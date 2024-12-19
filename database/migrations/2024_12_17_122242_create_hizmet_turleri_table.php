@@ -19,7 +19,7 @@ return new class extends Migration
         });
 
         Schema::create('hizmet_turleri_log', function (Blueprint $table) {
-            $table->unsignedBigInteger('hizmet_turleri_id');
+            $table->integer('hizmet_turleri_id');
             $table->string('baslik', 100);
             $table->char('islem', 1);
             $table->timestamps();
@@ -52,7 +52,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE TRIGGER hizmet_turleri_update
-            AFTER INSERT ON hizmet_turleri_log
+            AFTER UPDATE ON hizmet_turleri_log
             FOR EACH ROW
             BEGIN
                 INSERT INTO hizmet_turleri_log (

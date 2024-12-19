@@ -9,15 +9,17 @@ class DataBaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            IlSeeder::class,
+            RolSeeder::class,
             /*
             FirmaSeeder::class,
             KamuSeeder::class,
-            IlSeeder::class,
             HizmetTurSeeder::class,
             FirmaHizmetSeeder::class,
             HizmetIlDetaylariSeeder::class,
             */
-            KamuHizmetSeeder::class,
+            // KamuHizmetSeeder::class,
+            KullaniciSeeder::class,
         ]);
     }
 }

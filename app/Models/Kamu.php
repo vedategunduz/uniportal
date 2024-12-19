@@ -14,8 +14,17 @@ class Kamu extends Model
     protected $primaryKey = 'kamular_id';
 
     protected $fillable = [
-        'referans_uuid',
+        'referans_kodu',
+        'iller_id',
         'baslik',
+        'adres',
+        'website_url',
+        'x_url',
+        'instagram_url',
+        'linkedin_url',
+        'diger_url',
+        'aktiflik',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

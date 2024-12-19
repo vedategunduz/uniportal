@@ -16,9 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('hizmet_turleri_id')->nullable();
             $table->unsignedBigInteger('firmalar_id')->nullable();
 
-            // Foreign
-            $table->foreign('hizmet_turleri_id')->references('hizmet_turleri_id')->on('hizmet_turleri')->onDelete('restrict');
-            $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
+            // // Foreign
+            // $table->foreign('hizmet_turleri_id')->references('hizmet_turleri_id')->on('hizmet_turleri')->onDelete('restrict');
+            // $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
 
             $table->longText('aciklama');
             $table->timestamps();
@@ -27,9 +27,9 @@ return new class extends Migration
         Schema::enableForeignKeyConstraints();
 
         Schema::create('firma_hizmetleri_log', function (Blueprint $table) {
-            $table->unsignedBigInteger('firma_hizmetleri_id');
-            $table->unsignedBigInteger('hizmet_turleri_id')->nullable();
-            $table->unsignedBigInteger('firmalar_id')->nullable();
+            $table->integer('firma_hizmetleri_id');
+            $table->integer('hizmet_turleri_id')->nullable();
+            $table->integer('firmalar_id')->nullable();
             $table->char('islem', 1);
             $table->longText('aciklama');
             $table->timestamps();
@@ -56,7 +56,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE TRIGGER firma_hizmetleri_update
-            AFTER INSERT ON firma_hizmetleri_log
+            AFTER UPDATE ON firma_hizmetleri_log
             FOR EACH ROW
             BEGIN
                 INSERT INTO firma_hizmetleri_log (firma_hizmetleri_id, hizmet_turleri_id, firmalar_id, islem, aktiflik, islem_yapan_id, created_at, updated_at)

@@ -14,12 +14,18 @@ class Firma extends Model
     protected $primaryKey = 'firmalar_id';
 
     protected $fillable = [
-        'referans_uuid',
+        'referans_kodu',
         'baslik',
         'email',
         'telefon',
         'adres',
-        'website',
+        'website_url',
+        'x_url',
+        'instagram_url',
+        'linkedin_url',
+        'diger_url',
+        'aktiflik',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

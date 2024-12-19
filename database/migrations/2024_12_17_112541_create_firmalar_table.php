@@ -14,39 +14,39 @@ return new class extends Migration
             $table->string('referans_kodu', 20)->nullable();
 
             // Foreign
-            $table->foreign('referans_kodu')->references('kamu_kodu')->on('kamular')->onDelete('set null');
+            // $table->foreign('referans_kodu')->references('kamu_kodu')->on('kamular')->onDelete('restrict');
 
             $table->string('baslik', 255);
             $table->string('email', 100);
             $table->string('telefon', 25);
             $table->string('adres', 500);
-            $table->string('website_url', 255);
-            $table->string('x_url', 255);
-            $table->string('instagram_url', 255);
-            $table->string('linkedin_url', 255);
-            $table->string('diger_url', 255);
+            $table->string('website_url', 255)->nullable();
+            $table->string('x_url', 255)->nullable();
+            $table->string('instagram_url', 255)->nullable();
+            $table->string('linkedin_url', 255)->nullable();
+            $table->string('diger_url', 255)->nullable();
             $table->timestamps();
         });
 
         Schema::create('firmalar_log', function (Blueprint $table) {
-            $table->unsignedBigInteger('firmalar_id');
+            $table->integer('firmalar_id');
             $table->string('referans_kodu', 20)->nullable();
             $table->string('baslik', 255);
             $table->string('email', 100);
             $table->string('telefon', 25);
             $table->string('adres', 500);
-            $table->string('website_url', 255);
-            $table->string('x_url', 255);
-            $table->string('instagram_url', 255);
-            $table->string('linkedin_url', 255);
-            $table->string('diger_url', 255);
+            $table->string('website_url', 255)->nullable();
+            $table->string('x_url', 255)->nullable();
+            $table->string('instagram_url', 255)->nullable();
+            $table->string('linkedin_url', 255)->nullable();
+            $table->string('diger_url', 255)->nullable();
             $table->char('islem', 1);
             $table->timestamps();
         });
 
         DB::statement("
-            CREATE TRIGGER firmalar_log_insert
-            AFTER INSERT ON firmalar_log
+            CREATE TRIGGER firmalar_insert
+            AFTER INSERT ON firmalar
             FOR EACH ROW
             BEGIN
                 INSERT INTO firmalar_log (
@@ -65,8 +65,8 @@ return new class extends Migration
                     aktiflik,
                     islem_yapan_id,
                     created_at,
-                    updated_at)
-                VALUES (
+                    updated_at
+                ) VALUES (
                     NEW.firmalar_id,
                     NEW.referans_kodu,
                     NEW.baslik,
@@ -87,46 +87,46 @@ return new class extends Migration
         ");
 
         DB::statement("
-            CREATE TRIGGER firmalar_log_update
-            AFTER INSERT ON firmalar_log
-            FOR EACH ROW
-            BEGIN
-                INSERT INTO firmalar_log (
-                    firmalar_id,
-                    referans_kodu,
-                    baslik,
-                    email,
-                    telefon,
-                    adres,
-                    website_url,
-                    x_url,
-                    instagram_url,
-                    linkedin_url,
-                    diger_url,
-                    islem,
-                    aktiflik,
-                    islem_yapan_id,
-                    created_at,
-                    updated_at)
-                VALUES (
-                    NEW.firmalar_id,
-                    NEW.referans_kodu,
-                    NEW.baslik,
-                    NEW.email,
-                    NEW.telefon,
-                    NEW.website_url,
-                    NEW.x_url,
-                    NEW.instagram_url,
-                    NEW.linkedin_url,
-                    NEW.diger_url,
-                    'G',
-                    NEW.aktiflik,
-                    NEW.islem_yapan_id,
-                    NOW(),
-                    NOW()
-                );
-            END;
-        ");
+        CREATE TRIGGER firmalar_update
+        AFTER UPDATE ON firmalar
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO firmalar_log (
+                firmalar_id,
+                referans_kodu,
+                baslik,
+                email,
+                telefon,
+                adres,
+                website_url,
+                x_url,
+                instagram_url,
+                linkedin_url,
+                diger_url,
+                islem,
+                aktiflik,
+                islem_yapan_id,
+                created_at,
+                updated_at
+            ) VALUES (
+                NEW.firmalar_id,
+                NEW.referans_kodu,
+                NEW.baslik,
+                NEW.email,
+                NEW.telefon,
+                NEW.website_url,
+                NEW.x_url,
+                NEW.instagram_url,
+                NEW.linkedin_url,
+                NEW.diger_url,
+                'G',
+                NEW.aktiflik,
+                NEW.islem_yapan_id,
+                NOW(),
+                NOW()
+            );
+        END;
+    ");
     }
 
     public function down(): void

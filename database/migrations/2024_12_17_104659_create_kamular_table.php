@@ -24,9 +24,9 @@ return new class extends Migration
         });
 
         Schema::create('kamular_log', function (Blueprint $table) {
-            $table->id('kamular_id');
-            $table->string('kamu_kodu', 20)->unique();
-            $table->unsignedBigInteger('iller_id')->nullable();
+            $table->integer('kamular_id');
+            $table->string('kamu_kodu', 20);
+            $table->integer('iller_id')->nullable();
             $table->string('baslik', 255);
             $table->string('adres', 500);
             $table->string('website_url', 255);
@@ -39,46 +39,78 @@ return new class extends Migration
         });
 
         DB::statement("
-            CREATE TRIGGER kamular_log_update
-            AFTER INSERT ON kamular_log
-            FOR EACH ROW
-            BEGIN
-                INSERT INTO kamular_log (
-                    firmalar_id,
-                    referans_kodu,
-                    baslik,
-                    email,
-                    telefon,
-                    adres,
-                    website_url,
-                    x_url,
-                    instagram_url,
-                    linkedin_url,
-                    diger_url,
-                    islem,
-                    aktiflik,
-                    islem_yapan_id,
-                    created_at,
-                    updated_at)
-                VALUES (
-                    NEW.firmalar_id,
-                    NEW.referans_kodu,
-                    NEW.baslik,
-                    NEW.email,
-                    NEW.telefon,
-                    NEW.website_url,
-                    NEW.x_url,
-                    NEW.instagram_url,
-                    NEW.linkedin_url,
-                    NEW.diger_url,
-                    'G',
-                    NEW.aktiflik,
-                    NEW.islem_yapan_id,
-                    NOW(),
-                    NOW()
-                );
-            END;
-        ");
+        CREATE TRIGGER kamular_insert
+        AFTER INSERT ON kamular
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO kamular_log (
+                kamular_id,
+                kamu_kodu,
+                iller_id,
+                baslik,
+                adres,
+                website_url,
+                x_url,
+                instagram_url,
+                linkedin_url,
+                diger_url,
+                islem,
+                created_at,
+                updated_at
+            ) VALUES (
+                NEW.kamular_id,
+                NEW.kamu_kodu,
+                NEW.iller_id,
+                NEW.baslik,
+                NEW.adres,
+                NEW.website_url,
+                NEW.x_url,
+                NEW.instagram_url,
+                NEW.linkedin_url,
+                NEW.diger_url,
+                'E', -- ekleme işlemi
+                NOW(),
+                NOW()
+            );
+        END;
+    ");
+
+        DB::statement("
+        CREATE TRIGGER kamular_update
+        AFTER UPDATE ON kamular
+        FOR EACH ROW
+        BEGIN
+            INSERT INTO kamular_log (
+                kamular_id,
+                kamu_kodu,
+                iller_id,
+                baslik,
+                adres,
+                website_url,
+                x_url,
+                instagram_url,
+                linkedin_url,
+                diger_url,
+                islem,
+                created_at,
+                updated_at
+            ) VALUES (
+                NEW.kamular_id,
+                NEW.kamu_kodu,
+                NEW.iller_id,
+                NEW.baslik,
+                NEW.adres,
+                NEW.website_url,
+                NEW.x_url,
+                NEW.instagram_url,
+                NEW.linkedin_url,
+                NEW.diger_url,
+                'G',
+                NOW(),
+                NOW()
+            );
+        END;
+    ");
     }
 
     /**
@@ -88,5 +120,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('kamular');
         Schema::dropIfExists('kamular_log');
+        DB::statement("DROP TRIGGER IF EXISTS kamular_insert");
+        DB::statement("DROP TRIGGER IF EXISTS kamular_update");
     }
 };
