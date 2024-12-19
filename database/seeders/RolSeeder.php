@@ -12,6 +12,8 @@ class RolSeeder extends Seeder
      */
     public function run(): void
     {
-        Rol::factory()->count(1)->create();
+        Rol::create([
+            'tur' => 'Admin'
+        ]);
     }
 }

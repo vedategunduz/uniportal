@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('kamu_kodu', 20)->unique();
             $table->unsignedBigInteger('iller_id')->nullable();
 
-            // F
+            // Foreign
             $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
 
             $table->string('baslik', 255);

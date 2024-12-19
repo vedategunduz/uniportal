@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Kamu;
 use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class KamuSeeder extends Seeder
 {
@@ -171,17 +172,19 @@ class KamuSeeder extends Seeder
             ['baslik' => 'Zonguldak Bülent Ecevit Üniversitesi', 'il' => 67]
         ];
 
+        $faker = Faker::create("tr_TR");
+
         foreach ($universiteler as $uni) {
             Kamu::create([
                 'kamu_kodu' => strtoupper(Str::random(8)),
                 'iller_id' => $uni['il'],
                 'baslik' => $uni['baslik'],
-                'adres' => '',
-                'website_url' => '',
-                'x_url' => '',
-                'instagram_url' => '',
-                'linkedin_url' => '',
-                'diger_url' => '',
+                'adres' => $faker->address,
+                'website_url' => $faker->url,
+                'x_url' => $faker->url,
+                'instagram_url' => $faker->url,
+                'linkedin_url' => $faker->url,
+                'diger_url' => $faker->url,
             ]);
         }
     }
