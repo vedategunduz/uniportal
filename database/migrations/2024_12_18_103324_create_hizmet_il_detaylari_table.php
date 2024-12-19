@@ -21,12 +21,14 @@ return new class extends Migration
             $table->unsignedBigInteger('iller_id');
 
             // Foreign
-            // $table->foreign('firma_hizmetleri_id')->references('firma_hizmetleri_id')->on('firma_hizmetleri')->onDelete('restrict');
-            // $table->foreign('kamu_hizmetleri_id')->references('kamu_hizmetleri_id')->on('kamu_hizmetleri')->onDelete('restrict');
-            // $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
+            $table->foreign('firma_hizmetleri_id')->references('firma_hizmetleri_id')->on('firma_hizmetleri')->onDelete('restrict');
+            $table->foreign('kamu_hizmetleri_id')->references('kamu_hizmetleri_id')->on('kamu_hizmetleri')->onDelete('restrict');
+            $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
 
             $table->timestamps();
         });
+
+        Schema::enableForeignKeyConstraints();
 
         Schema::create('hizmet_il_detaylari_log', function (Blueprint $table) {
             $table->integer('hizmet_il_detaylari_id');
@@ -98,7 +100,6 @@ return new class extends Migration
             END;
         ");
 
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

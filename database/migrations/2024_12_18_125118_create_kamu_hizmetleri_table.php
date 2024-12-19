@@ -18,9 +18,9 @@ return new class extends Migration
             $table->unsignedBigInteger('kamular_id');
 
             // Foreign
-            //$table->foreign('hizmet_turleri_id')->references('hizmet_turleri_id')->on('hizmet_turleri')->onDelete('restrict');
-            //$table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
-            //$table->foreign('islem_yapan_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');
+            $table->foreign('hizmet_turleri_id')->references('hizmet_turleri_id')->on('hizmet_turleri')->onDelete('restrict');
+            $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
+            $table->foreign('islem_yapan_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');
 
             $table->longText('aciklama');
             $table->timestamps();

@@ -14,6 +14,7 @@
         <nav>
             <ul>
                 <li><a href="{{ route('firmalar') }}">Firmalar</a></li>
+                <li><a href="{{ route('kamular') }}">Kamular</a></li>
             </ul>
         </nav>
     </header>

@@ -24,6 +24,8 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::enableForeignKeyConstraints();
+
         Schema::create('kullanicilar_log', function (Blueprint $table) {
             $table->integer('kullanicilar_id');
             $table->integer('roller_id');
@@ -88,8 +90,6 @@ return new class extends Migration
                 );
             END;
         ");
-
-        Schema::enableForeignKeyConstraints();
     }
 
     /**

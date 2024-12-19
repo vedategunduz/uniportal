@@ -15,12 +15,16 @@ return new class extends Migration
         Schema::create('hizmet_turleri', function (Blueprint $table) {
             $table->id('hizmet_turleri_id');
             $table->string('baslik', 100);
+            $table->integer('derinlik');
+            $table->unsignedBigInteger('bagli_hizmet_turleri_id');
             $table->timestamps();
         });
 
         Schema::create('hizmet_turleri_log', function (Blueprint $table) {
             $table->integer('hizmet_turleri_id');
             $table->string('baslik', 100);
+            $table->integer('derinlik');
+            $table->integer('bagli_hizmet_turleri_id');
             $table->char('islem', 1);
             $table->timestamps();
         });
@@ -33,6 +37,8 @@ return new class extends Migration
                 INSERT INTO hizmet_turleri_log (
                     hizmet_turleri_id,
                     baslik,
+                    derinlik,
+                    bagli_hizmet_turleri_id,
                     islem,
                     aktiflik,
                     islem_yapan_id,
@@ -41,6 +47,8 @@ return new class extends Migration
                 VALUES (
                     NEW.hizmet_turleri_id,
                     NEW.baslik,
+                    NEW.derinlik,
+                    NEW.bagli_hizmet_turleri_id,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -58,6 +66,8 @@ return new class extends Migration
                 INSERT INTO hizmet_turleri_log (
                     hizmet_turleri_id,
                     baslik,
+                    derinlik,
+                    bagli_hizmet_turleri_id,
                     islem,
                     aktiflik,
                     islem_yapan_id,
@@ -66,6 +76,8 @@ return new class extends Migration
                 VALUES (
                     NEW.hizmet_turleri_id,
                     NEW.baslik,
+                    NEW.derinlik,
+                    NEW.bagli_hizmet_turleri_id,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,

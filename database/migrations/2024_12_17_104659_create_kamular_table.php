@@ -9,10 +9,16 @@ return new class extends Migration
 {
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('kamular', function (Blueprint $table) {
             $table->id('kamular_id');
             $table->string('kamu_kodu', 20)->unique();
             $table->unsignedBigInteger('iller_id')->nullable();
+
+            // F
+            $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
+
             $table->string('baslik', 255);
             $table->string('adres', 500);
             $table->string('website_url', 255);
@@ -22,6 +28,9 @@ return new class extends Migration
             $table->string('diger_url', 255);
             $table->timestamps();
         });
+
+        Schema::enableForeignKeyConstraints();
+
 
         Schema::create('kamular_log', function (Blueprint $table) {
             $table->integer('kamular_id');

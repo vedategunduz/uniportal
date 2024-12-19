@@ -9,5 +9,6 @@ Route::get('/', function () {
 });
 
 Route::get('/firmalar', [TestController::class, 'firmalar'])->name('firmalar');
+Route::get('/kamular', [TestController::class, 'kamular'])->name('kamular');
 
 Route::get('menu', [MenuController::class, 'index']);

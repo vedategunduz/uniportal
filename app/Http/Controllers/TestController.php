@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Firma;
+use App\Models\Kamu;
 
 class TestController extends Controller
 {
@@ -10,6 +11,12 @@ class TestController extends Controller
 
     public function firmalar() {
         $this->veriler = Firma::all();
+
+        return view('home', ['veriler' => $this->veriler]);
+    }
+
+    public function kamular() {
+        $this->veriler = Kamu::all();
 
         return view('home', ['veriler' => $this->veriler]);
     }

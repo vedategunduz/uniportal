@@ -15,6 +15,8 @@ class HizmetTur extends Model
 
     protected $fillabel = [
         'baslik',
+        'derinlik',
+        'bagli_hizmet_turleri_id',
         'islem_yapan_id',
     ];
 
