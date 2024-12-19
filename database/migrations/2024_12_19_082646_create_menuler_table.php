@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id('menuler_id');
             $table->string('menu_adi', 100);
             $table->string('menu_link', 100);
-            $table->string('menu_icon', 500);
+            $table->string('menu_icon', 1000);
             $table->string('menu_aciklama', 255);
             $table->integer('menu_sira');
             $table->unsignedBigInteger('bagli_menuler_id')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('menuler_id');
             $table->string('menu_adi', 100);
             $table->string('menu_link', 100);
-            $table->string('menu_icon', 500);
+            $table->string('menu_icon', 1000);
             $table->string('menu_aciklama', 255);
             $table->integer('menu_sira');
             $table->integer('bagli_menuler_id')->nullable();

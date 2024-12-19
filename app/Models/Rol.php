@@ -14,7 +14,8 @@ class Rol extends Model
     protected $primaryKey = 'roller_id';
 
     protected $fillable = [
-        'tur'
+        'tur',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

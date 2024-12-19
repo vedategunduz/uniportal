@@ -30,7 +30,15 @@ return new class extends Migration
             AFTER INSERT ON roller
             FOR EACH ROW
             BEGIN
-                INSERT INTO roller_log (roller_id, tur, islem_yapan_id, aktiflik, islem, created_at, updated_at)
+                INSERT INTO roller_log (
+                    roller_id,
+                    tur,
+                    islem_yapan_id,
+                    aktiflik,
+                    islem,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.roller_id,
                     NEW.tur,
@@ -47,7 +55,15 @@ return new class extends Migration
             AFTER UPDATE ON roller
             FOR EACH ROW
             BEGIN
-                INSERT INTO roller_log (roller_id, tur, islem_yapan_id, aktiflik, islem, created_at, updated_at)
+                INSERT INTO roller_log (
+                    roller_id,
+                    tur,
+                    islem_yapan_id,
+                    aktiflik,
+                    islem,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.roller_id,
                     NEW.tur,

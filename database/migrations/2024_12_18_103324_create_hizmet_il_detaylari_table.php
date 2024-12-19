@@ -43,7 +43,17 @@ return new class extends Migration
             AFTER INSERT ON hizmet_il_detaylari_log
             FOR EACH ROW
             BEGIN
-                INSERT INTO hizmet_il_detaylari_log (hizmet_il_detaylari_id, firma_hizmetleri_id, kamu_hizmetleri_id, iller_id, islem_yapan_id, aktiflik, islem, created_at, updated_at)
+                INSERT INTO hizmet_il_detaylari_log (
+                    hizmet_il_detaylari_id,
+                    firma_hizmetleri_id,
+                    kamu_hizmetleri_id,
+                    iller_id,
+                    islem_yapan_id,
+                    aktiflik,
+                    islem,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.hizmet_il_detaylari_id,
                     NEW.firma_hizmetleri_id,
@@ -63,7 +73,17 @@ return new class extends Migration
             AFTER UPDATE ON hizmet_il_detaylari_log
             FOR EACH ROW
             BEGIN
-                INSERT INTO hizmet_il_detaylari_log (hizmet_il_detaylari_id, firma_hizmetleri_id, kamu_hizmetleri_id, iller_id, islem_yapan_id, aktiflik, islem, created_at, updated_at)
+                INSERT INTO hizmet_il_detaylari_log (
+                    hizmet_il_detaylari_id,
+                    firma_hizmetleri_id,
+                    kamu_hizmetleri_id,
+                    iller_id,
+                    islem_yapan_id,
+                    aktiflik,
+                    islem,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.hizmet_il_detaylari_id,
                     NEW.firma_hizmetleri_id,

@@ -17,6 +17,7 @@ class FirmaHizmet extends Model
         'hizmet_turleri_id',
         'firmalar_id',
         'aciklama',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

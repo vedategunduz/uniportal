@@ -38,7 +38,16 @@ return new class extends Migration
             AFTER INSERT ON kullanicilar
             FOR EACH ROW
             BEGIN
-                INSERT INTO kullanicilar_log (kullanicilar_id, roller_id, ad, islem_yapan_id, aktiflik, islem, created_at, updated_at)
+                INSERT INTO kullanicilar_log (
+                    kullanicilar_id,
+                    roller_id,
+                    ad,
+                    islem_yapan_id,
+                    aktiflik,
+                    islem,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.kullanicilar_id,
                     NEW.roller_id,
@@ -57,7 +66,16 @@ return new class extends Migration
             AFTER UPDATE ON kullanicilar
             FOR EACH ROW
             BEGIN
-                INSERT INTO kullanicilar_log (kullanicilar_id, roller_id, ad, islem_yapan_id, aktiflik, islem, created_at, updated_at)
+                INSERT INTO kullanicilar_log (
+                    kullanicilar_id,
+                    roller_id,
+                    ad,
+                    islem_yapan_id,
+                    aktiflik,
+                    islem,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.kullanicilar_id,
                     NEW.roller_id,

@@ -12,6 +12,9 @@ class DataBaseSeeder extends Seeder
             IlSeeder::class,
             RolSeeder::class,
             KamuSeeder::class,
+            MenuSeeder::class,
+            KullaniciSeeder::class,
+            MenuRolIliskiSeeder::class,
             /*
             FirmaSeeder::class,
             HizmetTurSeeder::class,
@@ -19,8 +22,6 @@ class DataBaseSeeder extends Seeder
             HizmetIlDetaylariSeeder::class,
             */
             // KamuHizmetSeeder::class,
-            MenuSeeder::class,
-            KullaniciSeeder::class,
         ]);
     }
 }

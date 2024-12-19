@@ -14,7 +14,8 @@ class HizmetTur extends Model
     protected $primaryKey = 'hizmet_turleri_id';
 
     protected $fillabel = [
-        'baslik'
+        'baslik',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

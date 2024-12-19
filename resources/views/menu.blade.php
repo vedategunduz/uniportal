@@ -10,9 +10,13 @@
 </head>
 
 <body>
+
+    {{ Session::get('roller_id') }}
+
     @foreach ($menuler as $menu)
         <a href="{{ $menu['menu_link'] }}">{!! $menu['menu_icon'] !!} {{ $menu['menu_adi'] }}</a>
     @endforeach
+    
 </body>
 
 </html>

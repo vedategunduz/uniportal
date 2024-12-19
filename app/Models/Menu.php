@@ -19,7 +19,12 @@ class Menu extends Model
         'menu_aciklama',
         'menu_sira',
         'bagli_menuler_id',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;
+
+    public function MenuRolIliskiBaglantisi() {
+        return $this->hasMany(MenuRolIliski::class, 'menuler_id', 'menuler_id');
+    }
 }

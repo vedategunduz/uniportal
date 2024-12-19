@@ -41,7 +41,16 @@ return new class extends Migration
             AFTER INSERT ON kamu_hizmetleri
             FOR EACH ROW
             BEGIN
-                INSERT INTO kamu_hizmetleri_log (kamu_hizmetleri_id, hizmet_turleri_id, kamular_id, islem_yapan_id, islem, aktiflik, aciklama, created_at, updated_at)
+                INSERT INTO kamu_hizmetleri_log (
+                    kamu_hizmetleri_id,
+                    hizmet_turleri_id,
+                    kamular_id, islem_yapan_id,
+                    islem,
+                    aktiflik,
+                    aciklama,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.kamu_hizmetleri_id,
                     NEW.hizmet_turleri_id,
@@ -61,7 +70,17 @@ return new class extends Migration
             AFTER UPDATE ON kamu_hizmetleri
             FOR EACH ROW
             BEGIN
-                INSERT INTO kamu_hizmetleri_log (kamu_hizmetleri_id, hizmet_turleri_id, kamular_id, islem_yapan_id, islem, aktiflik, aciklama, created_at, updated_at)
+                INSERT INTO kamu_hizmetleri_log (
+                    kamu_hizmetleri_id,
+                    hizmet_turleri_id,
+                    kamular_id,
+                    islem_yapan_id,
+                    islem,
+                    aktiflik,
+                    aciklama,
+                    created_at,
+                    updated_at
+                )
                 VALUES (
                     NEW.kamu_hizmetleri_id,
                     NEW.hizmet_turleri_id,

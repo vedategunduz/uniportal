@@ -15,7 +15,8 @@ class Il extends Model
     protected $primaryKey = "iller_id";
 
     protected $fillabel = [
-        'baslik'
+        'baslik',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;
