@@ -11,14 +11,15 @@ class DataBaseSeeder extends Seeder
         $this->call([
             IlSeeder::class,
             RolSeeder::class,
+            KamuSeeder::class,
             /*
             FirmaSeeder::class,
-            KamuSeeder::class,
             HizmetTurSeeder::class,
             FirmaHizmetSeeder::class,
             HizmetIlDetaylariSeeder::class,
             */
             // KamuHizmetSeeder::class,
+            MenuSeeder::class,
             KullaniciSeeder::class,
         ]);
     }

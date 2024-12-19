@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', [TestController::class, 'index']);
-Route::get('/deneme/{id}', [TestController::class, 'test'])->name('deneme');
+Route::get('menu', [MenuController::class, 'index']);

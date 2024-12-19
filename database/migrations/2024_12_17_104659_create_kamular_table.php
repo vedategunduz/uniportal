@@ -68,7 +68,7 @@ return new class extends Migration
                 NEW.instagram_url,
                 NEW.linkedin_url,
                 NEW.diger_url,
-                'E', -- ekleme işlemi
+                'E',
                 NOW(),
                 NOW()
             );
