@@ -15,11 +15,6 @@ return new class extends Migration
             $table->id('firma_hizmetleri_id');
             $table->unsignedBigInteger('hizmet_turleri_id')->nullable();
             $table->unsignedBigInteger('firmalar_id')->nullable();
-
-            // // Foreign
-            // $table->foreign('hizmet_turleri_id')->references('hizmet_turleri_id')->on('hizmet_turleri')->onDelete('restrict');
-            // $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
-
             $table->longText('aciklama');
             $table->timestamps();
         });

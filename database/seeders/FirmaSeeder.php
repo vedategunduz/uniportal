@@ -12,6 +12,13 @@ class FirmaSeeder extends Seeder
      */
     public function run(): void
     {
-        Firma::factory()->count(10)->create();
+        Firma::create([
+            'kamular_id' => 1,
+            'baslik' => "patates",
+            'email' => "patates",
+            'telefon' => "patates",
+            'adres' => "patates",
+            'website_url' => "patates",
+        ]);
     }
 }

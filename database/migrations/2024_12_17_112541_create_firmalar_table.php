@@ -11,10 +11,10 @@ return new class extends Migration
     {
         Schema::create('firmalar', function (Blueprint $table) {
             $table->id('firmalar_id');
-            $table->string('referans_kodu', 20)->nullable();
+            $table->unsignedBigInteger('kamular_id')->nullable();
 
             // Foreign
-            // $table->foreign('referans_kodu')->references('kamu_kodu')->on('kamular')->onDelete('restrict');
+            $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
 
             $table->string('baslik', 255);
             $table->string('email', 100);
@@ -30,7 +30,7 @@ return new class extends Migration
 
         Schema::create('firmalar_log', function (Blueprint $table) {
             $table->integer('firmalar_id');
-            $table->string('referans_kodu', 20)->nullable();
+            $table->integer('kamular_id')->nullable();
             $table->string('baslik', 255);
             $table->string('email', 100);
             $table->string('telefon', 25);
@@ -51,7 +51,7 @@ return new class extends Migration
             BEGIN
                 INSERT INTO firmalar_log (
                     firmalar_id,
-                    referans_kodu,
+                    kamular_id,
                     baslik,
                     email,
                     telefon,
@@ -68,10 +68,11 @@ return new class extends Migration
                     updated_at
                 ) VALUES (
                     NEW.firmalar_id,
-                    NEW.referans_kodu,
+                    NEW.kamular_id,
                     NEW.baslik,
                     NEW.email,
                     NEW.telefon,
+                    NEW.adres,
                     NEW.website_url,
                     NEW.x_url,
                     NEW.instagram_url,
@@ -87,53 +88,54 @@ return new class extends Migration
         ");
 
         DB::statement("
-        CREATE TRIGGER firmalar_update
-        AFTER UPDATE ON firmalar
-        FOR EACH ROW
-        BEGIN
-            INSERT INTO firmalar_log (
-                firmalar_id,
-                referans_kodu,
-                baslik,
-                email,
-                telefon,
-                adres,
-                website_url,
-                x_url,
-                instagram_url,
-                linkedin_url,
-                diger_url,
-                islem,
-                aktiflik,
-                islem_yapan_id,
-                created_at,
-                updated_at
-            ) VALUES (
-                NEW.firmalar_id,
-                NEW.referans_kodu,
-                NEW.baslik,
-                NEW.email,
-                NEW.telefon,
-                NEW.website_url,
-                NEW.x_url,
-                NEW.instagram_url,
-                NEW.linkedin_url,
-                NEW.diger_url,
-                'G',
-                NEW.aktiflik,
-                NEW.islem_yapan_id,
-                NOW(),
-                NOW()
-            );
-        END;
-    ");
+            CREATE TRIGGER firmalar_update
+            AFTER UPDATE ON firmalar
+            FOR EACH ROW
+            BEGIN
+                INSERT INTO firmalar_log (
+                    firmalar_id,
+                    kamular_id,
+                    baslik,
+                    email,
+                    telefon,
+                    adres,
+                    website_url,
+                    x_url,
+                    instagram_url,
+                    linkedin_url,
+                    diger_url,
+                    islem,
+                    aktiflik,
+                    islem_yapan_id,
+                    created_at,
+                    updated_at
+                ) VALUES (
+                    NEW.firmalar_id,
+                    NEW.kamular_id,
+                    NEW.baslik,
+                    NEW.email,
+                    NEW.telefon,
+                    NEW.adres,
+                    NEW.website_url,
+                    NEW.x_url,
+                    NEW.instagram_url,
+                    NEW.linkedin_url,
+                    NEW.diger_url,
+                    'G',
+                    NEW.aktiflik,
+                    NEW.islem_yapan_id,
+                    NOW(),
+                    NOW()
+                );
+            END;
+        ");
     }
 
     public function down(): void
     {
         Schema::dropIfExists('firmalar');
         Schema::dropIfExists('firmalar_log');
-        DB::statement("DROP TRIGGER IF EXISTS firmalar_log_insert");
-        DB::statement("DROP TRIGGER IF EXISTS firmalar_log_update");
+        // DB::statement("DROP TRIGGER IF EXISTS firmalar_log_insert");
+        // DB::statement("DROP TRIGGER IF EXISTS firmalar_log_update");
     }
 };

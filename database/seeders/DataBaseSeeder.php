@@ -15,9 +15,9 @@ class DataBaseSeeder extends Seeder
             MenuSeeder::class,
             KullaniciSeeder::class,
             MenuRolIliskiSeeder::class,
-            /*
-            FirmaSeeder::class,
             HizmetTurSeeder::class,
+            //FirmaSeeder::class,
+            /*
             FirmaHizmetSeeder::class,
             HizmetIlDetaylariSeeder::class,
             */

@@ -14,7 +14,7 @@ class Firma extends Model
     protected $primaryKey = 'firmalar_id';
 
     protected $fillable = [
-        'referans_kodu',
+        'kamular_id',
         'baslik',
         'email',
         'telefon',

@@ -7,9 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
@@ -25,6 +22,8 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::enableForeignKeyConstraints();
+
         Schema::create('menu_rol_iliskileri_log', function (Blueprint $table) {
             $table->integer('menu_rol_iliskileri_id');
             $table->integer('roller_id');
@@ -33,8 +32,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        // AFTER INSERT Trigger
         DB::statement("
-        CREATE TRIGGER menu_rol_iliskileri_insert
+            CREATE TRIGGER menu_rol_iliskileri_insert
             AFTER INSERT ON menu_rol_iliskileri
             FOR EACH ROW
             BEGIN
@@ -59,6 +59,7 @@ return new class extends Migration
             END;
         ");
 
+        // AFTER UPDATE Trigger
         DB::statement("
             CREATE TRIGGER menu_rol_iliskileri_update
             AFTER UPDATE ON menu_rol_iliskileri
@@ -84,12 +85,13 @@ return new class extends Migration
                 );
             END;
         ");
-
-        Schema::enableForeignKeyConstraints();
     }
 
     public function down(): void
     {
+        DB::statement("DROP TRIGGER IF EXISTS menu_rol_iliskileri_insert");
+        DB::statement("DROP TRIGGER IF EXISTS menu_rol_iliskileri_update");
         Schema::dropIfExists('menu_rol_iliskileri');
+        Schema::dropIfExists('menu_rol_iliskileri_log');
     }
 };
