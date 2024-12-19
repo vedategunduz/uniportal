@@ -181,9 +181,9 @@ class KamuSeeder extends Seeder
                 'baslik' => $uni['baslik'],
                 'adres' => $faker->address,
                 'website_url' => $faker->url,
-                'x_url' => $faker->url,
-                'instagram_url' => $faker->url,
-                'linkedin_url' => $faker->url,
+                'x_url' => 'x.com/'.$faker->userName,
+                'instagram_url' => 'instagram.com/'.$faker->userName,
+                'linkedin_url' => 'linkedin.com/'.$faker->userName,
                 'diger_url' => $faker->url,
             ]);
         }

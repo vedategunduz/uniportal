@@ -7,11 +7,11 @@ use Illuminate\Database\Seeder;
 
 class KullaniciSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Kullanici::factory()->count(1)->create();
+        Kullanici::create([
+            'roller_id' => 1,
+            'ad' => 'Rıfkı',
+        ]);
     }
 }

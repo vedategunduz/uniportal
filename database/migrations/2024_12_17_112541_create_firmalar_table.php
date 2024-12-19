@@ -135,7 +135,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('firmalar');
         Schema::dropIfExists('firmalar_log');
-        // DB::statement("DROP TRIGGER IF EXISTS firmalar_log_insert");
-        // DB::statement("DROP TRIGGER IF EXISTS firmalar_log_update");
+        DB::statement("DROP TRIGGER IF EXISTS firmalar_log_insert");
+        DB::statement("DROP TRIGGER IF EXISTS firmalar_log_update");
     }
 };

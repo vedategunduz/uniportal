@@ -18,8 +18,6 @@ class DataBaseSeeder extends Seeder
             HizmetTurSeeder::class,
             FirmaSeeder::class,
             /*
-            FirmaHizmetSeeder::class,
-            HizmetIlDetaylariSeeder::class,
             */
             // KamuHizmetSeeder::class,
         ]);

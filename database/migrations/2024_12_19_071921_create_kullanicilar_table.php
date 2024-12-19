@@ -92,14 +92,11 @@ return new class extends Migration
         ");
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('kullanicilar');
-        Schema::dropIfExists('kullanicilar_log');
         DB::statement("DROP TRIGGER IF EXISTS kullanicilar_insert");
         DB::statement("DROP TRIGGER IF EXISTS kullanicilar_update");
+        Schema::dropIfExists('kullanicilar');
+        Schema::dropIfExists('kullanicilar_log');
     }
 };

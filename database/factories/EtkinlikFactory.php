@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\MenuRolIliski>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Etkinlik>
  */
-class MenuRolIliskiFactory extends Factory
+class EtkinlikFactory extends Factory
 {
     /**
      * Define the model's default state.

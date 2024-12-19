@@ -127,9 +127,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kamular');
-        Schema::dropIfExists('kamular_log');
         DB::statement("DROP TRIGGER IF EXISTS kamular_insert");
         DB::statement("DROP TRIGGER IF EXISTS kamular_update");
+        Schema::dropIfExists('kamular');
+        Schema::dropIfExists('kamular_log');
     }
 };
