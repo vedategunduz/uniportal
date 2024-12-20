@@ -12,6 +12,7 @@ class EtkinlikTur extends Model
 
     protected $fillable = [
         'tur',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

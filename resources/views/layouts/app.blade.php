@@ -11,12 +11,7 @@
 
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="{{ route('firmalar') }}">Firmalar</a></li>
-                <li><a href="{{ route('kamular') }}">Kamular</a></li>
-            </ul>
-        </nav>
+        {{-- Header ve Nav içeriği buraya --}}
     </header>
 
     <main>
@@ -24,10 +19,10 @@
     </main>
 
     <footer>
-        <!-- Footer içeriği buraya -->
+        {{-- Footer içeriği buraya --}}
     </footer>
 
-    <!-- JS ve diğer betikler buraya -->
+    {{-- JS ve diğer betikler buraya --}}
 </body>
 
 </html>
