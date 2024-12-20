@@ -19,6 +19,7 @@ class DataBaseSeeder extends Seeder
             FirmaSeeder::class,
             EtkinlikTurSeeder::class,
             EtkinlikSeeder::class,
+            EtkinlikKatilimSeeder::class,
         ]);
     }
 }

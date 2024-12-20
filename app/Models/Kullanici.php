@@ -16,6 +16,7 @@ class Kullanici extends Model
     protected $fillable = [
         'roller_id',
         'ad',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

@@ -23,6 +23,7 @@ class Etkinlik extends Model
         'etkinlik_baslama_tarihi',
         'etkinlik_bitis_tarihi',
         'aciklama',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

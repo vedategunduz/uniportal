@@ -16,10 +16,10 @@ return new class extends Migration
 
         Schema::create('etkinlik_katilimlari', function (Blueprint $table) {
             $table->id('etkinlik_katilimlari_id');
-            $table->unsignedBigInteger('etkinlikler_id');
-            $table->unsignedBigInteger('kullanicilar_id');
-            $table->unsignedBigInteger('firmalar_id');
-            $table->unsignedBigInteger('kamular_id');
+            $table->unsignedBigInteger('etkinlikler_id')->nullable();
+            $table->unsignedBigInteger('kullanicilar_id')->nullable();
+            $table->unsignedBigInteger('firmalar_id')->nullable();
+            $table->unsignedBigInteger('kamular_id')->nullable();
 
             // Foreign
             $table->foreign('etkinlikler_id')->references('etkinlikler_id')->on('etkinlikler')->onDelete('restrict');
@@ -35,10 +35,10 @@ return new class extends Migration
 
         Schema::create('etkinlik_katilimlari_log', function (Blueprint $table) {
             $table->integer('etkinlik_katilimlari_id');
-            $table->integer('etkinlikler_id');
-            $table->integer('kullanicilar_id');
-            $table->integer('firmalar_id');
-            $table->integer('kamular_id');
+            $table->integer('etkinlikler_id')->nullable();
+            $table->integer('kullanicilar_id')->nullable();
+            $table->integer('firmalar_id')->nullable();
+            $table->integer('kamular_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
             $table->char('islem', 1);
             $table->timestamps();

@@ -23,6 +23,7 @@ class Yorum extends Model
         'kamu_hizmetleri_id',
         'aciklama',
         'puan',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;

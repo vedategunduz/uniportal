@@ -19,6 +19,7 @@ class Resim extends Model
         'kamu_hizmetleri_id',
         'firma_hizmetleri_id',
         'resimyolu',
+        'islem_yapan_id',
     ];
 
     public $timestamps = true;
