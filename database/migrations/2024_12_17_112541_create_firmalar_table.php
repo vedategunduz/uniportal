@@ -133,9 +133,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('firmalar');
-        Schema::dropIfExists('firmalar_log');
         DB::statement("DROP TRIGGER IF EXISTS firmalar_log_insert");
         DB::statement("DROP TRIGGER IF EXISTS firmalar_log_update");
+        Schema::dropIfExists('firmalar');
+        Schema::dropIfExists('firmalar_log');
     }
 };

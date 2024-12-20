@@ -17,9 +17,6 @@ class DataBaseSeeder extends Seeder
             MenuRolIliskiSeeder::class,
             HizmetTurSeeder::class,
             FirmaSeeder::class,
-            /*
-            */
-            // KamuHizmetSeeder::class,
         ]);
     }
 }

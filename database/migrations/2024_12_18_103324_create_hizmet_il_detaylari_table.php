@@ -42,7 +42,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE TRIGGER hizmet_il_detaylari_insert
-            AFTER INSERT ON hizmet_il_detaylari_log
+            AFTER INSERT ON hizmet_il_detaylari
             FOR EACH ROW
             BEGIN
                 INSERT INTO hizmet_il_detaylari_log (
@@ -72,7 +72,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE TRIGGER hizmet_il_detaylari_update
-            AFTER UPDATE ON hizmet_il_detaylari_log
+            AFTER UPDATE ON hizmet_il_detaylari
             FOR EACH ROW
             BEGIN
                 INSERT INTO hizmet_il_detaylari_log (

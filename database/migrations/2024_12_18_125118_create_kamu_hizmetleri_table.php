@@ -100,9 +100,9 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('kamu_hizmetleri');
-        Schema::dropIfExists('kamu_hizmetleri_log');
         DB::statement("DROP TRIGGER IF EXISTS kamu_hizmetleri_insert");
         DB::statement("DROP TRIGGER IF EXISTS kamu_hizmetleri_update");
+        Schema::dropIfExists('kamu_hizmetleri');
+        Schema::dropIfExists('kamu_hizmetleri_log');
     }
 };

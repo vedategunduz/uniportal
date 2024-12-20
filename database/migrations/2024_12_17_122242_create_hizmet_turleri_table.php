@@ -31,7 +31,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE TRIGGER hizmet_turleri_insert
-            AFTER INSERT ON hizmet_turleri_log
+            AFTER INSERT ON hizmet_turleri
             FOR EACH ROW
             BEGIN
                 INSERT INTO hizmet_turleri_log (
@@ -60,7 +60,7 @@ return new class extends Migration
 
         DB::statement("
             CREATE TRIGGER hizmet_turleri_update
-            AFTER UPDATE ON hizmet_turleri_log
+            AFTER UPDATE ON hizmet_turleri
             FOR EACH ROW
             BEGIN
                 INSERT INTO hizmet_turleri_log (
@@ -93,9 +93,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hizmet_turleri');
-        Schema::dropIfExists('hizmet_turleri_log');
         DB::statement("DROP TRIGGER IF EXISTS hizmet_turleri_insert");
         DB::statement("DROP TRIGGER IF EXISTS hizmet_turleri_update");
+        Schema::dropIfExists('hizmet_turleri');
+        Schema::dropIfExists('hizmet_turleri_log');
     }
 };
