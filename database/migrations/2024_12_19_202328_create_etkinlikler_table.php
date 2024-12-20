@@ -13,10 +13,12 @@ return new class extends Migration
 
         Schema::create('etkinlikler', function (Blueprint $table) {
             $table->id('etkinlikler_id');
-            $table->unsignedBigInteger('firmalar_id');
-            $table->unsignedBigInteger('kamular_id');
+            $table->unsignedBigInteger('etkinlik_turleri_id');
+            $table->unsignedBigInteger('firmalar_id')->nullable();
+            $table->unsignedBigInteger('kamular_id')->nullable();
 
             // Foreign
+            $table->foreign('etkinlik_turleri_id')->references('etkinlik_turleri_id')->on('etkinlik_turleri')->onDelete('restrict');
             $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
             $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
 
@@ -32,8 +34,9 @@ return new class extends Migration
 
         Schema::create('etkinlikler_log', function (Blueprint $table) {
             $table->integer('etkinlikler_id');
-            $table->integer('firmalar_id');
-            $table->integer('kamular_id');
+            $table->integer('etkinlik_turleri_id');
+            $table->integer('firmalar_id')->nullable();
+            $table->integer('kamular_id')->nullable();
             $table->timestamp('etkinlik_basvuru_tarihi')->nullable();
             $table->timestamp('etkinlik_basvuru_bitis_tarihi')->nullable();
             $table->timestamp('etkinlik_baslama_tarihi')->nullable();
@@ -51,6 +54,7 @@ return new class extends Migration
             BEGIN
                 INSERT INTO etkinlikler_log (
                     etkinlikler_id,
+                    etkinlik_turleri_id,
                     firmalar_id,
                     kamular_id,
                     etkinlik_basvuru_tarihi,
@@ -66,6 +70,7 @@ return new class extends Migration
                 )
                 VALUES (
                     NEW.etkinlikler_id,
+                    NEW.etkinlik_turleri_id,
                     NEW.firmalar_id,
                     NEW.kamular_id,
                     NEW.etkinlik_basvuru_tarihi,
@@ -90,6 +95,7 @@ return new class extends Migration
             BEGIN
                 INSERT INTO etkinlikler_log (
                     etkinlikler_id,
+                    etkinlik_turleri_id,
                     firmalar_id,
                     kamular_id,
                     etkinlik_basvuru_tarihi,
@@ -105,6 +111,7 @@ return new class extends Migration
                 )
                 VALUES (
                     NEW.etkinlikler_id,
+                    NEW.etkinlik_turleri_id,
                     NEW.firmalar_id,
                     NEW.kamular_id,
                     NEW.etkinlik_basvuru_tarihi,
