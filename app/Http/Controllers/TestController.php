@@ -19,6 +19,6 @@ class TestController extends Controller
             'islem_yapan_id' => 1,
         ]);
 
-        return response()->json('İşlem başarılı');
+        return response()->view('home');
     }
 }

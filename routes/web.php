@@ -8,4 +8,5 @@ Route::get('/', function () {
 });
 
 
-Route::post('/', [TestController::class, 'EtkinlikTurEkle'])->name('ekle');
+Route::post('/EtkinlikTurEkle', [TestController::class, 'EtkinlikTurEkle'])->name('EtkinlikTurEkle');
+Route::post('/EtkinlikTurEkle', [TestController::class, 'EtkinlikTurEkle'])->name('EtkinlikTurEkle');

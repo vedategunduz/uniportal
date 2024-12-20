@@ -47,41 +47,41 @@ return new class extends Migration
         });
 
         DB::statement("
-        CREATE TRIGGER kamular_insert
-        AFTER INSERT ON kamular
-        FOR EACH ROW
-        BEGIN
-            INSERT INTO kamular_log (
-                kamular_id,
-                kamu_kodu,
-                iller_id,
-                baslik,
-                adres,
-                website_url,
-                x_url,
-                instagram_url,
-                linkedin_url,
-                diger_url,
-                islem,
-                created_at,
-                updated_at
-            ) VALUES (
-                NEW.kamular_id,
-                NEW.kamu_kodu,
-                NEW.iller_id,
-                NEW.baslik,
-                NEW.adres,
-                NEW.website_url,
-                NEW.x_url,
-                NEW.instagram_url,
-                NEW.linkedin_url,
-                NEW.diger_url,
-                'E',
-                NOW(),
-                NOW()
-            );
-        END;
-    ");
+            CREATE TRIGGER kamular_insert
+            AFTER INSERT ON kamular
+            FOR EACH ROW
+            BEGIN
+                INSERT INTO kamular_log (
+                    kamular_id,
+                    kamu_kodu,
+                    iller_id,
+                    baslik,
+                    adres,
+                    website_url,
+                    x_url,
+                    instagram_url,
+                    linkedin_url,
+                    diger_url,
+                    islem,
+                    created_at,
+                    updated_at
+                ) VALUES (
+                    NEW.kamular_id,
+                    NEW.kamu_kodu,
+                    NEW.iller_id,
+                    NEW.baslik,
+                    NEW.adres,
+                    NEW.website_url,
+                    NEW.x_url,
+                    NEW.instagram_url,
+                    NEW.linkedin_url,
+                    NEW.diger_url,
+                    'E',
+                    NOW(),
+                    NOW()
+                );
+            END;
+        ");
 
         DB::statement("
         CREATE TRIGGER kamular_update
