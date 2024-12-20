@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class EtkinlikKatilimSeeder extends Seeder
+class ResimSeeder extends Seeder
 {
     /**
      * Run the database seeds.

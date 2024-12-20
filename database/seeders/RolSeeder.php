@@ -12,8 +12,15 @@ class RolSeeder extends Seeder
      */
     public function run(): void
     {
-        Rol::create([
-            'tur' => 'Admin'
-        ]);
+        Rol::insert(
+            [
+                [
+                    'tur' => 'Admin'
+                ],
+                [
+                    'tur' => 'User'
+                ]
+            ]
+        );
     }
 }

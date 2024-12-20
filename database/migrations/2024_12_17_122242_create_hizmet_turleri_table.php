@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id('hizmet_turleri_id');
             $table->string('baslik', 100);
             $table->integer('derinlik');
-            $table->unsignedBigInteger('bagli_hizmet_turleri_id');
+            $table->unsignedBigInteger('bagli_hizmet_turleri_id')->nullable();
             $table->timestamps();
         });
 
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('hizmet_turleri_id');
             $table->string('baslik', 100);
             $table->integer('derinlik');
-            $table->integer('bagli_hizmet_turleri_id');
+            $table->integer('bagli_hizmet_turleri_id')->nullable();
             $table->char('islem', 1);
             $table->timestamps();
         });

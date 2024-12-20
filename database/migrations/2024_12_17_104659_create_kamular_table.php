@@ -31,7 +31,6 @@ return new class extends Migration
 
         Schema::enableForeignKeyConstraints();
 
-
         Schema::create('kamular_log', function (Blueprint $table) {
             $table->integer('kamular_id');
             $table->string('kamu_kodu', 20);

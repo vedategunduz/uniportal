@@ -16,12 +16,12 @@ class HizmetTurSeeder extends Seeder
             [
                 'baslik' => "Bilişim",
                 'derinlik' => 0,
-                'bagli_hizmet_turleri_id' => 0,
+                'bagli_hizmet_turleri_id' => null,
             ],
             [
                 'baslik' => "Tefrişat",
                 'derinlik' => 0,
-                'bagli_hizmet_turleri_id' => 0,
+                'bagli_hizmet_turleri_id' => null,
             ],
             [
                 'baslik' => "Bilgisayar",
