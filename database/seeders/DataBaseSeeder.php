@@ -20,6 +20,7 @@ class DataBaseSeeder extends Seeder
             EtkinlikTurSeeder::class,
             EtkinlikSeeder::class,
             EtkinlikKatilimSeeder::class,
+            BirimTipleriSeeder::class,
             KamuBirimSeeder::class,
         ]);
     }

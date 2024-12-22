@@ -14,14 +14,17 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
+        // Kullanıcılar Tablosu
         Schema::create('kullanicilar', function (Blueprint $table) {
             $table->id('kullanicilar_id');
-            $table->unsignedBigInteger('roller_id');
+            $table->unsignedBigInteger('roller_id')->index();
+            $table->string('ad', 155);
+            $table->string('email', 255)->unique();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
 
             $table->foreign('roller_id')->references('roller_id')->on('roller')->onDelete('restrict');
-
-            $table->string('ad');
-            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
@@ -29,13 +32,14 @@ return new class extends Migration
         Schema::create('kullanicilar_log', function (Blueprint $table) {
             $table->integer('kullanicilar_id');
             $table->integer('roller_id');
-            $table->string('ad');
+            $table->string('ad', 155);
+            $table->string('email', 255);
 
             $table->char('islem', 1);
             $table->timestamps();
         });
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER kullanicilar_insert
             AFTER INSERT ON kullanicilar
             FOR EACH ROW
@@ -44,6 +48,7 @@ return new class extends Migration
                     kullanicilar_id,
                     roller_id,
                     ad,
+                    email,
                     islem_yapan_id,
                     aktiflik,
                     islem,
@@ -54,6 +59,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.roller_id,
                     NEW.ad,
+                    NEW.email,
                     NEW.islem_yapan_id,
                     NEW.aktiflik,
                     'E',
@@ -63,7 +69,7 @@ return new class extends Migration
             END;
         ");
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER kullanicilar_update
             AFTER UPDATE ON kullanicilar
             FOR EACH ROW
@@ -72,6 +78,7 @@ return new class extends Migration
                     kullanicilar_id,
                     roller_id,
                     ad,
+                    email,
                     islem_yapan_id,
                     aktiflik,
                     islem,
@@ -82,6 +89,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.roller_id,
                     NEW.ad,
+                    NEW.email,
                     NEW.islem_yapan_id,
                     NEW.aktiflik,
                     'G',

@@ -74,7 +74,6 @@ return new class extends Migration
             END;
         ");
 
-
         DB::statement("
             CREATE TRIGGER resimler_update
             AFTER UPDATE ON resimler

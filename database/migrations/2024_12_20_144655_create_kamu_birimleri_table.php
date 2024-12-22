@@ -12,11 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('kamu_birimleri', function (Blueprint $table) {
             $table->id('kamu_birimleri_id');
             $table->unsignedBigInteger('kamular_id');
+            $table->unsignedBigInteger('birim_tipleri_id');
 
             $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
+            $table->foreign('birim_tipleri_id')->references('birim_tipleri_id')->on('birim_tipleri')->onDelete('restrict');
 
             $table->string('birim_ad', 155)->nullable();
             $table->string('birim_telefon', 20)->nullable();
@@ -26,9 +30,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::enableForeignKeyConstraints();
+
         Schema::create('kamu_birimleri_log', function (Blueprint $table) {
             $table->integer('kamu_birimleri_id');
             $table->integer('kamular_id');
+            $table->integer('birim_tipleri_id');
             $table->string('birim_ad', 155)->nullable();
             $table->string('birim_telefon', 20)->nullable();
             $table->string('birim_email', 155)->nullable();
@@ -47,6 +54,7 @@ return new class extends Migration
                 INSERT INTO kamu_birimleri_log (
                     kamu_birimleri_id,
                     kamular_id,
+                    birim_tipleri_id,
                     birim_ad,
                     birim_telefon,
                     birim_email,
@@ -60,6 +68,7 @@ return new class extends Migration
                 ) VALUES (
                     NEW.kamu_birimleri_id,
                     NEW.kamular_id,
+                    NEW.birim_tipleri_id,
                     NEW.birim_ad,
                     NEW.birim_telefon,
                     NEW.birim_email,
@@ -82,6 +91,7 @@ return new class extends Migration
                 INSERT INTO kamu_birimleri_log (
                     kamu_birimleri_id,
                     kamular_id,
+                    birim_tipleri_id,
                     birim_ad,
                     birim_telefon,
                     birim_email,
@@ -95,6 +105,7 @@ return new class extends Migration
                 ) VALUES (
                     NEW.kamu_birimleri_id,
                     NEW.kamular_id,
+                    NEW.birim_tipleri_id,
                     NEW.birim_ad,
                     NEW.birim_telefon,
                     NEW.birim_email,

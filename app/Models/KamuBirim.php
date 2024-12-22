@@ -13,6 +13,7 @@ class KamuBirim extends Model
 
     protected $fillabel = [
         'kamular_id',
+        'birim_tipleri_id',
         'birim_ad',
         'birim_telefon',
         'birim_email',
