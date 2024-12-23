@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use function Pest\Laravel\json;
+
 class KullaniciController extends Controller
 {
     /**
@@ -12,7 +14,7 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        //
+        return view('dashboard');
     }
 
     /**
@@ -20,7 +22,7 @@ class KullaniciController extends Controller
      */
     public function create()
     {
-        return view('giris');
+
     }
 
     /**
@@ -63,16 +65,20 @@ class KullaniciController extends Controller
         //
     }
 
-    public function login(Request $request)
+    public function giris() {
+        return view('giris');
+    }
+
+    public function giris_yap(Request $request)
     {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
             return redirect()->intended('dashboard');
         }
-        return view('home');
+        return response('kullanıcı adı veya şifre hatalı.');
     }
 
-    public function logout(Request $request)
+    public function cikis(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();

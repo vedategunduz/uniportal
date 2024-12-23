@@ -1,17 +1,20 @@
 <?php
 
-use App\Http\Controllers\KullaniciController;
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\KullaniciController;
+use App\Http\Middleware\GirisYapildiMiddleware;
 
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/giris', [KullaniciController::class, 'create']);
-Route::post('/giris', [KullaniciController::class, 'login'])->name('giris');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(GirisYapildiMiddleware::class);
 
-Route::get('/cikis', [KullaniciController::class, 'logout']);
+Route::prefix('giris')->group(function() {
+    Route::get('/', [KullaniciController::class, 'giris']);
+    Route::post('/', [KullaniciController::class, 'giris_yap'])->name('giris_yap');
+});
 
-Route::post('/EtkinlikTurEkle', [TestController::class, 'EtkinlikTurEkle'])->name('EtkinlikTurEkle');
-Route::post('/EtkinlikTurEkle', [TestController::class, 'EtkinlikTurEkle'])->name('EtkinlikTurEkle');
+Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis_yap');
