@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\KullaniciController;
+use App\Http\Controllers\DashboardController;
+
 use App\Http\Middleware\GirisYapildiMiddleware;
 
 Route::get('/', function () {
@@ -11,6 +12,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(GirisYapildiMiddleware::class);
+
+Route::get('/profile/{id?}', [KullaniciController::class, 'show']);
 
 Route::prefix('giris')->group(function() {
     Route::get('/', [KullaniciController::class, 'giris']);

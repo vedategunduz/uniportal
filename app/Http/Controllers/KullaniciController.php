@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kullanici;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function Pest\Laravel\json;
+use function PHPUnit\Framework\isEmpty;
 
 class KullaniciController extends Controller
 {
@@ -20,10 +21,7 @@ class KullaniciController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -36,9 +34,17 @@ class KullaniciController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id = null)
     {
-        //
+        if (blank($id)) {
+            $user = Auth::user();
+
+            return view('profile', compact('kullanici'));
+        }
+
+        $kullanici = Kullanici::where('kullanicilar_id', decrypt($id))->first();
+
+        return view('profile', compact('kullanici'));
     }
 
     /**
@@ -65,7 +71,8 @@ class KullaniciController extends Controller
         //
     }
 
-    public function giris() {
+    public function giris()
+    {
         return view('giris');
     }
 
