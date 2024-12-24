@@ -9,8 +9,8 @@ use Illuminate\View\Component;
 class Label extends Component
 {
     public $for;
-    public $class = "block mb-2 text-sm font-medium text-zinc-900";
     public $text;
+    public $class = "block mb-2 text-sm font-medium text-zinc-900";
     /**
      * Create a new component instance.
      */

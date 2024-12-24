@@ -22,6 +22,7 @@
     </footer>
 
     {{-- JS ve diğer betikler buraya --}}
+    @yield('scripts')
 </body>
 
 </html>

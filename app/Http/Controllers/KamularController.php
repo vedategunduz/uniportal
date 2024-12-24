@@ -10,11 +10,33 @@ class KamularController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kamular = Kamu::paginate(
-            $perPage = 15, $columns = ['*'], $pageName = 'kamular'
-        );
+        $kamular = Kamu::orderBy('baslik', 'asc')->paginate(16);
+
+        if ($request->ajax()) {
+            // İçeriği render edin
+            $html = '';
+            foreach ($kamular as $kamu) {
+                $html .= view('components.kamu',
+                    [
+                        'text' => $kamu->baslik,
+                        'href' => "/$kamu->kamular_id",
+                        'websiteUrl' => $kamu->website_url,
+                        'xUrl' => $kamu->x_url,
+                        'instagramUrl' => $kamu->instagram_url,
+                        'linkedinUrl' => $kamu->linkedin_url,
+                    ])->render();
+            }
+
+            // Paginator'ı render edin (Tailwind paginator'ınızı kullandığınız Blade dosyasını belirtin)
+            $pagination = $kamular->links('pagination::tailwind')->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $pagination,
+            ]);
+        }
 
         return view('kamular', compact('kamular'));
     }
