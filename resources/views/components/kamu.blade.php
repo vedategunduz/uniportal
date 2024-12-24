@@ -1,11 +1,11 @@
-<div class="shadow-md rounded p-2 grid grid-cols-3 border border-blue-100 shadow-blue-100 relative">
+<div class="shadow-md rounded p-2  py-3 grid grid-cols-3 border border-blue-100 shadow-blue-100 relative">
 
     <div class="absolute -right-0 shadow rounded-bl-full top-0 bg-blue-600 text-white text-xs px-2 pl-5 py-1">
         Üniversite
     </div>
 
-    <div class="col-span-1">
-        <img src="https://placeholdr.ai/723f2814-89e8-4534-a5e8-b3a2ac3230bd/128/128" alt="">
+    <div class="col-span-1 flex items-center justify-center">
+        <img src="{{ $logoUrl }}" class="size-24" alt="">
     </div>
 
     <div class="col-span-2 pt-5 px-4 flex flex-col justify-between">

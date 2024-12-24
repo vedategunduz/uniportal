@@ -180,6 +180,7 @@ class KamuSeeder extends Seeder
                 'iller_id' => $uni['il'],
                 'baslik' => $uni['baslik'],
                 'adres' => $faker->address,
+                'logo_url' => 'https://placehold.co/128x128',
                 'website_url' => $faker->url,
                 'x_url' => 'x.com/'.$faker->userName,
                 'instagram_url' => 'instagram.com/'.$faker->userName,

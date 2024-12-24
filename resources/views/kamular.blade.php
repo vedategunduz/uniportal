@@ -6,7 +6,7 @@
 
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="kamular">
         @foreach ($kamular as $kamu)
-            <x-kamu websiteUrl="{{ $kamu->website_url }}" xUrl="{{ $kamu->x_url }}" instagramUrl="{{ $kamu->instagram_url }}"
+            <x-kamu logoUrl="{{ $kamu->logo_url }}" websiteUrl="{{ $kamu->website_url }}" xUrl="{{ $kamu->x_url }}" instagramUrl="{{ $kamu->instagram_url }}"
                 linkedinUrl="{{ $kamu->linkedin_url }}" text="{{ $kamu->baslik }}" href="/{{ $kamu->kamular_id }}" />
         @endforeach
     </section>
@@ -51,7 +51,7 @@
                     kamuContainer.innerHTML = data.html;
                     pagination.innerHTML = data.pagination;
                     // URL'yi tarayıcıda güncelle (isteğe bağlı)
-                    history.pushState(url, '', url);
+                    // history.pushState(url, '', url);
                 })
                 .catch(error => {
                     console.error('Hata:', error);
@@ -60,9 +60,9 @@
                 });
         }
 
-        // // Tarayıcı ileri/geri butonları için destek
-        window.addEventListener('popstate', function() {
-            fetchKamu(window.location.href);
-        });
+        // // // Tarayıcı ileri/geri butonları için destek
+        // window.addEventListener('popstate', function() {
+        //     fetchKamu(window.location.href);
+        // });
     </script>
 @endsection

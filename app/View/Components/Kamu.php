@@ -10,15 +10,17 @@ class Kamu extends Component
 {
     public $text;
     public $href;
+    public $logoUrl;
     public $xUrl;
     public $websiteUrl;
     public $instagramUrl;
     public $linkedinUrl;
 
-    public function __construct($text, $href, $websiteUrl = "dwqdqw", $xUrl, $instagramUrl, $linkedinUrl)
+    public function __construct($text, $href, $logoUrl, $websiteUrl, $xUrl, $instagramUrl, $linkedinUrl)
     {
         $this->text = $text;
         $this->href = $href;
+        $this->logoUrl = $logoUrl;
         $this->xUrl = $xUrl;
         $this->websiteUrl = $websiteUrl;
         $this->instagramUrl = $instagramUrl;

@@ -12,7 +12,7 @@ class KamularController extends Controller
      */
     public function index(Request $request)
     {
-        $kamular = Kamu::orderBy('baslik', 'asc')->paginate(16);
+        $kamular = Kamu::orderBy('baslik', 'asc')->paginate(20);
 
         if ($request->ajax()) {
             // İçeriği render edin
@@ -22,6 +22,7 @@ class KamularController extends Controller
                     [
                         'text' => $kamu->baslik,
                         'href' => "/$kamu->kamular_id",
+                        'logoUrl' => $kamu->logo_url,
                         'websiteUrl' => $kamu->website_url,
                         'xUrl' => $kamu->x_url,
                         'instagramUrl' => $kamu->instagram_url,

@@ -19,8 +19,9 @@ return new class extends Migration
             // Foreign
             $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
 
-            $table->string('baslik', 255);
+            $table->string('baslik', 255)->nullable();
             $table->string('adres', 500);
+            $table->string('logo_url', 500);
             $table->string('website_url', 255);
             $table->string('x_url', 255);
             $table->string('instagram_url', 255);
@@ -35,8 +36,9 @@ return new class extends Migration
             $table->integer('kamular_id');
             $table->string('kamu_kodu', 20);
             $table->integer('iller_id')->nullable();
-            $table->string('baslik', 255);
+            $table->string('baslik', 255)->nullable();
             $table->string('adres', 500);
+            $table->string('logo_url', 500);
             $table->string('website_url', 255);
             $table->string('x_url', 255);
             $table->string('instagram_url', 255);
@@ -57,6 +59,7 @@ return new class extends Migration
                     iller_id,
                     baslik,
                     adres,
+                    logo_url,
                     website_url,
                     x_url,
                     instagram_url,
@@ -71,6 +74,7 @@ return new class extends Migration
                     NEW.iller_id,
                     NEW.baslik,
                     NEW.adres,
+                    NEW.logo_url,
                     NEW.website_url,
                     NEW.x_url,
                     NEW.instagram_url,
@@ -94,6 +98,7 @@ return new class extends Migration
                 iller_id,
                 baslik,
                 adres,
+                logo_url,
                 website_url,
                 x_url,
                 instagram_url,
@@ -108,6 +113,7 @@ return new class extends Migration
                 NEW.iller_id,
                 NEW.baslik,
                 NEW.adres,
+                NEW.logo_url,
                 NEW.website_url,
                 NEW.x_url,
                 NEW.instagram_url,

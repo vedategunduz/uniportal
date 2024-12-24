@@ -18,6 +18,7 @@ class Kamu extends Model
         'iller_id',
         'baslik',
         'adres',
+        'logo_url',
         'website_url',
         'x_url',
         'instagram_url',
