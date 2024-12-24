@@ -1,10 +1,10 @@
-<section class="container py-4">
+<section class="container">
     <nav class="lg:flex items-center justify-between">
-        <a href="/" class="uppercase text-2xl font-bold text-blue-600">{{ $logo }}</a>
-        <ul class="lg:flex lg:space-x-8">
+        <a href="/" class="text-2xl font-bold text-blue-600">{{ $logo }}</a>
+        <ul class="lg:flex">
             @foreach ($links as $link)
                 <li>
-                    <a href="#" class="text-zinc-700 flex flex-col items-center">
+                    <a href="{{ $link['path'] }}" class="{{ $class }}">
                         {!! $link['icon'] !!}
                         <span>
                             {{ $link['name'] }}
@@ -15,8 +15,8 @@
         </ul>
         <ul>
             <li>
-                <a href="/giris" class="block rounded-full border border-blue-400 text-blue-500 font-medium px-6 py-3 text-center">
-                    Giriş yap
+                <a href="/giris" class="block rounded-full border border-blue-400 text-blue-500 font-medium px-6 py-3 text-center hover:bg-blue-100 transition">
+                    Oturum aç
                 </a>
             </li>
         </ul>

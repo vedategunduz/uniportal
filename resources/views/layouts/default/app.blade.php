@@ -13,7 +13,7 @@
 <body>
     <x-nav />
 
-    <main>
+    <main class="container py-12">
         @yield('content')
     </main>
 

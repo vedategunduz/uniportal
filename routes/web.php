@@ -4,16 +4,24 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\KamularController;
 use App\Http\Middleware\GirisYapildiMiddleware;
 
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(GirisYapildiMiddleware::class);
+Route::get('/kamular', [KamularController::class, 'index']);
 
-Route::get('/profile/{id?}', [KullaniciController::class, 'show']);
+
+
+
+
+
+
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(GirisYapildiMiddleware::class);
 
 Route::prefix('giris')->group(function() {
     Route::get('/', [KullaniciController::class, 'giris']);
