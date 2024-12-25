@@ -6,17 +6,21 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Select extends Component
+class FormControl extends Component
 {
     public $id;
+    public $for;
+    public $type;
     public $name;
-    public $options;
+    public $text;
 
-    public function __construct($id, $name, $options)
+    public function __construct($for, $type, $id, $name, $text)
     {
         $this->id = $id;
+        $this->for = $for;
+        $this->type = $type;
         $this->name = $name;
-        $this->options = $options;
+        $this->text = $text;
     }
 
     /**
@@ -24,6 +28,6 @@ class Select extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.select');
+        return view('components.form-control');
     }
 }

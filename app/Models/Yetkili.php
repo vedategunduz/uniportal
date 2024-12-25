@@ -17,7 +17,7 @@ class Yetkili extends Model
         'islem_yapan_id',
     ];
 
-    public function yetkiliOlduguKamular()
+    public function kamuBilgileri()
     {
         return $this->belongsTo(Kamu::class, 'kamular_id', 'kamular_id');
     }

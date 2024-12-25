@@ -23,15 +23,15 @@ class EtkinlikController extends Controller
      */
     public function create()
     {
-        $etkinlik_turleri = EtkinlikTur::select('etkinlik_turleri_id', 'tur')->get();
+        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'tur')->get();
 
         // Yetkili olduğu kamuları alıyoruz
         $kamular = Yetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)
-            ->with('yetkiliOlduguKamular')
-            ->first();
+            ->with('kamuBilgileri')
+            ->get();
 
         // Verileri view'e gönderiyoruz
-        return view('etkinlik.create', compact(['etkinlik_turleri', 'kamular']));
+        return view('etkinlik.create', compact(['etkinlikTurleri', 'kamular']));
     }
 
     /**
