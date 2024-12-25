@@ -14,7 +14,7 @@ class Label extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct($for = null, $text)
+    public function __construct($for = "", $text = "")
     {
         $this->for = $for;
         $this->text = $text;

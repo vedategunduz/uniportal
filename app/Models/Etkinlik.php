@@ -15,7 +15,7 @@ class Etkinlik extends Model
     protected $primaryKey = 'etkinlikler_id';
 
     protected $fillable = [
-        'etkinlik_tur_id',
+        'etkinlik_turleri_id',
         'firmalar_id',
         'kamular_id',
         'etkinlik_basvuru_tarihi',

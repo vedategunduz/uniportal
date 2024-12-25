@@ -20,13 +20,13 @@ return new class extends Migration
             $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
 
             $table->string('baslik', 255)->nullable();
-            $table->string('adres', 500);
-            $table->string('logo_url', 500);
-            $table->string('website_url', 255);
-            $table->string('x_url', 255);
-            $table->string('instagram_url', 255);
-            $table->string('linkedin_url', 255);
-            $table->string('diger_url', 255);
+            $table->string('adres', 500)->nullable();
+            $table->string('logo_url', 500)->nullable();
+            $table->string('website_url', 255)->nullable();
+            $table->string('x_url', 255)->nullable();
+            $table->string('instagram_url', 255)->nullable();
+            $table->string('linkedin_url', 255)->nullable();
+            $table->string('diger_url', 255)->nullable();
             $table->timestamps();
         });
 
@@ -37,13 +37,13 @@ return new class extends Migration
             $table->string('kamu_kodu', 20);
             $table->integer('iller_id')->nullable();
             $table->string('baslik', 255)->nullable();
-            $table->string('adres', 500);
-            $table->string('logo_url', 500);
-            $table->string('website_url', 255);
-            $table->string('x_url', 255);
-            $table->string('instagram_url', 255);
-            $table->string('linkedin_url', 255);
-            $table->string('diger_url', 255);
+            $table->string('adres', 500)->nullable();
+            $table->string('logo_url', 500)->nullable();
+            $table->string('website_url', 255)->nullable();
+            $table->string('x_url', 255)->nullable();
+            $table->string('instagram_url', 255)->nullable();
+            $table->string('linkedin_url', 255)->nullable();
+            $table->string('diger_url', 255)->nullable();
             $table->char('islem', 1);
             $table->timestamps();
         });

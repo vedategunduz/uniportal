@@ -38,6 +38,14 @@ class MenuSeeder extends Seeder
                     'menu_sira' => 200,
                     'bagli_menuler_id' => 0,
                 ],
+                [
+                    'menu_adi' => 'Etkinlik ekle',
+                    'menu_link' => '/etkinlik/ekle',
+                    'menu_icon' => '',
+                    'menu_aciklama' => 'bilgisayarla ilgili menü.',
+                    'menu_sira' => 30,
+                    'bagli_menuler_id' => 0,
+                ],
             ]
         );
     }

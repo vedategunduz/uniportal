@@ -12,12 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
-
-        // Kullanıcılar Tablosu
         Schema::create('kullanicilar', function (Blueprint $table) {
             $table->id('kullanicilar_id');
-            $table->unsignedBigInteger('roller_id')->index();
+            $table->unsignedBigInteger('roller_id');
             $table->string('ad', 155);
             $table->string('email', 255)->unique();
             $table->string('password');
@@ -26,8 +23,6 @@ return new class extends Migration
 
             $table->foreign('roller_id')->references('roller_id')->on('roller')->onDelete('restrict');
         });
-
-        Schema::enableForeignKeyConstraints();
 
         Schema::create('kullanicilar_log', function (Blueprint $table) {
             $table->integer('kullanicilar_id');

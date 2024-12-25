@@ -12,8 +12,16 @@ class EtkinlikTurSeeder extends Seeder
      */
     public function run(): void
     {
-        EtkinlikTur::create([
-            'tur' => 'Haberleşme',
+        EtkinlikTur::insert([
+            [
+                'tur' => 'ETKİNLİK_TÜRÜ_1',
+            ],
+            [
+                'tur' => 'ETKİNLİK_TÜRÜ_2',
+            ],
+            [
+                'tur' => 'ETKİNLİK_TÜRÜ_3',
+            ],
         ]);
     }
 }

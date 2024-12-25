@@ -10,10 +10,11 @@ class DataBaseSeeder extends Seeder
     {
         $this->call([
             IlSeeder::class,
-            RolSeeder::class,
             KamuSeeder::class,
-            MenuSeeder::class,
+            RolSeeder::class,
             KullaniciSeeder::class,
+            YetkiliSeeder::class,
+            MenuSeeder::class,
             MenuRolIliskiSeeder::class,
             HizmetTurSeeder::class,
             FirmaSeeder::class,

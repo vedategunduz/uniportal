@@ -25,6 +25,4 @@ class Yorum extends Model
         'puan',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }
