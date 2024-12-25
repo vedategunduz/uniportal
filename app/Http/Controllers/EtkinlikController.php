@@ -23,18 +23,15 @@ class EtkinlikController extends Controller
      */
     public function create()
     {
-        $etkinlik_turleri = EtkinlikTur::all();
-
-
-        // $kamular = Yetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)
-        //     ->with('YetkiliOlduguKamular')
-        //     ->get();
+        $etkinlik_turleri = EtkinlikTur::select('etkinlik_turleri_id', 'tur')->get();
 
         // Yetkili olduğu kamuları alıyoruz
-        $kamular = Yetkili::Deneme();
+        $kamular = Yetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)
+            ->with('yetkiliOlduguKamular')
+            ->first();
 
         // Verileri view'e gönderiyoruz
-        return view('auth.etkinlik-ekle', compact(['etkinlik_turleri', 'kamular']));
+        return view('etkinlik.create', compact(['etkinlik_turleri', 'kamular']));
     }
 
     /**
@@ -52,7 +49,7 @@ class EtkinlikController extends Controller
             'aciklama' => $request->aciklama,
         ]);
 
-        return redirect()->route('etkinlik_ekleme_sayfasi')->with('success', 'Etkinlik başarıyla eklendi.');
+        return redirect()->route('etkinlik.ekle.create')->with('success', 'Etkinlik başarıyla eklendi.');
     }
 
     /**

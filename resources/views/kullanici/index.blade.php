@@ -1,4 +1,4 @@
-@extends('layouts.user.app')
+@extends('layouts.auth')
 
 @section('title', 'User dashboard')
 
@@ -10,8 +10,7 @@
             @foreach ($menuler as $menu)
                 <li><a href="{{ $menu['menu']->menu_link }}">{{ $menu['menu']->menu_adi }}</a></li>
             @endforeach
-            <li><a href="/profile/{{ encrypt(Auth::user()->kullanicilar_id) }}" class="">Profil</a></li>
-            <li><a href="cikis" class="">Çıkış</a></li>
+            <li><a href="{{ route('kullanici.cikis') }}" class="">Çıkış</a></li>
         </ul>
     </nav>
 @endsection

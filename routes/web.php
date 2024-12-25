@@ -2,26 +2,34 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\KullaniciController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\KamularController;
-use App\Http\Middleware\GirisYapildiMiddleware;
 
-Route::get('/', function () {
-    return view('home');
+Route::prefix('/')->group(function () {
+    Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
-Route::get('/kamular', [KamularController::class, 'index']);
-
-Route::get('/etkinlik/ekle', [EtkinlikController::class, 'create'])->name('etkinlik_ekleme_sayfasi');
-Route::post('/etkinlik/ekle', [EtkinlikController::class, 'store'])->name('etkinlik_ekle');
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(GirisYapildiMiddleware::class);
-
-Route::prefix('giris')->group(function() {
-    Route::get('/', [KullaniciController::class, 'giris']);
-    Route::post('/', [KullaniciController::class, 'giris_yap'])->name('giris_yap');
+Route::prefix('kamular')->name('kamular.')->group(function () {
+    Route::get('/', [KamularController::class, 'index'])->name('index');
 });
 
-Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis_yap');
+Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
+
+    Route::prefix('ekle')->name('ekle.')->group(function () {
+        Route::get('/', [EtkinlikController::class, 'create'])->name('create');
+        Route::post('/', [EtkinlikController::class, 'store'])->name('store');
+    });
+});
+
+Route::prefix('kullanici')->name('kullanici.')->group(function () {
+    Route::get('/', [KullaniciController::class, 'index'])->name('index');
+
+    Route::prefix('giris')->name('giris.')->group(function () {
+        Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
+        Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
+    });
+
+    Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis');
+});

@@ -1,17 +1,31 @@
-@extends('layouts.user.app')
+@extends('layouts.app')
 
 @section('title', 'User dashboard')
 
 @section('aside')
     <nav class="">
         <ul>
-            <li><a href="{{ route('cikis_yap') }}" class="">Çıkış</a></li>
+            <li><a href="{{ route('kullanici.cikis') }}" class="">Çıkış</a></li>
         </ul>
     </nav>
 @endsection
 
 @section('content')
-    <form action="{{ route('etkinlik_ekle') }}" method="POST" class="space-y-3 w-96 mx-auto">
+
+    {{ $kamular }}
+
+    <br>
+    <br>
+
+    <div class="bg-blue-100">
+        {{ $kamular->kamular_id }}
+    </div>
+
+    <div class="bg-blue-100">
+        {{ $kamular->YetkiliOlduguKamular->baslik }}
+    </div>
+
+    {{-- <form action="{{ route('etkinlik_ekle') }}" method="POST" class="space-y-3 w-96 mx-auto">
         <h1>Etkinlik</h1>
         @csrf
         <div class="">
@@ -57,5 +71,5 @@
         </div>
 
         <x-button type="submit" text="Ekle" />
-    </form>
+    </form> --}}
 @endsection

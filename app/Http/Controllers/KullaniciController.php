@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kullanici;
+use App\Models\MenuRolIliski;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\isEmpty;
 
 class KullaniciController extends Controller
 {
@@ -15,7 +14,8 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        $menuler = MenuRolIliski::with('menu')->where('roller_id', Auth::user()->roller_id)->get();
+        return view('kullanici.index', compact('menuler'));
     }
 
     /**
@@ -36,15 +36,7 @@ class KullaniciController extends Controller
      */
     public function show(string $id = null)
     {
-        if (blank($id)) {
-            $user = Auth::user();
 
-            return view('profile', compact('kullanici'));
-        }
-
-        $kullanici = Kullanici::where('kullanicilar_id', decrypt($id))->first();
-
-        return view('profile', compact('kullanici'));
     }
 
     /**
@@ -71,16 +63,17 @@ class KullaniciController extends Controller
         //
     }
 
-    public function giris()
+    public function girisForm()
     {
-        return view('giris');
+        return view('kullanici.giris');
     }
 
-    public function giris_yap(Request $request)
+    public function girisYap(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+
+            return $this->index();
         }
         return response('kullanıcı adı veya şifre hatalı.');
     }
@@ -91,6 +84,6 @@ class KullaniciController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return view('anasayfa.index');
     }
 }

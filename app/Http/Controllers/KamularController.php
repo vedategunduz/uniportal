@@ -39,7 +39,7 @@ class KamularController extends Controller
             ]);
         }
 
-        return view('kamular', compact('kamular'));
+        return view('kamular.index', compact('kamular'));
     }
 
     /**

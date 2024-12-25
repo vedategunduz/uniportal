@@ -1,6 +1,6 @@
 <section class="container">
     <nav class="lg:flex items-center justify-between">
-        <a href="/" class="text-2xl font-bold text-blue-600">{{ $logo }}</a>
+        <a href="{{ route('index') }}" class="text-2xl font-bold text-blue-600">{{ $logo }}</a>
         <ul class="lg:flex">
             @foreach ($links as $link)
                 <li>
@@ -15,7 +15,7 @@
         </ul>
         <ul>
             <li>
-                <a href="/giris" class="block rounded-full border border-blue-400 text-blue-500 font-medium px-6 py-3 text-center hover:bg-blue-100 transition">
+                <a href="{{ route('kullanici.giris.form') }}" class="block rounded-full border border-blue-400 text-blue-500 font-medium px-6 py-3 text-center hover:bg-blue-100 transition">
                     Oturum aç
                 </a>
             </li>

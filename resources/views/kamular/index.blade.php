@@ -1,4 +1,4 @@
-@extends('layouts.default.app')
+@extends('layouts.app')
 
 @section('title', 'uniportal | Kamular')
 

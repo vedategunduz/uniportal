@@ -1,9 +1,9 @@
-@extends('layouts.default.app')
+@extends('layouts.app')
 
 @section('title', 'Giriş yap')
 
 @section('content')
-    <form action="{{ route('giris_yap') }}" method="POST" class="max-w-sm mx-auto">
+    <form action="{{ route('kullanici.giris.yap') }}" method="POST" class="max-w-sm mx-auto">
         @csrf
         <div class="mb-3">
             <x-label for="email" text="Email:" />

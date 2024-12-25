@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Yetkili extends Model
 {
@@ -18,13 +17,8 @@ class Yetkili extends Model
         'islem_yapan_id',
     ];
 
-    public function YetkiliOlduguKamular()
+    public function yetkiliOlduguKamular()
     {
         return $this->belongsTo(Kamu::class, 'kamular_id', 'kamular_id');
-    }
-
-    public static function Deneme()
-    {
-        return DB::table('yetkililer')->join('kamular', 'kamular.kamular_id', '=', 'yetkililer.kamular_id')->select('kamular.*')->get();
     }
 }
