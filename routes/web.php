@@ -12,6 +12,8 @@ Route::prefix('/')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
+Route::get('/patates', [EditorController::class, 'ekranagetir']);
+
 Route::prefix('kamular')->name('kamular.')->group(function () {
     Route::get('/', [KamularController::class, 'index'])->name('index');
 });
@@ -39,7 +41,7 @@ Route::prefix('editor')->name('editor.')->group(function () {
     Route::post('store', [EditorController::class, 'store'])->name('store');
 
     Route::prefix('file')->name('file.')->group(function () {
-        Route::post('upload', [EditorController::class, 'fileUpload']);
+        Route::post('upload', [EditorController::class, 'fileUpload'])->name('yukle');
     });
 
     Route::prefix('image')->name('image.')->group(function () {

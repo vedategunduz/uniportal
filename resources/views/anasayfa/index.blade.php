@@ -4,4 +4,9 @@
 
 @section('content')
     <h1>Home blade</h1>
+
+    @foreach ($editorVerileri as $veri)
+    {!! $veri->icerik !!}
+
+    @endforeach
 @endsection

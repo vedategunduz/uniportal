@@ -2,31 +2,107 @@ import EditorJS from '@editorjs/editorjs'
 import Header from '@editorjs/header';
 import ImageTool from '@editorjs/image';
 import EditorjsList from '@editorjs/list';
-import Warning from '@editorjs/warning';
 import ColorPicker from 'editorjs-color-picker';
 import Delimiter from '@editorjs/delimiter';
 import AttachesTool from '@editorjs/attaches';
 import Table from '@editorjs/table'
-import CodeTool from '@editorjs/code';
 import Marker from '@editorjs/marker';
 import InlineCode from '@editorjs/inline-code';
 import Underline from '@editorjs/underline';
 import TextSpolier from 'editorjs-inline-spoiler-tool';
 import ChangeCase from 'editorjs-change-case';
+import Strikethrough from '@sotaproject/strikethrough';
+import IndentTune from 'editorjs-indent-tune'
+import DragDrop from "editorjs-drag-drop";
+import Paragraph from '@editorjs/paragraph';
+import AlignmentTune from 'editor-js-alignment-tune';
+// import CodeTool from '@editorjs/code';
 // import Quote from '@editorjs/quote';
 // import LinkTool from '@editorjs/link';
+
 
 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const editor = new EditorJS({
     holder: 'editorjs',
 
+    onReady: () => {
+        new DragDrop(editor);
+    },
+
+    tunes: ['indentTune'],
+
+    i18n: {
+        messages: {
+            ui: {
+                blockTunes: {
+                    toggler: {
+                        "Click to tune": "Ayarlamak için tıklayın",
+                        'or drag to move': "veya taşımak için sürükleyin",
+                    }
+                },
+                inlineToolbar: {
+                    marker: {
+                        "Marker": "İşaretci",
+                    }
+                },
+                toolbar: {
+                    toolbox: {
+                        "Add": "Ekle",
+                    }
+                }
+            },
+            toolNames: {
+                "Text": "Metin",
+                "Heading": "Başlık",
+                "Image": "Resim",
+                "Attachment": "Dosya",
+                "Unordered List": "Sırasız Liste",
+                "Ordered List": "Sıralı Liste",
+                "Delimiter": "Sınır",
+                "Table": "Tablo",
+                "Bold": "Kalın",
+                "Color": "Renk",
+                "Marker": "İşaretci",
+                "Underline": "Altı Çizili",
+                "Strikethrough": "Üstü Çizili",
+                "InlineCode": "Kod",
+                "ChangeCase": "Büyük/Küçük Harf değiştir",
+                "Checklist": "Kontrol Listesi",
+            },
+            blockTunes: {
+                delete: {
+                    "Delete": "Kaldır",
+                },
+                "moveUp": {
+                    "Move up": "Yukarı taşı"
+                },
+                "moveDown": {
+                    "Move down": "Aşağı taşı"
+                }
+            }
+        }
+    },
+
     tools: {
+        paragraph: {
+            class: Paragraph,
+            config: {
+                placeholder: 'Metin...',
+            },
+            tunes: ['alignmentTune']
+        },
+        alignmentTune: {
+            class: AlignmentTune,
+            config: {
+                default: 'left'
+            }
+        },
         header: {
             class: Header,
             config: {
                 placeholder: 'Başlık',
-                levels: [2, 3, 4],
+                levels: [2, 3, 4, 5, 6],
             }
         },
         image: {
@@ -41,27 +117,6 @@ const editor = new EditorJS({
                 },
             }
         },
-        list: {
-            class: EditorjsList,
-            inlineToolbar: true,
-        },
-        ColorPicker: {
-            class: ColorPicker,
-        },
-        delimiter: Delimiter,
-        code: CodeTool,
-        table: Table,
-        underline: Underline,
-        TextSpolier: TextSpolier,
-        warning: {
-            class: Warning,
-            inlineToolbar: true,
-            shortcut: 'CMD+SHIFT+W',
-            config: {
-                titlePlaceholder: 'Başlık',
-                messagePlaceholder: 'Mesaj',
-            },
-        },
         attaches: {
             class: AttachesTool,
             config: {
@@ -72,6 +127,19 @@ const editor = new EditorJS({
                 buttonText: 'Dosya seç',
             }
         },
+        list: {
+            class: EditorjsList,
+            inlineToolbar: true,
+        },
+        ColorPicker: {
+            class: ColorPicker,
+        },
+        delimiter: Delimiter,
+        table: Table,
+        underline: Underline,
+        indentTune: IndentTune,
+        strikethrough: Strikethrough,
+        TextSpolier: TextSpolier,
         marker: {
             class: Marker,
         },
@@ -80,11 +148,7 @@ const editor = new EditorJS({
         },
         changeCase: {
             class: ChangeCase,
-            config: {
-                showLocaleOption: true, // enable locale case options
-                locale: ['tr', 'TR', 'tr-TR']
-            }
-        }
+        },
     },
 });
 

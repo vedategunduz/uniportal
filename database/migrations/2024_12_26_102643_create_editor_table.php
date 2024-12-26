@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('editor', function (Blueprint $table) {
             $table->id('editor_id');
-            $table->json('icerik');
+            $table->longText('icerik');
             $table->timestamps();
         });
     }

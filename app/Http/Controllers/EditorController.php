@@ -10,23 +10,48 @@ class EditorController extends Controller
 {
     public function store(Request $request)
     {
-        $jsonData = $request->input('icerik');
-        // Editor.js'den gelen veriyi (genellikle JS tarafında JSON.stringify() ile göndersiniz)
-        // $jsonData bir array veya obje olarak gelecek.
-
-        // Casting sayesinde otomatik JSON'a çevrilecek
-        $editorEntry = Editor::create([
-            'icerik' => $jsonData  // <-- json_encode yok
+        Editor::create([
+            'icerik' => $request->input('icerik'),
         ]);
 
-        return response()->json([
-            'success' => true,
-            'editor_id' => $editorEntry->editor_id
-        ]);
+        return redirect()->route('index')->with('success', 'Kayıt başarıyla oluşturuldu!');
+    }
+
+    public function ekranagetir()
+    {
+        $editorVerileri = Editor::all();
+
+        return view('anasayfa.index', compact(['editorVerileri']));
     }
 
     public function fileUpload(Request $request)
     {
+
+        // Dosya doğrulama (uzantı, boyut vb.)
+        // $request->validate([
+        //     'file' => 'required|mimes:pdf,doc,docx|max:5120',
+        //     // 5MB limit örneği
+        // ]);
+
+        // if ($request->hasFile('file')) {
+        //     $file = $request->file('file');
+
+        //     // Benzersiz bir dosya adı oluşturun
+        //     $filename = time() . '-' . $file->getClientOriginalName();
+
+        //     // public/uploads klasörüne kaydetme
+        //     $filePath = $file->storeAs('public/file', $filename);
+
+        //     // Kullanıcıya göstereceğimiz URL (public/storage/uploads/... şeklinde)
+        //     $url = asset('storage/file/' . $filename);
+
+        //     return response()->json(['url' => $url]);
+        // }
+
+        // return response()->json(['url' => ''], 400);
+
+
+
         $uploadedFile = $request->file('file');
 
         if (!$uploadedFile) {
@@ -47,13 +72,7 @@ class EditorController extends Controller
         // URL oluştur
         $url = Storage::url($path);
 
-        return response()->json([
-            'success' => 1,
-            'file' => [
-                'url' => $url,
-                'name' => $filename
-            ]
-        ]);
+        return response()->json(['url' => $url]);
     }
 
     public function imageUpload(Request $request)
