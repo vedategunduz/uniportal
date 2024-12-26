@@ -26,32 +26,6 @@ class EditorController extends Controller
 
     public function fileUpload(Request $request)
     {
-
-        // Dosya doğrulama (uzantı, boyut vb.)
-        // $request->validate([
-        //     'file' => 'required|mimes:pdf,doc,docx|max:5120',
-        //     // 5MB limit örneği
-        // ]);
-
-        // if ($request->hasFile('file')) {
-        //     $file = $request->file('file');
-
-        //     // Benzersiz bir dosya adı oluşturun
-        //     $filename = time() . '-' . $file->getClientOriginalName();
-
-        //     // public/uploads klasörüne kaydetme
-        //     $filePath = $file->storeAs('public/file', $filename);
-
-        //     // Kullanıcıya göstereceğimiz URL (public/storage/uploads/... şeklinde)
-        //     $url = asset('storage/file/' . $filename);
-
-        //     return response()->json(['url' => $url]);
-        // }
-
-        // return response()->json(['url' => ''], 400);
-
-
-
         $uploadedFile = $request->file('file');
 
         if (!$uploadedFile) {
