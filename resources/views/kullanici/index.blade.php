@@ -17,9 +17,11 @@
 
     <div id="editorjs" class="border"></div>
 
+    <x-button type="submit" text="Kaydet" id="saveEditor" />
+
 @endsection
 
 
 @section('scripts')
-    @vite(['resources/js/editor.js']);
+    @vite(['resources/js/editor.js'])
 @endsection

@@ -35,5 +35,15 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
     Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis');
 });
 
-Route::post('editor/image/upload', [EditorController::class, 'upload']);
-Route::post('editor/image/fetch', [EditorController::class, 'fetch']);
+Route::prefix('editor')->name('editor.')->group(function () {
+    Route::post('store', [EditorController::class, 'store'])->name('store');
+
+    Route::prefix('file')->name('file.')->group(function () {
+        Route::post('upload', [EditorController::class, 'fileUpload']);
+    });
+
+    Route::prefix('image')->name('image.')->group(function () {
+        Route::post('upload', [EditorController::class, 'imageUpload']);
+        Route::post('fetch', [EditorController::class, 'imageFetch']);
+    });
+});
