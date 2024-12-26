@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AnasayfaController;
+use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\KamularController;
@@ -33,3 +34,6 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
     Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis');
 });
+
+Route::post('editor/image/upload', [EditorController::class, 'upload']);
+Route::post('editor/image/fetch', [EditorController::class, 'fetch']);

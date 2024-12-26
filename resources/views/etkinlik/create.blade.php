@@ -15,27 +15,6 @@
 @endsection
 
 @section('content')
-
-    <!-- Include stylesheet -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.snow.css" rel="stylesheet" />
-
-    <!-- Create the editor container -->
-    <div id="editor">
-        <p>Hello World!</p>
-        <p>Some initial <strong>bold</strong> text</p>
-        <p><br /></p>
-    </div>
-
-    <!-- Include the Quill library -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-beta.0/dist/quill.js"></script>
-
-    <!-- Initialize Quill editor -->
-    <script>
-        const quill = new Quill('#editor', {
-            theme: 'snow'
-        });
-    </script>
-    
     <form action="{{ route('etkinlik.ekle.store') }}" method="POST" class="max-w-sm mx-auto">
         <h1 class="text-4xl font-medium mb-6">Etkinlik</h1>
 

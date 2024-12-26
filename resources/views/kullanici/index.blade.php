@@ -2,8 +2,6 @@
 
 @section('title', 'User dashboard')
 
-@section('content')
-
 @section('aside')
     <nav class="">
         <ul>
@@ -15,6 +13,13 @@
     </nav>
 @endsection
 
-{{ Auth::user() }}
+@section('content')
 
+    <div id="editorjs" class="border"></div>
+
+@endsection
+
+
+@section('scripts')
+    @vite(['resources/js/editor.js']);
 @endsection

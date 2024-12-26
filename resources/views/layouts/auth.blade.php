@@ -9,6 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     @yield('links')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
 <body>
