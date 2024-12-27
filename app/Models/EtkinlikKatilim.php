@@ -17,13 +17,10 @@ class EtkinlikKatilim extends Model
     protected $fillable = [
         'etkinlikler_id',
         'kullanicilar_id',
-        'firmalar_id',
-        'kamular_id',
-        'durum',
+        'isletmeler_id',
+        'etkinlikKatilimDurumu',
         'islem_yapan_id',
     ];
 
     // Durum ENUM => ['beklemede', 'onaylandi', 'iptal']
-
-    public $timestamps = true;
 }

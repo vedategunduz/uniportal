@@ -13,11 +13,8 @@ class HizmetIlDetaylari extends Model
     protected $primaryKey = 'hizmet_il_detaylari_id';
 
     protected $fillable = [
-        'firma_hizmetleri_id',
-        'kamu_hizmetleri_id',
+        'hizmetler_id',
         'iller_id',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }

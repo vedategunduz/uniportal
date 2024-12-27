@@ -21,8 +21,6 @@ class MenuRolIliski extends Model
         'islem_yapan_id',
     ];
 
-    public $timestamps = true;
-
     public function rol(): BelongsTo {
         return $this->belongsTo(Rol::class, 'roller_id', 'roller_id');
     }

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('baslik', 100);
             $table->integer('derinlik');
             $table->integer('bagli_hizmet_turleri_id')->nullable();
-            $table->char('islem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
@@ -39,7 +39,7 @@ return new class extends Migration
                     baslik,
                     derinlik,
                     bagli_hizmet_turleri_id,
-                    islem,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
                     created_at,
@@ -68,7 +68,7 @@ return new class extends Migration
                     baslik,
                     derinlik,
                     bagli_hizmet_turleri_id,
-                    islem,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
                     created_at,

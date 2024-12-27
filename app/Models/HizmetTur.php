@@ -19,6 +19,4 @@ class HizmetTur extends Model
         'bagli_hizmet_turleri_id',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }

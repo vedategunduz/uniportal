@@ -14,14 +14,14 @@ return new class extends Migration
     {
         Schema::create('roller', function (Blueprint $table) {
             $table->id('roller_id');
-            $table->string('tur');
+            $table->string('baslik');
             $table->timestamps();
         });
 
         Schema::create('roller_log', function (Blueprint $table) {
             $table->integer('roller_id');
-            $table->string('tur');
-            $table->char('islem', 1);
+            $table->string('baslik');
+            $table->char('yapılanIslem', 1);
             $table->timestamps();
         });
 
@@ -32,7 +32,7 @@ return new class extends Migration
             BEGIN
                 INSERT INTO roller_log (
                     roller_id,
-                    tur,
+                    baslik,
                     islem_yapan_id,
                     aktiflik,
                     islem,
@@ -41,7 +41,7 @@ return new class extends Migration
                 )
                 VALUES (
                     NEW.roller_id,
-                    NEW.tur,
+                    NEW.baslik,
                     NEW.islem_yapan_id,
                     NEW.aktiflik,
                     'E',
@@ -57,7 +57,7 @@ return new class extends Migration
             BEGIN
                 INSERT INTO roller_log (
                     roller_id,
-                    tur,
+                    baslik,
                     islem_yapan_id,
                     aktiflik,
                     islem,
@@ -66,7 +66,7 @@ return new class extends Migration
                 )
                 VALUES (
                     NEW.roller_id,
-                    NEW.tur,
+                    NEW.baslik,
                     NEW.islem_yapan_id,
                     NEW.aktiflik,
                     'G',

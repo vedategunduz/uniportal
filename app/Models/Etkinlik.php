@@ -16,15 +16,14 @@ class Etkinlik extends Model
 
     protected $fillable = [
         'etkinlik_turleri_id',
-        'firmalar_id',
-        'kamular_id',
-        'etkinlik_basvuru_tarihi',
-        'etkinlik_basvuru_bitis_tarihi',
-        'etkinlik_baslama_tarihi',
-        'etkinlik_bitis_tarihi',
+        'isletmeler_id',
+        'etkinlikBasvuruTarihi',
+        'etkinlikBasvuruBitisTarihi',
+        'etkinlikBaslamaTarihi',
+        'etkinlikBitisTarihi',
+        'kontenjan',
+        'yorumDurumu',
         'aciklama',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }

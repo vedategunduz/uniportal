@@ -11,9 +11,7 @@ class EtkinlikTur extends Model
     protected $primaryKey = 'etkinlik_turleri_id';
 
     protected $fillable = [
-        'tur',
+        'baslik',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }

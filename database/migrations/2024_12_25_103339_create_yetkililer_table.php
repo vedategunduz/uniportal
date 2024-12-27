@@ -14,41 +14,37 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('yetkililer', function (Blueprint $table) {
-            $table->id('yetkililer_id');
+        Schema::create('isletme_yetkilileri', function (Blueprint $table) {
+            $table->id('isletme_yetkilileri_id');
             $table->unsignedBigInteger('kullanicilar_id');
-            $table->unsignedBigInteger('kamular_id')->nullable();
-            $table->unsignedBigInteger('firmalar_id')->nullable();
+            $table->unsignedBigInteger('isletmeler_id')->nullable();
             $table->timestamps();
 
             // Foreign
             $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');
-            $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
-            $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
+            $table->foreign('isletmeler_id')->references('isletmeler_id')->on('isletmeler')->onDelete('restrict');
         });
 
         Schema::enableForeignKeyConstraints();
 
-        Schema::create('yetkililer_log', function (Blueprint $table) {
-            $table->integer('yetkililer_id');
+        Schema::create('isletme_yetkilileri_log', function (Blueprint $table) {
+            $table->integer('isletme_yetkilileri_id');
             $table->integer('kullanicilar_id');
-            $table->integer('kamular_id')->nullable();
-            $table->integer('firmalar_id')->nullable();
+            $table->integer('isletmeler_id')->nullable();
             $table->char('islem', 1);
             $table->timestamps();
         });
 
         // AFTER INSERT trigger
         DB::unprepared("
-            CREATE TRIGGER yetkililer_insert
-            AFTER INSERT ON yetkililer
+            CREATE TRIGGER isletme_yetkilileri_insert
+            AFTER INSERT ON isletme_yetkilileri
             FOR EACH ROW
             BEGIN
-                INSERT INTO yetkililer_log (
-                    yetkililer_id,
+                INSERT INTO isletme_yetkilileri_log (
+                    isletme_yetkilileri_id,
                     kullanicilar_id,
-                    kamular_id,
-                    firmalar_id,
+                    isletmeler_id,
                     islem_yapan_id,
                     aktiflik,
                     islem,
@@ -56,10 +52,9 @@ return new class extends Migration
                     updated_at
                 )
                 VALUES (
-                    NEW.yetkililer_id,
+                    NEW.isletme_yetkilileri_id,
                     NEW.kullanicilar_id,
-                    NEW.kamular_id,
-                    NEW.firmalar_id,
+                    NEW.isletmeler_id,
                     NEW.islem_yapan_id,
                     NEW.aktiflik,
                     'E',
@@ -72,15 +67,14 @@ return new class extends Migration
 
         // AFTER UPDATE trigger
         DB::unprepared("
-            CREATE TRIGGER yetkililer_update
-            AFTER UPDATE ON yetkililer
+            CREATE TRIGGER isletme_yetkilileri_update
+            AFTER UPDATE ON isletme_yetkilileri
             FOR EACH ROW
             BEGIN
-                INSERT INTO yetkililer_log (
-                    yetkililer_id,
+                INSERT INTO isletme_yetkilileri_log (
+                    isletme_yetkilileri_id,
                     kullanicilar_id,
-                    kamular_id,
-                    firmalar_id,
+                    isletmeler_id,
                     islem_yapan_id,
                     aktiflik,
                     islem,
@@ -88,10 +82,9 @@ return new class extends Migration
                     updated_at
                 )
                 VALUES (
-                    NEW.yetkililer_id,
+                    NEW.isletme_yetkilileri_id,
                     NEW.kullanicilar_id,
-                    NEW.kamular_id,
-                    NEW.firmalar_id,
+                    NEW.isletmeler_id,
                     NEW.islem_yapan_id,
                     NEW.aktiflik,
                     'G',
@@ -107,9 +100,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('yetkililer');
-        Schema::dropIfExists('yetkililer_log');
-        DB::statement("DROP TRIGGER IF EXISTS yetkililer_insert");
-        DB::statement("DROP TRIGGER IF EXISTS yetkililer_update");
+        Schema::dropIfExists('isletme_yetkilileri');
+        Schema::dropIfExists('isletme_yetkilileri_log');
+        DB::statement("DROP TRIGGER IF EXISTS isletme_yetkilileri_insert");
+        DB::statement("DROP TRIGGER IF EXISTS isletme_yetkilileri_update");
     }
 };

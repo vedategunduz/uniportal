@@ -4,21 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Yetkili extends Model
+class IsletmeYetkilileri extends Model
 {
-    protected $table = 'yetkililer';
+    protected $table = 'isletme_yetkilileri';
 
-    protected $primaryKey = 'yetkililer_id';
+    protected $primaryKey = 'isletme_yetkilileri_id';
 
     protected $fillable = [
         'kullanicilar_id',
-        'kamular_id',
-        'firmalar_id',
+        'isletmeler_id',
         'islem_yapan_id',
     ];
 
-    public function kamuBilgileri()
+    public function isletmeBilgileri()
     {
-        return $this->belongsTo(Kamu::class, 'kamular_id', 'kamular_id');
+        return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 }

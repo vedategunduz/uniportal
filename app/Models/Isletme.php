@@ -5,28 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kamu extends Model
+class Isletme extends Model
 {
     use HasFactory;
 
-    protected $table = 'kamular';
+    protected $table = 'isletmeler';
 
-    protected $primaryKey = 'kamular_id';
+    protected $primaryKey = 'isletmeler_id';
 
     protected $fillable = [
         'referans_kodu',
         'iller_id',
         'baslik',
         'adres',
-        'logo_url',
-        'website_url',
-        'x_url',
-        'instagram_url',
-        'linkedin_url',
-        'diger_url',
+        'logoUrl',
+        'websiteUrl',
+        'xUrl',
+        'instagramUrl',
+        'linkedinUrl',
+        'digerUrl',
         'aktiflik',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }

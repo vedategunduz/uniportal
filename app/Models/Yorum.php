@@ -15,12 +15,10 @@ class Yorum extends Model
     protected $primaryKey = 'yorumlar_id';
 
     protected $fillable = [
-        'firmalar_id',
         'kullanicilar_id',
-        'kamular_id',
+        'isletmeler_id',
         'etkinlikler_id',
-        'firma_hizmetleri_id',
-        'kamu_hizmetleri_id',
+        'hizmetler_id',
         'aciklama',
         'puan',
         'islem_yapan_id',

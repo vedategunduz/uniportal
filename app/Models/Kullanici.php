@@ -18,7 +18,11 @@ class Kullanici extends Authenticatable
     protected $fillable = [
         'roller_id',
         'ad',
+        'soyad',
         'email',
+        'telefon',
+        'adres',
+        'profilFotoUrl',
         'password',
         'islem_yapan_id',
     ];
@@ -27,8 +31,6 @@ class Kullanici extends Authenticatable
         'password',
         'remember_token',
     ];
-
-    public $timestamps = true;
 
     public function setPasswordAttribute($value)
     {

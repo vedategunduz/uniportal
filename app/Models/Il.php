@@ -18,6 +18,4 @@ class Il extends Model
         'baslik',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }

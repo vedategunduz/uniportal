@@ -5,20 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class KamuHizmet extends Model
+class Hizmetler extends Model
 {
-    /** @use HasFactory<\Database\Factories\KamuHizmetFactory> */
     use HasFactory;
 
-    protected $table = 'kamu_hizmetleri';
+    protected $table = 'hizmetler';
 
-    protected $primaryKey = 'kamu_hizmetleri_id';
+    protected $primaryKey = 'hizmetler_id';
 
     protected $fillable = [
         'hizmet_turleri_id',
-        'kamular_id',
+        'isletmeler_id',
         'islem_yapan_id',
+        'baslik',
     ];
-
-    public $timestamps = true;
 }

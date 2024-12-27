@@ -16,11 +16,8 @@ class Resim extends Model
 
     protected $fillable = [
         'etkinlikler_id',
-        'kamu_hizmetleri_id',
-        'firma_hizmetleri_id',
+        'hizmetler_id',
         'resimyolu',
         'islem_yapan_id',
     ];
-
-    public $timestamps = true;
 }
