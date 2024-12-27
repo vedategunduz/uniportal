@@ -1,7 +1,7 @@
 @extends('layouts.auth')
 
-@section('title', 'User dashboard')
+@section('title', 'Giriş yap')
 
 @section('content')
-
+   {{ Auth::user() }}
 @endsection

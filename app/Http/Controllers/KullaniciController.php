@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use App\Models\MenuRolIliski;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +15,22 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        $menuler = MenuRolIliski::with('menu')->where('roller_id', Auth::user()->roller_id)->get();
+        $menuler = Menu::whereHas('MenuRolIliskiBaglantisi', function ($query) {
+            $query->where('roller_id', Auth::user()->roller_id);
+        })
+            ->with('altMenuler')
+            ->whereNull('bagli_menuler_id')
+            ->orderBy('menu_sira')
+            ->get();
+
         return view('kullanici.index', compact('menuler'));
+    }
+
+
+    public function menu()
+    {
+        $menuler = MenuRolIliski::with('menu')->where('roller_id', Auth::user()->roller_id)->get();
+        return view('kullanici.menu', compact('menuler'));
     }
 
     /**
@@ -34,10 +49,7 @@ class KullaniciController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id = null)
-    {
-
-    }
+    public function show(string $id = null) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -73,7 +85,7 @@ class KullaniciController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            return $this->index();
+            return redirect('/');
         }
         return response('kullanıcı adı veya şifre hatalı.');
     }

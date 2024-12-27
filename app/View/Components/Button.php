@@ -11,7 +11,7 @@ class Button extends Component
     public $text;
     public $type;
     public $id;
-    public $class = "bg-blue-500 text-white hover:bg-blue-600 transition focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2";
+    public $class = "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center";
 
     public function __construct($id = '', $text, $type = 'button')
     {

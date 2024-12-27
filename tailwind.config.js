@@ -9,6 +9,7 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
         './app/View/Components/*.php',
+        "./node_modules/flowbite/**/*.js",
     ],
     theme: {
         extend: {
@@ -20,6 +21,8 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        require('flowbite/plugin')
+    ],
     darkMode: 'false',
 };

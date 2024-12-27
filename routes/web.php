@@ -29,6 +29,8 @@ Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
     Route::get('/', [KullaniciController::class, 'index'])->name('index');
 
+    Route::get('/menu', [KullaniciController::class, 'menu'])->name('menu');
+
     Route::prefix('giris')->name('giris.')->group(function () {
         Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
         Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
