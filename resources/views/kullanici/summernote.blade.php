@@ -3,28 +3,35 @@
 @section('title', 'User dashboard')
 
 @section('links')
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+    <style>
+        a:hover {
+            text-decoration: none;
+            color: inherit
+        }
+    </style>
 @endsection
 
 @section('content')
-
     <form action="{{ route('editor.store') }}" method="POST">
         @csrf
+        <div class="use-the-bootstrap">
+        </div>
 
-
-        <div class="mb-3">
+        <div class="mb-3" class="use-the-bootstrap">
             <label for="icerik" class="form-label">İçerik</label>
             <textarea id="summernote" name="icerik"></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Kaydet</button>
     </form>
+@endsection
 
-
+@section('scripts')
     <script>
         $(document).ready(function() {
             $('#summernote').summernote({
@@ -96,7 +103,4 @@
             }
         });
     </script>
-@endsection
-
-@section('scripts')
 @endsection

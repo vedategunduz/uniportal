@@ -42,6 +42,8 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 Route::prefix('editor')->name('editor.')->group(function () {
     Route::post('store', [EditorController::class, 'store'])->name('store');
 
+    Route::get('summernote', [EditorController::class, 'index'])->name('index');
+
     Route::prefix('file')->name('file.')->group(function () {
         Route::post('upload', [EditorController::class, 'fileUpload'])->name('yukle');
     });

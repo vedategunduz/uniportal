@@ -2,6 +2,7 @@
 
 html,
 body {
+    font-size: 16px;
     font-family: "Inter", serif;
     font-optical-sizing: auto;
     font-weight: 400;

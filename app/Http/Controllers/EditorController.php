@@ -3,11 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Editor;
+use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EditorController extends Controller
 {
+    public function index()
+    {
+        $menuler = Menu::whereHas('MenuRolIliskiBaglantisi', function ($query) {
+            $query->where('roller_id', Auth::user()->roller_id);
+        })
+            ->with('altMenuler')
+            ->whereNull('bagli_menuler_id')
+            ->orderBy('menu_sira')
+            ->get();
+
+        return view('kullanici.summernote', compact(['menuler']));
+    }
+
     public function store(Request $request)
     {
         Editor::create([
