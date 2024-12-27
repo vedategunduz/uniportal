@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
 use App\Models\EtkinlikTur;
-use App\Models\Menu;
 use App\Models\Yetkili;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,8 +16,14 @@ class EtkinlikController extends Controller
     public function index()
     {
         $menuler = $this->getMenuler();
+        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'tur')->get();
 
-        return view('kullanici.index', compact('menuler'));
+        // Yetkili olduğu kamuları alıyoruz
+        $kamular = Yetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)
+            ->with('kamuBilgileri')
+            ->get();
+
+        return view('etkinlikler.index', compact(['menuler', 'etkinlikTurleri', 'kamular']));
     }
 
     /**
