@@ -21,6 +21,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
+            // Foreign Keys
             $table->foreign('roller_id')->references('roller_id')->on('roller')->onDelete('restrict');
         });
 
@@ -30,7 +31,7 @@ return new class extends Migration
             $table->string('ad', 155);
             $table->string('email', 255);
 
-            $table->char('islem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
@@ -44,9 +45,9 @@ return new class extends Migration
                     roller_id,
                     ad,
                     email,
-                    islem_yapan_id,
+                    yapilanIslem,
                     aktiflik,
-                    islem,
+                    islem_yapan_id,
                     created_at,
                     updated_at
                 )
@@ -55,9 +56,9 @@ return new class extends Migration
                     NEW.roller_id,
                     NEW.ad,
                     NEW.email,
-                    NEW.islem_yapan_id,
-                    NEW.aktiflik,
                     'E',
+                    NEW.aktiflik,
+                    NEW.islem_yapan_id,
                     NOW(),
                     NOW()
                 );
@@ -74,9 +75,9 @@ return new class extends Migration
                     roller_id,
                     ad,
                     email,
-                    islem_yapan_id,
+                    yapilanIslem,
                     aktiflik,
-                    islem,
+                    islem_yapan_id,
                     created_at,
                     updated_at
                 )
@@ -85,9 +86,9 @@ return new class extends Migration
                     NEW.roller_id,
                     NEW.ad,
                     NEW.email,
-                    NEW.islem_yapan_id,
-                    NEW.aktiflik,
                     'G',
+                    NEW.aktiflik,
+                    NEW.islem_yapan_id,
                     NOW(),
                     NOW()
                 );
@@ -95,10 +96,13 @@ return new class extends Migration
         ");
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        DB::statement("DROP TRIGGER IF EXISTS kullanicilar_insert");
-        DB::statement("DROP TRIGGER IF EXISTS kullanicilar_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS kullanicilar_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS kullanicilar_update");
         Schema::dropIfExists('kullanicilar');
         Schema::dropIfExists('kullanicilar_log');
     }

@@ -14,8 +14,9 @@ class Isletme extends Model
     protected $primaryKey = 'isletmeler_id';
 
     protected $fillable = [
-        'referans_kodu',
+        'isletme_turleri_id',
         'iller_id',
+        'referans_kodu',
         'baslik',
         'adres',
         'logoUrl',

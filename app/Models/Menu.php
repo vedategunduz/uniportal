@@ -13,12 +13,12 @@ class Menu extends Model
     protected $primaryKey = 'menuler_id';
 
     protected $fillable = [
-        'menu_adi',
-        'menu_link',
-        'menu_icon',
-        'menu_aciklama',
-        'menu_sira',
         'bagli_menuler_id',
+        'menuAd',
+        'menuLink',
+        'menuIcon',
+        'menuAciklama',
+        'menuSira',
         'islem_yapan_id',
     ];
 

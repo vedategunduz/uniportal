@@ -15,10 +15,10 @@ class RolSeeder extends Seeder
         Rol::insert(
             [
                 [
-                    'tur' => 'Admin'
+                    'baslik' => 'Admin'
                 ],
                 [
-                    'tur' => 'User'
+                    'baslik' => 'Ziyaretçi'
                 ]
             ]
         );

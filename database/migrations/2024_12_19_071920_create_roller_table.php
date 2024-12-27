@@ -21,11 +21,11 @@ return new class extends Migration
         Schema::create('roller_log', function (Blueprint $table) {
             $table->integer('roller_id');
             $table->string('baslik');
-            $table->char('yapılanIslem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER roller_insert
             AFTER INSERT ON roller
             FOR EACH ROW
@@ -33,24 +33,24 @@ return new class extends Migration
                 INSERT INTO roller_log (
                     roller_id,
                     baslik,
-                    islem_yapan_id,
+                    yapilanIslem,
                     aktiflik,
-                    islem,
+                    islem_yapan_id,
                     created_at,
                     updated_at
                 )
                 VALUES (
                     NEW.roller_id,
                     NEW.baslik,
-                    NEW.islem_yapan_id,
-                    NEW.aktiflik,
                     'E',
+                    NEW.aktiflik,
+                    NEW.islem_yapan_id,
                     NOW(),
                     NOW()
                 );
             END;
         ");
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER roller_update
             AFTER UPDATE ON roller
             FOR EACH ROW
@@ -58,18 +58,18 @@ return new class extends Migration
                 INSERT INTO roller_log (
                     roller_id,
                     baslik,
-                    islem_yapan_id,
+                    yapilanIslem,
                     aktiflik,
-                    islem,
+                    islem_yapan_id,
                     created_at,
                     updated_at
                 )
                 VALUES (
                     NEW.roller_id,
                     NEW.baslik,
-                    NEW.islem_yapan_id,
-                    NEW.aktiflik,
                     'G',
+                    NEW.aktiflik,
+                    NEW.islem_yapan_id,
                     NOW(),
                     NOW()
                 );
@@ -85,7 +85,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('roller');
         Schema::dropIfExists('roller_log');
-        DB::statement("DROP TRIGGER IF EXISTS roller_log_insert");
-        DB::statement("DROP TRIGGER IF EXISTS roller_log_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS roller_log_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS roller_log_update");
     }
 };

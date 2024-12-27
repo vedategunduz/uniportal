@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Isletme;
 use Illuminate\Database\Seeder;
-use App\Models\Kamu;
 use Illuminate\Support\Str;
 use Faker\Factory as Faker;
 
-class KamuSeeder extends Seeder
+class IsletmeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -175,17 +175,18 @@ class KamuSeeder extends Seeder
         $faker = Faker::create("tr_TR");
 
         foreach ($universiteler as $uni) {
-            Kamu::create([
+            Isletme::create([
                 'kamu_kodu' => strtoupper(Str::random(8)),
                 'iller_id' => $uni['il'],
+                'referans_kodu' => strtoupper(Str::random(8)),
                 'baslik' => $uni['baslik'],
                 'adres' => $faker->address,
-                'logo_url' => 'https://placehold.co/128x128',
-                'website_url' => $faker->url,
-                'x_url' => 'x.com/'.$faker->userName,
-                'instagram_url' => 'instagram.com/'.$faker->userName,
-                'linkedin_url' => 'linkedin.com/'.$faker->userName,
-                'diger_url' => $faker->url,
+                'logoUrl' => 'https://placehold.co/128x128',
+                'websiteUrl' => $faker->url,
+                'xUrl' => 'x.com/' . $faker->userName,
+                'instagramUrl' => 'instagram.com/' . $faker->userName,
+                'linkedinUrl' => 'linkedin.com/' . $faker->userName,
+                'digerUrl' => $faker->url,
             ]);
         }
     }

@@ -102,7 +102,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('isletme_yetkilileri');
         Schema::dropIfExists('isletme_yetkilileri_log');
-        DB::statement("DROP TRIGGER IF EXISTS isletme_yetkilileri_insert");
-        DB::statement("DROP TRIGGER IF EXISTS isletme_yetkilileri_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS isletme_yetkilileri_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS isletme_yetkilileri_update");
     }
 };

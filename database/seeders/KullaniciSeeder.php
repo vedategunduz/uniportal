@@ -12,7 +12,8 @@ class KullaniciSeeder extends Seeder
         Kullanici::create(
             [
                 'roller_id' => 1,
-                'ad' => 'admin',
+                'ad' => 'big',
+                'soyad' => 'admin',
                 'email' => 'admin@nku.edu.tr',
                 'password' => '12345600',
             ]
@@ -20,8 +21,9 @@ class KullaniciSeeder extends Seeder
         Kullanici::create(
             [
                 'roller_id' => 2,
-                'ad' => 'Patates',
-                'email' => 'sebzesever@nku.edu.tr',
+                'ad' => 'Jhon',
+                'soyad' => 'Doe',
+                'email' => 'ziyaretci@nku.edu.tr',
                 'password' => '12345600',
             ]
         );

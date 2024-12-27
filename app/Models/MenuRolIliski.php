@@ -15,10 +15,10 @@ class MenuRolIliski extends Model
     protected $primaryKey = 'menu_rol_iliskileri_id';
 
     protected $fillable = [
-        'baslik',
         'roller_id',
         'menuler_id',
         'islem_yapan_id',
+        'baslik',
     ];
 
     public function rol(): BelongsTo {

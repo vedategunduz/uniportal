@@ -18,15 +18,7 @@ return new class extends Migration
             $table->id('etkinlik_katilimlari_id');
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
             $table->unsignedBigInteger('kullanicilar_id')->nullable();
-            $table->unsignedBigInteger('firmalar_id')->nullable();
-            $table->unsignedBigInteger('kamular_id')->nullable();
-
-            // Foreign
-            $table->foreign('etkinlikler_id')->references('etkinlikler_id')->on('etkinlikler')->onDelete('restrict');
-            $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');
-            $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
-            $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
-
+            $table->unsignedBigInteger('isletmeler_id');
             $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
             $table->timestamps();
         });
@@ -37,14 +29,13 @@ return new class extends Migration
             $table->integer('etkinlik_katilimlari_id');
             $table->integer('etkinlikler_id')->nullable();
             $table->integer('kullanicilar_id')->nullable();
-            $table->integer('firmalar_id')->nullable();
-            $table->integer('kamular_id')->nullable();
+            $table->integer('isletmeler_id');
             $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
-            $table->char('islem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER etkinlik_katilimlari_insert
             AFTER INSERT ON etkinlik_katilimlari
             FOR EACH ROW
@@ -53,11 +44,11 @@ return new class extends Migration
                     etkinlik_katilimlari_id,
                     etkinlikler_id,
                     kullanicilar_id,
-                    firmalar_id,
-                    kamular_id,
+                    isletmeler_id,
+                    durum,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
-                    islem,
                     created_at,
                     updated_at
                 )
@@ -65,18 +56,18 @@ return new class extends Migration
                     NEW.etkinlik_katilimlari_id,
                     NEW.etkinlikler_id,
                     NEW.kullanicilar_id,
-                    NEW.firmalar_id,
-                    NEW.kamular_id,
+                    NEW.isletmeler_id,
+                    NEW.durum,
+                    'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
-                    'E',
                     NOW(),
                     NOW()
                 );
             END;
         ");
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER etkinlik_katilimlari_update
             AFTER UPDATE ON etkinlik_katilimlari
             FOR EACH ROW
@@ -85,11 +76,11 @@ return new class extends Migration
                     etkinlik_katilimlari_id,
                     etkinlikler_id,
                     kullanicilar_id,
-                    firmalar_id,
-                    kamular_id,
+                    isletmeler_id,
+                    durum,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
-                    islem,
                     created_at,
                     updated_at
                 )
@@ -97,11 +88,11 @@ return new class extends Migration
                     NEW.etkinlik_katilimlari_id,
                     NEW.etkinlikler_id,
                     NEW.kullanicilar_id,
-                    NEW.firmalar_id,
-                    NEW.kamular_id,
+                    NEW.isletmeler_id,
+                    NEW.durum,
+                    'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
-                    'G',
                     NOW(),
                     NOW()
                 );
@@ -114,8 +105,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TRIGGER IF EXISTS hizmet_il_detaylari_insert");
-        DB::statement("DROP TRIGGER IF EXISTS hizmet_il_detaylari_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS hizmet_il_detaylari_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS hizmet_il_detaylari_update");
         Schema::dropIfExists('etkinlik_katilimlari');
         Schema::dropIfExists('etkinlik_katilimlari_log');
     }

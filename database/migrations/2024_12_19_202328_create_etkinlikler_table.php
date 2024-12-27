@@ -14,18 +14,11 @@ return new class extends Migration
         Schema::create('etkinlikler', function (Blueprint $table) {
             $table->id('etkinlikler_id');
             $table->unsignedBigInteger('etkinlik_turleri_id');
-            $table->unsignedBigInteger('firmalar_id')->nullable();
-            $table->unsignedBigInteger('kamular_id')->nullable();
-
-            // Foreign
-            $table->foreign('etkinlik_turleri_id')->references('etkinlik_turleri_id')->on('etkinlik_turleri')->onDelete('restrict');
-            $table->foreign('firmalar_id')->references('firmalar_id')->on('firmalar')->onDelete('restrict');
-            $table->foreign('kamular_id')->references('kamular_id')->on('kamular')->onDelete('restrict');
-
-            $table->timestamp('etkinlik_basvuru_tarihi')->nullable();
-            $table->timestamp('etkinlik_basvuru_bitis_tarihi')->nullable();
-            $table->timestamp('etkinlik_baslama_tarihi')->nullable();
-            $table->timestamp('etkinlik_bitis_tarihi')->nullable();
+            $table->unsignedBigInteger('isletmeler_id');
+            $table->timestamp('etkinlikBasvuruTarihi')->nullable();
+            $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();
+            $table->timestamp('etkinlikBaslamaTarihi')->nullable();
+            $table->timestamp('etkinlikBitisTarihi')->nullable();
             $table->longText('aciklama');
             $table->timestamps();
         });
@@ -35,19 +28,18 @@ return new class extends Migration
         Schema::create('etkinlikler_log', function (Blueprint $table) {
             $table->integer('etkinlikler_id');
             $table->integer('etkinlik_turleri_id');
-            $table->integer('firmalar_id')->nullable();
-            $table->integer('kamular_id')->nullable();
-            $table->timestamp('etkinlik_basvuru_tarihi')->nullable();
-            $table->timestamp('etkinlik_basvuru_bitis_tarihi')->nullable();
-            $table->timestamp('etkinlik_baslama_tarihi')->nullable();
-            $table->timestamp('etkinlik_bitis_tarihi')->nullable();
+            $table->integer('isletmeler_id');
+            $table->timestamp('etkinlikBasvuruTarihi')->nullable();
+            $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();
+            $table->timestamp('etkinlikBaslamaTarihi')->nullable();
+            $table->timestamp('etkinlikBitisTarihi')->nullable();
             $table->longText('aciklama');
-            $table->char('islem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
         // AFTER INSERT Trigger
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER etkinlikler_insert
             AFTER INSERT ON etkinlikler
             FOR EACH ROW
@@ -55,14 +47,13 @@ return new class extends Migration
                 INSERT INTO etkinlikler_log (
                     etkinlikler_id,
                     etkinlik_turleri_id,
-                    firmalar_id,
-                    kamular_id,
-                    etkinlik_basvuru_tarihi,
-                    etkinlik_basvuru_bitis_tarihi,
-                    etkinlik_baslama_tarihi,
-                    etkinlik_bitis_tarihi,
+                    isletmeler_id,
+                    etkinlikBasvuruTarihi,
+                    etkinlikBasvuruBitisTarihi,
+                    etkinlikBaslamaTarihi,
+                    etkinlikBitisTarihi,
                     aciklama,
-                    islem,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
                     created_at,
@@ -71,13 +62,11 @@ return new class extends Migration
                 VALUES (
                     NEW.etkinlikler_id,
                     NEW.etkinlik_turleri_id,
-                    NEW.firmalar_id,
-                    NEW.kamular_id,
-                    NEW.etkinlik_basvuru_tarihi,
-                    NEW.etkinlik_basvuru_bitis_tarihi,
-                    NEW.etkinlik_baslama_tarihi,
-                    NEW.etkinlik_bitis_tarihi,
-                    NEW.aciklama,
+                    NEW.isletmeler_id,
+                    NEW.etkinlikBasvuruTarihi,
+                    NEW.etkinlikBasvuruBitisTarihi,
+                    NEW.etkinlikBaslamaTarihi,
+                    NEW.etkinlikBitisTarihi,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -88,7 +77,7 @@ return new class extends Migration
         ");
 
         // AFTER UPDATE Trigger
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER etkinlikler_update
             AFTER UPDATE ON etkinlikler
             FOR EACH ROW
@@ -96,28 +85,24 @@ return new class extends Migration
                 INSERT INTO etkinlikler_log (
                     etkinlikler_id,
                     etkinlik_turleri_id,
-                    firmalar_id,
-                    kamular_id,
-                    etkinlik_basvuru_tarihi,
-                    etkinlik_basvuru_bitis_tarihi,
-                    etkinlik_baslama_tarihi,
-                    etkinlik_bitis_tarihi,
+                    isletmeler_id,
+                    etkinlikBasvuruTarihi,
+                    etkinlikBasvuruBitisTarihi,
+                    etkinlikBaslamaTarihi,
+                    etkinlikBitisTarihi,
                     aciklama,
-                    islem,
-                    aktiflik,
-                    islem_yapan_id,
+                    yapilanIslem,
                     created_at,
                     updated_at
                 )
                 VALUES (
                     NEW.etkinlikler_id,
                     NEW.etkinlik_turleri_id,
-                    NEW.firmalar_id,
-                    NEW.kamular_id,
-                    NEW.etkinlik_basvuru_tarihi,
-                    NEW.etkinlik_basvuru_bitis_tarihi,
-                    NEW.etkinlik_baslama_tarihi,
-                    NEW.etkinlik_bitis_tarihi,
+                    NEW.isletmeler_id,
+                    NEW.etkinlikBasvuruTarihi,
+                    NEW.etkinlikBasvuruBitisTarihi,
+                    NEW.etkinlikBaslamaTarihi,
+                    NEW.etkinlikBitisTarihi,
                     NEW.aciklama,
                     'G',
                     NEW.aktiflik,
@@ -129,10 +114,13 @@ return new class extends Migration
         ");
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        DB::statement("DROP TRIGGER IF EXISTS etkinlikler_insert");
-        DB::statement("DROP TRIGGER IF EXISTS etkinlikler_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS etkinlikler_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS etkinlikler_update");
         Schema::dropIfExists('etkinlikler');
         Schema::dropIfExists('etkinlikler_log');
     }

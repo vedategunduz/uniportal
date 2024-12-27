@@ -14,10 +14,10 @@ class IsletmeBirim extends Model
     protected $fillabel = [
         'isletmeler_id',
         'birim_tipleri_id',
-        'birimAd',
-        'birimTelefon',
-        'birimEmail',
-        'birimWebsiteUrl',
-        'birimAdres',
+        'ad',
+        'email',
+        'telefon',
+        'adres',
+        'websiteUrl',
     ];
 }

@@ -16,7 +16,7 @@ return new class extends Migration
 
         Schema::create('etkinlik_turleri', function (Blueprint $table) {
             $table->id('etkinlik_turleri_id');
-            $table->string('tur', 55);
+            $table->string('baslik', 55);
             $table->timestamps();
         });
 
@@ -24,28 +24,28 @@ return new class extends Migration
 
         Schema::create('etkinlik_turleri_log', function (Blueprint $table) {
             $table->integer('etkinlik_turleri_id');
-            $table->string('tur', 55);
-            $table->char('islem', 1);
+            $table->string('baslik', 55);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER etkinlik_turleri_insert
             AFTER INSERT ON etkinlik_turleri
             FOR EACH ROW
             BEGIN
                 INSERT INTO etkinlik_turleri_log (
                     etkinlik_turleri_id,
-                    tur,
-                    islem,
+                    baslik,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
                     created_at,
                     updated_at
                 )
                 VALUES (
-                    etkinlik_turleri_id,
-                    tur,
+                    NEW.etkinlik_turleri_id,
+                    NEW.baslik,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -55,23 +55,23 @@ return new class extends Migration
             END;
         ");
 
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER etkinlik_turleri_update
             AFTER UPDATE ON etkinlik_turleri
             FOR EACH ROW
             BEGIN
                 INSERT INTO etkinlik_turleri_log (
                     etkinlik_turleri_id,
-                    tur,
-                    islem,
+                    baslik,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
                     created_at,
                     updated_at
                 )
                 VALUES (
-                    etkinlik_turleri_id,
-                    tur,
+                    NEW.etkinlik_turleri_id,
+                    NEW.baslik,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -87,8 +87,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP TRIGGER IF EXISTS etkinlik_turleri_insert");
-        DB::statement("DROP TRIGGER IF EXISTS etkinlik_turleri_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS etkinlik_turleri_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS etkinlik_turleri_update");
         Schema::dropIfExists('etkinlik_turleri');
         Schema::dropIfExists('etkinlik_turleri_log');
     }

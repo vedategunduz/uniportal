@@ -18,7 +18,7 @@ class EtkinlikKatilim extends Model
         'etkinlikler_id',
         'kullanicilar_id',
         'isletmeler_id',
-        'etkinlikKatilimDurumu',
+        'durum',
         'islem_yapan_id',
     ];
 

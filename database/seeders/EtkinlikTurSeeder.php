@@ -14,13 +14,13 @@ class EtkinlikTurSeeder extends Seeder
     {
         EtkinlikTur::insert([
             [
-                'tur' => 'ETKİNLİK_TÜRÜ_1',
+                'baslik' => 'ETKİNLİK_TÜRÜ_1',
             ],
             [
-                'tur' => 'ETKİNLİK_TÜRÜ_2',
+                'baslik' => 'ETKİNLİK_TÜRÜ_2',
             ],
             [
-                'tur' => 'ETKİNLİK_TÜRÜ_3',
+                'baslik' => 'ETKİNLİK_TÜRÜ_3',
             ],
         ]);
     }

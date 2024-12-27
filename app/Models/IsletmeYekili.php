@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class IsletmeYetkilileri extends Model
+class IsletmeYetkili extends Model
 {
     protected $table = 'isletme_yetkilileri';
 

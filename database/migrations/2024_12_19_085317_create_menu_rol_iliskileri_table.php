@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id('menu_rol_iliskileri_id');
             $table->unsignedBigInteger('roller_id');
             $table->unsignedBigInteger('menuler_id');
+            $table->timestamps();
 
+            // Foreign Keys
             $table->foreign('roller_id')->references('roller_id')->on('roller')->onDelete('restrict');
             $table->foreign('menuler_id')->references('menuler_id')->on('menuler')->onDelete('restrict');
-
-            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
@@ -28,12 +28,12 @@ return new class extends Migration
             $table->integer('menu_rol_iliskileri_id');
             $table->integer('roller_id');
             $table->integer('menuler_id');
-            $table->char('islem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
         // AFTER INSERT Trigger
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER menu_rol_iliskileri_insert
             AFTER INSERT ON menu_rol_iliskileri
             FOR EACH ROW
@@ -42,7 +42,8 @@ return new class extends Migration
                     menu_rol_iliskileri_id,
                     roller_id,
                     menuler_id,
-                    islem,
+                    yapilanIslem,
+                    aktiflik,
                     islem_yapan_id,
                     created_at,
                     updated_at
@@ -52,6 +53,7 @@ return new class extends Migration
                     NEW.roller_id,
                     NEW.menuler_id,
                     'E',
+                    NEW.aktiflik,
                     NEW.islem_yapan_id,
                     NOW(),
                     NOW()
@@ -60,7 +62,7 @@ return new class extends Migration
         ");
 
         // AFTER UPDATE Trigger
-        DB::statement("
+        DB::unprepared("
             CREATE TRIGGER menu_rol_iliskileri_update
             AFTER UPDATE ON menu_rol_iliskileri
             FOR EACH ROW
@@ -69,7 +71,8 @@ return new class extends Migration
                     menu_rol_iliskileri_id,
                     roller_id,
                     menuler_id,
-                    islem,
+                    yapilanIslem,
+                    aktiflik,
                     islem_yapan_id,
                     created_at,
                     updated_at
@@ -79,6 +82,7 @@ return new class extends Migration
                     NEW.roller_id,
                     NEW.menuler_id,
                     'G',
+                    NEW.aktiflik,
                     NEW.islem_yapan_id,
                     NOW(),
                     NOW()
@@ -89,8 +93,8 @@ return new class extends Migration
 
     public function down(): void
     {
-        DB::statement("DROP TRIGGER IF EXISTS menu_rol_iliskileri_insert");
-        DB::statement("DROP TRIGGER IF EXISTS menu_rol_iliskileri_update");
+        DB::unprepared("DROP TRIGGER IF EXISTS menu_rol_iliskileri_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS menu_rol_iliskileri_update");
         Schema::dropIfExists('menu_rol_iliskileri');
         Schema::dropIfExists('menu_rol_iliskileri_log');
     }

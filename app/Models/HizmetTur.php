@@ -14,9 +14,9 @@ class HizmetTur extends Model
     protected $primaryKey = 'hizmet_turleri_id';
 
     protected $fillabel = [
+        'bagli_hizmet_turleri_id',
         'baslik',
         'derinlik',
-        'bagli_hizmet_turleri_id',
         'islem_yapan_id',
     ];
 }
