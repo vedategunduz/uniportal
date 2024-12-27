@@ -89,7 +89,6 @@
                     success: function(response) {
                         if (response.url) {
                             // PDF veya DOCX gibi dosyaları Summernote içine <a> tagi olarak ekleyebiliriz.
-                            // Örneğin:
                             let fileLink = `<a href="${response.url}" target="_blank">${file.name}</a>`;
 
                             // Summernote'a HTML olarak eklemek için:

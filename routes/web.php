@@ -8,13 +8,11 @@ use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\KamularController;
 
-Route::prefix('/')->group(function () {
+Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
-Route::get('/patates', [EditorController::class, 'ekranagetir']);
-
-Route::prefix('kamular')->name('kamular.')->group(function () {
+Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
     Route::get('/', [KamularController::class, 'index'])->name('index');
 });
 
@@ -52,6 +50,5 @@ Route::prefix('editor')->name('editor.')->group(function () {
 
     Route::prefix('image')->name('image.')->group(function () {
         Route::post('upload', [EditorController::class, 'imageUpload']);
-        Route::post('fetch', [EditorController::class, 'imageFetch']);
     });
 });

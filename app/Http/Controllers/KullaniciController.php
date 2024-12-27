@@ -13,9 +13,7 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        $menuler = $this->getMenuler();
-
-        return view('kullanici.index', compact('menuler'));
+        return view('kullanici.index');
     }
 
     /**

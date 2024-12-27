@@ -24,7 +24,6 @@ class Kullanici extends Authenticatable
         'adres',
         'profilFotoUrl',
         'password',
-        'islem_yapan_id',
     ];
 
     protected $hidden = [

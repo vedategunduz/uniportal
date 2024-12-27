@@ -12,7 +12,7 @@ class AnasayfaController extends Controller
      */
     public function index(): View
     {
-        return view('anasayfa.index');
+        return view('main.index');
     }
 
     /**

@@ -16,7 +16,11 @@ return new class extends Migration
             $table->id('kullanicilar_id');
             $table->unsignedBigInteger('roller_id');
             $table->string('ad', 155);
+            $table->string('soyad', 155)->nullable();
             $table->string('email', 255)->unique();
+            $table->string('telefon', 155)->nullable();
+            $table->string('adres', 155)->nullable();
+            $table->string('profilFotoUrl', 155)->default('https://placehold.co/128');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
@@ -29,8 +33,11 @@ return new class extends Migration
             $table->integer('kullanicilar_id');
             $table->integer('roller_id');
             $table->string('ad', 155);
-            $table->string('email', 255);
-
+            $table->string('soyad', 155)->nullable();
+            $table->string('email', 255)->unique();
+            $table->string('telefon', 155)->nullable();
+            $table->string('adres', 155)->nullable();
+            $table->string('profileFotoUrl', 155)->nullable();
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
@@ -44,7 +51,11 @@ return new class extends Migration
                     kullanicilar_id,
                     roller_id,
                     ad,
+                    soyad,
                     email,
+                    telefon,
+                    adres,
+                    profileFotoUrl,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -55,7 +66,11 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.roller_id,
                     NEW.ad,
+                    NEW.soyad,
                     NEW.email,
+                    NEW.telefon,
+                    NEW.adres,
+                    NEW.profilFotoUrl,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -74,7 +89,11 @@ return new class extends Migration
                     kullanicilar_id,
                     roller_id,
                     ad,
+                    soyad,
                     email,
+                    telefon,
+                    adres,
+                    profileFotoUrl,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -85,7 +104,11 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.roller_id,
                     NEW.ad,
+                    NEW.soyad,
                     NEW.email,
+                    NEW.telefon,
+                    NEW.adres,
+                    NEW.profilFotoUrl,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,

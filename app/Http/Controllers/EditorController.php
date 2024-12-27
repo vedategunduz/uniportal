@@ -23,22 +23,6 @@ class EditorController extends Controller
         return view('kullanici.summernote', compact(['menuler']));
     }
 
-    public function store(Request $request)
-    {
-        Editor::create([
-            'icerik' => $request->input('icerik'),
-        ]);
-
-        return redirect()->route('index')->with('success', 'Kayıt başarıyla oluşturuldu!');
-    }
-
-    public function ekranagetir()
-    {
-        $editorVerileri = Editor::all();
-
-        return view('anasayfa.index', compact(['editorVerileri']));
-    }
-
     public function fileUpload(Request $request)
     {
         $uploadedFile = $request->file('file');
@@ -82,36 +66,6 @@ class EditorController extends Controller
         $url = Storage::url($path); // /storage/images/... şeklinde döner
 
         // 4. Editor.js’in beklediği formatta JSON döndür
-        return response()->json([
-            'success' => 1,
-            'file' => [
-                'url' => $url
-            ]
-        ]);
-    }
-
-    public function imageFetch(Request $request)
-    {
-        // 1. Editor.js body veya param içinde "url" gönderir.
-        $imageUrl = $request->input('url');
-
-        if (!$imageUrl) {
-            return response()->json(['success' => 0, 'message' => 'URL bulunamadı'], 400);
-        }
-
-        // 2. Uzaktaki görseli alıp sunucumuza kaydedelim (en basit örnek)
-        try {
-            $imageContents = file_get_contents($imageUrl);
-            // Rastgele bir isim oluşturalım
-            $filename = 'images/' . uniqid() . '.jpg';
-            Storage::disk('public')->put($filename, $imageContents);
-
-            $url = Storage::url($filename);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'message' => 'Resim alınamadı'], 400);
-        }
-
-        // 3. Editor.js’in beklediği formatta JSON döndür
         return response()->json([
             'success' => 1,
             'file' => [

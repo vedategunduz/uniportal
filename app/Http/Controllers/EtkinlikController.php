@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Etkinlik;
-use App\Models\EtkinlikTur;
-use App\Models\Yetkili;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class EtkinlikController extends Controller
 {
@@ -15,15 +11,7 @@ class EtkinlikController extends Controller
      */
     public function index()
     {
-        $menuler = $this->getMenuler();
-        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'tur')->get();
-
-        // Yetkili olduğu kamuları alıyoruz
-        $kamular = Yetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)
-            ->with('kamuBilgileri')
-            ->get();
-
-        return view('etkinlikler.index', compact(['menuler', 'etkinlikTurleri', 'kamular']));
+        return view('etkinlikler.index');
     }
 
     /**
@@ -31,15 +19,7 @@ class EtkinlikController extends Controller
      */
     public function create()
     {
-        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'tur')->get();
-
-        // Yetkili olduğu kamuları alıyoruz
-        $kamular = Yetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)
-            ->with('kamuBilgileri')
-            ->get();
-
-        // Verileri view'e gönderiyoruz
-        return view('etkinlik.create', compact(['etkinlikTurleri', 'kamular']));
+        return view('etkinlik.create');
     }
 
     /**
@@ -47,17 +27,7 @@ class EtkinlikController extends Controller
      */
     public function store(Request $request)
     {
-        Etkinlik::create([
-            'etkinlik_turleri_id' => decrypt($request->etkinlik_turleri_id),
-            'kamular_id' => decrypt($request->kamular_id),
-            'etkinlik_basvuru_tarihi' => $request->etkinlik_basvuru_tarihi,
-            'etkinlik_basvuru_bitis_tarihi' => $request->etkinlik_basvuru_bitis_tarihi,
-            'etkinlik_baslama_tarihi' => $request->etkinlik_baslama_tarihi,
-            'etkinlik_bitis_tarihi' => $request->etkinlik_bitis_tarihi,
-            'aciklama' => $request->aciklama,
-        ]);
-
-        return redirect()->route('etkinlik.ekle.create')->with('success', 'Etkinlik başarıyla eklendi.');
+        // return redirect()->route('etkinlik.ekle.create')->with('success', 'Etkinlik başarıyla eklendi.');
     }
 
     /**

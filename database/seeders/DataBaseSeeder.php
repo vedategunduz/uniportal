@@ -13,6 +13,7 @@ class DataBaseSeeder extends Seeder
             RolSeeder::class,
             MenuSeeder::class,
             MenuRolIliskiSeeder::class,
+            KullaniciSeeder::class,
         ]);
     }
 }
