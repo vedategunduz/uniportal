@@ -47,12 +47,20 @@ class MenuSeeder extends Seeder
                     'bagli_menuler_id' => null,
                 ],
                 [
-                    'menu_adi' => 'Etkinlik ekle',
-                    'menu_link' => '/etkinlik/ekle',
+                    'menu_adi' => 'Etkinlikler',
+                    'menu_link' => '/etkinlikler',
                     'menu_icon' => '',
                     'menu_aciklama' => '',
                     'menu_sira' => 300,
-                    'bagli_menuler_id' => 3,
+                    'bagli_menuler_id' => 4,
+                ],
+                [
+                    'menu_adi' => 'Etkinlik ekle',
+                    'menu_link' => '/etkinlikler/ekle',
+                    'menu_icon' => '',
+                    'menu_aciklama' => '',
+                    'menu_sira' => 301,
+                    'bagli_menuler_id' => 4,
                 ],
             ]
         );

@@ -18,7 +18,9 @@ Route::prefix('kamular')->name('kamular.')->group(function () {
     Route::get('/', [KamularController::class, 'index'])->name('index');
 });
 
-Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
+Route::prefix('etkinlikler')->name('etkinlik.')->group(function () {
+
+    Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
     Route::prefix('ekle')->name('ekle.')->group(function () {
         Route::get('/', [EtkinlikController::class, 'create'])->name('create');

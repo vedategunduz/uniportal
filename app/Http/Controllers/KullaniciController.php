@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Menu;
-use App\Models\MenuRolIliski;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,22 +13,9 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        $menuler = Menu::whereHas('MenuRolIliskiBaglantisi', function ($query) {
-            $query->where('roller_id', Auth::user()->roller_id);
-        })
-            ->with('altMenuler')
-            ->whereNull('bagli_menuler_id')
-            ->orderBy('menu_sira')
-            ->get();
+        $menuler = $this->getMenuler();
 
         return view('kullanici.index', compact('menuler'));
-    }
-
-
-    public function menu()
-    {
-        $menuler = MenuRolIliski::with('menu')->where('roller_id', Auth::user()->roller_id)->get();
-        return view('kullanici.menu', compact('menuler'));
     }
 
     /**

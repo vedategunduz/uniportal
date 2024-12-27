@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
 use App\Models\EtkinlikTur;
+use App\Models\Menu;
 use App\Models\Yetkili;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,9 @@ class EtkinlikController extends Controller
      */
     public function index()
     {
-        //
+        $menuler = $this->getMenuler();
+
+        return view('kullanici.index', compact('menuler'));
     }
 
     /**
