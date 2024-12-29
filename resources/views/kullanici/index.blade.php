@@ -3,7 +3,6 @@
 @section('title', 'User dashboard')
 
 @section('content')
-    <a href="#" class="py-2 px-3 rounded-lg border bg-blue-300">dqwdwq</a>
     <h3>Başlık</h3>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod illo quaerat cupiditate error vero doloremque

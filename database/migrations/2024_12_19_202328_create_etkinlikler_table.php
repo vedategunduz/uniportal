@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('etkinlikler_id');
             $table->unsignedBigInteger('etkinlik_turleri_id');
             $table->unsignedBigInteger('isletmeler_id');
+            $table->integer('kontenjan')->nullable();
             $table->timestamp('etkinlikBasvuruTarihi')->nullable();
             $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();
             $table->timestamp('etkinlikBaslamaTarihi')->nullable();
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->integer('etkinlikler_id');
             $table->integer('etkinlik_turleri_id');
             $table->integer('isletmeler_id');
+            $table->integer('kontenjan')->nullable();
             $table->timestamp('etkinlikBasvuruTarihi')->nullable();
             $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();
             $table->timestamp('etkinlikBaslamaTarihi')->nullable();
@@ -48,6 +50,7 @@ return new class extends Migration
                     etkinlikler_id,
                     etkinlik_turleri_id,
                     isletmeler_id,
+                    kontenjan,
                     etkinlikBasvuruTarihi,
                     etkinlikBasvuruBitisTarihi,
                     etkinlikBaslamaTarihi,
@@ -63,6 +66,7 @@ return new class extends Migration
                     NEW.etkinlikler_id,
                     NEW.etkinlik_turleri_id,
                     NEW.isletmeler_id,
+                    NEW.kontenjan,
                     NEW.etkinlikBasvuruTarihi,
                     NEW.etkinlikBasvuruBitisTarihi,
                     NEW.etkinlikBaslamaTarihi,
@@ -86,6 +90,7 @@ return new class extends Migration
                     etkinlikler_id,
                     etkinlik_turleri_id,
                     isletmeler_id,
+                    kontenjan,
                     etkinlikBasvuruTarihi,
                     etkinlikBasvuruBitisTarihi,
                     etkinlikBaslamaTarihi,
@@ -99,6 +104,7 @@ return new class extends Migration
                     NEW.etkinlikler_id,
                     NEW.etkinlik_turleri_id,
                     NEW.isletmeler_id,
+                    NEW.kontenjan,
                     NEW.etkinlikBasvuruTarihi,
                     NEW.etkinlikBasvuruBitisTarihi,
                     NEW.etkinlikBaslamaTarihi,

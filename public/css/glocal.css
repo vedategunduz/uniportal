@@ -27,3 +27,8 @@ h5 {
 h6 {
     font-size: 16px;
 }
+
+a:hover {
+    text-decoration: none;
+    color: inherit;
+}

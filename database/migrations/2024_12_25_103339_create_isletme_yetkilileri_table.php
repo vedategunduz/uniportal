@@ -31,7 +31,7 @@ return new class extends Migration
             $table->integer('isletme_yetkilileri_id');
             $table->integer('kullanicilar_id');
             $table->integer('isletmeler_id')->nullable();
-            $table->char('islem', 1);
+            $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
 
@@ -47,7 +47,7 @@ return new class extends Migration
                     isletmeler_id,
                     islem_yapan_id,
                     aktiflik,
-                    islem,
+                    yapilanIslem,
                     created_at,
                     updated_at
                 )
@@ -77,7 +77,7 @@ return new class extends Migration
                     isletmeler_id,
                     islem_yapan_id,
                     aktiflik,
-                    islem,
+                    yapilanIslem,
                     created_at,
                     updated_at
                 )

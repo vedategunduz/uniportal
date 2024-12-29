@@ -104,7 +104,7 @@
                 </div>
             @else
                 <a href="{{ route('kullanici.giris.form') }}"
-                    class="flex py-2 px-3 rounded-lg text-white bg-blue-600 shadow shadow-blue-500 hover:bg-blue-700 hover:shadow-none transition items-center">
+                    class="flex text-white bg-blue-700 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center">
                     <span>Oturum aç</span>
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

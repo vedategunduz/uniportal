@@ -54,7 +54,7 @@
                                 @else
                                     <a href="{{ $menu->menuLink }}" @class([
                                         'flex items-center py-1 px-3 rounded-lg transition',
-                                        'bg-blue-700 text-white' => Request::is(ltrim($menu->menuLink, '/')),
+                                        'bg-blue-700 text-white hover:text-white' => Request::is(ltrim($menu->menuLink, '/')),
                                         'hover:bg-gray-100' => !Request::is(ltrim($menu->menuLink, '/')),
                                     ])>
                                         <span class="p-1 rounded-lg me-2">
@@ -83,7 +83,7 @@
             </nav>
         </aside>
 
-        <main class="p-4 bg-gray-50 w-full">
+        <main class="p-4 max-w-screen-xl mx-auto w-full">
             @yield('content')
         </main>
     </div>

@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Isletme;
-use App\Models\IsletmeTur;
 use Illuminate\Database\Seeder;
 
 class DataBaseSeeder extends Seeder
@@ -18,6 +16,8 @@ class DataBaseSeeder extends Seeder
             KullaniciSeeder::class,
             IsletmeTurSeeder::class,
             IsletmeSeeder::class,
+            IsletmeYetkiliSeeder::class,
+            EtkinlikTurSeeder::class,
         ]);
     }
 }
