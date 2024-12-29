@@ -68,7 +68,7 @@ class KullaniciController extends Controller
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            return redirect('/');
+            return redirect()->intended('kullanici');
         }
         return response('kullanıcı adı veya şifre hatalı.');
     }
