@@ -10,6 +10,7 @@ use App\Http\Controllers\KamularController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\NotAuthMiddleware;
 use App\Models\Isletme;
+use Illuminate\Container\Attributes\Auth;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -30,9 +31,20 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 });
 
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
-    Route::get('/', [KullaniciController::class, 'index'])
-        ->name('index')
-        ->middleware(AuthMiddleware::class);
+    Route::middleware(AuthMiddleware::class)->group(function () {
+        Route::get('/', [KullaniciController::class, 'index'])
+            ->name('index');
+
+        Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
+            Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
+        });
+
+        Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
+            Route::get('/kamular', [KullaniciController::class, 'kamular'])->name('kamular');
+            Route::get('/firmalar', [KullaniciController::class, 'firmalar'])->name('firmalar');
+            Route::get('/sendikalar', [KullaniciController::class, 'sendikalar'])->name('sendikalar');
+        });
+    });
 
     // Giriş rota grubu
     Route::prefix('giris')->name('giris.')->group(function () {

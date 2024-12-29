@@ -176,9 +176,10 @@ class IsletmeSeeder extends Seeder
 
         foreach ($universiteler as $uni) {
             Isletme::create([
-                'kamu_kodu' => strtoupper(Str::random(8)),
+                'isletme_turleri_id' => 1,
                 'iller_id' => $uni['il'],
                 'referans_kodu' => strtoupper(Str::random(8)),
+                'referans' => null,
                 'baslik' => $uni['baslik'],
                 'adres' => $faker->address,
                 'logoUrl' => 'https://placehold.co/128x128',

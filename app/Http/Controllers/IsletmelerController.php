@@ -23,11 +23,11 @@ class IsletmelerController extends Controller
                     [
                         'text' => $kamu->baslik,
                         'href' => "/$kamu->kamular_id",
-                        'logoUrl' => $kamu->logo_url,
-                        'websiteUrl' => $kamu->website_url,
-                        'xUrl' => $kamu->x_url,
-                        'instagramUrl' => $kamu->instagram_url,
-                        'linkedinUrl' => $kamu->linkedin_url,
+                        'logoUrl' => $kamu->logoUrl,
+                        'websiteUrl' => $kamu->websiteUrl,
+                        'xUrl' => $kamu->xUrl,
+                        'instagramUrl' => $kamu->instagramUrl,
+                        'linkedinUrl' => $kamu->linkedinUrl,
                     ])->render();
             }
 

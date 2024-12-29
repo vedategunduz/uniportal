@@ -17,6 +17,7 @@ class Isletme extends Model
         'isletme_turleri_id',
         'iller_id',
         'referans_kodu',
+        'referans',
         'baslik',
         'adres',
         'logoUrl',

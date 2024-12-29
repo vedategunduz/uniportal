@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Isletme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,47 @@ class KullaniciController extends Controller
     public function index()
     {
         $menuler = $this->getMenuler();
+
         return view('kullanici.index', compact('menuler'));
+    }
+
+    public function kamular(Request $request)
+    {
+        $menuler = $this->getMenuler();
+        $kamular = Isletme::where('isletme_turleri_id', 1)->orderBy('baslik', 'asc')->paginate(20);
+
+        if ($request->ajax()) {
+            // İçeriği render edin
+            $html = '';
+            foreach ($kamular as $kamu) {
+                $html .= view('components.kamu',
+                    [
+                        'text' => $kamu->baslik,
+                        'href' => "/$kamu->kamular_id",
+                        'logoUrl' => $kamu->logoUrl,
+                        'websiteUrl' => $kamu->websiteUrl,
+                        'xUrl' => $kamu->xUrl,
+                        'instagramUrl' => $kamu->instagramUrl,
+                        'linkedinUrl' => $kamu->linkedinUrl,
+                    ])->render();
+            }
+
+            // Paginator'ı render edin (Tailwind paginator'ınızı kullandığınız Blade dosyasını belirtin)
+            $pagination = $kamular->links('pagination::tailwind')->render();
+
+            return response()->json([
+                'html' => $html,
+                'pagination' => $pagination,
+            ]);
+        }
+
+        return view('kullanici.kamular.index', compact(['menuler', 'kamular']));
+    }
+
+    public function etkinlikler() {
+        $menuler = $this->getMenuler();
+
+        return view('kullanici.etkinlikler.index', compact('menuler'));
     }
 
     /**

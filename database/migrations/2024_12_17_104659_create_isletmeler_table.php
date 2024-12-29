@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('isletme_turleri_id');
             $table->unsignedBigInteger('iller_id')->nullable();
             $table->string('referans_kodu', 20)->unique()->nullable();
+            $table->string('referans', 20)->nullable();
             $table->string('baslik', 255)->nullable();
             $table->string('adres', 500)->nullable();
             $table->string('logoUrl', 500)->nullable();
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign
+            $table->foreign('isletme_turleri_id')->references('isletme_turleri_id')->on('isletme_turleri')->onDelete('restrict');
             $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
         });
 
@@ -37,6 +39,7 @@ return new class extends Migration
             $table->integer('isletme_turleri_id');
             $table->integer('iller_id')->nullable();
             $table->string('referans_kodu', 20)->nullable();
+            $table->string('referans', 20)->nullable();
             $table->string('baslik', 255)->nullable();
             $table->string('adres', 500)->nullable();
             $table->string('logoUrl', 500)->nullable();
@@ -59,6 +62,7 @@ return new class extends Migration
                     isletme_turleri_id,
                     iller_id,
                     referans_kodu,
+                    referans,
                     baslik,
                     adres,
                     logoUrl,
@@ -77,6 +81,7 @@ return new class extends Migration
                     NEW.isletme_turleri_id,
                     NEW.iller_id,
                     NEW.referans_kodu,
+                    NEW.referans,
                     NEW.baslik,
                     NEW.adres,
                     NEW.logoUrl,
@@ -104,6 +109,7 @@ return new class extends Migration
                     isletme_turleri_id,
                     iller_id,
                     referans_kodu,
+                    referans,
                     baslik,
                     adres,
                     logoUrl,
@@ -122,6 +128,7 @@ return new class extends Migration
                     NEW.isletme_turleri_id,
                     NEW.iller_id,
                     NEW.referans_kodu,
+                    NEW.referans,
                     NEW.baslik,
                     NEW.adres,
                     NEW.logoUrl,
