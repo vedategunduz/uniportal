@@ -7,16 +7,19 @@ use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\KamularController;
+use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\NotAuthMiddleware;
+use App\Models\Isletme;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
 Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
-    Route::get('/', [KamularController::class, 'index'])->name('index');
+    Route::get('/', [Isletme::class, 'index'])->name('index');
 });
 
-Route::prefix('etkinlikler')->name('etkinlik.')->group(function () {
+Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 
     Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
@@ -27,16 +30,25 @@ Route::prefix('etkinlikler')->name('etkinlik.')->group(function () {
 });
 
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
-    Route::get('/', [KullaniciController::class, 'index'])->name('index');
+    Route::get('/', [KullaniciController::class, 'index'])
+        ->name('index')
+        ->middleware(AuthMiddleware::class);
 
-    Route::get('/menu', [KullaniciController::class, 'menu'])->name('menu');
-
+    // Giriş rota grubu
     Route::prefix('giris')->name('giris.')->group(function () {
-        Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
-        Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
-    });
+        // Giriş formu
+        Route::get('/', [KullaniciController::class, 'girisForm'])
+            ->name('form');
 
-    Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis');
+        // Giriş işlemi
+        Route::post('/', [KullaniciController::class, 'girisYap'])
+            ->name('yap');
+    })->middleware(NotAuthMiddleware::class);
+
+    // Çıkış rotası
+    Route::get('/cikis', [KullaniciController::class, 'cikis'])
+        ->name('cikis')
+        ->middleware(AuthMiddleware::class);
 });
 
 Route::prefix('editor')->name('editor.')->group(function () {

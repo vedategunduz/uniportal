@@ -34,7 +34,7 @@ return new class extends Migration
             $table->integer('roller_id');
             $table->string('ad', 155);
             $table->string('soyad', 155)->nullable();
-            $table->string('email', 255)->unique();
+            $table->string('email', 255)->nullable();
             $table->string('telefon', 155)->nullable();
             $table->string('adres', 155)->nullable();
             $table->string('profileFotoUrl', 155)->nullable();

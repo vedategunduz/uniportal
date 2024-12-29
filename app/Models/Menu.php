@@ -22,15 +22,11 @@ class Menu extends Model
         'islem_yapan_id',
     ];
 
-    public function anaMenuler() {
-        return $this->belongsTo(Menu::class, 'bagli_menuler_id');
-    }
-
     public function altMenuler() {
         return $this->hasMany(Menu::class, 'bagli_menuler_id');
     }
 
-    public function MenuRolIliskiBaglantisi() {
+    public function MenuRolDetayi() {
         return $this->hasMany(MenuRolIliski::class, 'menuler_id', 'menuler_id');
     }
 }

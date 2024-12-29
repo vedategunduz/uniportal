@@ -13,7 +13,8 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        return view('kullanici.index');
+        $menuler = $this->getMenuler();
+        return view('kullanici.index', compact('menuler'));
     }
 
     /**
@@ -70,7 +71,8 @@ class KullaniciController extends Controller
 
             return redirect()->intended('kullanici');
         }
-        return response('kullanıcı adı veya şifre hatalı.');
+
+        return redirect()->back();
     }
 
     public function cikis(Request $request)
@@ -79,6 +81,6 @@ class KullaniciController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return view('anasayfa.index');
+        return redirect()->route('main.index');
     }
 }

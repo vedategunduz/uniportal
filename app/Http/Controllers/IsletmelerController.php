@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Isletme;
 use App\Models\Kamu;
 use Illuminate\Http\Request;
 
-class KamularController extends Controller
+class IsletmelerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $kamular = Kamu::orderBy('baslik', 'asc')->paginate(20);
+        $isletmeler = Isletme::orderBy('baslik', 'asc')->paginate(20);
 
         if ($request->ajax()) {
             // İçeriği render edin
             $html = '';
-            foreach ($kamular as $kamu) {
+            foreach ($isletmeler as $kamu) {
                 $html .= view('components.kamu',
                     [
                         'text' => $kamu->baslik,
@@ -31,7 +32,7 @@ class KamularController extends Controller
             }
 
             // Paginator'ı render edin (Tailwind paginator'ınızı kullandığınız Blade dosyasını belirtin)
-            $pagination = $kamular->links('pagination::tailwind')->render();
+            $pagination = $isletmeler->links('pagination::tailwind')->render();
 
             return response()->json([
                 'html' => $html,
@@ -39,7 +40,7 @@ class KamularController extends Controller
             ]);
         }
 
-        return view('kamular.index', compact('kamular'));
+        return view('isletmeler.index', compact('isletmeler'));
     }
 
     /**

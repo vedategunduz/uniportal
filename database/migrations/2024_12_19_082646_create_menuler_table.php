@@ -14,7 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('bagli_menuler_id')->nullable();
             $table->string('menuAd', 100)->nullable();
             $table->string('menuLink', 100)->nullable();
-            $table->string('menuIcon', 1000)->nullable();
+            $table->longText('menuIcon')->nullable();
             $table->string('menuAciklama', 255)->nullable();
             $table->integer('menuSira');
             $table->timestamps();
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('bagli_menuler_id')->nullable();
             $table->string('menuAd', 100)->nullable();
             $table->string('menuLink', 100)->nullable();
-            $table->string('menuIcon', 1000)->nullable();
+            $table->longText('menuIcon')->nullable();
             $table->string('menuAciklama', 255)->nullable();
             $table->integer('menuSira');
             $table->char('yapilanIslem', 1);

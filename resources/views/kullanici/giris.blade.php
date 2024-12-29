@@ -13,6 +13,6 @@
             <x-label for="password" text="Şifre:" />
             <x-input type="password" name="password" id="password" value="12345600" />
         </div>
-        <x-button type="submit" text="Oturum aç" id=""/>
+        <x-button type="submit" text="Oturum aç" id="" />
     </form>
 @endsection

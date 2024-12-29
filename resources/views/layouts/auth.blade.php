@@ -14,14 +14,66 @@
 
 <body>
 
-    <nav>
-        
-    </nav>
+    <script>
+        console.log({!! $menuler !!});
+    </script>
 
-    <div class="p-4 sm:ml-64">
-        <div class="p-4 mt-14">
+    <div class="flex">
+        <aside class="w-72 h-screen shadow bg-white text-gray-900">
+            <nav class="flex flex-col h-full p-4">
+
+                <a href="{{ route('kullanici.index') }}" class="flex items-center mb-8">
+                    <img src="https://flowbite.com/docs/images/logo.svg" class="size-8 me-3" alt="Flowbite Logo" />
+                    <span class="text-2xl font-semibold whitespace-nowrap">uniportal</span>
+                </a>
+
+                <ul class="space-y-2">
+                    @foreach ($menuler as $menu)
+                        @if ($menu->bagli_menuler_id == null)
+                            <li>
+                                <a href="{{ $menu->menuLink }}" @class([
+                                    'flex items-center py-1 px-3 rounded-lg transition',
+                                    'bg-blue-700 text-white' => Request::is(ltrim($menu->menuLink, '/')),
+                                    'hover:bg-gray-100' => !Request::is(ltrim($menu->menuLink, '/')),
+                                ])>
+                                    <span class="p-1 rounded-lg me-2">
+                                        {!! $menu->menuIcon !!}
+                                    </span>
+                                    <span>{{ $menu->menuAd }}</span>
+                                </a>
+
+                                @if ($menu->altMenuler->count() > 0)
+                                    <ul class="hidden">
+                                        @foreach ($menu->altMenuler as $altMenu)
+                                            <li>
+                                                <a href="{{ $altMenu->menuLink }}">{{ $altMenu->menuAd }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+
+                <div class="mt-auto">
+                    <a href="{{ route('kullanici.cikis') }}"
+                        class="flex items-center py-2 px-3 rounded-lg hover:bg-gray-100 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="size-6 me-2">
+                            <path fill-rule="evenodd"
+                                d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h10.94l-1.72-1.72a.75.75 0 0 1 0-1.06Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Çıkış Yap</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="p-4 bg-gray-50 w-full">
             @yield('content')
-        </div>
+        </main>
     </div>
 
     @yield('scripts')
