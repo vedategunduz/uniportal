@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Etkinlik;
 use App\Models\EtkinlikTur;
 use App\Models\Il;
 use App\Models\Isletme;
@@ -70,8 +71,9 @@ class KullaniciController extends Controller
 
         $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
         $iller = Il::select('iller_id', 'baslik')->get();
+        $etkinlikler = Etkinlik::all();
 
-        return view('kullanici.etkinlikler.index', compact(['menuler', 'isletmeler', 'etkinlikTurleri', 'iller']));
+        return view('kullanici.etkinlikler.index', compact(['menuler', 'isletmeler', 'etkinlikTurleri', 'iller', 'etkinlikler']));
     }
 
     /**

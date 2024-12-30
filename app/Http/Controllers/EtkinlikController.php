@@ -72,7 +72,7 @@ class EtkinlikController extends Controller
                 }
             }
 
-            return response()->json(['succes' => 1]);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e]);
         }

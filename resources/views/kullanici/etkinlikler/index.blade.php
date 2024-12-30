@@ -27,14 +27,22 @@
             <span>Etkinlik Ekle</span>
         </button>
     </div>
-    <h3 class="mb-4">Başlık</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod illo quaerat cupiditate error vero doloremque
-        laudantium dolore quam repellat hic, sit, veniam dolorum? Nam aut quaerat amet, voluptatum possimus suscipit?
-    </p>
+
+    <div class="grid grid-cols-4">
+        @foreach ($etkinlikler as $etkinlik)
+            <div class="grid grid-cols-3">
+                <div class="">
+                    <img src="{{ asset('storage/' . $etkinlik->kapakResmiYolu) }}" alt="">
+                </div>
+                <div class="col-span-2">
+                    {{ $etkinlik->baslik }}
+                </div>
+            </div>
+        @endforeach
+    </div>
 
     <section id="etkinlikModal"
-        class="fixed top-0 left-0 w-screen h-screen inset-0 z-10 overflow-auto max-h-screen py-4">
+        class="hidden fixed top-0 left-0 w-screen h-screen inset-0 z-10 overflow-auto max-h-screen py-4">
         <button type="button" title="modalı kapat" class="fixed top-0 left-0 w-full h-full bg-black/30 cursor-pointer z-20"
             data-modal-target="etkinlikModal"></button>
 
@@ -132,8 +140,8 @@
                                     class="h-48 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
                                     <span class="font-medium text-gray-500">Diğer resimler</span>
                                 </label>
-                                <input type="file" name="etkinlikDigerResimler[]" class="sr-only" id="etkinlikDigerResimler"
-                                    accept="image/*">
+                                <input type="file" name="etkinlikDigerResimler[]" class="sr-only"
+                                    id="etkinlikDigerResimler" accept="image/*">
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="mb-3">
@@ -199,7 +207,8 @@
                                     <label class="cursor-pointer flex justify-between items-center gap-4">
                                         <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Sosyal medyada
                                             paylaş</span>
-                                        <input type="checkbox" name="etkinlikSosyalMedyadaPaylas" class="sr-only peer" checked>
+                                        <input type="checkbox" name="etkinlikSosyalMedyadaPaylas" class="sr-only peer"
+                                            checked>
                                         <div
                                             class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                         </div>

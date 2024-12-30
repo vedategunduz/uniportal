@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const responseData = await response.json();
             console.log('Başarılı:', responseData);
+            if(responseData.success) {
+                document.getElementById('etkinlikModal').classList.add('hidden');
+            }
         } catch (error) {
             console.error('Hata:', error);
         }
