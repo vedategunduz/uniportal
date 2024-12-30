@@ -17,4 +17,8 @@ abstract class Controller
             ->orderBy('menuSira')
             ->get();
     }
+
+    protected function uploadImage() {
+        
+    }
 }

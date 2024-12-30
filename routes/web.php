@@ -6,18 +6,16 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
-use App\Http\Controllers\KamularController;
+use App\Http\Controllers\IsletmelerController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\NotAuthMiddleware;
-use App\Models\Isletme;
-use Illuminate\Container\Attributes\Auth;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
 Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
-    Route::get('/', [Isletme::class, 'index'])->name('index');
+    Route::get('/', [IsletmelerController::class, 'index'])->name('index');
 });
 
 Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
@@ -25,7 +23,6 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
     Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
     Route::prefix('ekle')->name('ekle.')->group(function () {
-        Route::get('/', [EtkinlikController::class, 'create'])->name('create');
         Route::post('/', [EtkinlikController::class, 'store'])->name('store');
     });
 });
@@ -37,6 +34,7 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
+            Route::post('/ekle', [EtkinlikController::class, 'store']);
         });
 
         Route::prefix('isletmeler')->name('isletmeler.')->group(function () {

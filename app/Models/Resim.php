@@ -16,8 +16,7 @@ class Resim extends Model
 
     protected $fillable = [
         'etkinlikler_id',
-        'hizmetler_id',
-        'resimyolu',
+        'resimYolu',
         'islem_yapan_id',
     ];
 }

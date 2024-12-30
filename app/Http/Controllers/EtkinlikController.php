@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Etkinlik;
+use App\Models\Resim;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EtkinlikController extends Controller
 {
@@ -27,7 +30,52 @@ class EtkinlikController extends Controller
      */
     public function store(Request $request)
     {
-        // return redirect()->route('etkinlik.ekle.create')->with('success', 'Etkinlik başarıyla eklendi.');
+        try {
+            $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
+            $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
+
+            if ($request->hasFile('etkinlikKapakResmi')) {
+                $image = $request->file('etkinlikKapakResmi');
+                // Dosya adını benzersiz yapmak için
+                $name = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+
+                // Dosyayı 'public/images' dizinine kaydet
+                $path = $image->storeAs('images', $name, 'public');
+            }
+
+            $etkinlik = Etkinlik::create([
+                'etkinlik_turleri_id' => decrypt($request->etkinlikTur),
+                'isletmeler_id' => decrypt($request->etkinlikIsletme),
+                'iller_id' => decrypt($request->etkinlikIl),
+                'kontenjan' => $request->etkinlikKontenjan,
+                'etkinlikBasvuruTarihi' => $request->etkinlikBasvuru,
+                'etkinlikBasvuruBitisTarihi' => $request->etkinlikBasvuruBitis,
+                'etkinlikBaslamaTarihi' => $request->etkinlikBaslangic,
+                'etkinlikBitisTarihi' => $request->etkinlikBitis,
+                'kapakResmiYolu' => $path ?? null,
+                'baslik' => $request->etkinlikBaslik,
+                'aciklama' => $request->etkinlikAciklama,
+                'sosyalMedyadaPaylas' => $sosyalMedya,
+                'yorumDurumu' => $yorumDurumu,
+            ]);
+
+            if($request->hasFile('etkinlikDigerResimler')) {
+                foreach($request->file('etkinlikDigerResimler') as $image) {
+                    $name = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                    // Dosyayı 'public/images' dizinine kaydet
+                    $path = $image->storeAs('images', $name, 'public');
+
+                    Resim::create([
+                        'etkinlikler_id' => $etkinlik->etkinlikler_id,
+                        'resimYolu' => $path
+                    ]);
+                }
+            }
+
+            return response()->json(['succes' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e]);
+        }
     }
 
     /**

@@ -14,22 +14,22 @@ return new class extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        Schema::create('hizmet_il_detaylari', function (Blueprint $table) {
-            $table->id('hizmet_il_detaylari_id');
-            $table->unsignedBigInteger('hizmetler_id')->nullable();
+        Schema::create('etkinlik_il_detaylari', function (Blueprint $table) {
+            $table->id('etkinlik_il_detaylari_id');
+            $table->unsignedBigInteger('etkinlikler_id')->nullable();
             $table->unsignedBigInteger('iller_id');
             $table->timestamps();
 
             // Foreign
-            $table->foreign('hizmetler_id')->references('hizmetler_id')->on('hizmetler')->onDelete('restrict');
+            $table->foreign('etkinlikler_id')->references('etkinlikler_id')->on('etkinlikler')->onDelete('restrict');
             $table->foreign('iller_id')->references('iller_id')->on('iller')->onDelete('restrict');
         });
 
         Schema::enableForeignKeyConstraints();
 
-        Schema::create('hizmet_il_detaylari_log', function (Blueprint $table) {
-            $table->integer('hizmet_il_detaylari_id');
-            $table->integer('hizmetler_id')->nullable();
+        Schema::create('etkinlik_il_detaylari_log', function (Blueprint $table) {
+            $table->integer('etkinlik_il_detaylari_id');
+            $table->integer('etkinlikler_id')->nullable();
             $table->integer('iller_id');
 
             $table->char('yapilanIslem', 1);
@@ -37,13 +37,13 @@ return new class extends Migration
         });
 
         DB::unprepared("
-            CREATE TRIGGER hizmet_il_detaylari_insert
-            AFTER INSERT ON hizmet_il_detaylari
+            CREATE TRIGGER etkinlik_il_detaylari_insert
+            AFTER INSERT ON etkinlik_il_detaylari
             FOR EACH ROW
             BEGIN
-                INSERT INTO hizmet_il_detaylari_log (
-                    hizmet_il_detaylari_id,
-                    hizmetler_id,
+                INSERT INTO etkinlik_il_detaylari_log (
+                    etkinlik_il_detaylari_id,
+                    etkinlikler_id,
                     iller_id,
                     yapianIslem,
                     aktiflik,
@@ -52,8 +52,8 @@ return new class extends Migration
                     updated_at
                 )
                 VALUES (
-                    NEW.hizmet_il_detaylari_id,
-                    NEW.hizmetler_id,
+                    NEW.etkinlik_il_detaylari_id,
+                    NEW.etkinlikler_id,
                     NEW.iller_id,
                     'E',
                     NEW.aktiflik,
@@ -65,13 +65,13 @@ return new class extends Migration
         ");
 
         DB::unprepared("
-            CREATE TRIGGER hizmet_il_detaylari_update
-            AFTER UPDATE ON hizmet_il_detaylari
+            CREATE TRIGGER etkinlik_il_detaylari_update
+            AFTER UPDATE ON etkinlik_il_detaylari
             FOR EACH ROW
             BEGIN
-                INSERT INTO hizmet_il_detaylari_log (
-                    hizmet_il_detaylari_id,
-                    hizmetler_id,
+                INSERT INTO etkinlik_il_detaylari_log (
+                    etkinlik_il_detaylari_id,
+                    etkinlikler_id,
                     iller_id,
                     yapilanIslem,
                     aktiflik,
@@ -80,8 +80,8 @@ return new class extends Migration
                     updated_at
                 )
                 VALUES (
-                    NEW.hizmet_il_detaylari_id,
-                    NEW.hizmetler_id,
+                    NEW.etkinlik_il_detaylari_id,
+                    NEW.etkinlikler_id,
                     NEW.iller_id,
                     'G',
                     NEW.aktiflik,
@@ -99,9 +99,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hizmet_il_detaylari');
-        Schema::dropIfExists('hizmet_il_detaylari_log');
-        DB::unprepared("DROP TRIGGER IF EXISTS hizmet_il_detaylari_insert");
-        DB::unprepared("DROP TRIGGER IF EXISTS hizmet_il_detaylari_update");
+        Schema::dropIfExists('etkinlik_il_detaylari');
+        Schema::dropIfExists('etkinlik_il_detaylari_log');
+        DB::unprepared("DROP TRIGGER IF EXISTS etkinlik_il_detaylari_insert");
+        DB::unprepared("DROP TRIGGER IF EXISTS etkinlik_il_detaylari_update");
     }
 };

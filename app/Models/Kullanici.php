@@ -36,6 +36,10 @@ class Kullanici extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
+    public function YetkiliOlduguIsletmeler(){
+        return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id');
+    }
+
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'roller_id');

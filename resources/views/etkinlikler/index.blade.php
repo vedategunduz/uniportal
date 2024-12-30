@@ -85,8 +85,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <x-label for="summernote" text="İçerik:"/>
-                            <textarea id="summernote" name="icerik"></textarea>
+                            <x-label for="etkinlikAciklama" text="İçerik:"/>
+                            <textarea id="etkinlikAciklama" name="icerik"></textarea>
                         </div>
 
                         <div class="flex gap-4">

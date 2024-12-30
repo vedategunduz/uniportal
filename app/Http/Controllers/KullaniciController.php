@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EtkinlikTur;
+use App\Models\Il;
 use App\Models\Isletme;
+use App\Models\IsletmeYetkili;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +31,8 @@ class KullaniciController extends Controller
             // İçeriği render edin
             $html = '';
             foreach ($kamular as $kamu) {
-                $html .= view('components.kamu',
+                $html .= view(
+                    'components.kamu',
                     [
                         'text' => $kamu->baslik,
                         'href' => "/$kamu->kamular_id",
@@ -37,7 +41,8 @@ class KullaniciController extends Controller
                         'xUrl' => $kamu->xUrl,
                         'instagramUrl' => $kamu->instagramUrl,
                         'linkedinUrl' => $kamu->linkedinUrl,
-                    ])->render();
+                    ]
+                )->render();
             }
 
             // Paginator'ı render edin (Tailwind paginator'ınızı kullandığınız Blade dosyasını belirtin)
@@ -52,10 +57,21 @@ class KullaniciController extends Controller
         return view('kullanici.kamular.index', compact(['menuler', 'kamular']));
     }
 
-    public function etkinlikler() {
+    public function etkinlikler()
+    {
         $menuler = $this->getMenuler();
 
-        return view('kullanici.etkinlikler.index', compact('menuler'));
+        $isletmeler = IsletmeYetkili::select('isletmeler_id')
+            ->with(['isletmeBilgileri' => function ($query) {
+                $query->select('isletmeler_id', 'baslik');
+            }])
+            ->where('kullanicilar_id', Auth::user()->kullanicilar_id)
+            ->get();
+
+        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
+        $iller = Il::select('iller_id', 'baslik')->get();
+
+        return view('kullanici.etkinlikler.index', compact(['menuler', 'isletmeler', 'etkinlikTurleri', 'iller']));
     }
 
     /**

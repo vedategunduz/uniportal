@@ -17,13 +17,11 @@ return new class extends Migration
         Schema::create('resimler', function (Blueprint $table) {
             $table->id('resimler_id');
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
-            $table->unsignedBigInteger('kamu_hizmetleri_id')->nullable();
-            $table->unsignedBigInteger('hizmetler_id')->nullable();
-            $table->string('resimyolu', 500);
+            $table->string('resimYolu');
             $table->timestamps();
         });
 
-        // Schema::enableForeignKeyConstraints();
+        Schema::enableForeignKeyConstraints();
 
         // Schema::create('resimler_log', function (Blueprint $table) {
         //     $table->integer('resimler_id');

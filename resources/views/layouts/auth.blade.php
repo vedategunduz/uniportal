@@ -83,7 +83,7 @@
             </nav>
         </aside>
 
-        <main class="p-4 max-w-screen-xl mx-auto w-full">
+        <main class="p-4 w-full">
             @yield('content')
         </main>
     </div>

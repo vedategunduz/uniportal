@@ -17,13 +17,16 @@ class Etkinlik extends Model
     protected $fillable = [
         'etkinlik_turleri_id',
         'isletmeler_id',
+        'iller_id',
         'etkinlikBasvuruTarihi',
         'etkinlikBasvuruBitisTarihi',
         'etkinlikBaslamaTarihi',
         'etkinlikBitisTarihi',
+        'kapakResmiYolu',
+        'baslik',
+        'aciklama',
         'kontenjan',
         'yorumDurumu',
-        'aciklama',
         'islem_yapan_id',
     ];
 }
