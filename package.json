@@ -34,6 +34,7 @@
         "@editorjs/underline": "^1.2.1",
         "@editorjs/warning": "^1.4.1",
         "@sotaproject/strikethrough": "^1.0.1",
+        "datatables.net-dt": "^2.1.8",
         "editor-js-alignment-tune": "^1.0.1",
         "editorjs-color-picker": "^1.0.6",
         "editorjs-header-with-alignment": "^1.0.1",

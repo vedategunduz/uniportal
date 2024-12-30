@@ -27,23 +27,49 @@
             <span>Etkinlik Ekle</span>
         </button>
     </div>
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
 
-    <div class="grid grid-cols-4">
-        @foreach ($etkinlikler as $etkinlik)
-            <div class="grid grid-cols-3">
-                <div class="">
-                    <img src="{{ asset('storage/' . $etkinlik->kapakResmiYolu) }}" alt="">
-                </div>
-                <div class="col-span-2">
-                    {{ $etkinlik->baslik }}
-                </div>
-            </div>
-        @endforeach
+    <div class="grid">
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <th>Başlık</th>
+                    <th>Başvuru Tarihi</th>
+                    <th>Başvuru Bitiş Tarihi</th>
+                </tr>
+            </thead>
+            <tbody id="eklenecek">
+                @for ($i = 0; $i < 10; $i++)
+                    @foreach ($etkinlikler as $etkinlik)
+                        <tr>
+                            <td>{{ $etkinlik->baslik }}</td>
+                            <td>{{ $etkinlik->etkinlikBasvuruTarihi }}</td>
+                            <td><img src="{{ asset('storage/' . $etkinlik->kapakResmiYolu) }}" class="size-12"
+                                    alt=""></td>
+                        </tr>
+                    @endforeach
+                @endfor
+            </tbody>
+        </table>
+
+        <button id="tikla">dwqwq</button>
     </div>
+    <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+    <script>
+        let table = new DataTable('#myTable');
+        document.getElementById('tikla').addEventListener('click', function() {
+            table.row.add([
+                '1',
+                '2',
+                '3'
+            ]).draw();
+        });
+    </script>
 
     <section id="etkinlikModal"
         class="hidden fixed top-0 left-0 w-screen h-screen inset-0 z-10 overflow-auto max-h-screen py-4">
-        <button type="button" title="modalı kapat" class="fixed top-0 left-0 w-full h-full bg-black/30 cursor-pointer z-20"
+        <button type="button" title="modalı kapat"
+            class="fixed top-0 left-0 w-full h-full bg-black/30 cursor-pointer z-20"
             data-modal-target="etkinlikModal"></button>
 
         <div class="mx-auto max-w-screen-xl z-30 relative">
@@ -59,7 +85,8 @@
                     </button>
                 </header>
 
-                <section class="px-4 py-8">
+                 <div id="kabuk"></div>
+                {{-- <section class="px-4 py-8">
                     <form method="POST" id="etkinlikForm" class="grid md:grid-cols-2 gap-4">
                         <section>
                             <div class="mb-3">
@@ -228,7 +255,7 @@
                             </div>
                         </section>
                     </form>
-                </section>
+                </section> --}}
             </div>
         </div>
     </section>
@@ -236,6 +263,7 @@
 
 @section('scripts')
     <script src="{{ asset('js/etkinlik-form.js') }}"></script>
+    <script src="{{ asset('js/data-table.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#etkinlikAciklama').summernote({

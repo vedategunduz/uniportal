@@ -14,6 +14,8 @@ Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
+
+
 Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
     Route::get('/', [IsletmelerController::class, 'index'])->name('index');
 });
@@ -33,6 +35,7 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
             ->name('index');
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
+            Route::get('/modal', [KullaniciController::class, 'modal']);
             Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
             Route::post('/ekle', [EtkinlikController::class, 'store']);
         });

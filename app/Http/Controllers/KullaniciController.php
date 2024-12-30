@@ -23,6 +23,25 @@ class KullaniciController extends Controller
         return view('kullanici.index', compact('menuler'));
     }
 
+    public function modal()
+    {
+        $menuler = $this->getMenuler();
+
+        $isletmeler = IsletmeYetkili::select('isletmeler_id')
+            ->with(['isletmeBilgileri' => function ($query) {
+                $query->select('isletmeler_id', 'baslik');
+            }])
+            ->where('kullanicilar_id', Auth::user()->kullanicilar_id)
+            ->get();
+
+        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
+        $iller = Il::select('iller_id', 'baslik')->get();
+        $etkinlikler = Etkinlik::all();
+
+
+        return view('kullanici.etkinlikler.modal', compact(['menuler', 'isletmeler', 'etkinlikTurleri', 'iller', 'etkinlikler']));
+    }
+
     public function kamular(Request $request)
     {
         $menuler = $this->getMenuler();

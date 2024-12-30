@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Isletme;
-use App\Models\Kamu;
 use Illuminate\Http\Request;
 
 class IsletmelerController extends Controller
