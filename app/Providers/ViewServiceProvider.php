@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Etkinlik;
 use App\Models\EtkinlikTur;
 use App\Models\Il;
 use App\Models\IsletmeYetkili;
@@ -53,9 +52,8 @@ class ViewServiceProvider extends ServiceProvider
 
                 $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
                 $iller = Il::select('iller_id', 'baslik')->get();
-                $etkinlikler = Etkinlik::all();
 
-                $view->with(compact('isletmeler', 'etkinlikTurleri', 'iller', 'etkinlikler'));
+                $view->with(compact('isletmeler', 'etkinlikTurleri', 'iller'));
             }
         });
     }

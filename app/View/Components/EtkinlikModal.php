@@ -8,8 +8,9 @@ use Illuminate\View\Component;
 
 class EtkinlikModal extends Component
 {
-    public $baslik;
-    public $isletmeler;
+    public $modalBaslik;
+    public $etkinlikBaslik;
+    public $isletme;
     public $kategoriler;
     public $aciklama;
     public $basvuruTarih;
@@ -22,37 +23,42 @@ class EtkinlikModal extends Component
     public $sosyalMedyaDurum;
     public $kapakResim;
     public $digerResimler;
+    public $postUrl;
 
     public function __construct(
-        // $baslik = "",
-        // $isletmeler = "",
-        // $kategoriler,
-        // $aciklama = null,
-        // $basvuruTarih,
-        // $basvuruBitisTarih,
-        // $baslamaTarih,
-        // $bitisTarih,
-        // $kontenjan,
-        // $sehir,
-        // $yorumDurum,
-        // $sosyalMedyaDurum,
-        // $kapakResim = null,
-        // $digerResimler = []
+        $modalBaslik = "",
+        $etkinlikBaslik = "",
+        $isletme = "",
+        $kategoriler = "",
+        $aciklama = "",
+        $basvuruTarih = "",
+        $basvuruBitisTarih = "",
+        $baslamaTarih = "",
+        $bitisTarih = "",
+        $kontenjan = "",
+        $sehir = "",
+        $yorumDurum = "",
+        $sosyalMedyaDurum = "",
+        $kapakResim = "",
+        $digerResimler = [],
+        $postUrl,
     ) {
-        // $this->baslik = $baslik;
-        // $this->isletmeler = $isletmeler;
-        // $this->kategoriler = $kategoriler;
-        // $this->aciklama = $aciklama;
-        // $this->basvuruTarih = $basvuruTarih;
-        // $this->basvuruBitisTarih = $basvuruBitisTarih;
-        // $this->baslamaTarih = $baslamaTarih;
-        // $this->bitisTarih = $bitisTarih;
-        // $this->kontenjan = $kontenjan;
-        // $this->sehir = $sehir;
-        // $this->yorumDurum = $yorumDurum;
-        // $this->sosyalMedyaDurum = $sosyalMedyaDurum;
-        // $this->kapakResim = $kapakResim;
-        // $this->digerResimler = $digerResimler;
+        $this->modalBaslik = $modalBaslik;
+        $this->etkinlikBaslik = $etkinlikBaslik;
+        $this->isletme = $isletme;
+        $this->kategoriler = $kategoriler;
+        $this->aciklama = $aciklama;
+        $this->basvuruTarih = $basvuruTarih;
+        $this->basvuruBitisTarih = $basvuruBitisTarih;
+        $this->baslamaTarih = $baslamaTarih;
+        $this->bitisTarih = $bitisTarih;
+        $this->kontenjan = $kontenjan;
+        $this->sehir = $sehir;
+        $this->yorumDurum = $yorumDurum;
+        $this->sosyalMedyaDurum = $sosyalMedyaDurum;
+        $this->kapakResim = $kapakResim;
+        $this->digerResimler = $digerResimler;
+        $this->postUrl = $postUrl;
     }
 
     /**

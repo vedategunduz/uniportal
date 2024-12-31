@@ -2,26 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\NotAuthMiddleware;
+
 use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\IsletmelerController;
-use App\Http\Middleware\AuthMiddleware;
-use App\Http\Middleware\NotAuthMiddleware;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
-
-
 
 Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
     Route::get('/', [IsletmelerController::class, 'index'])->name('index');
 });
 
 Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-
     Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
     Route::prefix('ekle')->name('ekle.')->group(function () {
@@ -35,7 +33,13 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
-            Route::post('/ekle', [EtkinlikController::class, 'store'])->name('ekle');
+
+            Route::post('/{id}', [KullaniciController::class, 'update']);
+            // Etkinlik modalları
+            Route::prefix('modal')->group(function () {
+                Route::get('/ekle', [KullaniciController::class, 'modalEkle']);
+                Route::get('/duzenle/{id}', [KullaniciController::class, 'modalDuzenle']);
+            });
         });
 
         Route::prefix('isletmeler')->name('isletmeler.')->group(function () {

@@ -1,9 +1,9 @@
 <header class="flex justify-between rounded-t-md items-center p-4 border-b bg-blue-700 text-white">
-    <h2 class="font-medium text-lg">{{ $baslik }}</h2>
+    <h2 class="font-medium text-lg">{{ $modalBaslik }}</h2>
 
-    <button type="button" data-modal-target="etkinlikModal">
+    <button type="button" class="close-modal" data-modal-target="etkinlikModal">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="size-6">
+            class="size-6 pointer-events-none">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
     </button>
@@ -25,7 +25,8 @@
                 </select>
             </div>
             <div class="mb-3 font-medium">
-                <x-input id="etkinlikBaslik" type="text" name="etkinlikBaslik" placeholder="Etkinlik Adı" />
+                <x-input id="etkinlikBaslik" type="text" name="etkinlikBaslik" placeholder="Etkinlik Adı"
+                    value="{{ $etkinlikBaslik }}" />
             </div>
             <div class="my-3">
                 <select name="etkinlikTur" id="etkinlikTur"
@@ -177,3 +178,43 @@
         </section>
     </form>
 </section>
+
+{{-- POST --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('etkinlikForm');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute(
+                'content');
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('{{ $postUrl }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Ağ yanıtı uygun değil: ' + response.statusText);
+                }
+
+                const responseData = await response.json();
+                console.log('Başarılı:', responseData);
+                if (responseData.success) {
+                    document.getElementById('etkinlikModal').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+            }
+        });
+    });
+</script>

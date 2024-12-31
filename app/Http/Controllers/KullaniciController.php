@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Etkinlik;
 use App\Models\Isletme;
+use Dotenv\Util\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,7 +55,8 @@ class KullaniciController extends Controller
 
     public function etkinlikler()
     {
-        return view('kullanici.etkinlikler.index');
+        $etkinlikler = Etkinlik::orderBy('baslik', 'asc')->paginate(20);
+        return view('kullanici.etkinlikler.index', compact('etkinlikler'));
     }
 
     /**
@@ -77,9 +80,34 @@ class KullaniciController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id) {}
+
+    public function modalEkle()
     {
-        //
+        $html = view('components.etkinlik-modal', [
+            'modalBaslik' => 'Yeni Etkinlik Oluştur',
+            'etkinlikBaslik' => '',
+            'postUrl' => url('kullanici/etkinlikler/store'),
+        ])->render();
+
+        return response()->json([
+            'html' =>  $html
+        ]);
+    }
+
+    public function modalDuzenle(string $id)
+    {
+        $etkinlik = Etkinlik::find($id);
+
+        $html = view('components.etkinlik-modal', [
+            'modalBaslik' => 'Etkinlik Düzenle',
+            'etkinlikBaslik' => $etkinlik->baslik,
+            'postUrl' => url('kullanici/etkinlikler/'),
+        ])->render();
+
+        return response()->json([
+            'html' =>  $html
+        ]);
     }
 
     /**
