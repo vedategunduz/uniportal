@@ -31,13 +31,11 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
     Route::middleware(AuthMiddleware::class)->group(function () {
-        Route::get('/', [KullaniciController::class, 'index'])
-            ->name('index');
+        Route::get('/', [KullaniciController::class, 'index'])->name('index');
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-            Route::get('/modal', [KullaniciController::class, 'modal']);
             Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
-            Route::post('/ekle', [EtkinlikController::class, 'store']);
+            Route::post('/ekle', [EtkinlikController::class, 'store'])->name('ekle');
         });
 
         Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
@@ -50,12 +48,9 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
     // Giriş rota grubu
     Route::prefix('giris')->name('giris.')->group(function () {
         // Giriş formu
-        Route::get('/', [KullaniciController::class, 'girisForm'])
-            ->name('form');
-
+        Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
         // Giriş işlemi
-        Route::post('/', [KullaniciController::class, 'girisYap'])
-            ->name('yap');
+        Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
     })->middleware(NotAuthMiddleware::class);
 
     // Çıkış rotası
@@ -65,15 +60,11 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 });
 
 Route::prefix('editor')->name('editor.')->group(function () {
-    Route::post('store', [EditorController::class, 'store'])->name('store');
-
-    Route::get('summernote', [EditorController::class, 'index'])->name('index');
-
     Route::prefix('file')->name('file.')->group(function () {
         Route::post('upload', [EditorController::class, 'fileUpload'])->name('yukle');
     });
 
     Route::prefix('image')->name('image.')->group(function () {
-        Route::post('upload', [EditorController::class, 'imageUpload']);
+        Route::post('upload', [EditorController::class, 'imageUpload'])->name('yukle');
     });
 });

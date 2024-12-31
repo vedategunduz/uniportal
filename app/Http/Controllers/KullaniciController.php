@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Etkinlik;
-use App\Models\EtkinlikTur;
-use App\Models\Il;
 use App\Models\Isletme;
-use App\Models\IsletmeYetkili;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,33 +14,11 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        $menuler = $this->getMenuler();
-
-        return view('kullanici.index', compact('menuler'));
-    }
-
-    public function modal()
-    {
-        $menuler = $this->getMenuler();
-
-        $isletmeler = IsletmeYetkili::select('isletmeler_id')
-            ->with(['isletmeBilgileri' => function ($query) {
-                $query->select('isletmeler_id', 'baslik');
-            }])
-            ->where('kullanicilar_id', Auth::user()->kullanicilar_id)
-            ->get();
-
-        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
-        $iller = Il::select('iller_id', 'baslik')->get();
-        $etkinlikler = Etkinlik::all();
-
-
-        return view('kullanici.etkinlikler.modal', compact(['menuler', 'isletmeler', 'etkinlikTurleri', 'iller', 'etkinlikler']));
+        return view('kullanici.index');
     }
 
     public function kamular(Request $request)
     {
-        $menuler = $this->getMenuler();
         $kamular = Isletme::where('isletme_turleri_id', 1)->orderBy('baslik', 'asc')->paginate(20);
 
         if ($request->ajax()) {
@@ -74,25 +48,12 @@ class KullaniciController extends Controller
             ]);
         }
 
-        return view('kullanici.kamular.index', compact(['menuler', 'kamular']));
+        return view('kullanici.kamular.index', compact(['kamular']));
     }
 
     public function etkinlikler()
     {
-        $menuler = $this->getMenuler();
-
-        $isletmeler = IsletmeYetkili::select('isletmeler_id')
-            ->with(['isletmeBilgileri' => function ($query) {
-                $query->select('isletmeler_id', 'baslik');
-            }])
-            ->where('kullanicilar_id', Auth::user()->kullanicilar_id)
-            ->get();
-
-        $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
-        $iller = Il::select('iller_id', 'baslik')->get();
-        $etkinlikler = Etkinlik::all();
-
-        return view('kullanici.etkinlikler.index', compact(['menuler', 'isletmeler', 'etkinlikTurleri', 'iller', 'etkinlikler']));
+        return view('kullanici.etkinlikler.index');
     }
 
     /**

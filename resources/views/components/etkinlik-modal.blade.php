@@ -1,3 +1,14 @@
+<header class="flex justify-between rounded-t-md items-center p-4 border-b bg-blue-700 text-white">
+    <h2 class="font-medium text-lg">{{ $baslik }}</h2>
+
+    <button type="button" data-modal-target="etkinlikModal">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+    </button>
+</header>
+
 <section class="px-4 py-8">
     <form method="POST" id="etkinlikForm" class="grid md:grid-cols-2 gap-4">
         <section>
@@ -151,7 +162,7 @@
                         </div>
                     </label>
                     <p class="text-xs text-gray-500">Etkinlik
-                        instagram sayfanızda yayınlanır.</p>
+                        instagram sayfamızda yayınlanır.</p>
                 </div>
             </div>
 

@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Etkinlik;
 use App\Models\Resim;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-
 class EtkinlikController extends Controller
 {
     /**
