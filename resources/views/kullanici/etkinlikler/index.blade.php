@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+
     <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
 @endsection
 
@@ -35,6 +36,32 @@
             <div class="bg-white rounded-md" id="etkinlikModalContent"></div>
         </div>
     </section>
+
+    <button type="button" id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
+        class="flex items-center font-medium justify-between border text-sm py-2 px-3 text-gray-900 rounded-md hover:bg-gray-50 transition w-full">
+        <span>Katılım Sınırlaması <span class="text-gray-600 text-xs">(Opsiyonel)</span></span>
+        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+        </svg>
+    </button>
+    <!-- Dropdown menu -->
+    <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow py-2">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-4  h-48 overflow-auto">
+            @foreach ($iller as $il)
+                @php
+                    $sifreli_il_id = 'checbox_' . encrypt($il->iller_id);
+                @endphp
+                <div class="flex items-center">
+                    <input id="{{ $sifreli_il_id }}" type="checkbox"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="{{ $sifreli_il_id }}"
+                        class="ms-2 text-sm font-medium text-gray-900 select-none">{{ $il->baslik }}</label>
+                </div>
+            @endforeach
+
+        </div>
+    </div>
 
     <table id="myTable">
         <thead>

@@ -16,11 +16,12 @@
                 <select name="etkinlikIsletme" id="etkinlikIsletme"
                     class="bg-gray-50 border font-medium border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     @if ($isletmeler->count() > 1)
-                        <option selected>İşletme seçin</option>
+                        <option>İşletme seçin</option>
                     @endif
-                    @foreach ($isletmeler as $isletme)
-                        <option value="{{ encrypt($isletme->isletmeBilgileri->isletmeler_id) }}">
-                            {{ $isletme->isletmeBilgileri->baslik }}</option>
+                    @foreach ($isletmeler as $rowIsletme)
+                        <option value="{{ encrypt($rowIsletme->isletmeler_id) }}"
+                            @if ($isletme == $rowIsletme->isletmeler_id) selected @endif>
+                            {{ $rowIsletme->isletmeBilgileri->baslik }}</option>
                     @endforeach
                 </select>
             </div>
@@ -72,7 +73,7 @@
             </div>
             <div class="mb-3">
                 <x-label for="etkinlikAciklama" text="Açıklama" />
-                <textarea id="etkinlikAciklama" name="etkinlikAciklama"></textarea>
+                <textarea id="etkinlikAciklama" name="etkinlikAciklama">{{ $aciklama }}</textarea>
             </div>
         </section>
 
@@ -90,7 +91,7 @@
                     class="h-48 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
                     <span class="font-medium text-gray-500">Diğer resimler</span>
                 </label>
-                <input type="file" name="etkinlikDigerResimler[]" class="sr-only" id="etkinlikDigerResimler"
+                <input type="file" name="etkinlikDigerResimler[]" multiple class="sr-only" id="etkinlikDigerResimler"
                     accept="image/*">
             </div>
             <div class="grid grid-cols-2 gap-4">
@@ -122,7 +123,7 @@
             <!-- Dropdown menu -->
             <div id="dropdownNavbar"
                 class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow py-2">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-4  h-48 overflow-auto">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-4 h-48 overflow-auto">
                     @foreach ($iller as $il)
                         @php
                             $sifreli_il_id = 'checbox_' . encrypt($il->iller_id);
@@ -167,10 +168,9 @@
                 </div>
             </div>
 
-
             <div class="flex items-center justify-end gap-2 mt-8 border-t pt-4">
                 <button type="button" data-modal-target="etkinlikModal"
-                    class="py-2 px-3 rounded-md border text-gray-900 hover:bg-gray-50 transition">Vazgeç</button>
+                    class="close-modal py-2 px-3 rounded-md border text-gray-900 hover:bg-gray-50 transition">Vazgeç</button>
                 <button type="submit"
                     class="py-2 px-3 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">Etkinlik
                     Oluştur</button>

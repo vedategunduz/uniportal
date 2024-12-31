@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
+use App\Models\Il;
 use App\Models\Isletme;
-use Dotenv\Util\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,8 +55,9 @@ class KullaniciController extends Controller
 
     public function etkinlikler()
     {
+        $iller = Il::all();
         $etkinlikler = Etkinlik::orderBy('baslik', 'asc')->paginate(20);
-        return view('kullanici.etkinlikler.index', compact('etkinlikler'));
+        return view('kullanici.etkinlikler.index', compact('etkinlikler', 'iller'));
     }
 
     /**
@@ -86,8 +87,10 @@ class KullaniciController extends Controller
     {
         $html = view('components.etkinlik-modal', [
             'modalBaslik' => 'Yeni Etkinlik Oluştur',
+            'isletme' => '',
             'etkinlikBaslik' => '',
-            'postUrl' => url('kullanici/etkinlikler/store'),
+            'aciklama' => '',
+            'postUrl' => url('kullanici/etkinlikler/ekle'),
         ])->render();
 
         return response()->json([
@@ -102,7 +105,9 @@ class KullaniciController extends Controller
 
         $html = view('components.etkinlik-modal', [
             'modalBaslik' => 'Etkinlik Düzenle',
+            'isletme' => $etkinlik->isletmeler_id,
             'etkinlikBaslik' => $etkinlik->baslik,
+            'aciklama' => $etkinlik->aciklama,
             'postUrl' => url('kullanici/etkinlikler/'),
         ])->render();
 
