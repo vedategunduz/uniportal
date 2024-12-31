@@ -178,7 +178,6 @@
         </section>
     </form>
 </section>
-
 {{-- POST --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {

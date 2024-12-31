@@ -8,15 +8,12 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
 @endsection
 
 @section('content')
     <h3 class="font-semibold mb-4">Etkinlikler</h3>
-    <div class="flex justify-between items-center mb-4">
-        <input type="text" name="q" id="q"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
-            placeholder="Ara...">
-
+    <div class="mb-4">
         <button type="button" data-modal-target="etkinlikModal"
             class="open-modal py-2 px-3 rounded-md shadow-md text-white bg-blue-600 hover:bg-blue-700 transition flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -39,21 +36,29 @@
         </div>
     </section>
 
-    <table>
+    <table id="myTable">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Başlık</th>
+                <th>Kontenjan</th>
+                <th>Etkinlik Başlama</th>
+                <th>Etkinlik Bitiş</th>
+                <th>Başvuru Başlama</th>
+                <th>Başvuru Bitiş</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach ($etkinlikler as $etkinlik)
                 <tr>
-                    <td>{{ $etkinlik->etkinlikler_id }}</td>
                     <td>{{ $etkinlik->baslik }}</td>
-                    <td><button class="etkinlikDuzenleButton open-modal" data-modal-target="etkinlikModal"
-                            data-target="{{ $etkinlik->etkinlikler_id }}" type="button"
+                    <td>{{ $etkinlik->kontenjan }}</td>
+                    <td>{{ $etkinlik->etkinlikBaslamaTarihi }}</td>
+                    <td>{{ $etkinlik->etkinlikBitisTarihi }}</td>
+                    <td>{{ $etkinlik->etkinlikBasvuruTarihi }}</td>
+                    <td>{{ $etkinlik->etkinlikBasvuruBitisTarihi }}</td>
+                    <td><button class="etkinlikDuzenleButton" data-modal-target="etkinlikModal"
+                            data-target="{{ encrypt($etkinlik->etkinlikler_id) }}" type="button"
                             class="px-3 py-1 border rounded-md">Düzenle</button>
                     </td>
                 </tr>
@@ -63,7 +68,37 @@
 @endsection
 
 @section('scripts')
+    <script src="//cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script>
+        let table = new DataTable('#myTable', {
+            responsive: true,
+            language: {
+                "decimal": ",",
+                "emptyTable": "Tabloda veri yok",
+                "info": " _START_ - _END_ arasında _TOTAL_ kayıt gösteriliyor",
+                "infoEmpty": "0 kayıttan 0'ı gösteriliyor",
+                "infoFiltered": " (Toplam _MAX_ kayıttan filtrelendi)",
+                "infoPostFix": "",
+                "thousands": ".",
+                "lengthMenu": "Sayfada _MENU_ adet kayıt göster",
+                "loadingRecords": "Yükleniyor...",
+                "processing": "İşleniyor...",
+                "search": "Ara:",
+                "zeroRecords": "Eşleşen kayıt bulunamadı",
+                "paginate": {
+                    "first": "İlk",
+                    "last": "Son",
+                    "next": "Sonraki",
+                    "previous": "Önceki"
+                },
+                "aria": {
+                    "orderable": "Bu sütunu sırala",
+                    "orderableReverse": "Bu sütunun ters sırayla sıralanmasını sağla"
+                }
+            }
+        });
+
+
         function changeModal($url) {
             try {
                 fetch($url, {
@@ -159,12 +194,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            changeModal(`{{ url('kullanici/etkinlikler/modal/ekle') }}`);
-
             document.querySelectorAll('.open-modal').forEach(function(button) {
                 button.addEventListener('click', function() {
-                    const modal = document.getElementById(button.dataset.modalTarget);
                     changeModal(`{{ url('kullanici/etkinlikler/modal/ekle') }}`);
+                    const modal = document.getElementById(button.dataset.modalTarget);
                     modal.classList.remove('hidden');
                 });
             });
@@ -173,7 +206,6 @@
                 if (event.target.matches('.close-modal')) {
                     const modalId = event.target.getAttribute('data-modal-target');
                     const modal = document.getElementById(modalId);
-
                     modal.classList.add('hidden');
                 }
             });
@@ -183,6 +215,10 @@
                     changeModal(
                         `{{ url('kullanici/etkinlikler/modal/duzenle/${button.dataset.target}') }}`
                     );
+
+                    const modalId = event.target.getAttribute('data-modal-target');
+                    const modal = document.getElementById(modalId);
+                    modal.classList.remove('hidden');
                 });
             });
         });

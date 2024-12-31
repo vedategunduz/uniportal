@@ -97,6 +97,7 @@ class KullaniciController extends Controller
 
     public function modalDuzenle(string $id)
     {
+        $id = decrypt($id);
         $etkinlik = Etkinlik::find($id);
 
         $html = view('components.etkinlik-modal', [
