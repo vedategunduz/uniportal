@@ -27,19 +27,19 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
     });
 });
 
+
+
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
+
     Route::middleware(AuthMiddleware::class)->group(function () {
         Route::get('/', [KullaniciController::class, 'index'])->name('index');
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
+            Route::post('/', [EtkinlikController::class, 'store']);
 
-            Route::post('/{id}', [KullaniciController::class, 'update']);
+            Route::post('/dd/', [KullaniciController::class, 'update']);
 
-            Route::get('/ekle', function() {
-
-            });
-            Route::post('/ekle', [EtkinlikController::class, 'store']);
             // Etkinlik modalları
             Route::prefix('modal')->group(function () {
                 Route::get('/ekle', [KullaniciController::class, 'modalEkle']);

@@ -13,11 +13,6 @@
 </head>
 
 <body>
-
-    <script>
-        console.log({!! $menuler !!});
-    </script>
-
     <div class="flex">
         <aside class="w-72 h-screen shadow bg-white text-gray-900">
             <nav class="flex flex-col h-full p-4">

@@ -10,7 +10,7 @@
 </header>
 
 <section class="px-4 py-8">
-    <form method="POST" id="etkinlikForm" class="grid md:grid-cols-2 gap-4">
+    <form action="{{ $postUrl }}" method="POST" id="etkinlikForm" class="grid md:grid-cols-2 gap-4">
         <section>
             <div class="mb-3">
                 <select name="etkinlikIsletme" id="etkinlikIsletme"
@@ -80,11 +80,12 @@
         <section class="">
             <div class="mb-3">
                 <label for="etkinlikKapakResmi"
-                    class="h-36 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
+                    class="h-12 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
                     <span class="font-medium text-gray-500">Kapak resmi</span>
                 </label>
                 <input type="file" name="etkinlikKapakResmi" class="sr-only" id="etkinlikKapakResmi"
                     accept="image/*">
+                <div id="resimcontainer"></div>
             </div>
             <div class="mb-3">
                 <label for="etkinlikDigerResimler"
@@ -111,31 +112,31 @@
                 </div>
             </div>
 
-            <button type="button" id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
-                class="flex items-center font-medium justify-between border text-sm py-2 px-3 text-gray-900 rounded-md hover:bg-gray-50 transition w-full">
-                <span>Katılım Sınırlaması <span class="text-gray-600 text-xs">(Opsiyonel)</span></span>
-                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m1 1 4 4 4-4" />
-                </svg>
-            </button>
-            <!-- Dropdown menu -->
-            <div id="dropdownNavbar"
-                class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow py-2">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-4 h-48 overflow-auto">
-                    @foreach ($iller as $il)
-                        @php
-                            $sifreli_il_id = 'checbox_' . encrypt($il->iller_id);
-                        @endphp
-                        <div class="flex items-center">
-                            <input id="{{ $sifreli_il_id }}" type="checkbox"
-                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                            <label for="{{ $sifreli_il_id }}"
-                                class="ms-2 text-sm font-medium text-gray-900 select-none">{{ $il->baslik }}</label>
-                        </div>
-                    @endforeach
+            <div>
+                <button type="button"
+                    class="dropdown-btn flex items-center font-medium justify-between border text-sm py-2 px-3 text-gray-900 rounded-md hover:bg-gray-50 transition w-full">
+                    <span class="pointer-events-none">Katılım sınırlaması <span class="text-gray-600 text-xs" id="katilimSinirlamaText">(Opsiyonel)</span></span>
+                    <svg class="w-2.5 h-2.5 ms-2.5 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
 
+                <div class="hidden max-w-screen-sm border rounded-md absolute bg-white z-50">
+                    <div class="grid p-4 grid-cols-3 h-48 overflow-auto" id="katilimSinirlamaContainer">
+                        @foreach ($iller as $il)
+                            @php
+                                $sifreli_il_id = 'checbox_' . encrypt($il->iller_id);
+                            @endphp
+                            <div class="flex items-center">
+                                <input id="{{ $sifreli_il_id }}" name="katilimSinirlama[]" type="checkbox"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                <label for="{{ $sifreli_il_id }}"
+                                    class="ms-2 text-sm font-medium text-gray-900 select-none">{{ $il->baslik }}</label>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
@@ -178,42 +179,3 @@
         </section>
     </form>
 </section>
-{{-- POST --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('etkinlikForm');
-
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute(
-                'content');
-
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch('{{ $postUrl }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Ağ yanıtı uygun değil: ' + response.statusText);
-                }
-
-                const responseData = await response.json();
-                console.log('Başarılı:', responseData);
-                if (responseData.success) {
-                    document.getElementById('etkinlikModal').classList.add('hidden');
-                }
-            } catch (error) {
-                console.error('Hata:', error);
-            }
-        });
-    });
-</script>

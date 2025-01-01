@@ -8,8 +8,18 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
-
     <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+    <style>
+        select.dt-input {
+            width: 60px;
+        }
+
+        #resimcontainer img{
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -36,32 +46,6 @@
             <div class="bg-white rounded-md" id="etkinlikModalContent"></div>
         </div>
     </section>
-
-    <button type="button" id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
-        class="flex items-center font-medium justify-between border text-sm py-2 px-3 text-gray-900 rounded-md hover:bg-gray-50 transition w-full">
-        <span>Katılım Sınırlaması <span class="text-gray-600 text-xs">(Opsiyonel)</span></span>
-        <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
-        </svg>
-    </button>
-    <!-- Dropdown menu -->
-    <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow py-2">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 p-4  h-48 overflow-auto">
-            @foreach ($iller as $il)
-                @php
-                    $sifreli_il_id = 'checbox_' . encrypt($il->iller_id);
-                @endphp
-                <div class="flex items-center">
-                    <input id="{{ $sifreli_il_id }}" type="checkbox"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                    <label for="{{ $sifreli_il_id }}"
-                        class="ms-2 text-sm font-medium text-gray-900 select-none">{{ $il->baslik }}</label>
-                </div>
-            @endforeach
-
-        </div>
-    </div>
 
     <table id="myTable">
         <thead>
@@ -113,10 +97,10 @@
                 "search": "Ara:",
                 "zeroRecords": "Eşleşen kayıt bulunamadı",
                 "paginate": {
-                    "first": "İlk",
-                    "last": "Son",
-                    "next": "Sonraki",
-                    "previous": "Önceki"
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
+                    "previous": "<"
                 },
                 "aria": {
                     "orderable": "Bu sütunu sırala",
@@ -137,6 +121,90 @@
                     .then(data => {
                         document.getElementById('etkinlikModalContent').innerHTML = data.html;
 
+                        document.getElementById('etkinlikKapakResmi').addEventListener('change', function(event) {
+                            const resimContainer = document.getElementById('resimcontainer');
+                            resimContainer.innerHTML = ''; // Önceki resmi temizle
+
+                            const dosya = event.target.files[0];
+                            if (dosya && dosya.type.startsWith('image/')) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const img = document.createElement('img');
+                                    img.src = e.target.result;
+                                    img.alt = 'Seçilen Kapak Resmi';
+                                    resimContainer.appendChild(img);
+                                }
+                                reader.readAsDataURL(dosya);
+                            } else {
+                                resimContainer.innerHTML =
+                                    '<p class="text-red-500">Lütfen geçerli bir resim dosyası seçin.</p>';
+                            }
+                        });
+                        // KATILIM SINIRLAMA
+                        let katilimSinirlamaCount = 0;
+                        document.getElementById('katilimSinirlamaContainer')
+                            .querySelectorAll('input[type="checkbox"]')
+                            .forEach(function(checkbox) {
+                                checkbox.addEventListener('change', function() {
+                                    if (this.checked) {
+                                        katilimSinirlamaCount++;
+                                    } else {
+                                        katilimSinirlamaCount--;
+                                    }
+
+                                    if (katilimSinirlamaCount > 0) {
+                                        document.getElementById('katilimSinirlamaText').innerText =
+                                            `(${katilimSinirlamaCount} adet seçim yapıldı)`;
+                                    } else {
+                                        document.getElementById('katilimSinirlamaText').innerText =
+                                            '(Opsiyonel)';
+                                    }
+                                });
+                            });
+                        // DROPDOWN
+                        document.querySelectorAll('.dropdown-btn').forEach(function(button) {
+                            button.addEventListener('click', function() {
+                                const DROPDOWN_CONTENT = this.nextElementSibling;
+                                DROPDOWN_CONTENT.classList.toggle('hidden');
+                            });
+                        });
+                        // FORM
+                        const form = document.getElementById('etkinlikForm');
+                        form.addEventListener('submit', async function(event) {
+                            event.preventDefault();
+
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content');
+
+                            const formData = new FormData(form);
+                            const postUrl = form.getAttribute('action');
+
+                            try {
+                                const response = await fetch(postUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': csrfToken,
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    },
+                                    body: formData
+                                });
+
+                                if (!response.ok) {
+                                    throw new Error('Ağ yanıtı uygun değil: ' + response
+                                        .statusText);
+                                }
+
+                                const responseData = await response.json();
+                                console.log('Başarılı:', responseData);
+                                if (responseData.success) {
+                                    document.getElementById('etkinlikModal').classList.add(
+                                        'hidden');
+                                }
+                            } catch (error) {
+                                console.error('Hata:', error);
+                            }
+                        });
                         // SUMMERNOTE
                         $(document).ready(function() {
                             $('#etkinlikAciklama').summernote({

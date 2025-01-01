@@ -90,7 +90,7 @@ class KullaniciController extends Controller
             'isletme' => '',
             'etkinlikBaslik' => '',
             'aciklama' => '',
-            'postUrl' => url('kullanici/etkinlikler/ekle'),
+            'postUrl' => url('kullanici/etkinlikler/'),
         ])->render();
 
         return response()->json([
