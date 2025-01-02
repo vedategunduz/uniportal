@@ -34,7 +34,8 @@
                     class="bg-gray-50 border font-medium border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option>Etkinlik Kategorisi</option>
                     @foreach ($etkinlikTurleri as $etkinlikTur)
-                        <option value="{{ encrypt($etkinlikTur->etkinlik_turleri_id) }}">
+                        <option value="{{ encrypt($etkinlikTur->etkinlik_turleri_id) }}"
+                            @if ($kategori == $etkinlikTur->etkinlik_turleri_id) selected @endif>
                             {{ $etkinlikTur->baslik }}</option>
                     @endforeach
                 </select>
@@ -48,10 +49,11 @@
                 </div>
                 <div class="">
                     <input type="datetime-local" name="etkinlikBaslangic" id="etkinlikBaslangic"
+                        value="{{ $baslamaTarih }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 </div>
                 <div class="">
-                    <input type="datetime-local" name="etkinlikBitis" id="etkinlikBitis"
+                    <input type="datetime-local" name="etkinlikBitis" id="etkinlikBitis" value="{{ $bitisTarih }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 </div>
             </div>
@@ -63,11 +65,12 @@
                     </button>
                 </div>
                 <div class="">
-                    <input type="datetime-local" name="etkinlikBasvuru" id="etkinlikBasvuru"
+                    <input type="datetime-local" name="etkinlikBasvuru" id="etkinlikBasvuru" value="{{ $basvuruTarih }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 </div>
                 <div class="">
                     <input type="datetime-local" name="etkinlikBasvuruBitis" id="etkinlikBasvuruBitis"
+                        value="{{ $basvuruBitisTarih }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 </div>
             </div>
@@ -80,17 +83,23 @@
         <section class="">
             <div class="mb-3">
                 <label for="etkinlikKapakResmi"
-                    class="h-12 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
-                    <span class="font-medium text-gray-500">Kapak resmi</span>
+                    class="relative h-48 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
+                    <span class="font-medium text-gray-500 absolute top-2 left-2 z-50">Kapak resmi</span>
+                    <div id="resimcontainer">
+                        @if ($kapakResim)
+                            <img src="{{ asset('storage/' . $kapakResim) }}" alt="Kapak Resmi" class="">
+                        @endif
+                    </div>
                 </label>
                 <input type="file" name="etkinlikKapakResmi" class="sr-only" id="etkinlikKapakResmi"
                     accept="image/*">
-                <div id="resimcontainer"></div>
             </div>
             <div class="mb-3">
                 <label for="etkinlikDigerResimler"
                     class="h-48 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
                     <span class="font-medium text-gray-500">Diğer resimler</span>
+                    <div id="resimlerContainer">
+                    </div>
                 </label>
                 <input type="file" name="etkinlikDigerResimler[]" multiple class="sr-only" id="etkinlikDigerResimler"
                     accept="image/*">
@@ -98,7 +107,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="mb-3">
                     <input type="number" name="etkinlikKontenjan" id="etkinlikKontenjan" min="0"
-                        placeholder="Kontenjan giriniz"
+                        placeholder="Kontenjan giriniz" value="{{ $kontenjan }}"
                         class="bg-gray-50 font-medium border border-gray-300 text-gray-900 text-sm rounded-lg w-full focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                 </div>
                 <div class="mb-3">
@@ -106,7 +115,8 @@
                         class="bg-gray-50 border font-medium border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option value="">Etkinlik Düzenlendiği İl</option>
                         @foreach ($iller as $il)
-                            <option value="{{ encrypt($il->iller_id) }}">{{ $il->baslik }}</option>
+                            <option value="{{ encrypt($il->iller_id) }}"
+                                @if ($il->iller_id == $sehir) selected @endif>{{ $il->baslik }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -115,23 +125,26 @@
             <div>
                 <button type="button"
                     class="dropdown-btn flex items-center font-medium justify-between border text-sm py-2 px-3 text-gray-900 rounded-md hover:bg-gray-50 transition w-full">
-                    <span class="pointer-events-none">Katılım sınırlaması <span class="text-gray-600 text-xs" id="katilimSinirlamaText">(Opsiyonel)</span></span>
-                    <svg class="w-2.5 h-2.5 ms-2.5 pointer-events-none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                        fill="none" viewBox="0 0 10 6">
+                    <span class="pointer-events-none">Katılım sınırlaması <span class="text-gray-600 text-xs"
+                            id="katilimSinirlamaText">(Opsiyonel)</span></span>
+                    <svg class="w-2.5 h-2.5 ms-2.5 pointer-events-none" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
                     </svg>
                 </button>
 
                 <div class="hidden max-w-screen-sm border rounded-md absolute bg-white z-50">
-                    <div class="grid p-4 grid-cols-3 h-48 overflow-auto" id="katilimSinirlamaContainer">
+                    <div class="grid p-4 grid-cols-4 h-48 overflow-auto" id="katilimSinirlamaContainer">
                         @foreach ($iller as $il)
                             @php
                                 $sifreli_il_id = 'checbox_' . encrypt($il->iller_id);
                             @endphp
                             <div class="flex items-center">
                                 <input id="{{ $sifreli_il_id }}" name="katilimSinirlama[]" type="checkbox"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                    value="{{ encrypt($il->iller_id) }}"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    @if (in_array($il->iller_id, $katilimSinirlama)) checked @endif>
                                 <label for="{{ $sifreli_il_id }}"
                                     class="ms-2 text-sm font-medium text-gray-900 select-none">{{ $il->baslik }}</label>
                             </div>
@@ -173,8 +186,7 @@
                 <button type="button" data-modal-target="etkinlikModal"
                     class="close-modal py-2 px-3 rounded-md border text-gray-900 hover:bg-gray-50 transition">Vazgeç</button>
                 <button type="submit"
-                    class="py-2 px-3 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">Etkinlik
-                    Oluştur</button>
+                    class="py-2 px-3 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">{{ $modalSubmitText }}</button>
             </div>
         </section>
     </form>

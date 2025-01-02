@@ -45,7 +45,7 @@ return new class extends Migration
                     etkinlik_il_detaylari_id,
                     etkinlikler_id,
                     iller_id,
-                    yapianIslem,
+                    yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
                     created_at,

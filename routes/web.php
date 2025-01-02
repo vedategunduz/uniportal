@@ -36,10 +36,9 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
+
             Route::post('/', [EtkinlikController::class, 'store']);
-
-            Route::post('/dd/', [KullaniciController::class, 'update']);
-
+            Route::post('/duzenle/{id}', [EtkinlikController::class, 'update']);
             // Etkinlik modalları
             Route::prefix('modal')->group(function () {
                 Route::get('/ekle', [KullaniciController::class, 'modalEkle']);

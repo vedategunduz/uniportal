@@ -15,6 +15,6 @@ class EtkinlikIlDetaylari extends Model
     protected $fillable = [
         'etkinlikler_id',
         'iller_id',
-        'islem_yapan_id',
+        'yapilanIslem',
     ];
 }

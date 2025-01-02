@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Kullanici Paneli')</title>
     @yield('links')
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/main.js'])
     <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -27,7 +27,9 @@
                         @if ($menu->bagli_menuler_id == null)
                             <li>
                                 @if ($menu->altMenuler->count() > 0)
-                                    <button type="button" @class(['flex items-center w-full py-1 px-3 rounded-lg transition hover:bg-gray-100 accordion-button'])>
+                                    <button type="button" @class([
+                                        'flex items-center w-full py-1 px-3 rounded-lg transition hover:bg-gray-100 accordion-button',
+                                    ])>
                                         <span class="p-1 rounded-lg me-2">
                                             {!! $menu->menuIcon !!}
                                         </span>
@@ -42,14 +44,16 @@
                                     <ul class="hidden">
                                         @foreach ($menu->altMenuler as $altMenu)
                                             <li>
-                                                <a href="{{ $altMenu->menuLink }}" class="block indent-10 py-1 px-3 rounded-lg transition hover:bg-gray-100">{{ $altMenu->menuAd }}</a>
+                                                <a href="{{ $altMenu->menuLink }}"
+                                                    class="block indent-10 py-1 px-3 rounded-lg transition hover:bg-gray-100">{{ $altMenu->menuAd }}</a>
                                             </li>
                                         @endforeach
                                     </ul>
                                 @else
                                     <a href="{{ $menu->menuLink }}" @class([
                                         'flex items-center py-1 px-3 rounded-lg transition',
-                                        'bg-blue-700 text-white hover:text-white' => Request::is(ltrim($menu->menuLink, '/')),
+                                        'bg-blue-700 text-white hover:text-white' => Request::is(
+                                            ltrim($menu->menuLink, '/')),
                                         'hover:bg-gray-100' => !Request::is(ltrim($menu->menuLink, '/')),
                                     ])>
                                         <span class="p-1 rounded-lg me-2">
@@ -84,6 +88,11 @@
     </div>
 
     @yield('scripts')
+    <script>
+        window.App = {
+            baseUrl: "{{ url('/') }}"
+        };
+    </script>
 </body>
 
 </html>

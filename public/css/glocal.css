@@ -37,8 +37,13 @@ h6 {
 }
 
 a:hover {
-    text-decoration: none;
     color: inherit;
+}
+
+a:not(.underline) {
+    &:hover, &:focus{
+        text-decoration: none !important;
+    }
 }
 
 label {
@@ -51,4 +56,35 @@ input[type="checkbox"] {
 
 input[type="checkbox"]:focus {
     outline: none;
+}
+
+@keyframes zoomIn
+{
+    from {
+        transform: scale(.7);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.zoomIn-modal-animation {
+    animation-name: zoomIn;
+    animation-duration: .3s;
+    transform: scale(1);
+}
+
+@keyframes bottomToTop {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+.bottom-to-top-alert-animation {
+    animation-name: bottomToTop;
+    animation-duration: .3s;
+    transform: translateY(0);
 }

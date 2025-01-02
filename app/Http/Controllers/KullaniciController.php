@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
+use App\Models\EtkinlikIlDetaylari;
 use App\Models\Il;
 use App\Models\Isletme;
 use Illuminate\Http\Request;
@@ -56,40 +57,27 @@ class KullaniciController extends Controller
     public function etkinlikler()
     {
         $iller = Il::all();
-        $etkinlikler = Etkinlik::orderBy('baslik', 'asc')->paginate(20);
+        $etkinlikler = Etkinlik::orderBy('created_At', 'asc')->paginate(20);
         return view('kullanici.etkinlikler.index', compact('etkinlikler', 'iller'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {}
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id = null) {}
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id) {}
 
     public function modalEkle()
     {
         $html = view('components.etkinlik-modal', [
             'modalBaslik' => 'Yeni Etkinlik Oluştur',
+            'modalSubmitText' => 'Etkinlik oluştur',
+            'kategori' => '',
             'isletme' => '',
             'etkinlikBaslik' => '',
             'aciklama' => '',
+            'basvuruTarih' => '',
+            'basvuruBitisTarih' => '',
+            'baslamaTarih' => '',
+            'bitisTarih' => '',
+            'kapakResim' => '',
+            'kontenjan' => '',
+            'sehir' => '',
+            'katilimSinirlama' => [],
             'postUrl' => url('kullanici/etkinlikler/'),
         ])->render();
 
@@ -102,34 +90,29 @@ class KullaniciController extends Controller
     {
         $id = decrypt($id);
         $etkinlik = Etkinlik::find($id);
+        $katilimSinirlama = EtkinlikIlDetaylari::where('etkinlikler_id', $id)->pluck('iller_id')->toArray();
 
         $html = view('components.etkinlik-modal', [
             'modalBaslik' => 'Etkinlik Düzenle',
+            'modalSubmitText' => 'Etkinlik güncelle',
+            'kategori' => $etkinlik->etkinlik_turleri_id,
             'isletme' => $etkinlik->isletmeler_id,
             'etkinlikBaslik' => $etkinlik->baslik,
             'aciklama' => $etkinlik->aciklama,
-            'postUrl' => url('kullanici/etkinlikler/'),
+            'basvuruTarih' => $etkinlik->etkinlikBasvuruTarihi,
+            'basvuruBitisTarih' => $etkinlik->etkinlikBasvuruBitisTarihi,
+            'baslamaTarih' => $etkinlik->etkinlikBaslamaTarihi,
+            'bitisTarih' => $etkinlik->etkinlikBitisTarihi,
+            'kapakResim' => $etkinlik->kapakResmiYolu,
+            'kontenjan' => $etkinlik->kontenjan,
+            'sehir' => $etkinlik->iller_id,
+            'katilimSinirlama' => $katilimSinirlama,
+            'postUrl' => url('kullanici/etkinlikler').'/duzenle/'.encrypt($id),
         ])->render();
 
         return response()->json([
             'html' =>  $html
         ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 
     public function girisForm()
@@ -141,10 +124,8 @@ class KullaniciController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-
             return redirect()->intended('kullanici');
         }
-
         return redirect()->back();
     }
 
@@ -153,7 +134,6 @@ class KullaniciController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect()->route('main.index');
     }
 }

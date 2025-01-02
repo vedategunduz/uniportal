@@ -9,6 +9,7 @@ use Illuminate\View\Component;
 class EtkinlikModal extends Component
 {
     public $modalBaslik;
+    public $modalSubmitText;
     public $etkinlikBaslik;
     public $isletme;
     public $kategoriler;
@@ -24,9 +25,11 @@ class EtkinlikModal extends Component
     public $kapakResim;
     public $digerResimler;
     public $postUrl;
+    public $katilimSinirlama;
 
     public function __construct(
         $modalBaslik = "",
+        $modalSubmitText = "",
         $etkinlikBaslik = "",
         $isletme = "",
         $kategoriler = "",
@@ -42,8 +45,10 @@ class EtkinlikModal extends Component
         $kapakResim = "",
         $digerResimler = [],
         $postUrl,
+        $katilimSinirlama = [],
     ) {
         $this->modalBaslik = $modalBaslik;
+        $this->modalSubmitText = $modalSubmitText;
         $this->etkinlikBaslik = $etkinlikBaslik;
         $this->isletme = $isletme;
         $this->kategoriler = $kategoriler;
@@ -59,6 +64,7 @@ class EtkinlikModal extends Component
         $this->kapakResim = $kapakResim;
         $this->digerResimler = $digerResimler;
         $this->postUrl = $postUrl;
+        $this->katilimSinirlama = $katilimSinirlama;
     }
 
     /**
