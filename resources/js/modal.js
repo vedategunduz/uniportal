@@ -114,12 +114,37 @@ function initForm() {
                 body: FORM_DATA
             });
 
+            // Eğer HTTP statü kodu 200-299 aralığında DEĞİLSE (yani !RESPONSE.ok)
+            // özel olarak 422 durumunu kontrol edelim
             if (!RESPONSE.ok) {
-                throw new Error('Ağ yanıtı uygun değil: ' + RESPONSE.statusText);
+                // 422 ise validation hataları dönmüş demektir
+                if (RESPONSE.status === 422) {
+                    // Gelen JSON verisini parse et
+                    const errorData = await RESPONSE.json();
+
+                    console.error('Validation Errors:', errorData.errors);
+
+                    // İsterseniz her bir field ve mesajını DOM'a yazdırabilirsiniz
+                    // (Basit örnek)
+                    for (const [field, messages] of Object.entries(errorData.errors)) {
+                        messages.forEach(msg => {
+                            errorAlert(`${msg}`);
+                            console.log(`${field}: ${msg}`);
+                            // Örneğin bir hata alanı oluşturarak kullanıcıya gösterebilirsiniz
+                        });
+                    }
+
+                    return; // Burada return diyerek sonraki kodlara geçmiyoruz.
+                } else {
+                    // 422 dışındaki hatalar için (örnek: 500 vs.)
+                    throw new Error('Ağ yanıtı uygun değil: ' + RESPONSE.statusText);
+                }
             }
 
+            // RESPONSE.ok === true durumda, success yanıtı parse edebiliriz
             const RESPONSE_DATA = await RESPONSE.json();
             console.log('Başarılı:', RESPONSE_DATA);
+
             if (RESPONSE_DATA.success) {
                 document.getElementById('etkinlikModal').classList.add('hidden');
                 successAlert(RESPONSE_DATA.success);

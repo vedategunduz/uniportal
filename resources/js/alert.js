@@ -9,11 +9,7 @@ function createAlert(message, type = 'success') {
         'px-4',
         'py-3',
         'rounded',
-        'fixed',
-        'bottom-12',
-        'right-12',
         'bottom-to-top-alert-animation',
-        'z-30',
     ];
 
     switch (type) {
@@ -44,11 +40,11 @@ function createAlert(message, type = 'success') {
     ALERT_MESSAGE.appendChild(ALERT_HEAD);
     ALERT_MESSAGE.innerHTML += message;
     ALERT_CONTAINER.appendChild(ALERT_MESSAGE);
-    document.body.appendChild(ALERT_CONTAINER);
+    document.getElementById('alerts').appendChild(ALERT_CONTAINER);
 
     setTimeout(function () {
-        document.body.removeChild(ALERT_CONTAINER);
-    }, 5000);
+        document.getElementById('alerts').removeChild(ALERT_CONTAINER);
+    }, 50000);
 }
 
 // Kolay erişim için fonksiyonlar

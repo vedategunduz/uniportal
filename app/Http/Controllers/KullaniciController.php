@@ -78,6 +78,8 @@ class KullaniciController extends Controller
             'kontenjan' => '',
             'sehir' => '',
             'katilimSinirlama' => [],
+            'yorumDurumu' => '',
+            'sosyalMedyaDurum' => true,
             'postUrl' => url('kullanici/etkinlikler/'),
         ])->render();
 
@@ -107,6 +109,8 @@ class KullaniciController extends Controller
             'kontenjan' => $etkinlik->kontenjan,
             'sehir' => $etkinlik->iller_id,
             'katilimSinirlama' => $katilimSinirlama,
+            'yorumDurumu' => $etkinlik->yorumDurumu,
+            'sosyalMedyaDurum' => $etkinlik->sosyalMedyadaPaylas,
             'postUrl' => url('kullanici/etkinlikler').'/duzenle/'.encrypt($id),
         ])->render();
 

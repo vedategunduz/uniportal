@@ -41,7 +41,7 @@ class EtkinlikModal extends Component
         $kontenjan = "",
         $sehir = "",
         $yorumDurum = "",
-        $sosyalMedyaDurum = "",
+        $sosyalMedyaDurum,
         $kapakResim = "",
         $digerResimler = [],
         $postUrl,

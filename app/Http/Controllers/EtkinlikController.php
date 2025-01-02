@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EtkinlikStoreRequest;
 use App\Models\Etkinlik;
 use App\Models\EtkinlikIlDetaylari;
 use App\Models\Isletme;
 use App\Models\Resim;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EtkinlikController extends Controller
 {
@@ -29,93 +31,191 @@ class EtkinlikController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
+    //         $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
+
+    //         if ($request->hasFile('etkinlikKapakResmi')) {
+    //             $image = $request->file('etkinlikKapakResmi');
+
+    //             // İşletme referans kodunu çekme
+    //             $isletmeId = decrypt($request->etkinlikIsletme);
+    //             $isletmeReferansKodu = Isletme::find($isletmeId)->referans_kodu;
+
+    //             // Dosya adını benzersiz yapmak için
+    //             $name = time() . '_' . uniqid() . '_' . $image->getClientOriginalExtension();
+
+    //             // Dosyayı belirli bir işletme referans kodu klasörüne kaydet
+    //             $path = $image->storeAs('images/' . $isletmeReferansKodu, $name, 'public');
+    //         }
+
+    //         $etkinlik = Etkinlik::create([
+    //             'etkinlik_turleri_id' => decrypt($request->etkinlikTur),
+    //             'isletmeler_id' => decrypt($request->etkinlikIsletme),
+    //             'iller_id' => decrypt($request->etkinlikIl),
+    //             'kontenjan' => $request->etkinlikKontenjan,
+    //             'etkinlikBasvuruTarihi' => $request->etkinlikBasvuru,
+    //             'etkinlikBasvuruBitisTarihi' => $request->etkinlikBasvuruBitis,
+    //             'etkinlikBaslamaTarihi' => $request->etkinlikBaslangic,
+    //             'etkinlikBitisTarihi' => $request->etkinlikBitis,
+    //             'kapakResmiYolu' => $path ?? null,
+    //             'baslik' => $request->etkinlikBaslik,
+    //             'aciklama' => $request->etkinlikAciklama,
+    //             'sosyalMedyadaPaylas' => $sosyalMedya,
+    //             'yorumDurumu' => $yorumDurumu,
+    //         ]);
+
+    //         if ($request->has('katilimSinirlama')) {
+    //             try {
+    //                 foreach ($request->katilimSinirlama as $iller) {
+    //                     EtkinlikIlDetaylari::create([
+    //                         'etkinlikler_id' => $etkinlik->etkinlikler_id,
+    //                         'iller_id' => decrypt($iller)
+    //                     ]);
+    //                 }
+    //             } catch (\Exception $e) {
+    //                 return response()->json(['error', 'İl detayları eklenirken bir sorun oluştu: ' . $e->getMessage()]);
+    //             }
+    //         }
+
+    //         if ($request->hasFile('etkinlikDigerResimler')) {
+
+    //             $isletmeReferansKodu = Isletme::select('referans_kodu')->find(decrypt($request->etkinlikIsletme));
+
+    //             foreach ($request->file('etkinlikDigerResimler') as $image) {
+    //                 $name = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+    //                 // Dosyayı 'public/images' dizinine kaydet
+    //                 $path = $image->storeAs('images/' . $isletmeReferansKodu, $name, 'public');
+
+    //                 Resim::create([
+    //                     'etkinlikler_id' => $etkinlik->etkinlikler_id,
+    //                     'resimYolu' => $path
+    //                 ]);
+    //             }
+    //         }
+
+    //         return response()->json(['success' => 'Etkinlik oluşturuldu.']);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e]);
+    //     }
+    // }
+
+    public function store(EtkinlikStoreRequest $request)
     {
         try {
-            $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
-            $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
+            // Transaction ile tüm veritabanı işlemleri tek seferde yönetilir
+            return DB::transaction(function () use ($request) {
+                // Form Request aracılığıyla doğrulanan verileri alıyoruz
+                $validatedData = $request->validated();
 
-            if ($request->hasFile('etkinlikKapakResmi')) {
-                $image = $request->file('etkinlikKapakResmi');
+                // Boolean alanlar
+                $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
+                $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
 
-                // İşletme referans kodunu çekme
-                $isletmeId = decrypt($request->etkinlikIsletme);
-                $isletmeReferansKodu = Isletme::find($isletmeId)->referans_kodu;
+                // ID alanlarını decrypt ediyoruz
+                $etkinlikTurId     = decrypt($validatedData['etkinlikTur']);
+                $etkinlikIsletmeId = decrypt($validatedData['etkinlikIsletme']);
+                $etkinlikIlId      = decrypt($validatedData['etkinlikIl']);
 
-                // Dosya adını benzersiz yapmak için
-                $name = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                // İşletme referans kodu -> resimleri doğru klasöre yüklemek için
+                $isletme = Isletme::findOrFail($etkinlikIsletmeId);
+                $isletmeReferansKodu = $isletme->referans_kodu;
 
-                // Dosyayı belirli bir işletme referans kodu klasörüne kaydet
-                $path = $image->storeAs('images/' . $isletmeReferansKodu, $name, 'public');
-            }
+                // Kapak resmini yüklüyoruz (varsa)
+                $kapakResmiYolu = null;
+                if ($request->hasFile('etkinlikKapakResmi')) {
+                    $kapakResmiYolu = $this->storeSingleImage(
+                        $request->file('etkinlikKapakResmi'),
+                        $isletmeReferansKodu
+                    );
+                }
 
-            $etkinlik = Etkinlik::create([
-                'etkinlik_turleri_id' => decrypt($request->etkinlikTur),
-                'isletmeler_id' => decrypt($request->etkinlikIsletme),
-                'iller_id' => decrypt($request->etkinlikIl),
-                'kontenjan' => $request->etkinlikKontenjan,
-                'etkinlikBasvuruTarihi' => $request->etkinlikBasvuru,
-                'etkinlikBasvuruBitisTarihi' => $request->etkinlikBasvuruBitis,
-                'etkinlikBaslamaTarihi' => $request->etkinlikBaslangic,
-                'etkinlikBitisTarihi' => $request->etkinlikBitis,
-                'kapakResmiYolu' => $path ?? null,
-                'baslik' => $request->etkinlikBaslik,
-                'aciklama' => $request->etkinlikAciklama,
-                'sosyalMedyadaPaylas' => $sosyalMedya,
-                'yorumDurumu' => $yorumDurumu,
-            ]);
+                // Etkinlik kaydı oluştur
+                $etkinlik = Etkinlik::create([
+                    'etkinlik_turleri_id'       => $etkinlikTurId,
+                    'isletmeler_id'             => $etkinlikIsletmeId,
+                    'iller_id'                  => $etkinlikIlId,
+                    'kontenjan'                 => $validatedData['etkinlikKontenjan'],
+                    'etkinlikBasvuruTarihi'     => $validatedData['etkinlikBasvuru'],
+                    'etkinlikBasvuruBitisTarihi' => $validatedData['etkinlikBasvuruBitis'],
+                    'etkinlikBaslamaTarihi'     => $validatedData['etkinlikBaslangic'],
+                    'etkinlikBitisTarihi'       => $validatedData['etkinlikBitis'],
+                    'kapakResmiYolu'            => $kapakResmiYolu,
+                    'baslik'                    => $validatedData['etkinlikBaslik'],
+                    'aciklama'                  => $validatedData['etkinlikAciklama'],
+                    'sosyalMedyadaPaylas'       => $sosyalMedya,
+                    'yorumDurumu'               => $yorumDurumu,
+                ]);
 
-            if ($request->has('katilimSinirlama')) {
-                try {
-                    foreach ($request->katilimSinirlama as $iller) {
+                // Katılım sınırlama (varsa)
+                if (!empty($validatedData['katilimSinirlama'])) {
+                    foreach ($validatedData['katilimSinirlama'] as $ilId) {
+                        $realIlId = decrypt($ilId);
                         EtkinlikIlDetaylari::create([
                             'etkinlikler_id' => $etkinlik->etkinlikler_id,
-                            'iller_id' => decrypt($iller)
+                            'iller_id'       => $realIlId
                         ]);
                     }
-                } catch (\Exception $e) {
-                    return response()->json(['error', 'İl detayları eklenirken bir sorun oluştu: ' . $e->getMessage()]);
                 }
-            }
 
-            if ($request->hasFile('etkinlikDigerResimler')) {
-
-                $isletmeReferansKodu = Isletme::select('referans_kodu')->find(decrypt($request->etkinlikIsletme));
-
-                foreach ($request->file('etkinlikDigerResimler') as $image) {
-                    $name = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
-                    // Dosyayı 'public/images' dizinine kaydet
-                    $path = $image->storeAs('images/' . $isletmeReferansKodu, $name, 'public');
-
-                    Resim::create([
-                        'etkinlikler_id' => $etkinlik->etkinlikler_id,
-                        'resimYolu' => $path
-                    ]);
+                // Diğer resimleri yükle (varsa)
+                if (!empty($validatedData['etkinlikDigerResimler'])) {
+                    $this->storeMultipleImages(
+                        $validatedData['etkinlikDigerResimler'],
+                        $etkinlik->etkinlikler_id,
+                        $isletmeReferansKodu
+                    );
                 }
-            }
 
-            return response()->json(['success' => 'Etkinlik oluşturuldu.']);
+                // Başarılı sonuç
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Etkinlik başarıyla oluşturuldu.'
+                ], 201);
+            });
         } catch (\Exception $e) {
-            return response()->json(['error' => $e]);
+            // Herhangi bir hata olursa rollback yapılır ve buraya düşer
+            return response()->json([
+                'error'   => true,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
     /**
-     * Display the specified resource.
+     * Tek bir resmi diske kaydetmek için yardımcı (helper) metod.
+     * Geriye yüklenen dosyanın tam yolunu (path) döndürür.
      */
-    public function show(string $id)
+    private function storeSingleImage($image, string $isletmeReferansKodu): string
     {
-        //
+        // Dosya adı (benzersiz)
+        $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+
+        // Dosyayı (storage/app/public/images/{referansKodu}) dizinine kaydet
+        // storeAs parametre sırası: (path, filename, disk)
+        return $image->storeAs(
+            'images/' . $isletmeReferansKodu,
+            $filename,
+            'public'
+        );
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Birden fazla resmi diske kaydetmek için yardımcı (helper) metod.
+     * Her yükleme sonrası Resim tablosuna kaydeder.
      */
-    public function edit(string $id)
+    private function storeMultipleImages(array $imageFiles, int $etkinlikId, string $isletmeReferansKodu)
     {
-        //
+        foreach ($imageFiles as $image) {
+            $path = $this->storeSingleImage($image, $isletmeReferansKodu);
+            Resim::create([
+                'etkinlikler_id' => $etkinlikId,
+                'resimYolu'      => $path
+            ]);
+        }
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -123,7 +223,6 @@ class EtkinlikController extends Controller
     {
         try {
             $id = decrypt($id);
-
             $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
             $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
 
@@ -135,7 +234,7 @@ class EtkinlikController extends Controller
                 $isletmeReferansKodu = Isletme::find($isletmeId)->referans_kodu;
 
                 // Dosya adını benzersiz yapmak için
-                $name = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+                $name = uniqid() . '_' . $image->getClientOriginalName();
 
                 // Dosyayı belirli bir işletme referans kodu klasörüne kaydet
                 $path = $image->storeAs('images/' . $isletmeReferansKodu, $name, 'public');
@@ -162,6 +261,21 @@ class EtkinlikController extends Controller
 
             $etkinlik->save();
 
+            $etkinlik->etkinlikIlDetayi()->delete();
+
+            if ($request->has('katilimSinirlama')) {
+                try {
+                    foreach ($request->katilimSinirlama as $iller) {
+                        EtkinlikIlDetaylari::create([
+                            'etkinlikler_id' => $etkinlik->etkinlikler_id,
+                            'iller_id' => decrypt($iller)
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    return response()->json(['error', 'İl detayları eklenirken bir sorun oluştu: ' . $e->getMessage()]);
+                }
+            }
+
             // if ($request->hasFile('etkinlikDigerResimler')) {
 
             //     $isletmeReferansKodu = Isletme::select('referans_kodu')->find(decrypt($request->etkinlikIsletme));
@@ -182,13 +296,5 @@ class EtkinlikController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e]);
         }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

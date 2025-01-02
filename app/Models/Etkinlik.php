@@ -28,5 +28,10 @@ class Etkinlik extends Model
         'aciklama',
         'kontenjan',
         'yorumDurumu',
+        'sosyalMedyadaPaylas'
     ];
+
+    public function etkinlikIlDetayi() {
+        return $this->hasMany(EtkinlikIlDetaylari::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
 }
