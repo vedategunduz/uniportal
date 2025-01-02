@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Il extends Model
 {
     /** @use HasFactory<\Database\Factories\IlFactory> */
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
 
     protected $table = "iller";
 
@@ -16,6 +17,5 @@ class Il extends Model
 
     protected $fillabel = [
         'baslik',
-        'islem_yapan_id',
     ];
 }

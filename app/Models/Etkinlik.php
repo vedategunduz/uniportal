@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Etkinlik extends Model
 {
     /** @use HasFactory<\Database\Factories\EtkinlikFactory> */
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
 
     protected $table = 'etkinlikler';
 
@@ -27,6 +28,5 @@ class Etkinlik extends Model
         'aciklama',
         'kontenjan',
         'yorumDurumu',
-        'islem_yapan_id',
     ];
 }

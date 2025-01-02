@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Isletme extends Model
 {
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
 
     protected $table = 'isletmeler';
 
@@ -27,6 +28,5 @@ class Isletme extends Model
         'linkedinUrl',
         'digerUrl',
         'aktiflik',
-        'islem_yapan_id',
     ];
 }

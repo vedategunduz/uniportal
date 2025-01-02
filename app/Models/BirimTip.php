@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class BirimTip extends Model
 {
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
 
     protected $table = 'birim_tipleri';
 
@@ -15,6 +16,5 @@ class BirimTip extends Model
 
     protected $fillable = [
         'baslik',
-        'islem_yapan_id',
     ];
 }

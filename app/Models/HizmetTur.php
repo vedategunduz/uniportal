@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class HizmetTur extends Model
 {
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
 
     protected $table = 'hizmet_turleri';
 
@@ -17,6 +18,5 @@ class HizmetTur extends Model
         'bagli_hizmet_turleri_id',
         'baslik',
         'derinlik',
-        'islem_yapan_id',
     ];
 }

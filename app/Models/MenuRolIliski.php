@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MenuRolIliski extends Model
 {
     /** @use HasFactory<\Database\Factories\MenuRolIliskiFactory> */
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
+
     protected $table = 'menu_rol_iliskileri';
 
     protected $primaryKey = 'menu_rol_iliskileri_id';
@@ -17,7 +19,6 @@ class MenuRolIliski extends Model
     protected $fillable = [
         'roller_id',
         'menuler_id',
-        'islem_yapan_id',
         'baslik',
     ];
 

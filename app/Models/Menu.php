@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
 {
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
+
     protected $table = 'menuler';
 
     protected $primaryKey = 'menuler_id';
@@ -19,7 +21,6 @@ class Menu extends Model
         'menuIcon',
         'menuAciklama',
         'menuSira',
-        'islem_yapan_id',
     ];
 
     public function altMenuler() {

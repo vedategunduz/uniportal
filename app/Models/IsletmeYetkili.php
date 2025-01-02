@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class IsletmeYetkili extends Model
 {
+    use IslemYapanTrait;
+
     protected $table = 'isletme_yetkilileri';
 
     protected $primaryKey = 'isletme_yetkilileri_id';
@@ -13,7 +16,6 @@ class IsletmeYetkili extends Model
     protected $fillable = [
         'kullanicilar_id',
         'isletmeler_id',
-        'islem_yapan_id',
     ];
 
     public function isletmeBilgileri()

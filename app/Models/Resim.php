@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Resim extends Model
 {
     /** @use HasFactory<\Database\Factories\ResimFactory> */
-    use HasFactory;
+    use HasFactory, IslemYapanTrait;
 
     protected $table = 'resimler';
 
@@ -17,6 +18,5 @@ class Resim extends Model
     protected $fillable = [
         'etkinlikler_id',
         'resimYolu',
-        'islem_yapan_id',
     ];
 }
