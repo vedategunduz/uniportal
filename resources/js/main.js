@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             changeModal(`${BASE_URL}/kullanici/etkinlikler/modal/ekle`);
             const modal = document.getElementById(button.dataset.modalTarget);
+            document.body.classList.add('overflow-hidden');
             modal.classList.remove('hidden');
         });
     });
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.matches('.close-modal')) {
             const modalId = event.target.getAttribute('data-modal-target');
             const modal = document.getElementById(modalId);
+            document.body.classList.remove('overflow-hidden');
             modal.classList.add('hidden');
         }
     });
@@ -32,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const modalId = event.target.getAttribute('data-modal-target');
             const modal = document.getElementById(modalId);
+            document.body.classList.add('overflow-hidden');
             modal.classList.remove('hidden');
         });
     });

@@ -13,6 +13,7 @@ export async function changeModal(url) {
 
         // HELPER FUNCTIONS
         initCoverImageHandler();
+        initOtherImagesHandler();
         initKatilimSinirlama();
         initDropdowns();
         initForm();
@@ -42,8 +43,46 @@ function initCoverImageHandler() {
             }
             reader.readAsDataURL(dosya);
         } else {
-            resimContainer.innerHTML =
-                '<p class="text-red-500">Lütfen geçerli bir resim dosyası seçin.</p>';
+            const errorMsg = document.createElement('p');
+            errorMsg.className = 'text-red-500';
+            errorMsg.textContent = 'Lütfen geçerli bir resim dosyası seçin.';
+            resimContainer.appendChild(errorMsg);
+        }
+    });
+}
+
+function initOtherImagesHandler() {
+    const otherImagesInput = document.getElementById('etkinlikDigerResimler');
+    if (!otherImagesInput) return;
+
+    otherImagesInput.addEventListener('change', function (event) {
+        const resimContainer = document.getElementById('resimlercontainer');
+        resimContainer.innerHTML = ''; // Önceki resimleri temizle
+
+        const dosyalar = event.target.files;
+        if (dosyalar.length > 0) {
+            Array.from(dosyalar).forEach(dosya => {
+                if (dosya.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.alt = 'Diğer Etkinlik Resmi';
+                        resimContainer.appendChild(img);
+                    }
+                    reader.readAsDataURL(dosya);
+                } else {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'text-red-500';
+                    errorMsg.textContent = 'Lütfen geçerli bir resim dosyası seçin.';
+                    resimContainer.appendChild(errorMsg);
+                }
+            });
+        } else {
+            const errorMsg = document.createElement('p');
+            errorMsg.className = 'text-red-500';
+            errorMsg.textContent = 'Lütfen geçerli bir resim dosyası seçin.';
+            resimContainer.appendChild(errorMsg);
         }
     });
 }
@@ -99,6 +138,9 @@ function initForm() {
     FORM.addEventListener('submit', async function (event) {
         event.preventDefault();
 
+        const FORM_SUBMIT_BUTTON = FORM.querySelector('button[type="submit"]');
+        FORM_SUBMIT_BUTTON.disabled = true;
+
         const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const FORM_DATA = new FormData(FORM);
         const POST_URL = FORM.getAttribute('action');
@@ -148,6 +190,8 @@ function initForm() {
             }
         } catch (error) {
             console.error('Hata:', error);
+        } finally {
+            FORM_SUBMIT_BUTTON.disabled = false;
         }
     });
 }

@@ -212,14 +212,14 @@ class EtkinlikController extends Controller
                 }
 
                 // Diğer resimler güncellemesi (varsa) -> Örneğin:
-                // if (!empty($validatedData['etkinlikDigerResimler'])) {
-                //     // storeMultipleImages metodunu kullanarak yükleyebilirsiniz
-                //     $this->storeMultipleImages(
-                //         $validatedData['etkinlikDigerResimler'],
-                //         $etkinlik->etkinlikler_id,
-                //         $isletmeReferansKodu
-                //     );
-                // }
+                if (!empty($validatedData['etkinlikDigerResimler'])) {
+                    // storeMultipleImages metodunu kullanarak yükleyebilirsiniz
+                    $this->storeMultipleImages(
+                        $validatedData['etkinlikDigerResimler'],
+                        $etkinlik->etkinlikler_id,
+                        $isletmeReferansKodu
+                    );
+                }
 
                 return response()->json([
                     'success' => true,
