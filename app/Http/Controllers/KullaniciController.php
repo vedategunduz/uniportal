@@ -6,6 +6,8 @@ use App\Models\Etkinlik;
 use App\Models\EtkinlikIlDetaylari;
 use App\Models\Il;
 use App\Models\Isletme;
+use App\Models\Resim;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,62 +63,97 @@ class KullaniciController extends Controller
         return view('kullanici.etkinlikler.index', compact('etkinlikler', 'iller'));
     }
 
-    public function modalEkle()
+    /**
+     * Yeni etkinlik oluşturma modalını döndürür.
+     *
+     * @return JsonResponse
+     */
+    public function modalEkle(): JsonResponse
     {
-        $html = view('components.etkinlik-modal', [
-            'modalBaslik' => 'Yeni Etkinlik Oluştur',
-            'modalSubmitText' => 'Etkinlik oluştur',
-            'kategori' => '',
-            'isletme' => '',
-            'etkinlikBaslik' => '',
-            'aciklama' => '',
-            'basvuruTarih' => '',
-            'basvuruBitisTarih' => '',
-            'baslamaTarih' => '',
-            'bitisTarih' => '',
-            'kapakResim' => '',
-            'kontenjan' => '',
-            'sehir' => '',
-            'katilimSinirlama' => [],
-            'yorumDurumu' => '',
-            'sosyalMedyaDurum' => true,
-            'postUrl' => url('kullanici/etkinlikler/'),
-        ])->render();
+        // Modalda doldurulması gereken varsayılan alanlar
+        $data = [
+            'modalBaslik'        => 'Yeni Etkinlik Oluştur',
+            'modalSubmitText'    => 'Etkinlik oluştur',
+            'kategori'           => '',
+            'isletme'            => '',
+            'etkinlikBaslik'     => '',
+            'aciklama'           => '',
+            'basvuruTarih'       => '',
+            'basvuruBitisTarih'  => '',
+            'baslamaTarih'       => '',
+            'bitisTarih'         => '',
+            'kapakResim'         => '',
+            'kontenjan'          => '',
+            'sehir'              => '',
+            'katilimSinirlama'   => [],
+            'digerResimler'      => [],
+            'yorumDurumu'        => '',
+            'sosyalMedyaDurum'   => true,
+            'postUrl'            => url('kullanici/etkinlikler/'),
+        ];
 
+        // Blade view'i render ederek HTML çıktısını yakalıyoruz.
+        $html = view('components.etkinlik-modal', $data)->render();
+
+        // JSON şeklinde döndürüyoruz.
         return response()->json([
-            'html' =>  $html
-        ]);
+            'html' => $html,
+        ], 200);
     }
 
-    public function modalDuzenle(string $id)
+    /**
+     * Var olan bir etkinliğin düzenlenmesi için modalı döndürür.
+     *
+     * @param  string  $id  Şifreli etkinlik ID'si
+     * @return JsonResponse
+     */
+    public function modalDuzenle(string $id): JsonResponse
     {
-        $id = decrypt($id);
-        $etkinlik = Etkinlik::find($id);
-        $katilimSinirlama = EtkinlikIlDetaylari::where('etkinlikler_id', $id)->pluck('iller_id')->toArray();
+        // Gelen ID'yi çözüyoruz
+        $decryptedId = decrypt($id);
 
-        $html = view('components.etkinlik-modal', [
-            'modalBaslik' => 'Etkinlik Düzenle',
-            'modalSubmitText' => 'Etkinlik güncelle',
-            'kategori' => $etkinlik->etkinlik_turleri_id,
-            'isletme' => $etkinlik->isletmeler_id,
-            'etkinlikBaslik' => $etkinlik->baslik,
-            'aciklama' => $etkinlik->aciklama,
-            'basvuruTarih' => $etkinlik->etkinlikBasvuruTarihi,
+        // İlgili etkinliği veya bulunamazsa 404 döndürür
+        $etkinlik = Etkinlik::findOrFail($decryptedId);
+
+        // İllere göre katılım sınırlaması varsa onları çekiyoruz
+        $katilimSinirlama = EtkinlikIlDetaylari::where('etkinlikler_id', $decryptedId)
+            ->pluck('iller_id')
+            ->toArray();
+
+        // Etkinliğe ait diğer resimler varsa onları çekiyoruz
+        $resimler = Resim::where('etkinlikler_id', $decryptedId)->pluck('resimYolu')->toArray();
+
+        // Modalda doldurulması gereken veriler
+        $data = [
+            'modalBaslik'       => 'Etkinlik Düzenle',
+            'modalSubmitText'   => 'Etkinlik güncelle',
+            'kategori'          => $etkinlik->etkinlik_turleri_id,
+            'isletme'           => $etkinlik->isletmeler_id,
+            'etkinlikBaslik'    => $etkinlik->baslik,
+            'aciklama'          => $etkinlik->aciklama,
+            'basvuruTarih'      => $etkinlik->etkinlikBasvuruTarihi,
             'basvuruBitisTarih' => $etkinlik->etkinlikBasvuruBitisTarihi,
-            'baslamaTarih' => $etkinlik->etkinlikBaslamaTarihi,
-            'bitisTarih' => $etkinlik->etkinlikBitisTarihi,
-            'kapakResim' => $etkinlik->kapakResmiYolu,
-            'kontenjan' => $etkinlik->kontenjan,
-            'sehir' => $etkinlik->iller_id,
-            'katilimSinirlama' => $katilimSinirlama,
-            'yorumDurumu' => $etkinlik->yorumDurumu,
-            'sosyalMedyaDurum' => $etkinlik->sosyalMedyadaPaylas,
-            'postUrl' => url('kullanici/etkinlikler').'/duzenle/'.encrypt($id),
-        ])->render();
+            'baslamaTarih'      => $etkinlik->etkinlikBaslamaTarihi,
+            'bitisTarih'        => $etkinlik->etkinlikBitisTarihi,
+            'kapakResim'        => $etkinlik->kapakResmiYolu,
+            'kontenjan'         => $etkinlik->kontenjan,
+            'sehir'             => $etkinlik->iller_id,
+            'katilimSinirlama'  => $katilimSinirlama,
+            'digerResimler'     => $resimler,
+            'yorumDurumu'       => $etkinlik->yorumDurumu,
+            'sosyalMedyaDurum'  => $etkinlik->sosyalMedyadaPaylas,
+            // URL’yi dilerseniz route() kullanarak da oluşturabilirsiniz.
+            // 'postUrl'         => route('kullanici.etkinlikler.update', encrypt($decryptedId)),
+            'postUrl'           => url('kullanici/etkinlikler/duzenle/' . encrypt($decryptedId)),
+        ];
 
+        // Blade view'i render ederek HTML çıktısını yakalıyoruz.
+        $html = view('components.etkinlik-modal', $data)->render();
+
+        // JSON şeklinde döndürüyoruz.
         return response()->json([
-            'html' =>  $html
-        ]);
+            'html' => $html,
+        ], 200);
     }
 
     public function girisForm()

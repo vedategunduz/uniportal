@@ -18,11 +18,14 @@
             text-align: center
         }
 
-        #resimcontainer img {
-            max-width: 100%;
-            max-height: 11.75rem;
-            object-fit: contain;
-            margin: 0 auto;
+        #resimcontainer,
+        #resimlercontainer {
+            img {
+                max-width: 100%;
+                max-height: 11.75rem;
+                object-fit: cover;
+                margin: 0 auto;
+            }
         }
     </style>
 @endsection
@@ -43,11 +46,10 @@
 
     <section id="etkinlikModal"
         class="hidden fixed top-0 left-0 w-screen h-screen inset-0 z-10 overflow-auto max-h-screen py-4">
-        <button type="button"
-            class="close-modal fixed top-0 left-0 w-full h-full bg-black/30 cursor-pointer z-20"
+        <button type="button" class="close-modal fixed top-0 left-0 w-full h-full bg-black/30 cursor-pointer z-20"
             data-modal-target="etkinlikModal"><span class="sr-only">Modalı kapat</span></button>
 
-        <div class="mx-auto max-w-screen-xl z-30 relative zoomIn-modal-animation">
+        <div class="mx-auto max-w-screen-2xl z-30 relative zoomIn-modal-animation">
             <div class="bg-white rounded-md" id="etkinlikModalContent"></div>
         </div>
     </section>

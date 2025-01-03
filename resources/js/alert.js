@@ -44,7 +44,7 @@ function createAlert(message, type = 'success') {
 
     setTimeout(function () {
         document.getElementById('alerts').removeChild(ALERT_CONTAINER);
-    }, 50000);
+    }, 5000);
 }
 
 // Kolay erişim için fonksiyonlar

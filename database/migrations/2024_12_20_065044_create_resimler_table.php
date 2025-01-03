@@ -19,6 +19,9 @@ return new class extends Migration
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
             $table->string('resimYolu');
             $table->timestamps();
+
+            // Foreign Keys
+            $table->foreign('etkinlikler_id')->references('etkinlikler_id')->on('etkinlikler')->onDelete('restrict');
         });
 
         Schema::enableForeignKeyConstraints();

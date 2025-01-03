@@ -10,8 +10,8 @@
 </header>
 
 <section class="px-4 py-8">
-    <form action="{{ $postUrl }}" method="POST" id="etkinlikForm" class="grid md:grid-cols-2 gap-4">
-        <section>
+    <form action="{{ $postUrl }}" method="POST" id="etkinlikForm" class="grid md:grid-cols-3 gap-24">
+        <section class="md:col-span-2">
             <div class="mb-3">
                 <select name="etkinlikIsletme" id="etkinlikIsletme"
                     class="bg-gray-50 border font-medium border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -96,9 +96,14 @@
             </div>
             <div class="mb-3">
                 <label for="etkinlikDigerResimler"
-                    class="h-48 border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
-                    <span class="font-medium text-gray-500">Diğer resimler</span>
-                    <div id="resimlerContainer">
+                    class="relative h-48 overflow-auto border-2 border-dashed flex items-center justify-center cursor-pointer hover:bg-gray-50 transition">
+                    <span class="font-medium text-gray-500 absolute top-2 left-2 z-50">Diğer resimler</span>
+                    <div id="resimlercontainer" class="grid grid-cols-3 gap-4">
+                        @if ($digerResimler)
+                            @foreach ($digerResimler as $resim)
+                                <img src="{{ asset('storage/' . $resim) }}" alt="Diğer Resimler" class="">
+                            @endforeach
+                        @endif
                     </div>
                 </label>
                 <input type="file" name="etkinlikDigerResimler[]" multiple class="sr-only" id="etkinlikDigerResimler"
@@ -153,7 +158,7 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="">
                 <div class="my-3">
                     <label class="cursor-pointer flex justify-between items-center gap-4">
                         <span class="text-sm font-medium text-gray-900">Yorum yapmayı
@@ -167,7 +172,7 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-4">
+            <div class="">
                 <div class="">
                     <label class="cursor-pointer flex justify-between items-center gap-4">
                         <span class="text-sm font-medium text-gray-900 dark:text-gray-300">Sosyal medyada

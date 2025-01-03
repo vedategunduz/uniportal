@@ -37,7 +37,7 @@ function initCoverImageHandler() {
             reader.onload = function (e) {
                 const img = document.createElement('img');
                 img.src = e.target.result;
-                img.alt = 'Seçilen Kapak Resmi';
+                img.alt = 'Etkinlik Kapak Resmi';
                 resimContainer.appendChild(img);
             }
             reader.readAsDataURL(dosya);
@@ -122,15 +122,10 @@ function initForm() {
                     // Gelen JSON verisini parse et
                     const errorData = await RESPONSE.json();
 
-                    console.error('Validation Errors:', errorData.errors);
-
                     // İsterseniz her bir field ve mesajını DOM'a yazdırabilirsiniz
-                    // (Basit örnek)
                     for (const [field, messages] of Object.entries(errorData.errors)) {
                         messages.forEach(msg => {
                             errorAlert(`${msg}`);
-                            console.log(`${field}: ${msg}`);
-                            // Örneğin bir hata alanı oluşturarak kullanıcıya gösterebilirsiniz
                         });
                     }
 
@@ -147,7 +142,7 @@ function initForm() {
 
             if (RESPONSE_DATA.success) {
                 document.getElementById('etkinlikModal').classList.add('hidden');
-                successAlert(RESPONSE_DATA.success);
+                successAlert(RESPONSE_DATA.message);
             } else if (RESPONSE_DATA.error) {
                 errorAlert('Oopss! Bir hata oluştu. Lütfen bildirin.');
             }
