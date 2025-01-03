@@ -50,6 +50,9 @@
             data-modal-target="etkinlikModal"><span class="sr-only">Modalı kapat</span></button>
 
         <div class="mx-auto max-w-screen-2xl z-30 relative zoomIn-modal-animation">
+            <div class="hidden absolute w-full h-full rounded items-center justify-center bg-black/50 z-50" id="etkinlikLoader">
+                <span class="text-white">Lütfen bekleyin...</span>
+            </div>
             <div class="bg-white rounded-md" id="etkinlikModalContent"></div>
         </div>
     </section>

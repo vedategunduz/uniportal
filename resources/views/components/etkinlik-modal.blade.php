@@ -102,7 +102,9 @@
                         @if ($digerResimler)
                             @foreach ($digerResimler as $resim)
                                 <div class="relative">
-                                    <button type="button" onclick="alert()" class="absolute right-0 top-0 p-1 bg-rose-500 text-white size">
+                                    <button type="button"
+                                        class="absolute right-0 top-0 p-1 bg-rose-500 text-white size digerResimSilButton"
+                                        data-target="">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor"
                                             class="size-4 pointer-events-none">

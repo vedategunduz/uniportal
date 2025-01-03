@@ -18,7 +18,6 @@ export async function changeModal(url) {
         initDropdowns();
         initForm();
         initSummernote();
-
     } catch (error) {
         console.error('Hata:', error);
     }
@@ -141,6 +140,10 @@ function initForm() {
         const FORM_SUBMIT_BUTTON = FORM.querySelector('button[type="submit"]');
         FORM_SUBMIT_BUTTON.disabled = true;
 
+        const FORM_LOADER = document.getElementById('etkinlikLoader');
+        FORM_LOADER.classList.remove('hidden');
+        FORM_LOADER.classList.add('flex');
+
         const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const FORM_DATA = new FormData(FORM);
         const POST_URL = FORM.getAttribute('action');
@@ -157,7 +160,7 @@ function initForm() {
             });
 
             // Eğer HTTP statü kodu 200-299 aralığında DEĞİLSE (yani !RESPONSE.ok)
-            // özel olarak 422 durumunu kontrol edelim
+            // Özel olarak 422 durumunu kontrol edelim
             if (!RESPONSE.ok) {
                 // 422 ise validation hataları dönmüş demektir
                 if (RESPONSE.status === 422) {
@@ -192,6 +195,8 @@ function initForm() {
             console.error('Hata:', error);
         } finally {
             FORM_SUBMIT_BUTTON.disabled = false;
+            FORM_LOADER.classList.remove('flex');
+            FORM_LOADER.classList.add('hidden');
         }
     });
 }
