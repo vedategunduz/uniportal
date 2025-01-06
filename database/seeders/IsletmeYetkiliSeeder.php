@@ -18,12 +18,12 @@ class IsletmeYetkiliSeeder extends Seeder
         foreach ($isletmeler as $isletme) {
             IsletmeYetkili::insert([
                 'kullanicilar_id' => 1,
-                'isletmeler_id' => $isletme->isletmeler_id,
+                'isletmeler_id'   => $isletme->isletmeler_id,
             ]);
         }
         IsletmeYetkili::create([
             'kullanicilar_id' => 2,
-            'isletmeler_id' => 143,
+            'isletmeler_id'   => 143,
         ]);
     }
 }

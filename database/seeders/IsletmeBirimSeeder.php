@@ -80,9 +80,9 @@ class IsletmeBirimSeeder extends Seeder
         foreach ($isletmeler as $isletme) {
             foreach ($universiteBirimleri as $birim) {
                 IsletmeBirim::create([
-                    'isletmeler_id' => $isletme['isletmeler_id'],
+                    'isletmeler_id'    => $isletme['isletmeler_id'],
                     'birim_tipleri_id' => $birim['birim_tip_id'],
-                    'baslik' => $birim['birim_ad'],
+                    'baslik'           => $birim['birim_ad'],
                 ]);
             }
         }

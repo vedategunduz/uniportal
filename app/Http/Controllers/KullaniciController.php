@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
 use App\Models\EtkinlikIlDetaylari;
-use App\Models\Il;
 use App\Models\Isletme;
 use App\Models\Resim;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class KullaniciController extends Controller
 {
-    /**
+      /**
      * Display a listing of the resource.
      */
     public function index()
@@ -27,28 +26,28 @@ class KullaniciController extends Controller
         $kamular = Isletme::where('isletme_turleri_id', 1)->orderBy('baslik', 'asc')->paginate(20);
 
         if ($request->ajax()) {
-            // İçeriği render edin
+              // İçeriği render edin
             $html = '';
             foreach ($kamular as $kamu) {
                 $html .= view(
                     'components.kamu',
                     [
-                        'text' => $kamu->baslik,
-                        'href' => "/$kamu->kamular_id",
-                        'logoUrl' => $kamu->logoUrl,
-                        'websiteUrl' => $kamu->websiteUrl,
-                        'xUrl' => $kamu->xUrl,
+                        'text'         => $kamu->baslik,
+                        'href'         => "/$kamu->kamular_id",
+                        'logoUrl'      => $kamu->logoUrl,
+                        'websiteUrl'   => $kamu->websiteUrl,
+                        'xUrl'         => $kamu->xUrl,
                         'instagramUrl' => $kamu->instagramUrl,
-                        'linkedinUrl' => $kamu->linkedinUrl,
+                        'linkedinUrl'  => $kamu->linkedinUrl,
                     ]
                 )->render();
             }
 
-            // Paginator'ı render edin (Tailwind paginator'ınızı kullandığınız Blade dosyasını belirtin)
+              // Paginator'ı render edin (Tailwind paginator'ınızı kullandığınız Blade dosyasını belirtin)
             $pagination = $kamular->links('pagination::tailwind')->render();
 
             return response()->json([
-                'html' => $html,
+                'html'       => $html,
                 'pagination' => $pagination,
             ]);
         }
@@ -56,45 +55,45 @@ class KullaniciController extends Controller
         return view('kullanici.kamular.index', compact(['kamular']));
     }
 
-    /**
+      /**
      * Yeni etkinlik oluşturma modalını döndürür.
      *
      * @return JsonResponse
      */
     public function modalEkle(): JsonResponse
     {
-        // Modalda doldurulması gereken varsayılan alanlar
+          // Modalda doldurulması gereken varsayılan alanlar
         $data = [
-            'modalBaslik'        => 'Yeni Etkinlik Oluştur',
-            'modalSubmitText'    => 'Etkinlik oluştur',
-            'kategori'           => '',
-            'isletme'            => '',
-            'etkinlikBaslik'     => '',
-            'aciklama'           => '',
-            'basvuruTarih'       => '',
-            'basvuruBitisTarih'  => '',
-            'baslamaTarih'       => '',
-            'bitisTarih'         => '',
-            'kapakResim'         => '',
-            'kontenjan'          => '',
-            'sehir'              => '',
-            'katilimSinirlama'   => [],
-            'digerResimler'      => [],
-            'yorumDurumu'        => '',
-            'sosyalMedyaDurum'   => true,
-            'postUrl'            => url('kullanici/etkinlikler/'),
+            'modalBaslik'       => 'Yeni Etkinlik Oluştur',
+            'modalSubmitText'   => 'Etkinlik oluştur',
+            'kategori'          => '',
+            'isletme'           => '',
+            'etkinlikBaslik'    => '',
+            'aciklama'          => '',
+            'basvuruTarih'      => '',
+            'basvuruBitisTarih' => '',
+            'baslamaTarih'      => '',
+            'bitisTarih'        => '',
+            'kapakResim'        => '',
+            'kontenjan'         => '',
+            'sehir'             => '',
+            'katilimSinirlama'  => [],
+            'digerResimler'     => [],
+            'yorumDurumu'       => '',
+            'sosyalMedyaDurum'  => true,
+            'postUrl'           => url('kullanici/etkinlikler/'),
         ];
 
-        // Blade view'i render ederek HTML çıktısını yakalıyoruz.
+          // Blade view'i render ederek HTML çıktısını yakalıyoruz.
         $html = view('components.etkinlik-modal', $data)->render();
 
-        // JSON şeklinde döndürüyoruz.
+          // JSON şeklinde döndürüyoruz.
         return response()->json([
             'html' => $html,
         ], 200);
     }
 
-    /**
+      /**
      * Var olan bir etkinliğin düzenlenmesi için modalı döndürür.
      *
      * @param  string  $id  Şifreli etkinlik ID'si
@@ -102,21 +101,21 @@ class KullaniciController extends Controller
      */
     public function modalDuzenle(string $id): JsonResponse
     {
-        // Gelen ID'yi çözüyoruz
+          // Gelen ID'yi çözüyoruz
         $decryptedId = decrypt($id);
 
-        // İlgili etkinliği veya bulunamazsa 404 döndürür
+          // İlgili etkinliği veya bulunamazsa 404 döndürür
         $etkinlik = Etkinlik::findOrFail($decryptedId);
 
-        // İllere göre katılım sınırlaması varsa onları çekiyoruz
+          // İllere göre katılım sınırlaması varsa onları çekiyoruz
         $katilimSinirlama = EtkinlikIlDetaylari::where('etkinlikler_id', $decryptedId)
             ->pluck('iller_id')
             ->toArray();
 
-        // Etkinliğe ait diğer resimler varsa onları çekiyoruz
+          // Etkinliğe ait diğer resimler varsa onları çekiyoruz
         $resimler = Resim::where('etkinlikler_id', $decryptedId)->pluck('resimYolu')->toArray();
 
-        // Modalda doldurulması gereken veriler
+          // Modalda doldurulması gereken veriler
         $data = [
             'modalBaslik'       => 'Etkinlik Düzenle',
             'modalSubmitText'   => 'Etkinlik güncelle',
@@ -135,15 +134,15 @@ class KullaniciController extends Controller
             'digerResimler'     => $resimler,
             'yorumDurumu'       => $etkinlik->yorumDurumu,
             'sosyalMedyaDurum'  => $etkinlik->sosyalMedyadaPaylas,
-            // URL’yi dilerseniz route() kullanarak da oluşturabilirsiniz.
-            // 'postUrl'         => route('kullanici.etkinlikler.update', encrypt($decryptedId)),
-            'postUrl'           => url('kullanici/etkinlikler/duzenle/' . encrypt($decryptedId)),
+              // URL’yi dilerseniz route() kullanarak da oluşturabilirsiniz.
+              // 'postUrl'         => route('kullanici.etkinlikler.update', encrypt($decryptedId)),
+            'postUrl' => url('kullanici/etkinlikler/duzenle/' . encrypt($decryptedId)),
         ];
 
-        // Blade view'i render ederek HTML çıktısını yakalıyoruz.
+          // Blade view'i render ederek HTML çıktısını yakalıyoruz.
         $html = view('components.etkinlik-modal', $data)->render();
 
-        // JSON şeklinde döndürüyoruz.
+          // JSON şeklinde döndürüyoruz.
         return response()->json([
             'html' => $html,
         ], 200);

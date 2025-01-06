@@ -18,6 +18,9 @@ class RolSeeder extends Seeder
                     'baslik' => 'Admin'
                 ],
                 [
+                    'baslik' => 'Yönetici'
+                ],
+                [
                     'baslik' => 'Ziyaretçi'
                 ]
             ]

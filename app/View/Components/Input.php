@@ -17,14 +17,14 @@ class Input extends Component
 
     public function __construct($id = null, $type = null, $name = null, $value = null, $placeholder = null)
     {
-        $this->id = $id;
-        $this->type = $type;
-        $this->name = $name;
-        $this->value = $value;
+        $this->id          = $id;
+        $this->type        = $type;
+        $this->name        = $name;
+        $this->value       = $value;
         $this->placeholder = $placeholder;
     }
 
-    /**
+      /**
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string

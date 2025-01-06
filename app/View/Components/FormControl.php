@@ -16,14 +16,14 @@ class FormControl extends Component
 
     public function __construct($for, $type, $id, $name, $text)
     {
-        $this->id = $id;
-        $this->for = $for;
+        $this->id   = $id;
+        $this->for  = $for;
         $this->type = $type;
         $this->name = $name;
         $this->text = $text;
     }
 
-    /**
+      /**
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string

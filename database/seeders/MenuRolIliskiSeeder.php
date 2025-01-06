@@ -16,12 +16,21 @@ class MenuRolIliskiSeeder extends Seeder
         $tum_menuler = Menu::all();
 
         foreach ($tum_menuler as $menu) {
-            MenuRolIliski::create(
-                [
-                    'roller_id' => 1,
-                    'menuler_id' => $menu['menuler_id']
-                ]
-            );
+            MenuRolIliski::create([
+                'roller_id'  => 1,
+                'menuler_id' => $menu['menuler_id']
+            ]);
         }
+
+        MenuRolIliski::insert([
+            [
+                'roller_id'  => 2,
+                'menuler_id' => 1
+            ],
+            [
+                'roller_id'  => 2,
+                'menuler_id' => 2
+            ],
+        ]);
     }
 }

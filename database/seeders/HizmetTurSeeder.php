@@ -14,33 +14,33 @@ class HizmetTurSeeder extends Seeder
     {
         HizmetTur::insert([
             [
-                'baslik' => "Bilişim",
-                'derinlik' => 0,
+                'baslik'                  => "Bilişim",
+                'derinlik'                => 0,
                 'bagli_hizmet_turleri_id' => null,
             ],
             [
-                'baslik' => "Tefrişat",
-                'derinlik' => 0,
+                'baslik'                  => "Tefrişat",
+                'derinlik'                => 0,
                 'bagli_hizmet_turleri_id' => null,
             ],
             [
-                'baslik' => "Bilgisayar",
-                'derinlik' => 1,
+                'baslik'                  => "Bilgisayar",
+                'derinlik'                => 1,
                 'bagli_hizmet_turleri_id' => 1,
             ],
             [
-                'baslik' => "Sunucu - Depolama",
-                'derinlik' => 1,
+                'baslik'                  => "Sunucu - Depolama",
+                'derinlik'                => 1,
                 'bagli_hizmet_turleri_id' => 1,
             ],
             [
-                'baslik' => "Yazılım",
-                'derinlik' => 1,
+                'baslik'                  => "Yazılım",
+                'derinlik'                => 1,
                 'bagli_hizmet_turleri_id' => 1,
             ],
             [
-                'baslik' => "Masa",
-                'derinlik' => 1,
+                'baslik'                  => "Masa",
+                'derinlik'                => 1,
                 'bagli_hizmet_turleri_id' => 2,
             ]
         ]);

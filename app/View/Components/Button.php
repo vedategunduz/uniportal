@@ -15,12 +15,12 @@ class Button extends Component
 
     public function __construct($id = '', $text, $type = 'button')
     {
-        $this->id = $id;
+        $this->id   = $id;
         $this->text = $text;
         $this->type = $type;
     }
 
-    /**
+      /**
      * Get the view / contents that represent the component.
      *
      * @return View|Closure|string

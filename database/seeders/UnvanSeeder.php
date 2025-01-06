@@ -7,190 +7,190 @@ use Illuminate\Database\Seeder;
 
 class UnvanSeeder extends Seeder
 {
-    /**
+      /**
      * Run the database seeds.
      */
     public function run(): void
     {
         Unvan::insert([
             [
-                'baslik' => 'Daire Başkanı',
+                'baslik'             => 'Daire Başkanı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Bilgisayar Programcısı',
+                'baslik'             => 'Bilgisayar Programcısı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Mühendis',
+                'baslik'             => 'Mühendis',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Şube Müdürü',
+                'baslik'             => 'Şube Müdürü',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Mimar',
+                'baslik'             => 'Mimar',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Tekniker',
+                'baslik'             => 'Tekniker',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Teknisyen',
+                'baslik'             => 'Teknisyen',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Şef',
+                'baslik'             => 'Şef',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Memur',
+                'baslik'             => 'Memur',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Uzman Yardımcısı',
+                'baslik'             => 'Uzman Yardımcısı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Uzman',
+                'baslik'             => 'Uzman',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Genel Müdür Yardımcısı',
+                'baslik'             => 'Genel Müdür Yardımcısı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Genel Müdür',
+                'baslik'             => 'Genel Müdür',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Doktor',
+                'baslik'             => 'Doktor',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Hemşire',
+                'baslik'             => 'Hemşire',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Ebe',
+                'baslik'             => 'Ebe',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Diş Hekimi',
+                'baslik'             => 'Diş Hekimi',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Veteriner',
+                'baslik'             => 'Veteriner',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Psikolog',
+                'baslik'             => 'Psikolog',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Fizyoterapist',
+                'baslik'             => 'Fizyoterapist',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Paramedik',
+                'baslik'             => 'Paramedik',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Eczacı',
+                'baslik'             => 'Eczacı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Öğretmen',
+                'baslik'             => 'Öğretmen',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Okul Müdürü',
+                'baslik'             => 'Okul Müdürü',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Okul Müdür Yardımcısı',
+                'baslik'             => 'Okul Müdür Yardımcısı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Eğitim Uzmanı',
+                'baslik'             => 'Eğitim Uzmanı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Avukat',
+                'baslik'             => 'Avukat',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Hukuk Müşaviri',
+                'baslik'             => 'Hukuk Müşaviri',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'İmam',
+                'baslik'             => 'İmam',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Vaiz',
+                'baslik'             => 'Vaiz',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Müezzin',
+                'baslik'             => 'Müezzin',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Kur\'an Kursu Öğreticisi',
+                'baslik'             => 'Kur\'an Kursu Öğreticisi',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Polis Memuru',
+                'baslik'             => 'Polis Memuru',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Komiser Yardımcısı',
+                'baslik'             => 'Komiser Yardımcısı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Komiser',
+                'baslik'             => 'Komiser',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Başkomiser',
+                'baslik'             => 'Başkomiser',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Emniyet Müdürü',
+                'baslik'             => 'Emniyet Müdürü',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Vali',
+                'baslik'             => 'Vali',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Kaymakam',
+                'baslik'             => 'Kaymakam',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Mahalli İdareler Müdürü',
+                'baslik'             => 'Mahalli İdareler Müdürü',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Hizmetli',
+                'baslik'             => 'Hizmetli',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Şoför',
+                'baslik'             => 'Şoför',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Bekçi',
+                'baslik'             => 'Bekçi',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'İstihbarat Uzmanı',
+                'baslik'             => 'İstihbarat Uzmanı',
                 'isletme_turleri_id' => 1,
             ],
             [
-                'baslik' => 'Operasyon Görevlisi',
+                'baslik'             => 'Operasyon Görevlisi',
                 'isletme_turleri_id' => 1,
             ]
         ]);

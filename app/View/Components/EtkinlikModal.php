@@ -28,46 +28,46 @@ class EtkinlikModal extends Component
     public $katilimSinirlama;
 
     public function __construct(
-        $modalBaslik = "",
-        $modalSubmitText = "",
-        $etkinlikBaslik = "",
-        $isletme = "",
-        $kategoriler = "",
-        $aciklama = "",
-        $basvuruTarih = "",
+        $modalBaslik       = "",
+        $modalSubmitText   = "",
+        $etkinlikBaslik    = "",
+        $isletme           = "",
+        $kategoriler       = "",
+        $aciklama          = "",
+        $basvuruTarih      = "",
         $basvuruBitisTarih = "",
-        $baslamaTarih = "",
-        $bitisTarih = "",
-        $kontenjan = "",
-        $sehir = "",
-        $yorumDurum = "",
+        $baslamaTarih      = "",
+        $bitisTarih        = "",
+        $kontenjan         = "",
+        $sehir             = "",
+        $yorumDurum        = "",
         $sosyalMedyaDurum,
-        $kapakResim = "",
+        $kapakResim    = "",
         $digerResimler = [],
         $postUrl,
         $katilimSinirlama = [],
     ) {
-        $this->modalBaslik = $modalBaslik;
-        $this->modalSubmitText = $modalSubmitText;
-        $this->etkinlikBaslik = $etkinlikBaslik;
-        $this->isletme = $isletme;
-        $this->kategoriler = $kategoriler;
-        $this->aciklama = $aciklama;
-        $this->basvuruTarih = $basvuruTarih;
+        $this->modalBaslik       = $modalBaslik;
+        $this->modalSubmitText   = $modalSubmitText;
+        $this->etkinlikBaslik    = $etkinlikBaslik;
+        $this->isletme           = $isletme;
+        $this->kategoriler       = $kategoriler;
+        $this->aciklama          = $aciklama;
+        $this->basvuruTarih      = $basvuruTarih;
         $this->basvuruBitisTarih = $basvuruBitisTarih;
-        $this->baslamaTarih = $baslamaTarih;
-        $this->bitisTarih = $bitisTarih;
-        $this->kontenjan = $kontenjan;
-        $this->sehir = $sehir;
-        $this->yorumDurum = $yorumDurum;
-        $this->sosyalMedyaDurum = $sosyalMedyaDurum;
-        $this->kapakResim = $kapakResim;
-        $this->digerResimler = $digerResimler;
-        $this->postUrl = $postUrl;
-        $this->katilimSinirlama = $katilimSinirlama;
+        $this->baslamaTarih      = $baslamaTarih;
+        $this->bitisTarih        = $bitisTarih;
+        $this->kontenjan         = $kontenjan;
+        $this->sehir             = $sehir;
+        $this->yorumDurum        = $yorumDurum;
+        $this->sosyalMedyaDurum  = $sosyalMedyaDurum;
+        $this->kapakResim        = $kapakResim;
+        $this->digerResimler     = $digerResimler;
+        $this->postUrl           = $postUrl;
+        $this->katilimSinirlama  = $katilimSinirlama;
     }
 
-    /**
+      /**
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string

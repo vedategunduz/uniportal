@@ -177,17 +177,17 @@ class IsletmeSeeder extends Seeder
         foreach ($universiteler as $uni) {
             Isletme::create([
                 'isletme_turleri_id' => 1,
-                'iller_id' => $uni['il'],
-                'referans_kodu' => strtoupper(Str::random(8)),
-                'referans' => null,
-                'baslik' => $uni['baslik'],
-                'adres' => $faker->address,
-                'logoUrl' => 'https://placehold.co/128x128',
-                'websiteUrl' => $faker->url,
-                'xUrl' => 'x.com/' . $faker->userName,
-                'instagramUrl' => 'instagram.com/' . $faker->userName,
-                'linkedinUrl' => 'linkedin.com/' . $faker->userName,
-                'digerUrl' => $faker->url,
+                'iller_id'           => $uni['il'],
+                'referans_kodu'      => strtoupper(Str::random(8)),
+                'referans'           => null,
+                'baslik'             => $uni['baslik'],
+                'adres'              => $faker->address,
+                'logoUrl'            => 'https://placehold.co/128x128',
+                'websiteUrl'         => $faker->url,
+                'xUrl'               => 'x.com/' . $faker->userName,
+                'instagramUrl'       => 'instagram.com/' . $faker->userName,
+                'linkedinUrl'        => 'linkedin.com/' . $faker->userName,
+                'digerUrl'           => $faker->url,
             ]);
         }
     }

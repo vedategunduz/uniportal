@@ -8,7 +8,7 @@ use Illuminate\View\Component;
 
 class Nav extends Component
 {
-    public $logo = 'uniportal';
+    public $logo  = 'uniportal';
     public $links = [
         [
             'name' => 'Anasayfa',
@@ -36,7 +36,7 @@ class Nav extends Component
 
     public function __construct() {}
 
-    /**
+      /**
      * Get the view / contents that represent the component.
      */
     public function render(): View|Closure|string
