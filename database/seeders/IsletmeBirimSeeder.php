@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Kamu;
-use App\Models\KamuBirim;
+use App\Models\Isletme;
+use App\Models\IsletmeBirim;
 use Illuminate\Database\Seeder;
 
-class KamuBirimSeeder extends Seeder
+class IsletmeBirimSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -75,14 +75,14 @@ class KamuBirimSeeder extends Seeder
             ['birim_ad' => "Özel Kalem Müdürlüğü", 'birim_tip_id' => 6],
         ];
 
-        $kamular = Kamu::where('kamular_id', 143)->get();
+        $isletmeler = Isletme::where('isletmeler_id', 143)->get();
 
-        foreach ($kamular as $kamu) {
+        foreach ($isletmeler as $isletme) {
             foreach ($universiteBirimleri as $birim) {
-                KamuBirim::create([
-                    'kamular_id' => $kamu['kamular_id'],
-                    'birim_ad' => $birim['birim_ad'],
+                IsletmeBirim::create([
+                    'isletmeler_id' => $isletme['isletmeler_id'],
                     'birim_tipleri_id' => $birim['birim_tip_id'],
+                    'baslik' => $birim['birim_ad'],
                 ]);
             }
         }

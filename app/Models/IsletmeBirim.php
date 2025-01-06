@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IsletmeBirim extends Model
 {
     use IslemYapanTrait;
-    
+
     protected $table = "isletme_birimleri";
 
     protected $primaryKey = "isletme_birimleri_id";
@@ -16,10 +16,6 @@ class IsletmeBirim extends Model
     protected $fillabel = [
         'isletmeler_id',
         'birim_tipleri_id',
-        'ad',
-        'email',
-        'telefon',
-        'adres',
-        'websiteUrl',
+        'baslik',
     ];
 }

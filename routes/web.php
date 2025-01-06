@@ -35,7 +35,7 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
         Route::get('/', [KullaniciController::class, 'index'])->name('index');
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-            Route::get('/', [KullaniciController::class, 'etkinlikler'])->name('index');
+            Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
             Route::post('/', [EtkinlikController::class, 'store']);
             Route::post('/duzenle/{id}', [EtkinlikController::class, 'update']);

@@ -27,6 +27,10 @@ return new class extends Migration
             $table->boolean('sosyalMedyadaPaylas', 1)->default(1);
             $table->boolean('yorumDurumu')->default(1);
             $table->timestamps();
+
+            $table->foreign('etkinlik_turleri_id')->references('etkinlik_turleri_id')->on('etkinlik_turleri');
+            $table->foreign('isletmeler_id')->references('isletmeler_id')->on('isletmeler');
+            $table->foreign('iller_id')->references('iller_id')->on('iller');
         });
 
         Schema::enableForeignKeyConstraints();

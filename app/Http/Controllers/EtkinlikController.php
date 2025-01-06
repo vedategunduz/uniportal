@@ -16,19 +16,40 @@ class EtkinlikController extends Controller
      */
     public function index()
     {
-        return view('etkinlikler.index');
+        $etkinlikler = Etkinlik::with('il', 'isletme')->paginate(10);
+
+        foreach ($etkinlikler as $etkinlik) {
+            // Başlangıç ve bitiş tarihlerini Carbon'a çeviriyoruz
+            $baslangicTarihi = \Carbon\Carbon::parse($etkinlik->etkinlikBaslamaTarihi);
+            $bitisTarihi = \Carbon\Carbon::parse($etkinlik->etkinlikBitisTarihi);
+
+            // Örnek format: "06 Ocak 2025 - 10 Ocak 2025, 11:02 - 16:00"
+            // Tarih formatı (Türkçe ay adı, gün, yıl)
+            $tarihFormat = $baslangicTarihi->translatedFormat('d F')
+                . ' - '
+                . $bitisTarihi->translatedFormat('d F Y');
+
+            // Saat formatı (24 saat, dakika)
+            // Örneğin "11:02" - "16:00"
+            $saatFormat = $baslangicTarihi->format('H:i')
+                . ' - '
+                . $bitisTarihi->format('H:i');
+
+            // Blade'de kolay kullanmak için tek satır string oluşturalım:
+            $etkinlik->formatted_date_time = $tarihFormat . ', ' . $saatFormat;
+        }
+
+        return view('kullanici.etkinlikler.index', compact('etkinlikler'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        return view('etkinlik.create');
-    }
 
-
-
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(EtkinlikRequest $request)
     {
         try {

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class DataBaseSeeder extends Seeder
+class DatabaseSeeder extends Seeder
 {
     public function run()
     {
@@ -18,6 +18,11 @@ class DataBaseSeeder extends Seeder
             IsletmeSeeder::class,
             IsletmeYetkiliSeeder::class,
             EtkinlikTurSeeder::class,
+            EtkinlikSeeder::class,
+            BirimTipleriSeeder::class,
+            IsletmeBirimSeeder::class,
+            UnvanSeeder::class,
+            KullaniciBirimUnvanSeeder::class,
         ]);
     }
 }

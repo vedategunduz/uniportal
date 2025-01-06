@@ -13,15 +13,15 @@ class BirimTipleriSeeder extends Seeder
     public function run(): void
     {
         BirimTip::insert([
-            ['baslik' => "Fakülte"],
-            ['baslik' => "Enstitü"],
-            ['baslik' => "Yüksekokul"],
-            ['baslik' => "Daire Başkanlığı"],
-            ['baslik' => "Merkez"],
-            ['baslik' => "Müdürlük"],
-            ['baslik' => "Birim"],
-            ['baslik' => "Meslek Yüksekokulu"],
-            ['baslik' => "Genel İdare"],
+            ['baslik' => "Fakülte", 'isletme_turleri_id' => 1],
+            ['baslik' => "Enstitü", 'isletme_turleri_id' => 1],
+            ['baslik' => "Yüksekokul", 'isletme_turleri_id' => 1],
+            ['baslik' => "Daire Başkanlığı", 'isletme_turleri_id' => 1],
+            ['baslik' => "Merkez", 'isletme_turleri_id' => 1],
+            ['baslik' => "Müdürlük", 'isletme_turleri_id' => 1],
+            ['baslik' => "Birim", 'isletme_turleri_id' => 1],
+            ['baslik' => "Meslek Yüksekokulu", 'isletme_turleri_id' => 1],
+            ['baslik' => "Genel İdare", 'isletme_turleri_id' => 1],
         ]);
     }
 }

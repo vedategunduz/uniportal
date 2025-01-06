@@ -14,13 +14,22 @@ class EtkinlikTurSeeder extends Seeder
     {
         EtkinlikTur::insert([
             [
-                'baslik' => 'ETKİNLİK_TÜRÜ_1',
+                'baslik' => 'konser veya performans',
             ],
             [
-                'baslik' => 'ETKİNLİK_TÜRÜ_2',
+                'baslik' => 'eğitim',
             ],
             [
-                'baslik' => 'ETKİNLİK_TÜRÜ_3',
+                'baslik' => 'kongre',
+            ],
+            [
+                'baslik' => 'konferans',
+            ],
+            [
+                'baslik' => 'festival veya fuar',
+            ],
+            [
+                'baslik' => 'gala',
             ],
         ]);
     }

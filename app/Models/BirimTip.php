@@ -15,6 +15,7 @@ class BirimTip extends Model
     protected $primaryKey = 'birim_tipleri_id';
 
     protected $fillable = [
+        'isletme_turleri_id',
         'baslik',
     ];
 }

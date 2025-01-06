@@ -56,13 +56,6 @@ class KullaniciController extends Controller
         return view('kullanici.kamular.index', compact(['kamular']));
     }
 
-    public function etkinlikler()
-    {
-        $iller = Il::all();
-        $etkinlikler = Etkinlik::orderBy('created_At', 'asc')->paginate(20);
-        return view('kullanici.etkinlikler.index', compact('etkinlikler', 'iller'));
-    }
-
     /**
      * Yeni etkinlik oluşturma modalını döndürür.
      *
