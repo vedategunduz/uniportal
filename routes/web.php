@@ -6,6 +6,7 @@ use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\NotAuthMiddleware;
 
 use App\Http\Controllers\AnasayfaController;
+use App\Http\Controllers\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
@@ -33,6 +34,10 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
     Route::middleware(AuthMiddleware::class)->group(function () {
         Route::get('/', [KullaniciController::class, 'index'])->name('index');
+
+        Route::prefix('birimler')->name('birimler.')->group(function() {
+            Route::get('/', [BirimlerController::class, 'index'])->name('index');
+        });
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [EtkinlikController::class, 'index'])->name('index');

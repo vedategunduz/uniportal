@@ -10,6 +10,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/main.js'])
     <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+
 </head>
 
 <body>

@@ -16,5 +16,6 @@ class Unvan extends Model
     protected $fillable = [
         'isletme_turleri_id',
         'baslik',
+        'unvanSira',
     ];
 }

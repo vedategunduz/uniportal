@@ -18,4 +18,12 @@ class KullaniciBirimUnvan extends Model
         'isletme_birimleri_id',
         'unvanlar_id',
     ];
+
+    public function kullanici(){
+        return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
+    public function unvan() {
+        return $this->belongsTo(Unvan::class, 'unvanlar_id', 'unvanlar_id');
+    }
 }

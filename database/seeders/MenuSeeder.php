@@ -56,6 +56,27 @@ class MenuSeeder extends Seeder
                     'menuIcon'         => '',
                     'bagli_menuler_id' => 3,
                 ],
+                [
+                    'menuAd'           => 'Yönetici işlemleri',
+                    'menuLink'         => '',
+                    'menuSira'         => 400,
+                    'menuIcon'         => '',
+                    'bagli_menuler_id' => null,
+                ],
+                [
+                    'menuAd'           => 'Birim işlemleri',
+                    'menuLink'         => '/kullanici/birimler',
+                    'menuSira'         => 700,
+                    'menuIcon'         => '',
+                    'bagli_menuler_id' => 7,
+                ],
+                [
+                    'menuAd'           => 'Kullanici işlemleri',
+                    'menuLink'         => '/kullanici/islem',
+                    'menuSira'         => 701,
+                    'menuIcon'         => '',
+                    'bagli_menuler_id' => 7,
+                ],
             ]
         );
     }

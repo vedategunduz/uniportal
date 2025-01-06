@@ -31,6 +31,18 @@ class MenuRolIliskiSeeder extends Seeder
                 'roller_id'  => 2,
                 'menuler_id' => 2
             ],
+            [
+                'roller_id'  => 2,
+                'menuler_id' => 7
+            ],
+            [
+                'roller_id'  => 2,
+                'menuler_id' => 8
+            ],
+            [
+                'roller_id'  => 2,
+                'menuler_id' => 9
+            ],
         ]);
     }
 }

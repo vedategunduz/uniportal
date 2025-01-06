@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('unvanlar', function (Blueprint $table) {
             $table->id('unvanlar_id');
             $table->unsignedBigInteger('isletme_turleri_id');
+            $table->integer('unvanSira')->nullable();
             $table->string('baslik');
             $table->timestamps();
 
