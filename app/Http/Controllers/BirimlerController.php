@@ -19,4 +19,9 @@ class BirimlerController extends Controller
 
         return view('kullanici.birimler.index', compact('isletmeBirimleri'));
     }
+
+    public function isletmeBirimPersonelBul($id)
+    {
+        $personel = (new IsletmeBirim)->isletmeBirimPersonelBul($id);
+    }
 }

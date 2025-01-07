@@ -18,4 +18,16 @@ class IsletmeBirim extends Model
         'birim_tipleri_id',
         'baslik',
     ];
+
+    public function isletmeBirimPersonelBul($id)
+    {
+        $birimPersonelleri = KullaniciBirimUnvan::with('kullanici', 'unvan')
+            ->where('isletme_birimleri_id', $id)
+            ->get()
+            ->sortBy(function ($item) {
+                return $item->unvan->unvanSira;
+            });
+
+        return $birimPersonelleri;
+    }
 }

@@ -29,7 +29,6 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 });
 
 
-
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
     Route::middleware(AuthMiddleware::class)->group(function () {
@@ -37,6 +36,7 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
         Route::prefix('birimler')->name('birimler.')->group(function() {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
+            Route::get('/temiz', [BirimlerController::class, 'temiz'])->name('temiz');
         });
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {

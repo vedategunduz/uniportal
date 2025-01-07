@@ -8,10 +8,11 @@ use App\Models\EtkinlikIlDetaylari;
 use App\Models\Isletme;
 use App\Models\Resim;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class EtkinlikController extends Controller
 {
-      /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -19,23 +20,23 @@ class EtkinlikController extends Controller
         $etkinlikler = Etkinlik::with('il', 'isletme')->paginate(10);
 
         foreach ($etkinlikler as $etkinlik) {
-              // Başlangıç ve bitiş tarihlerini Carbon'a çeviriyoruz
+            // Başlangıç ve bitiş tarihlerini Carbon'a çeviriyoruz
             $baslangicTarihi = \Carbon\Carbon::parse($etkinlik->etkinlikBaslamaTarihi);
             $bitisTarihi     = \Carbon\Carbon::parse($etkinlik->etkinlikBitisTarihi);
 
-              // Örnek format: "06 Ocak 2025 - 10 Ocak 2025, 11:02 - 16:00"
-              // Tarih formatı (Türkçe ay adı, gün, yıl)
+            // Örnek format: "06 Ocak 2025 - 10 Ocak 2025, 11:02 - 16:00"
+            // Tarih formatı (Türkçe ay adı, gün, yıl)
             $tarihFormat = $baslangicTarihi->translatedFormat('d F')
                 . ' - '
                 . $bitisTarihi->translatedFormat('d F Y');
 
-              // Saat formatı (24 saat, dakika)
-              // Örneğin "11:02" - "16:00"
+            // Saat formatı (24 saat, dakika)
+            // Örneğin "11:02" - "16:00"
             $saatFormat = $baslangicTarihi->format('H:i')
                 . ' - '
                 . $bitisTarihi->format('H:i');
 
-              // Blade'de kolay kullanmak için tek satır string oluşturalım:
+            // Blade'de kolay kullanmak için tek satır string oluşturalım:
             $etkinlik->formatted_date_time = $tarihFormat . ', ' . $saatFormat;
         }
 
@@ -43,35 +44,35 @@ class EtkinlikController extends Controller
     }
 
 
-      /**
+    /**
      * Show the form for creating a new resource.
      */
 
-      /**
+    /**
      * Store a newly created resource in storage.
      */
     public function store(EtkinlikRequest $request)
     {
         try {
-              // Transaction ile tüm veritabanı işlemleri tek seferde yönetilir
+            // Transaction ile tüm veritabanı işlemleri tek seferde yönetilir
             return DB::transaction(function () use ($request) {
-                  // Form Request aracılığıyla doğrulanan verileri alıyoruz
+                // Form Request aracılığıyla doğrulanan verileri alıyoruz
                 $validatedData = $request->validated();
 
-                  // Boolean alanlar
+                // Boolean alanlar
                 $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
                 $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
 
-                  // ID alanlarını decrypt ediyoruz
+                // ID alanlarını decrypt ediyoruz
                 $etkinlikTurId     = decrypt($validatedData['etkinlikTur']);
                 $etkinlikIsletmeId = decrypt($validatedData['etkinlikIsletme']);
                 $etkinlikIlId      = decrypt($validatedData['etkinlikIl']);
 
-                  // İşletme referans kodu -> resimleri doğru klasöre yüklemek için
+                // İşletme referans kodu -> resimleri doğru klasöre yüklemek için
                 $isletme             = Isletme::findOrFail($etkinlikIsletmeId);
                 $isletmeReferansKodu = $isletme->referans_kodu;
 
-                  // Kapak resmini yüklüyoruz (varsa)
+                // Kapak resmini yüklüyoruz (varsa)
                 $kapakResmiYolu = null;
                 if ($request->hasFile('etkinlikKapakResmi')) {
                     $kapakResmiYolu = $this->storeSingleImage(
@@ -80,7 +81,7 @@ class EtkinlikController extends Controller
                     );
                 }
 
-                  // Etkinlik kaydı oluştur
+                // Etkinlik kaydı oluştur
                 $etkinlik = Etkinlik::create([
                     'etkinlik_turleri_id'        => $etkinlikTurId,
                     'isletmeler_id'              => $etkinlikIsletmeId,
@@ -97,7 +98,7 @@ class EtkinlikController extends Controller
                     'yorumDurumu'                => $yorumDurumu,
                 ]);
 
-                  // Katılım sınırlama (varsa)
+                // Katılım sınırlama (varsa)
                 if (!empty($validatedData['katilimSinirlama'])) {
                     foreach ($validatedData['katilimSinirlama'] as $ilId) {
                         $realIlId = decrypt($ilId);
@@ -108,7 +109,7 @@ class EtkinlikController extends Controller
                     }
                 }
 
-                  // Diğer resimleri yükle (varsa)
+                // Diğer resimleri yükle (varsa)
                 if (!empty($validatedData['etkinlikDigerResimler'])) {
                     $this->storeMultipleImages(
                         $validatedData['etkinlikDigerResimler'],
@@ -117,14 +118,14 @@ class EtkinlikController extends Controller
                     );
                 }
 
-                  // Başarılı sonuç
+                // Başarılı sonuç
                 return response()->json([
                     'success' => true,
                     'message' => 'Etkinlik başarıyla oluşturuldu.'
                 ], 201);
             });
         } catch (\Exception $e) {
-              // Herhangi bir hata olursa rollback yapılır ve buraya düşer
+            // Herhangi bir hata olursa rollback yapılır ve buraya düşer
             return response()->json([
                 'error'   => true,
                 'message' => $e->getMessage()
@@ -132,17 +133,17 @@ class EtkinlikController extends Controller
         }
     }
 
-      /**
+    /**
      * Tek bir resmi diske kaydetmek için yardımcı (helper) metod.
      * Geriye yüklenen dosyanın tam yolunu (path) döndürür.
      */
     private function storeSingleImage($image, string $isletmeReferansKodu): string
     {
-          // Dosya adı (benzersiz)
+        // Dosya adı (benzersiz)
         $filename = uniqid() . '.' . $image->getClientOriginalExtension();
 
-          // Dosyayı (storage/app/public/images/{referansKodu}) dizinine kaydet
-          // storeAs parametre sırası: (path, filename, disk)
+        // Dosyayı (storage/app/public/images/{referansKodu}) dizinine kaydet
+        // storeAs parametre sırası: (path, filename, disk)
         return $image->storeAs(
             'images/' . $isletmeReferansKodu,
             $filename,
@@ -150,7 +151,7 @@ class EtkinlikController extends Controller
         );
     }
 
-      /**
+    /**
      * Birden fazla resmi diske kaydetmek için yardımcı (helper) metod.
      * Her yükleme sonrası Resim tablosuna kaydeder.
      */
@@ -158,81 +159,78 @@ class EtkinlikController extends Controller
     {
         foreach ($imageFiles as $image) {
             $path = $this->storeSingleImage($image, $isletmeReferansKodu);
-            Resim::create([
+            Resim::resimInsert([
                 'etkinlikler_id' => $etkinlikId,
                 'resimYolu'      => $path
             ]);
         }
     }
-      /**
+    /**
      * Update the specified resource in storage.
      */
     public function update(EtkinlikRequest $request, string $id)
     {
         try {
-              // Tüm veritabanı işlemlerini transaction içinde yapıyoruz
+            // Tüm veritabanı işlemlerini transaction içinde yapıyoruz
             return DB::transaction(function () use ($request, $id) {
-                  // ID’yi çözerek ilgili etkinliği bulalım
+                // ID’yi çözerek ilgili etkinliği bulalım
                 $etkinlikId = decrypt($id);
                 $etkinlik   = Etkinlik::findOrFail($etkinlikId);
 
-                  // Form Request’ten doğrulanmış verileri alıyoruz
+                // Form Request’ten doğrulanmış verileri alıyoruz
                 $validatedData = $request->validated();
 
-                  // Boolean alanları çekiyoruz
+                // Boolean alanları çekiyoruz
                 $sosyalMedya = $request->boolean('etkinlikSosyalMedyadaPaylas');
                 $yorumDurumu = $request->boolean('etkinlikYorumDurumu');
 
-                  // ID alanlarını decrypt ederek gerçek ID’leri elde ediyoruz
+                // ID alanlarını decrypt ederek gerçek ID’leri elde ediyoruz
                 $etkinlikTurId     = decrypt($validatedData['etkinlikTur']);
                 $etkinlikIsletmeId = decrypt($validatedData['etkinlikIsletme']);
                 $etkinlikIlId      = decrypt($validatedData['etkinlikIl']);
 
-                  // İşletme referans kodu -> resimleri doğru klasöre yüklemek için
+                // İşletme referans kodu -> resimleri doğru klasöre yüklemek için
                 $isletme             = Isletme::findOrFail($etkinlikIsletmeId);
                 $isletmeReferansKodu = $isletme->referans_kodu;
 
-                  // Kapak resmini yüklüyoruz (varsa). Yoksa eski resim yolunu koruyoruz
+                //   Kapak resmini yüklüyoruz (varsa). Yoksa eski resim yolunu koruyoruz
                 $kapakResmiYolu = $etkinlik->kapakResmiYolu;
                 if ($request->hasFile('etkinlikKapakResmi')) {
-                      // İsterseniz storeSingleImage helper’ını burada da kullanabilirsiniz
+                    // İsterseniz storeSingleImage helper’ını burada da kullanabilirsiniz
                     $kapakResmiYolu = $this->storeSingleImage(
                         $request->file('etkinlikKapakResmi'),
                         $isletmeReferansKodu
                     );
+                    // // Eski resmi silmek için
+                    // Storage::disk('public')->delete($etkinlik->kapakResmiYolu);
                 }
 
-                  // Etkinlik tablosunu güncelliyoruz
-                $etkinlik->update([
-                    'etkinlik_turleri_id'        => $etkinlikTurId,
-                    'isletmeler_id'              => $etkinlikIsletmeId,
-                    'iller_id'                   => $etkinlikIlId,
-                    'kontenjan'                  => $validatedData['etkinlikKontenjan'],
-                    'etkinlikBasvuruTarihi'      => $validatedData['etkinlikBasvuru'],
-                    'etkinlikBasvuruBitisTarihi' => $validatedData['etkinlikBasvuruBitis'],
-                    'etkinlikBaslamaTarihi'      => $validatedData['etkinlikBaslangic'],
-                    'etkinlikBitisTarihi'        => $validatedData['etkinlikBitis'],
-                    'baslik'                     => $validatedData['etkinlikBaslik'],
-                    'aciklama'                   => $validatedData['etkinlikAciklama'],
-                    'sosyalMedyadaPaylas'        => $sosyalMedya,
-                    'yorumDurumu'                => $yorumDurumu,
-                    'kapakResmiYolu'             => $kapakResmiYolu,
-                ]);
+                // Form Request’ten gelen verileri güncelliyoruz
+                $validatedData['etkinlikler_id']      = 1;
+                $validatedData['etkinlik_turleri_id'] = $etkinlikTurId;
+                $validatedData['isletmeler_id']       = $etkinlikIsletmeId;
+                $validatedData['iller_id']            = $etkinlikIlId;
+                $validatedData['sosyalMedyadaPaylas'] = $sosyalMedya;
+                $validatedData['yorumDurumu']         = $yorumDurumu;
+                $validatedData['etkinlikKapakResmi']  = $kapakResmiYolu;
 
-                  // Eski il detaylarını siliyoruz
+                // Etkinlik tablosunu güncelliyoruz
+                Etkinlik::etkinlikUpdate($validatedData);
+
+                // Eski il detaylarını siliyoruz
                 $etkinlik->etkinlikIlDetayi()->delete();
 
-                  // Katılım sınırlamalarını (varsa) yeniden ekliyoruz
+                //   // Katılım sınırlamalarını (varsa) yeniden ekliyoruz
                 if (!empty($validatedData['katilimSinirlama'])) {
                     foreach ($validatedData['katilimSinirlama'] as $ilId) {
-                        EtkinlikIlDetaylari::create([
+                        EtkinlikIlDetaylari::etkinlikIlDetayiInsert([
                             'etkinlikler_id' => $etkinlik->etkinlikler_id,
-                            'iller_id'       => decrypt($ilId),
+                            'iller_id'       => decrypt($ilId)
                         ]);
                     }
                 }
 
-                  // Diğer resimler güncellemesi (varsa) -> Örneğin:
+                //   // Diğer resimler güncellemesi (varsa) -> Örneğin:
                 if (!empty($validatedData['etkinlikDigerResimler'])) {
                       // storeMultipleImages metodunu kullanarak yükleyebilirsiniz
                     $this->storeMultipleImages(
@@ -244,11 +242,11 @@ class EtkinlikController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Etkinlik başarıyla güncellendi.',
+                    'message' => $validatedData,
                 ], 200);
             });
         } catch (\Exception $e) {
-              // Herhangi bir hata oluşursa rollback yapılır ve buraya düşer
+            // Herhangi bir hata oluşursa rollback yapılır ve buraya düşer
             return response()->json([
                 'error'   => true,
                 'message' => $e->getMessage()

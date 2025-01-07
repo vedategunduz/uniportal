@@ -13,7 +13,7 @@
     <form action="{{ $postUrl }}" method="POST" id="etkinlikForm" class="grid md:grid-cols-3 gap-24">
         <section class="md:col-span-2">
             <div class="mb-3">
-                <select name="etkinlikIsletme" id="etkinlikIsletme"
+                <select name="etkinlikIsletme" id="isletmeler_id"
                     class="bg-gray-50 border font-medium border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     @if ($isletmeler->count() > 1)
                         <option value="">İşletme seçin</option>

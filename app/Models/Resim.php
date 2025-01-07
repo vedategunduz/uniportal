@@ -19,4 +19,8 @@ class Resim extends Model
         'etkinlikler_id',
         'resimYolu',
     ];
+
+    public static function resimInsert($veriler) {
+        return self::create($veriler);
+    }
 }

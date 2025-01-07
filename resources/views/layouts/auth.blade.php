@@ -10,8 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/main.js'])
     <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="//cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.dataTables.min.css">
 </head>
 
 <body>
@@ -90,7 +89,9 @@
 
         <div id="alerts" class="absolute right-4 bottom-4 z-30 space-y-2"></div>
     </div>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.2.0/js/dataTables.js"></script>
+    <script src="{{ asset('js/data-table.js') }}"></script>
     @yield('scripts')
     <script>
         window.App = {

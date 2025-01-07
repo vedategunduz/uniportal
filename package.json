@@ -42,6 +42,7 @@
         "editorjs-indent-tune": "^1.4.0",
         "editorjs-inline-spoiler-tool": "^1.0.1",
         "editorjs-paragraph-with-alignment": "^3.0.0",
-        "flowbite": "^2.5.2"
+        "flowbite": "^2.5.2",
+        "simple-datatables": "^9.2.1"
     }
 }
