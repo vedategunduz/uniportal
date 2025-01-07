@@ -1,5 +1,6 @@
 import { initDataTable } from './data-table';
 import { changeModal } from './modal';
+import { fetchData } from './fetch';
 
 const BASE_URL = window.App.baseUrl;
 
@@ -8,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initDataTable();
 
     // Modal açma butonları
-    document.querySelectorAll('.open-modal').forEach(function (button) {
+    document.querySelectorAll('.etkinlik-open-modal').forEach(function (button) {
         button.addEventListener('click', function () {
             changeModal(`${BASE_URL}/kullanici/etkinlikler/modal/ekle`);
             const modal = document.getElementById(button.dataset.modalTarget);
@@ -38,4 +39,46 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.classList.remove('hidden');
         });
     });
+
+    document.getElementById('birimDegistirForm')?.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formElement = event.target;
+        const formData = new FormData(formElement);
+
+        // FormData'yı düz bir nesneye dönüştürme
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+        
+        fetchData(`${BASE_URL}/kullanici/birimler/patates`, data);
+    });
+
+    window.onclick = function (event) {
+        if (event.target.matches('.birimdenCikart')) {
+            fetchData(`${BASE_URL}/kullanici/birimler/kullanici/${event.target.dataset.id}`);
+        }
+
+        if (event.target.matches('.open-modal')) {
+            const MODAL = document.getElementById(event.target.dataset.modal);
+
+            MODAL.classList.remove('hidden');
+            MODAL.classList.add('flex');
+
+            document.body.classList.add('overflow-hidden');
+        }
+
+        if (event.target.matches('.close-modal')) {
+            const MODAL = document.getElementById(event.target.dataset.modal);
+
+            MODAL.classList.remove('flex');
+            MODAL.classList.add('hidden');
+
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        if (event.target.matches('.birimDegistir')) {
+            document.querySelector('[name=kullanici_birim_unvan_iliskileri_id]').value = event.target.dataset.id;
+        }
+    };
 });

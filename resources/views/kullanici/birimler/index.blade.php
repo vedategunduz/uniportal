@@ -85,11 +85,12 @@
                                         <div class="border-t my-2"></div>
                                         <div>
                                             <button type="button"
-                                                onclick="birimdenCikart('{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}')"
-                                                class="text-white bg-rose-700 hover:bg-rose-800 focus:ring-2 focus:ring-rose-300 font-medium rounded-lg text-xs px-2 py-1">Birimden
+                                                data-id="{{ ($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
+                                                class="birimdenCikart text-white bg-rose-700 hover:bg-rose-800 focus:ring-2 focus:ring-rose-300 font-medium rounded-lg text-xs px-2 py-1">Birimden
                                                 çıkart</button>
-                                            <button type="button"
-                                                class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-400 font-medium rounded-lg text-xs px-2 py-1">Birim
+                                            <button type="button" data-modal="birimDegistir"
+                                                data-id="{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
+                                                class="birimDegistir open-modal text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-400 font-medium rounded-lg text-xs px-2 py-1">Birim
                                                 değiştir</button>
 
                                         </div>
@@ -120,6 +121,51 @@
             @endforeach
         </tbody>
     </table>
+
+    <section class="modal items-center justify-center hidden" id="birimDegistir">
+        <div class="modal-outside close-modal" data-modal="birimDegistir"></div>
+
+        <div class="modal-content max-w-sm min-h-24 p-6 rounded-lg">
+            <header class="mb-6 flex justify-between">
+                <div class="">
+                    <h2 class="text-xl font-semibold text-gray-950">Birim değiştir</h2>
+                    <p class="text-sm text-gray-500">
+                        Kullanıcının birimini değiştirmek için yeni bir birim seçin.
+                    </p>
+                </div>
+                <div class="">
+                    <button class="close-modal" data-modal="birimDegistir">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5 pointer-events-none">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <form action="" method="POST" id="birimDegistirForm">
+                <section>
+                    <input type="text" name="kullanici_birim_unvan_iliskileri_id" value=""
+                        placeholder="kullanici unvan iliskisi" hidden>
+                    <label for="isletme_birimleri_id">Birimler</label>
+                    <select name="isletme_birimleri_id" id="isletme_birimleri_id"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                        @foreach ($isletmeBirimleri as $rowBirim)
+                            <option @if ($rowBirim->isletme_birimleri_id == $rowPersonel->isletme_birimleri_id) selected @endif
+                                value="{{ encrypt($rowBirim->isletme_birimleri_id) }}">{{ $rowBirim->baslik }}
+                            </option>
+                        @endforeach
+                    </select>
+                </section>
+
+                <footer class="mt-8 text-right">
+                    <button type="submit"
+                        class="bg-gray-900 text-white px-3 py-2 rounded hover:bg-gray-950 transition">Birimi
+                        değiştir</button>
+                </footer>
+            </form>
+        </div>
+    </section>
 @endsection
 
 @section('scripts')
@@ -147,11 +193,5 @@
         </span>
     </button>
         `;
-    </script>
-
-    <script>
-        function birimdenCikart(id) {
-            console.log(id);
-        }
     </script>
 @endsection

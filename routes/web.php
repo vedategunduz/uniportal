@@ -36,7 +36,9 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
         Route::prefix('birimler')->name('birimler.')->group(function() {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
-            Route::get('/temiz', [BirimlerController::class, 'temiz'])->name('temiz');
+
+            Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy'])->name('kullanici');
+            Route::post('/patates', [BirimlerController::class, 'change']);
         });
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
