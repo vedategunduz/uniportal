@@ -90,8 +90,8 @@
         <div id="alerts" class="absolute right-4 bottom-4 z-30 space-y-2"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/2.2.0/js/dataTables.js"></script>
     <script src="{{ asset('js/data-table.js') }}"></script>
+    {{-- <script src="https://cdn.datatables.net/2.2.0/js/dataTables.js"></script> --}}
     @yield('scripts')
     <script>
         window.App = {

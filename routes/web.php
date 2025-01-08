@@ -28,7 +28,8 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
     });
 });
 
-Route::post('/birimler/sil/{id}', [BirimlerController::class, 'birimSil'])->name('birimler.sil');
+Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
+Route::post('/birimler/sil/{id}', [BirimlerController::class, 'birimSil']);
 
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
 
@@ -38,8 +39,10 @@ Route::prefix('kullanici')->name('kullanici.')->group(function () {
         Route::prefix('birimler')->name('birimler.')->group(function() {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
 
+            Route::post('/personelBirimDegistir', [BirimlerController::class, 'change']);
+
             Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy'])->name('kullanici');
-            Route::post('/patates', [BirimlerController::class, 'change']);
+            // Route::post('/patates', [BirimlerController::class, 'change']);
         });
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {

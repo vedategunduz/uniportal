@@ -21,6 +21,6 @@ class BirimDataTable extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.birim-data-table');
+        return view('kullanici.birimler.components.birim-data-table');
     }
 }

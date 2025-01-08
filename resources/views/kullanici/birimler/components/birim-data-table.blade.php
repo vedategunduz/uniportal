@@ -44,7 +44,7 @@
                             </div>
                             <p class="text-base font-semibold leading-none text-gray-900 dark:text-white">
                                 <a
-                                    href="#">{{ $rowPersonel->kullanici->ad . ' ' . $rowPersonel->kullanici->soyad }}</a>
+                                    href="#">{{ $rowPersonel->kullanici->ad . " " . $rowPersonel->kullanici->soyad }}</a>
                             </p>
                             <p class="mb-3 text-sm font-normal">
                                 <a href="#" class="hover:underline">{{ $rowPersonel->kullanici->email }}</a>

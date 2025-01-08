@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\EtkinlikTur;
 use App\Models\Il;
+use App\Models\IsletmeBirim;
 use App\Models\IsletmeYetkili;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,19 @@ class ViewServiceProvider extends ServiceProvider
                 $iller = Il::select('iller_id', 'baslik')->get();
 
                 $view->with(compact('isletmeler', 'etkinlikTurleri', 'iller'));
+            }
+        });
+
+        View::composer('components.birim-data-table', function ($view) {
+            if (Auth::check()) {
+                $isletmeler = IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('isletmeler_id');
+
+                $isletmeBirimleri = IsletmeBirim::whereIn('isletmeler_id', $isletmeler)
+                    ->where('aktiflik', 1)
+                    ->orderBy('baslik', 'asc')
+                    ->get();
+
+                $view->with(compact('isletmeler', 'isletmeBirimleri'));
             }
         });
     }

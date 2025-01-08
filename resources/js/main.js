@@ -1,4 +1,4 @@
-import { initDataTable } from './data-table';
+// import { initDataTable } from './data-table';
 import { changeModal } from './modal';
 import { fetchData } from './fetch';
 
@@ -6,7 +6,7 @@ const BASE_URL = window.App.baseUrl;
 
 document.addEventListener('DOMContentLoaded', function () {
     // DataTable'i başlat
-    initDataTable();
+    // initDataTable();
 
     // Modal açma butonları
     document.querySelectorAll('.etkinlik-open-modal').forEach(function (button) {
@@ -38,20 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.classList.add('overflow-hidden');
             modal.classList.remove('hidden');
         });
-    });
-
-    document.getElementById('birimDegistirForm')?.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const formElement = event.target;
-        const formData = new FormData(formElement);
-
-        // FormData'yı düz bir nesneye dönüştürme
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-
-        fetchData(`${BASE_URL}/kullanici/birimler/patates`, data);
     });
 
     window.onclick = function (event) {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class IsletmeYetkili extends Model
 {
@@ -21,5 +22,10 @@ class IsletmeYetkili extends Model
     public function isletmeBilgileri()
     {
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
+    }
+
+    public static function isletmeKullanicilariGetir()
+    {
+        return IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('isletmeler_id');
     }
 }

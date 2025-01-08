@@ -19,15 +19,23 @@ class IsletmeBirim extends Model
         'baslik',
     ];
 
-    public function isletmeBirimPersonelBul($id)
+    public function isletmeBirimPersonelBul($isletme_birimleri_id)
     {
         $birimPersonelleri = KullaniciBirimUnvan::with('kullanici', 'unvan')
-            ->where('isletme_birimleri_id', $id)
+            ->where('isletme_birimleri_id', $isletme_birimleri_id)
             ->get()
             ->sortBy(function ($item) {
                 return $item->unvan->unvanSira;
             });
 
         return $birimPersonelleri;
+    }
+
+    public static function isletmeBirimleriGetir($isletmeler_id)
+    {
+        return IsletmeBirim::whereIn('isletmeler_id', $isletmeler_id)
+            ->where('aktiflik', 1)
+            ->orderBy('baslik', 'asc')
+            ->get();
     }
 }
