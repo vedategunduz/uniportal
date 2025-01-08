@@ -38,7 +38,6 @@ export async function fetchData(url, data) {
 
     if (RESPONSE_DATA.success) {
         successAlert(RESPONSE_DATA.message);
-        document.location.reload();
     } else if (RESPONSE_DATA.error) {
         errorAlert('Oopss! Bir hata oluştu. Lütfen bildirin.');
     }

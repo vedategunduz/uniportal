@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\IsletmeBirim;
 use App\Models\IsletmeYetkili;
-use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +33,23 @@ class BirimlerController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Kullanıcı\'nın birimi değiştirildi.'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error'   => true,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function birimSil(string $id)
+    {
+        try {
+            IsletmeBirim::findOrFail($id)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Birim kaldırıldı.'
             ], 201);
         } catch (\Exception $e) {
             return response()->json([

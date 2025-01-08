@@ -50,13 +50,17 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.forEach((value, key) => {
             data[key] = value;
         });
-        
+
         fetchData(`${BASE_URL}/kullanici/birimler/patates`, data);
     });
 
     window.onclick = function (event) {
         if (event.target.matches('.birimdenCikart')) {
             fetchData(`${BASE_URL}/kullanici/birimler/kullanici/${event.target.dataset.id}`);
+        }
+
+        if (event.target.matches('.birimDegistir')) {
+            document.querySelector('[name=kullanici_birim_unvan_iliskileri_id]').value = event.target.dataset.id;
         }
 
         if (event.target.matches('.open-modal')) {
@@ -75,10 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
             MODAL.classList.add('hidden');
 
             document.body.classList.remove('overflow-hidden');
-        }
-
-        if (event.target.matches('.birimDegistir')) {
-            document.querySelector('[name=kullanici_birim_unvan_iliskileri_id]').value = event.target.dataset.id;
         }
     };
 });

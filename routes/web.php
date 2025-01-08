@@ -28,6 +28,7 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
     });
 });
 
+Route::post('/birimler/sil/{id}', [BirimlerController::class, 'birimSil'])->name('birimler.sil');
 
 Route::prefix('kullanici')->name('kullanici.')->group(function () {
 

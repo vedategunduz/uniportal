@@ -1,7 +1,6 @@
 @php
     use App\Models\KullaniciBirimUnvan;
     use App\Models\IsletmeBirim;
-
 @endphp
 
 @extends('layouts.auth')
@@ -24,7 +23,7 @@
 @endsection
 
 @section('content')
-    <table id="birimler" name="birimler" class="display nowrap" style="width:100%">
+    <table class="jquery-dt" id="birimler" name="birimler" class="display nowrap" style="width:100%">
         <thead>
             <tr>
                 <th class="w-96">Birim adı</th>
@@ -35,7 +34,7 @@
         </thead>
         <tbody>
             @foreach ($isletmeBirimleri as $rowBirim)
-                <tr>
+                <tr data-row-id="{{ $rowBirim->isletme_birimleri_id }}">
                     <td>{{ $rowBirim->baslik }}</td>
                     <td>
                         @php
@@ -45,19 +44,22 @@
                         @endphp
                         <div class="flex sm:24 lg:w-96 flex-wrap">
                             @foreach ($birimPersonelleri as $rowPersonel)
-                                <img src="{{ $rowPersonel->kullanici->profilFotoUrl }}" class="rounded-full size-10 shadow"
+                                @php
+                                    $sifreli_kullanici_birim_unvan_iliskileri_id = encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id);
+                                @endphp
+                                <img data-person-id="{{ $sifreli_kullanici_birim_unvan_iliskileri_id }}" src="{{ $rowPersonel->kullanici->profilFotoUrl }}" class="rounded-full size-10 shadow"
                                     alt=""
-                                    data-popover-target="popover-default_{{ $rowPersonel->kullanici_birim_unvan_iliskileri_id }}">
+                                    data-popover-target="popover-default_{{ $sifreli_kullanici_birim_unvan_iliskileri_id }}">
 
                                 <div data-popover
-                                    id="popover-default_{{ $rowPersonel->kullanici_birim_unvan_iliskileri_id }}"
+                                    id="popover-default_{{ $sifreli_kullanici_birim_unvan_iliskileri_id }}"
                                     role="tooltip"
                                     class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
                                     <div class="p-3">
                                         <div class="text-sm font-semibold leading-none text-gray-900 dark:text-white mb-3">
                                             {{ $rowBirim->baslik }}
                                         </div>
-                                        <div class="flex items-center justify-around mb-2">
+                                        <div class="flex items-center justify-between mb-2">
                                             <a href="#">
                                                 <img class="size-14 rounded-full"
                                                     src="{{ $rowPersonel->kullanici->profilFotoUrl }}" alt="Jese Leos">
@@ -85,8 +87,9 @@
                                         <div class="border-t my-2"></div>
                                         <div>
                                             <button type="button"
-                                                data-id="{{ ($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
-                                                class="birimdenCikart text-white bg-rose-700 hover:bg-rose-800 focus:ring-2 focus:ring-rose-300 font-medium rounded-lg text-xs px-2 py-1">Birimden
+                                                onclick="birimdenCikart('{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}')"
+                                                data-id="{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
+                                                class="text-white bg-rose-700 hover:bg-rose-800 focus:ring-2 focus:ring-rose-300 font-medium rounded-lg text-xs px-2 py-1">Birimden
                                                 çıkart</button>
                                             <button type="button" data-modal="birimDegistir"
                                                 data-id="{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
@@ -110,7 +113,8 @@
                         </button>
                     </td>
                     <td>
-                        <button type="button" class="bg-rose-500 text-white p-2 rounded">
+                        <button type="button" onclick="birimSil({{ $rowBirim->isletme_birimleri_id }})"
+                            class="bg-rose-500 text-white p-2 rounded">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-3">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -121,6 +125,30 @@
             @endforeach
         </tbody>
     </table>
+
+    <section class="modal hidden items-center justify-center" id="birimDetay">
+        <div class="modal-outside close-modal" data-modal="birimDetay"></div>
+
+        <div class="modal-content max-w-screen-sm min-h-24 p-6 rounded-lg">
+            <header class="mb-6 flex justify-between">
+                <div class="">
+                    <h2 class="text-xl font-semibold text-gray-950">Birim detayları</h2>
+                </div>
+                <div class="">
+                    <button class="close-modal" data-modal="birimDetay">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5 pointer-events-none">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <section id="modalContent">
+                <x-birim-detay-modal />
+            </section>
+        </div>
+    </section>
 
     <section class="modal items-center justify-center hidden" id="birimDegistir">
         <div class="modal-outside close-modal" data-modal="birimDegistir"></div>
@@ -151,8 +179,7 @@
                     <select name="isletme_birimleri_id" id="isletme_birimleri_id"
                         class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                         @foreach ($isletmeBirimleri as $rowBirim)
-                            <option @if ($rowBirim->isletme_birimleri_id == $rowPersonel->isletme_birimleri_id) selected @endif
-                                value="{{ encrypt($rowBirim->isletme_birimleri_id) }}">{{ $rowBirim->baslik }}
+                            <option value="{{ encrypt($rowBirim->isletme_birimleri_id) }}">{{ $rowBirim->baslik }}
                             </option>
                         @endforeach
                     </select>
@@ -169,29 +196,54 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
     <script>
-        const dataTable = new simpleDatatables.DataTable("#birimler", {
-            searchable: true,
-            locale: "tr_TR"
-        });
+        let table = new DataTable('#birimler');
 
-        dataTable.on('datatable.page', function() {
+        const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        async function fetchData(url, id) {
+            const BASE_URL = window.App.baseUrl;
+
+            return await fetch(`${BASE_URL}/${url}${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': CSRF_TOKEN
+                },
+            });
+        }
+
+        async function birimSil(id) {
+            const RESPONSE = await fetchData('birimler/sil/', id);
+            const RESPONSE_DATA = await RESPONSE.json();
+
+            if (RESPONSE_DATA.success) {
+                table.row($(`tr[data-row-id='${id}']`))
+                    .remove()
+                    .draw();
+            } else {
+                alert('Bir hata oluştu' + RESPONSE_DATA.message);
+            }
+        }
+
+        async function birimdenCikart(id) {
+            const RESPONSE = await fetchData('kullanici/birimler/kullanici/', id);
+            const RESPONSE_DATA = await RESPONSE.json();
+
+            if (RESPONSE_DATA.success) {
+                document.querySelector(`img[data-person-id='${id}']`).remove();
+            } else {
+                alert('Bir hata oluştu' + RESPONSE_DATA.message);
+            }
+        }
+
+        table.on('draw.dt', function() {
             document.querySelectorAll('[data-popover-target]').forEach(triggerEl => {
                 const targetEl = document.getElementById(triggerEl.getAttribute('data-popover-target'));
                 new Popover(targetEl, triggerEl);
             });
         });
-        document.querySelector('.datatable-search').innerHTML += `
-            <button type="button" class="bg-emerald-500 pl-2 py-2 pr-4 rounded flex items-center text-white ms-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            class="size-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
-        <span>
-            Ekle
-        </span>
-    </button>
-        `;
     </script>
 @endsection
