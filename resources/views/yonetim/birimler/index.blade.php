@@ -25,8 +25,8 @@
                 Birime yerleşmemiş kullanıcılar(30)
             </button>
             <button type="button" class="bg-emerald-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white ms-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                    class="size-5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 <span>
@@ -50,27 +50,23 @@
         </tbody>
     </table>
 
-    <section class="modal items-center justify-center" id="birimDetay">
+    <section class="modal flex items-center justify-center" id="birimDetay">
         <div class="modal-outside close-modal" data-modal="birimDetay"></div>
 
-        <div class="modal-content max-w-screen-sm min-h-24 p-6 rounded-lg">
-            <header class="mb-6 flex justify-between">
+        <div class="modal-content max-w-screen-sm min-h-24 rounded-lg">
+            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t-lg">
                 <div class="">
-                    <h2 class="text-xl font-semibold text-gray-950">Birim detayları</h2>
+                    <h2 class="font-medium text-lg text-white">Birim detayları</h2>
                 </div>
-                <div class="">
-                    <button class="close-modal" data-modal="birimDetay">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-5 pointer-events-none">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
+                <button class="close-modal" data-modal="birimDetay">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-5 pointer-events-none">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </header>
 
-            <section id="modalContent">
-                <x-birim-detay-modal />
-            </section>
+            <section id="modalContent" class="p-6"></section>
         </div>
     </section>
 
@@ -128,9 +124,7 @@
 
         // let table = new DataTable('#birimler');
 
-
         async function fetchData(url, id = "") {
-
             return await fetch(`${BASE_URL}/${url}${id}`, {
                 method: 'POST',
                 headers: {
@@ -141,6 +135,8 @@
                 },
             });
         }
+
+        alertGoster();
 
         $('#birimler').DataTable({
             lengthMenu: [20, 40, 100, {
@@ -224,7 +220,6 @@
                     'data-popover-target'));
                 new Popover(targetEl, triggerEl);
             });
-
         });
     </script>
 @endsection

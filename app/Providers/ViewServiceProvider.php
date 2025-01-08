@@ -70,5 +70,18 @@ class ViewServiceProvider extends ServiceProvider
                 $view->with(compact('isletmeler', 'isletmeBirimleri'));
             }
         });
+
+        View::composer('yonetim.birimler.components.personel-popover-cart', function ($view) {
+            if (Auth::check()) {
+                $isletmeler = IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('isletmeler_id');
+
+                $isletmeBirimleri = IsletmeBirim::whereIn('isletmeler_id', $isletmeler)
+                    ->where('aktiflik', 1)
+                    ->orderBy('baslik', 'asc')
+                    ->get();
+
+                $view->with(compact('isletmeler', 'isletmeBirimleri'));
+            }
+        });
     }
 }

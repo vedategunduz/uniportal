@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class BirimDetayModal extends Component
+class PersonelPopoverCart extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class BirimDetayModal extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('yonetim.birimler.components.birim-detay-modal');
+        return view('yonetim.birimler.components.personel-popover-cart');
     }
 }
