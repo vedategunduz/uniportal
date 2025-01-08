@@ -208,7 +208,7 @@
         }
 
         async function birimdenCikart(id) {
-            const RESPONSE = await fetchData('kullanici/birimler/kullanici/', id);
+            const RESPONSE = await fetchData('yonetim/birimler/kullanici/', id);
             const RESPONSE_DATA = await RESPONSE.json();
 
             if (RESPONSE_DATA.success) {

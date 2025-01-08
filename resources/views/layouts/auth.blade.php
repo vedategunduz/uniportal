@@ -18,7 +18,7 @@
         <aside class="w-72 h-screen shadow bg-white text-gray-900">
             <nav class="flex flex-col h-full p-4">
 
-                <a href="{{ route('kullanici.index') }}" class="flex items-center mb-8">
+                <a href="{{ route('yonetim.index') }}" class="flex items-center mb-8">
                     <img src="https://flowbite.com/docs/images/logo.svg" class="size-8 me-3" alt="Flowbite Logo" />
                     <span class="text-2xl font-semibold whitespace-nowrap">uniportal</span>
                 </a>
@@ -69,7 +69,7 @@
                 </ul>
 
                 <div class="mt-auto">
-                    <a href="{{ route('kullanici.cikis') }}"
+                    <a href="{{ route('yonetim.cikis') }}"
                         class="flex items-center py-2 px-3 rounded-lg hover:bg-gray-100 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             class="size-6 me-2">

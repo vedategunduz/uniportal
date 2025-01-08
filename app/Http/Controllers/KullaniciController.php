@@ -18,7 +18,7 @@ class KullaniciController extends Controller
      */
     public function index()
     {
-        return view('kullanici.index');
+        return view('yonetim.index');
     }
 
     public function kamular(Request $request)
@@ -52,7 +52,7 @@ class KullaniciController extends Controller
             ]);
         }
 
-        return view('kullanici.kamular.index', compact(['kamular']));
+        return view('yonetim.kamular.index', compact(['kamular']));
     }
 
       /**
@@ -81,7 +81,7 @@ class KullaniciController extends Controller
             'digerResimler'     => [],
             'yorumDurumu'       => '',
             'sosyalMedyaDurum'  => true,
-            'postUrl'           => url('kullanici/etkinlikler/'),
+            'postUrl'           => url('yonetim/etkinlikler/'),
         ];
 
           // Blade view'i render ederek HTML çıktısını yakalıyoruz.
@@ -136,7 +136,7 @@ class KullaniciController extends Controller
             'sosyalMedyaDurum'  => $etkinlik->sosyalMedyadaPaylas,
               // URL’yi dilerseniz route() kullanarak da oluşturabilirsiniz.
               // 'postUrl'         => route('kullanici.etkinlikler.update', encrypt($decryptedId)),
-            'postUrl' => url('kullanici/etkinlikler/duzenle/' . encrypt($decryptedId)),
+            'postUrl' => url('yonetim/etkinlikler/duzenle/' . encrypt($decryptedId)),
         ];
 
           // Blade view'i render ederek HTML çıktısını yakalıyoruz.
@@ -150,14 +150,14 @@ class KullaniciController extends Controller
 
     public function girisForm()
     {
-        return view('kullanici.giris');
+        return view('yonetim.giris');
     }
 
     public function girisYap(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-            return redirect()->intended('kullanici');
+            return redirect()->intended('yonetim');
         }
         return redirect()->back();
     }

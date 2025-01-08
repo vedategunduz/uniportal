@@ -19,7 +19,7 @@ class BirimlerController extends Controller
             ->orderBy('baslik', 'asc')
             ->get();
 
-        return view('kullanici.birimler.index', compact('isletmeBirimleri'));
+        return view('yonetim.birimler.index', compact('isletmeBirimleri'));
     }
 
     public function getTable()

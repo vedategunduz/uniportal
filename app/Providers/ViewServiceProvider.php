@@ -26,7 +26,7 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('kullanici.*', function ($view) {
+        View::composer('yonetim.*', function ($view) {
             if (Auth::check()) {
                 $menuler = Menu::whereHas('MenuRolDetayi', function ($query) {
                     $query->where('roller_id', Auth::user()->roller_id);

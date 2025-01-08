@@ -40,7 +40,7 @@ class EtkinlikController extends Controller
             $etkinlik->formatted_date_time = $tarihFormat . ', ' . $saatFormat;
         }
 
-        return view('kullanici.etkinlikler.index', compact('etkinlikler'));
+        return view('yonetim.etkinlikler.index', compact('etkinlikler'));
     }
 
 
