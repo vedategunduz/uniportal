@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Etkinlik düzenleme
     document.querySelectorAll('.etkinlikDuzenleButton').forEach(function (button) {
         button.addEventListener('click', function (event) {
-            changeModal(`${BASE_URL}/kullanici/etkinlikler/modal/duzenle/${button.dataset.target}`);
+            changeModal(`${BASE_URL}/yonetim/etkinlikler/modal/duzenle/${button.dataset.target}`);
 
             const modalId = event.target.getAttribute('data-modal-target');
             const modal = document.getElementById(modalId);
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.onclick = function (event) {
         if (event.target.matches('.birimdenCikart')) {
-            fetchData(`${BASE_URL}/kullanici/birimler/kullanici/${event.target.dataset.id}`);
+            fetchData(`${BASE_URL}/yonetim/birimler/kullanici/${event.target.dataset.id}`);
         }
 
         if (event.target.matches('.birimDegistir')) {
