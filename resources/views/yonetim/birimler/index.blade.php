@@ -24,12 +24,14 @@
             <button class="bg-red-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white">
                 Birime yerleşmemiş kullanıcılar(30)
             </button>
-            <button type="button" class="bg-emerald-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white ms-2">
+            <button type="button"
+                class="bg-emerald-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white ms-2 open-modal birimDuzenle"
+                data-modal="birimDetay" data-id="{{ encrypt(0) }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-5">
+                    stroke="currentColor" class="size-5 pointer-events-none">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
-                <span>
+                <span class="pointer-events-none">
                     Ekle
                 </span>
             </button>
@@ -50,7 +52,7 @@
         </tbody>
     </table>
 
-    <section class="modal flex items-center justify-center" id="birimDetay">
+    <section class="modal hidden items-center justify-center" id="birimDetay">
         <div class="modal-outside close-modal" data-modal="birimDetay"></div>
 
         <div class="modal-content max-w-screen-sm min-h-24 rounded-lg">
@@ -93,8 +95,11 @@
 
             <form action="" method="POST" id="birimDegistirForm">
                 <section>
-                    <input type="text" name="kullanici_birim_unvan_iliskileri_id" value=""
+                    <input type="hidden" name="hidden_isletme_birimleri_id" value="" hidden
+                        placeholder="isletme birimi">
+                    <input type="hidden" name="kullanici_birim_unvan_iliskileri_id" value=""
                         placeholder="kullanici unvan iliskisi" hidden>
+
                     <label for="isletme_birimleri_id">Birimler</label>
                     <select name="isletme_birimleri_id" id="isletme_birimleri_id"
                         class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5">
@@ -105,38 +110,117 @@
                     </select>
                 </section>
 
-                <footer class="mt-8 text-right">
+                <footer class="mt-6 text-right">
                     <button type="submit"
-                        class="bg-gray-900 text-white px-3 py-2 rounded hover:bg-gray-950 transition">Birimi
+                        class="bg-amber-500 text-white px-3 py-2 rounded hover:bg-amber-700 transition">Birimi
                         değiştir</button>
                 </footer>
             </form>
         </div>
     </section>
+
+    <div class="modal hidden items-center justify-center" id="confirmModal">
+        <div class="modal-outside close-modal" data-modal="confirmModal"></div>
+
+        <div class="modal-content max-w-sm min-h-24 p-6 rounded-lg">
+            <header class="mb-6 flex justify-between">
+                <div class="">
+                    <h2 class="text-xl font-semibold text-gray-950">Birimi kaldır</h2>
+                    <p class="text-sm text-gray-500">
+                        Birimi kaldırmak istediğinize emin misiniz?
+                    </p>
+                </div>
+                <div class="">
+                    <button class="close-modal" data-modal="confirmModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5 pointer-events-none">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <form action="" method="POST" id="confirmForm">
+                <section>
+                    <input type="hidden" name="silme_hidden_isletme_birimleri_id" value="" hidden
+                        placeholder="isletme birimi">
+                </section>
+
+                <footer class="grid grid-cols-2 gap-2">
+                    <button data-modal="confirmModal" type="button"
+                        class="close-modal bg-gray-50 text-gray-900 px-3 py-2 rounded hover:bg-gray-100 transition close-modal"
+                        data-modal="confirmModal">Hayır</button>
+
+                    <button type="submit"
+                        class="bg-red-700 text-white px-3 py-2 rounded hover:bg-red-800 transition">Evet</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <div class="bg-pink-300 border-pink-400"></div>
+    <div class="bg-red-300 border-red-400"></div>
+    <div class="bg-yellow-300 border-yellow-400"></div>
+    <div class="bg-indigo-300 border-indigo-400"></div>
+    <div class="bg-blue-300 border-blue-400"></div>
+    <div class="bg-green-300 border-green-400"></div>
+    <div class="bg-gray-300 border-gray-400"></div>
+    <div class="bg-purple-300 border-purple-400"></div>
+    <div class="bg-teal-300 border-teal-400"></div>
 @endsection
 
 @section('scripts')
     <script>
-        // let table = new DataTable('#birimler');
+        window.addEventListener('click', function(event) {
+            // if (event.target.matches('.birimdenCikart')) {
+            //     fetchData(`${BASE_URL}/yonetim/birimler/kullanici/${event.target.dataset.id}`);
 
-        const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const BASE_URL = "{{ url('/') }}";
+            //     if (event.target.dataset.birimid != 0) {
+            //         modalPersonelListesiGuncelle(event.target.dataset.birimid);
+            //     }
+            // }
 
-        // let table = new DataTable('#birimler');
+            if (event.target.matches('.birimDegistir')) {
+                document.querySelector('[name=kullanici_birim_unvan_iliskileri_id]').value = event.target.dataset
+                    .id;
+                document.querySelector('[name=hidden_isletme_birimleri_id]').value = event.target.dataset.birimid;
+            }
 
-        async function fetchData(url, id = "") {
-            return await fetch(`${BASE_URL}/${url}${id}`, {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': CSRF_TOKEN
-                },
-            });
+            if (event.target.matches('.birimSil')) {
+                document.querySelector('input[type=hidden][name="silme_hidden_isletme_birimleri_id"]').value = event
+                    .target.dataset.id;
+            }
+
+            if (event.target.matches('.birimDuzenle')) {
+                async function calis() {
+                    const RESPONSE_DATA = await fetchData(`yonetim/birimler/modal/${event.target.dataset.id}`);
+
+                    if (RESPONSE_DATA.success) {
+                        document.getElementById('modalContent').innerHTML = RESPONSE_DATA.html;
+                        modalPersonelListesiGuncelle(event.target.dataset.id);
+                    } else {
+                        errorAlert('Kayıt gösterilemedi.');
+                    }
+                }
+                calis();
+            }
+        });
+
+        async function modalPersonelListesiGuncelle(id) {
+            const RESPONSE_DATA = await fetchData(`yonetim/birimler/modal/birimKullanicilari/${id}`);
+
+            if (RESPONSE_DATA.success) {
+                document.getElementById('personeller').innerHTML = RESPONSE_DATA.html;
+
+                document.querySelectorAll('[data-popover-target]').forEach(triggerEl => {
+                    const targetEl = document.getElementById(triggerEl.getAttribute(
+                        'data-popover-target'));
+                    new Popover(targetEl, triggerEl);
+                });
+            } else {
+                errorAlert(RESPONSE_DATA.message);
+            }
         }
-
-        alertGoster();
 
         $('#birimler').DataTable({
             lengthMenu: [20, 40, 100, {
@@ -161,56 +245,52 @@
 
         document.getElementById('birimDegistirForm')?.addEventListener('submit', async function(event) {
             event.preventDefault();
-            const formElement = event.target;
-            const formData = new FormData(formElement);
+            const formData = new FormData(event.target);
 
-            // FormData'yı düz bir nesneye dönüştürme
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            const RESPONSE = await fetch('birimler/personelBirimDegistir', {
-                method: 'POST',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': CSRF_TOKEN
-                },
-                body: JSON.stringify(data)
-            });
-
-            const RESPONSE_DATA = await RESPONSE.json();
+            const RESPONSE_DATA = await fetchData('yonetim/birimler/personelBirimDegistir', formData,
+                true)
 
             if (RESPONSE_DATA.success) {
                 $('#birimler').DataTable().ajax.reload(null, false);
-                document.querySelector('.close-modal[data-modal="birimDegistir"]').click();
+                successAlert(RESPONSE_DATA.message);
+                document.getElementById('birimDegistir').classList.add('hidden');
+
+                if (Object.fromEntries(formData)['hidden_isletme_birimleri_id'] != 0) {
+                    modalPersonelListesiGuncelle(Object.fromEntries(formData)[
+                        'hidden_isletme_birimleri_id']);
+                }
+                document.body.classList.remove('overflow-hidden');
             } else {
-                alert('Bir hata oluştu' + RESPONSE_DATA.message);
+                errorAlert(RESPONSE_DATA.message);
             }
         });
 
-
-        async function birimSil(id) {
-            const RESPONSE = await fetchData('birimler/sil/', id);
-            const RESPONSE_DATA = await RESPONSE.json();
+        document.getElementById('confirmForm')?.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const RESPONSE_DATA = await fetchData('birimler/sil', formData, true)
 
             if (RESPONSE_DATA.success) {
                 $('#birimler').DataTable().ajax.reload(null, false);
+                successAlert(RESPONSE_DATA.message);
+                document.getElementById('confirmModal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
             } else {
-                alert('Bir hata oluştu' + RESPONSE_DATA.message);
+                errorAlert(RESPONSE_DATA.message);
             }
-        }
+        });
 
-        async function birimdenCikart(id) {
-            const RESPONSE = await fetchData('yonetim/birimler/kullanici/', id);
-            const RESPONSE_DATA = await RESPONSE.json();
+        async function birimdenCikart(id, birimId) {
+            const RESPONSE_DATA = await fetchData(`yonetim/birimler/kullanici/${id}`, );
 
             if (RESPONSE_DATA.success) {
                 $('#birimler').DataTable().ajax.reload(null, false);
+                successAlert(RESPONSE_DATA.message);
+                if (birimId != 0) {
+                    modalPersonelListesiGuncelle(birimId);
+                }
             } else {
-                alert('Bir hata oluştu' + RESPONSE_DATA.message);
+                errorAlert(RESPONSE_DATA.message);
             }
         }
 

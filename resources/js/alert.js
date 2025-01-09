@@ -1,8 +1,8 @@
-// Genel uyarı fonksiyonu
+  // Genel uyarı fonksiyonu
 function createAlert(message, type = 'success') {
     const ALERT_CONTAINER = document.createElement('div');
-    const ALERT_MESSAGE = document.createElement('p');
-    const ALERT_HEAD = document.createElement('p');
+    const ALERT_MESSAGE   = document.createElement('p');
+    const ALERT_HEAD      = document.createElement('p');
 
     const CONTAINER_CLASS = [
         'border',
@@ -50,7 +50,7 @@ function createAlert(message, type = 'success') {
     }, 5000);
 }
 
-// Kolay erişim için fonksiyonlar
+  // Kolay erişim için fonksiyonlar
 export function successAlert(message) {
     createAlert(message, 'success');
 }

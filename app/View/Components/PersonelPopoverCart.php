@@ -13,7 +13,7 @@ class PersonelPopoverCart extends Component
      */
     public function __construct()
     {
-        //
+
     }
 
     /**

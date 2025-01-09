@@ -29,7 +29,7 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 });
 
 Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
-Route::post('/birimler/sil/{id}', [BirimlerController::class, 'birimSil']);
+Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
 
 Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
@@ -40,6 +40,9 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
 
             Route::post('/personelBirimDegistir', [BirimlerController::class, 'change']);
+
+            Route::post('/modal/{id}', [BirimlerController::class, 'getModal']);
+            Route::post('/modal/birimKullanicilari/{id}', [BirimlerController::class, 'getModalIsletmeKullanicilari']);
 
             Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy']);
             // Route::post('/patates', [BirimlerController::class, 'change']);

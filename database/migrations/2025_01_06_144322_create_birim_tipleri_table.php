@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id('birim_tipleri_id');
             $table->unsignedBigInteger('isletme_turleri_id');
             $table->string('baslik', 100);
+            $table->string('CSSClass', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('isletme_turleri_id')->references('isletme_turleri_id')->on('isletme_turleri')->onDelete('restrict');

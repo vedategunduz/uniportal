@@ -1,6 +1,5 @@
 // import { initDataTable } from './data-table';
 import { changeModal } from './modal';
-import { fetchData } from './fetch';
 
 const BASE_URL = window.App.baseUrl;
 
@@ -39,32 +38,4 @@ document.addEventListener('DOMContentLoaded', function () {
             modal.classList.remove('hidden');
         });
     });
-
-    window.onclick = function (event) {
-        if (event.target.matches('.birimdenCikart')) {
-            fetchData(`${BASE_URL}/yonetim/birimler/kullanici/${event.target.dataset.id}`);
-        }
-
-        if (event.target.matches('.birimDegistir')) {
-            document.querySelector('[name=kullanici_birim_unvan_iliskileri_id]').value = event.target.dataset.id;
-        }
-
-        if (event.target.matches('.open-modal')) {
-            const MODAL = document.getElementById(event.target.dataset.modal);
-
-            MODAL.classList.remove('hidden');
-            MODAL.classList.add('flex');
-
-            document.body.classList.add('overflow-hidden');
-        }
-
-        if (event.target.matches('.close-modal')) {
-            const MODAL = document.getElementById(event.target.dataset.modal);
-
-            MODAL.classList.remove('flex');
-            MODAL.classList.add('hidden');
-
-            document.body.classList.remove('overflow-hidden');
-        }
-    };
 });

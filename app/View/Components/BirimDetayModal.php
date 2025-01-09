@@ -13,7 +13,7 @@ class BirimDetayModal extends Component
      */
     public function __construct()
     {
-        //
+
     }
 
     /**

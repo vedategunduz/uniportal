@@ -18,4 +18,9 @@ class BirimTip extends Model
         'isletme_turleri_id',
         'baslik',
     ];
+
+    public static function birimTurleriGetir()
+    {
+        return self::where('aktiflik', 1)->get();
+    }
 }
