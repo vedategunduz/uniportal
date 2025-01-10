@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BirimTip;
 use App\Models\IsletmeBirim;
 use App\Models\IsletmeYetkili;
+use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,32 @@ class BirimlerController extends Controller
 
         $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
 
-        return view('yonetim.birimler.index', compact('isletmeBirimleri'));
+        $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi();
+
+        return view('yonetim.birimler.index', compact('isletmeBirimleri', 'birimYerlesmemisKullanicilarSayisi'));
+    }
+
+    public function birimeYerlesmemisPersonelSayisi()
+    {
+        $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi();
+
+        return response()->json([
+            'success' => true,
+            'message' => $birimYerlesmemisKullanicilarSayisi
+        ], 200);
+    }
+
+    public function personelBirimAta(Request $request) {
+        foreach ($request->kullanicilar as $kullanici) {
+            KullaniciBirimUnvan::create([
+                'kullanicilar_id' => decrypt($kullanici),
+                'isletme_birimleri_id' => decrypt($request->isletme_birimleri_id),
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Kullanıcılar başarıyla birime atandı.'
+        ], 201);
     }
 
     public function getModal(string $id)
@@ -34,6 +60,30 @@ class BirimlerController extends Controller
         ];
 
         $html = view('yonetim.birimler.components.birim-detay-modal', $data)->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ], 200);
+    }
+
+    public function personeller()
+    {
+
+        $birimYerlesmemisKullanicilar = KullaniciBirimUnvan::birimiOlmayanKullanicilar()->pluck('kullanicilar_id');
+
+        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $birimYerlesmemisKullanicilar)->get();
+
+        $isletmeler = IsletmeYetkili::isletmeKullanicilariGetir();
+
+        $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
+
+        $data = [
+            'kullanicilar' => $kullanicilar,
+            'isletmeBirimleri' => $isletmeBirimleri,
+        ];
+
+        $html = view('yonetim.birimler.components.personel-listesi', $data)->render();
 
         return response()->json([
             'success' => true,
@@ -66,7 +116,7 @@ class BirimlerController extends Controller
         foreach ($isletmeBirimleri as $rowBirim) {
             $row = array();
 
-            $row[] = '<div class="flex items-center justify-between gap-4"><span>'.$rowBirim->baslik.'</span><span class="inline-block text-white font-medium me-2 px-2 py-0.5 rounded border '. $rowBirim->isletmeBirimTipi->CSSClass .' "  style="font-size:11px">' . $rowBirim->isletmeBirimTipi->baslik . '</span></div>';
+            $row[] = '<div class="flex items-center justify-between gap-4"><span>' . $rowBirim->baslik . '</span><span class="inline-block text-white font-medium me-2 px-2 py-0.5 rounded border ' . $rowBirim->isletmeBirimTipi->CSSClass . ' "  style="font-size:11px">' . $rowBirim->isletmeBirimTipi->baslik . '</span></div>';
             $personelBilgileri = "";
             $birimPersonelleri = (new IsletmeBirim())->isletmeBirimPersonelBul($rowBirim->isletme_birimleri_id);
             $personelBilgileri .= '<div class="flex sm:24 lg:w-96 flex-wrap">';
@@ -89,7 +139,7 @@ class BirimlerController extends Controller
                                 <label class="inline-flex items-center cursor-pointer">
                                     <input type="checkbox" value="" class="sr-only peer">
                                     <div
-                                        class="relative w-7 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[``] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600">
+                                        class="relative w-7 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[\'\'] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600">
                                     </div>
                                     <span class="ms-3 text-sm font-medium text-gray-900 select-none">Yetkili</span>
                                 </label>

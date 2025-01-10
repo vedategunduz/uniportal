@@ -73,9 +73,10 @@ class IsletmeBirimSeeder extends Seeder
             ['birim_ad' => "Kurum Arşiv Birimi", 'birim_tip_id' => 7],
             ['birim_ad' => "İktisadi İşletme Müdürlüğü", 'birim_tip_id' => 6],
             ['birim_ad' => "Özel Kalem Müdürlüğü", 'birim_tip_id' => 6],
+            ['birim_ad' => "Kurum Genel", 'birim_tip_id' => 9, 'aktiflik' => 0],
         ];
 
-        $isletmeler = Isletme::where('isletmeler_id', 143)->get();
+        $isletmeler = Isletme::whereIn('isletmeler_id', [143, 144])->get();
 
         foreach ($isletmeler as $isletme) {
             foreach ($universiteBirimleri as $birim) {

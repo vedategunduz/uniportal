@@ -17,7 +17,12 @@ body {
     font-style: normal;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
@@ -26,24 +31,31 @@ h1, h2, h3, h4, h5, h6 {
 h1 {
     font-size: 3rem;
 }
+
 h2 {
     font-size: 2.5rem;
 }
+
 h3 {
     font-size: 2rem;
 }
+
 h4 {
     font-size: 1.5rem;
 }
+
 h5 {
     font-size: 1.25rem;
 }
+
 h6 {
     font-size: 1rem;
 }
 
 a:not(.underline) {
-    &:hover, &:focus{
+
+    &:hover,
+    &:focus {
         text-decoration: none !important;
     }
 }
@@ -60,11 +72,11 @@ input[type="checkbox"]:focus {
     outline: none;
 }
 
-@keyframes zoomIn
-{
+@keyframes zoomIn {
     from {
         transform: scale(.7);
     }
+
     to {
         transform: scale(1);
     }
@@ -80,6 +92,7 @@ input[type="checkbox"]:focus {
     from {
         transform: translateY(100%);
     }
+
     to {
         transform: translateY(0);
     }
@@ -100,6 +113,8 @@ input[type="checkbox"]:focus {
     background-color: rgba(0, 0, 0, .5);
     z-index: 10;
     overflow: auto;
+    align-items: center;
+    justify-content: center;
 
     .modal-outside {
         position: absolute;
@@ -116,5 +131,35 @@ input[type="checkbox"]:focus {
         margin: 0 auto;
         background-color: #fff;
         animation: zoomIn .3s;
+    }
+}
+
+
+
+/* width */
+.hidden-scroll::-webkit-scrollbar {
+    width: 1px;
+}
+
+/* Track */
+.hidden-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+.hidden-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+.hidden-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.group input:checked+label  {
+    color: #3b82f6;
+    
+    img {
+        border: 2px solid #3b82f6;
     }
 }

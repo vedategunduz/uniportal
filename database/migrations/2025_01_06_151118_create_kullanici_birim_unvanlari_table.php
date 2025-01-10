@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('kullanici_birim_unvan_iliskileri_id');
             $table->unsignedBigInteger('kullanicilar_id');
             $table->unsignedBigInteger('isletme_birimleri_id');
-            $table->unsignedBigInteger('unvanlar_id');
+            $table->unsignedBigInteger('unvanlar_id')->default(46);
             $table->timestamps();
 
             $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');

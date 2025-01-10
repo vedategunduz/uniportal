@@ -49,5 +49,7 @@ class IsletmeBirim extends Model
         $isletmeBirim = IsletmeBirim::find($isletme_birimleri_id);
         $isletmeBirim->aktiflik = 0;
         $isletmeBirim->save();
+
+        KullaniciBirimUnvan::where('isletme_birimleri_id', $isletme_birimleri_id)->delete();
     }
 }

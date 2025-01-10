@@ -237,6 +237,11 @@ class UnvanSeeder extends Seeder
                 'baslik'             => 'Operasyon Görevlisi',
                 'isletme_turleri_id' => 1,
                 'unvanSira'          => 44
+            ],
+            [
+                'baslik'             => 'Personel',
+                'isletme_turleri_id' => 1,
+                'unvanSira'          => 45
             ]
         ]);
     }
