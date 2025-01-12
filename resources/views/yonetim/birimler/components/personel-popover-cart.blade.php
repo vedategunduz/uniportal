@@ -1,6 +1,4 @@
 @foreach ($birimPersonelleri as $rowPersonel)
-@foreach ($birimPersonelleri as $rowPersonel)
-@foreach ($birimPersonelleri as $rowPersonel)
     @php
         $sifreli_kullanici_birim_unvan_iliskileri_id = encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id);
     @endphp
@@ -51,6 +49,4 @@
         </div>
         <div data-popper-arrow></div>
     </div>
-@endforeach
-@endforeach
 @endforeach

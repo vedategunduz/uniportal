@@ -39,10 +39,13 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
         Route::prefix('birimler')->name('birimler.')->group(function() {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
 
+            Route::post('/guncelle', [BirimlerController::class, 'guncelle']);
+            Route::post('/ekle', [BirimlerController::class, 'ekle']);
             Route::post('/personeller', [BirimlerController::class, 'personeller']);
             Route::post('/birimeYerlesmemisPersonelSayisi', [BirimlerController::class, 'birimeYerlesmemisPersonelSayisi']);
             Route::post('/personelBirimDegistir', [BirimlerController::class, 'change']);
             Route::post('/personelBirimAta', [BirimlerController::class, 'personelBirimAta']);
+            Route::post('/personelEklemeListesi/{birimler_id}/{search}', [BirimlerController::class, 'personelEklemeListesi']);
 
             Route::post('/modal/{id}', [BirimlerController::class, 'getModal']);
             Route::post('/modal/birimKullanicilari/{id}', [BirimlerController::class, 'getModalIsletmeKullanicilari']);

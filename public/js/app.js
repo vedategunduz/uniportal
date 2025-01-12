@@ -106,7 +106,7 @@ window.addEventListener('click', function (event) {
         MODAL.classList.remove('hidden');
         MODAL.classList.add('flex');
 
-        // document.body.classList.add('overflow-hidden');
+        document.body.classList.add('overflow-hidden');
     }
 
     if (event.target.matches('.close-modal')) {
@@ -115,6 +115,6 @@ window.addEventListener('click', function (event) {
         MODAL.classList.remove('flex');
         MODAL.classList.add('hidden');
 
-        // document.body.classList.remove('overflow-hidden');
+        document.body.classList.remove('overflow-hidden');
     }
 });

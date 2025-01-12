@@ -13,7 +13,7 @@ class IsletmeBirim extends Model
 
     protected $primaryKey = "isletme_birimleri_id";
 
-    protected $fillabel = [
+    protected $fillable = [
         'isletmeler_id',
         'birim_tipleri_id',
         'baslik',

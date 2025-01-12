@@ -32,7 +32,60 @@ class BirimlerController extends Controller
         ], 200);
     }
 
-    public function personelBirimAta(Request $request) {
+    public function personelEklemeListesi(string $birimler_id, string $search)
+    {
+        $isletmePersonelleri = IsletmeYetkili::personeller(143);
+
+        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $isletmePersonelleri)
+            ->where('ad', 'like', '%' . $search . '%')
+            ->orWhere('soyad', 'like', '%' . $search . '%')
+            ->orWhere('email', 'like', '%' . $search . '%')
+            ->get();
+
+        $data = [
+            'kullanicilar' => $kullanicilar,
+        ];
+
+        $html = view('yonetim.birimler.components.personel-ekleme-listesi', $data)->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ], 200);
+    }
+
+    public function ekle(Request $request)
+    {
+        IsletmeBirim::create([
+            'baslik'           => $request->baslik,
+            'isletmeler_id'    => 143,
+            'birim_tipleri_id' => decrypt($request->birim_tipleri_id),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Birim başarıyla eklendi.'
+        ], 201);
+    }
+
+    public function guncelle(Request $request)
+    {
+        $isletmeBirimi = IsletmeBirim::findOrFail(decrypt($request->isletme_birimleri_id));
+
+        $isletmeBirimi->update([
+            'baslik'           => $request->baslik,
+            'isletmeler_id'    => 143,
+            'birim_tipleri_id' => decrypt($request->birim_tipleri_id),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Birim başarıyla güncellendi.'
+        ], 201);
+    }
+
+    public function personelBirimAta(Request $request)
+    {
         foreach ($request->kullanicilar as $kullanici) {
             KullaniciBirimUnvan::create([
                 'kullanicilar_id' => decrypt($kullanici),

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class KullaniciBirimUnvan extends Model
 {
@@ -40,6 +41,10 @@ class KullaniciBirimUnvan extends Model
             ->whereNull('kullanici_birim_unvan_iliskileri.kullanicilar_id')
             ->where('isletme_yetkilileri.isletmeler_id', 143)
             ->get();
+    }
+
+    public static function oBirimeAitOlmayanIsletmeKullanicilari($birimler_id)
+    {
     }
 
     public static function birimeYerlesmemisPersonelSayisi()

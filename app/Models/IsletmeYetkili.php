@@ -19,6 +19,10 @@ class IsletmeYetkili extends Model
         'isletmeler_id',
     ];
 
+    public static function personeller(int $id) {
+        return IsletmeYetkili::where('isletmeler_id', $id)->pluck('kullanicilar_id');
+    }
+
     public function isletmeBilgileri()
     {
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
