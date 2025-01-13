@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class EtkinlikModalContent extends Component
+class MenuItem extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class EtkinlikModalContent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.etkinlik.etkinlik-modal-content');
+        return view('components.menu-item');
     }
 }

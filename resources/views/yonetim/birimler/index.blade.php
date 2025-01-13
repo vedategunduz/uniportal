@@ -53,11 +53,11 @@
         </tbody>
     </table>
 
-    <section class="modal hidden" id="birimDetay">
+    <section class="custom-modal hidden" id="birimDetay">
         <div class="modal-outside close-modal" data-modal="birimDetay"></div>
 
-        <div class="modal-content max-w-screen-sm min-h-24 rounded-lg">
-            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t-lg">
+        <div class="modal-content max-w-screen-sm min-h-24 rounded">
+            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t">
                 <div>
                     <h2 class="font-medium text-lg text-white">Birim detayları</h2>
                 </div>
@@ -73,11 +73,11 @@
         </div>
     </section>
 
-    <section class="modal hidden" id="birimDegistir">
+    <section class="custom-modal hidden" id="birimDegistir">
         <div class="modal-outside close-modal" data-modal="birimDegistir"></div>
 
-        <div class="modal-content max-w-sm min-h-24 rounded-lg">
-            <header class="flex items-center justify-between bg-yellow-400 text-white px-6 py-3 rounded-t-lg">
+        <div class="modal-content max-w-sm min-h-24 rounded">
+            <header class="flex items-center justify-between bg-yellow-400 text-white px-6 py-3 rounded-t">
                 <div>
                     <h2 class="font-medium text-lg text-white">Birimi Değiştir</h2>
                 </div>
@@ -115,11 +115,11 @@
         </div>
     </section>
 
-    <section class="modal hidden" id="confirmModal">
+    <section class="custom-modal hidden" id="confirmModal">
         <div class="modal-outside close-modal" data-modal="confirmModal"></div>
 
-        <div class="modal-content max-w-sm rounded-lg">
-            <header class="flex items-center justify-between bg-red-700 text-white px-6 py-3 rounded-t-lg">
+        <div class="modal-content max-w-sm rounded">
+            <header class="flex items-center justify-between bg-red-700 text-white px-6 py-3 rounded-t">
                 <div>
                     <h2 class="font-medium text-lg text-white">Birimi kaldır</h2>
                 </div>
@@ -150,11 +150,11 @@
         </div>
     </section>
 
-    <section class="modal hidden" id="personellerModal">
+    <section class="custom-modal hidden" id="personellerModal">
         <div class="modal-outside close-modal" data-modal="personellerModal"></div>
 
-        <div class="modal-content max-w-5xl min-h-24 rounded-lg">
-            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t-lg">
+        <div class="modal-content max-w-5xl min-h-24 rounded">
+            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t">
                 <div>
                     <h2 class="font-medium text-lg text-white">Personeller</h2>
                 </div>

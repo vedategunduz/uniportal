@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\EtkinlikTur;
 use App\Models\Il;
+use App\Models\Isletme;
 use App\Models\IsletmeBirim;
 use App\Models\IsletmeYetkili;
 use App\Models\Menu;
@@ -33,23 +34,19 @@ class ViewServiceProvider extends ServiceProvider
                 })
                     ->with('altMenuler')
                     ->whereNull('bagli_menuler_id')
-                    ->orderBy('menuSira')
+                    ->orderBy('menuSira', 'asc')
                     ->get();
 
                 $view->with(compact('menuler'));
             }
         });
 
-        View::composer('components.etkinlik-modal', function ($view) {
+        View::composer('components.etkinlik.*', function ($view) {
             if (Auth::check()) {
                 $user = Auth::user();
 
-                $isletmeler = IsletmeYetkili::select('isletmeler_id')
-                    ->with(['isletmeBilgileri' => function ($query) {
-                        $query->select('isletmeler_id', 'baslik');
-                    }])
-                    ->where('kullanicilar_id', $user->kullanicilar_id)
-                    ->get();
+                $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
+                $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
                 $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
                 $iller = Il::select('iller_id', 'baslik')->get();

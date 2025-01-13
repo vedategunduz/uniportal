@@ -24,7 +24,7 @@ class Menu extends Model
     ];
 
     public function altMenuler() {
-        return $this->hasMany(Menu::class, 'bagli_menuler_id');
+        return $this->hasMany(Menu::class, 'bagli_menuler_id')->orderBy('menuSira', 'asc');
     }
 
     public function MenuRolDetayi() {

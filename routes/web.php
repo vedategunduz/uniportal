@@ -32,6 +32,8 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 
 Route::resource('yonetim/etkinlikler', EventController::class);
 
+Route::post('api/modal/etkinlik/{id}', [EventController::class, 'modalGetir']);
+
 
 Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
 Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
@@ -59,9 +61,9 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             // Route::post('/patates', [BirimlerController::class, 'change']);
         });
         // Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-        //     Route::get('/', [EtkinlikController::class, 'index'])->name('index');
+        //     // Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
-        //     Route::post('/', [EtkinlikController::class, 'store']);
+        //     // Route::post('/', [EtkinlikController::class, 'store']);
         //     Route::post('/duzenle/{id}', [EtkinlikController::class, 'update']);
         //     // Etkinlik modalları
         //     Route::prefix('modal')->group(function () {

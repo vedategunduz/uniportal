@@ -25,8 +25,6 @@ class IsletmeYetkili extends Model
         $isletmePersonelleri = IsletmeYetkili::whereNotIn('kullanicilar_id', $birimPersonelleri)->where('isletmeler_id', $id)->pluck('kullanicilar_id');
 
         return $isletmePersonelleri;
-
-        // return IsletmeYetkili::where('isletmeler_id', $id)->pluck('kullanicilar_id');
     }
 
     public function isletmeBilgileri()
@@ -34,7 +32,10 @@ class IsletmeYetkili extends Model
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 
-    public static function isletmeKullanicilariGetir()
+    /**
+     * @return array => kullanıcının yetkili olduğu işletmeleri döndürür.
+     */
+    public static function aitOldugumIsletmeleriGetir()
     {
         return IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('isletmeler_id');
     }

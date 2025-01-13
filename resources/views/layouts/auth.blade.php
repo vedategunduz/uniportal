@@ -8,9 +8,15 @@
     <title>@yield('title', 'Kullanici Paneli')</title>
     @yield('links')
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/main.js'])
-    <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.dataTables.min.css">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -23,47 +29,10 @@
                     <span class="text-2xl font-semibold whitespace-nowrap">uniportal</span>
                 </a>
 
-                <ul class="space-y-2">
+                <ul class="text-nowrap">
                     @foreach ($menuler as $menu)
-                        @if ($menu->bagli_menuler_id == null)
-                            <li>
-                                @if ($menu->altMenuler->count() > 0)
-                                    <button type="button" @class([
-                                        'flex items-center w-full py-1 px-3 rounded-lg transition hover:bg-gray-100 accordion-button',
-                                    ])>
-                                        <span class="p-1 rounded-lg me-2">
-                                            {!! $menu->menuIcon !!}
-                                        </span>
-                                        <span>{{ $menu->menuAd }}</span>
-
-                                        <svg class="size-2.5 ms-2.5 ml-auto" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="m1 1 4 4 4-4" />
-                                        </svg>
-                                    </button>
-                                    <ul class="hidden">
-                                        @foreach ($menu->altMenuler as $altMenu)
-                                            <li>
-                                                <a href="{{ $altMenu->menuLink }}"
-                                                    class="block indent-10 py-1 px-3 rounded-lg transition hover:bg-gray-100">{{ $altMenu->menuAd }}</a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    <a href="{{ $menu->menuLink }}" @class([
-                                        'flex items-center py-1 px-3 rounded-lg transition',
-                                        'bg-blue-700 text-white hover:text-white' => Request::is(
-                                            ltrim($menu->menuLink, '/')),
-                                        'hover:bg-gray-100' => !Request::is(ltrim($menu->menuLink, '/')),
-                                    ])>
-                                        <span class="p-1 rounded-lg me-2">
-                                            {!! $menu->menuIcon !!}
-                                        </span>
-                                        <span>{{ $menu->menuAd }}</span>
-                                    </a>
-                                @endif
-                            </li>
+                        @if (is_null($menu->bagli_menuler_id))
+                            @include('components.menu-item', ['menu' => $menu])
                         @endif
                     @endforeach
                 </ul>
@@ -89,7 +58,7 @@
 
         <div id="alerts" class="absolute right-4 bottom-4 z-30 space-y-2"></div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
     <script src="{{ asset('js/data-table.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')

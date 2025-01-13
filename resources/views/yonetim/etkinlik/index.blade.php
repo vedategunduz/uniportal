@@ -18,10 +18,10 @@
     </header>
 
 
-    <div id="modal" class="modal hidden">
+    <div id="modal" class="custom-modal hidden">
         <section class="modal-outside close-modal" data-modal="modal"></section>
 
-        <section id="modal-content" class="modal-content max-w-screen-lg rounded-lg"></section>
+        <section id="modal-content" class="modal-content max-w-screen-lg rounded max-h-screen overflow-auto hidden-scroll"></section>
     </div>
 @endsection
 
@@ -32,10 +32,88 @@
                 const modal = document.getElementById(event.target.dataset.modal);
                 const modalContent = modal.querySelector('#modal-content');
 
-                const RESPONSE_DATA = fetchData(`api/modal/etkinlik`);
+                (async () => {
+                    const RESPONSE_DATA = await fetchData(`api/modal/etkinlik/${event.target.dataset.id}`);
 
-                if (RESPONSE_DATA.success)
-                    modalContent.innerHTML = RESPONSE_DATA;
+                    if (RESPONSE_DATA.success) {
+                        modalContent.innerHTML = RESPONSE_DATA.html;
+
+                        $(document).ready(function() {
+                            $('#summernote').summernote({
+                                height: 200,
+                                lang: 'tr-TR',
+                                toolbar: [
+                                    ['style', ['style']],
+                                    ['font', ['bold', 'underline', 'clear']],
+                                    ['fontname', ['fontname']],
+                                    ['color', ['color']],
+                                    ['para', ['ul', 'ol', 'paragraph']],
+                                    ['table', ['table']],
+                                    ['insert', ['link', 'picture', 'video']],
+                                    ['view', ['fullscreen', 'codeview']],
+                                    ['mybutton', ['uploadDoc']]
+                                ],
+                                buttons: {
+                                    uploadDoc: function(context) {
+                                        var ui = $.summernote.ui;
+                                        var button = ui.button({
+                                            contents: '<i class="note-icon-plus"/> Dosya Yükle',
+                                            tooltip: 'Doküman Yükle (pdf, docx vs)',
+                                            click: function() {
+                                                let fileInput = $(
+                                                    '<input/>').attr({
+                                                    type: 'file',
+                                                    accept: '.pdf,.doc,.docx'
+                                                });
+                                                fileInput.click();
+
+                                                fileInput.on('change',
+                                                    function() {
+                                                        let file =
+                                                            fileInput[0]
+                                                            .files[0];
+                                                        if (file) {
+                                                            uploadFile(
+                                                                file,
+                                                                context
+                                                            );
+                                                        }
+                                                    });
+                                            }
+                                        });
+                                        return button.render();
+                                    }
+                                }
+                            });
+
+                            function uploadFile(file, context) {
+                                let data = new FormData();
+                                data.append('file', file);
+                                data.append('_token', '{{ csrf_token() }}');
+
+                                $.ajax({
+                                    url: '',
+                                    type: 'POST',
+                                    data: data,
+                                    contentType: false,
+                                    processData: false,
+                                    success: function(response) {
+                                        if (response.url) {
+                                            let fileLink =
+                                                `<a href="${response.url}" target="_blank">${file.name}</a>`;
+                                            context.invoke('editor.pasteHTML',
+                                                fileLink + '<br>');
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error(error);
+                                    }
+                                });
+                            }
+                        });
+                    } else
+                        errorAlert('İçerik eklenemedi.');
+                })();
             }
         });
     </script>

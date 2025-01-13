@@ -13,7 +13,7 @@ class BirimlerController extends Controller
 {
     public function index()
     {
-        $isletmeler = IsletmeYetkili::isletmeKullanicilariGetir();
+        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
 
         $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
 
@@ -129,7 +129,7 @@ class BirimlerController extends Controller
 
         $kullanicilar = Kullanici::whereIn('kullanicilar_id', $birimYerlesmemisKullanicilar)->get();
 
-        $isletmeler = IsletmeYetkili::isletmeKullanicilariGetir();
+        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
 
         $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
 
@@ -164,7 +164,7 @@ class BirimlerController extends Controller
 
     public function getTable()
     {
-        $isletmeler = IsletmeYetkili::isletmeKullanicilariGetir();
+        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
 
         $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
 
