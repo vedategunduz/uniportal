@@ -3,7 +3,7 @@
         $sifreli_kullanici_birim_unvan_iliskileri_id = encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id);
     @endphp
     <img data-person-id="{{ $sifreli_kullanici_birim_unvan_iliskileri_id }}"
-        src="{{ $rowPersonel->kullanici->profilFotoUrl }}" class="rounded-full size-12 shadow" alt=""
+        src="{{ $rowPersonel->kullanici->profilFotoUrl }}" class="rounded-full size-12 shadow object-contain" alt=""
         data-popover-target="popover-default_{{ $sifreli_kullanici_birim_unvan_iliskileri_id }}">
 
     <div data-popover id="popover-default_{{ $sifreli_kullanici_birim_unvan_iliskileri_id }}" role="tooltip"
@@ -12,7 +12,7 @@
             {{-- <div class="text-sm font-semibold leading-none text-gray-900 dark:text-white mb-3"></div> --}}
             <div class="flex items-center justify-between mb-2">
                 <a href="#">
-                    <img class="size-14 rounded-full" src="{{ $rowPersonel->kullanici->profilFotoUrl }}"
+                    <img class="size-14 rounded-full object-contain" src="{{ $rowPersonel->kullanici->profilFotoUrl }}"
                         alt="Jese Leos">
                 </a>
                 <label class="inline-flex items-center cursor-pointer">

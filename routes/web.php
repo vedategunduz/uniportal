@@ -10,6 +10,7 @@ use App\Http\Controllers\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EtkinlikController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\IsletmelerController;
 
 Route::prefix('/')->name('main.')->group(function () {
@@ -28,6 +29,10 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
     });
 });
 
+
+Route::resource('yonetim/etkinlikler', EventController::class);
+
+
 Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
 Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
 
@@ -36,7 +41,7 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
     Route::middleware(AuthMiddleware::class)->group(function () {
         Route::get('/', [KullaniciController::class, 'index'])->name('index');
 
-        Route::prefix('birimler')->name('birimler.')->group(function() {
+        Route::prefix('birimler')->name('birimler.')->group(function () {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
 
             Route::post('/guncelle', [BirimlerController::class, 'guncelle']);
@@ -53,18 +58,17 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy']);
             // Route::post('/patates', [BirimlerController::class, 'change']);
         });
+        // Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
+        //     Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
-        Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-            Route::get('/', [EtkinlikController::class, 'index'])->name('index');
-
-            Route::post('/', [EtkinlikController::class, 'store']);
-            Route::post('/duzenle/{id}', [EtkinlikController::class, 'update']);
-            // Etkinlik modalları
-            Route::prefix('modal')->group(function () {
-                Route::get('/ekle', [KullaniciController::class, 'modalEkle']);
-                Route::get('/duzenle/{id}', [KullaniciController::class, 'modalDuzenle']);
-            });
-        });
+        //     Route::post('/', [EtkinlikController::class, 'store']);
+        //     Route::post('/duzenle/{id}', [EtkinlikController::class, 'update']);
+        //     // Etkinlik modalları
+        //     Route::prefix('modal')->group(function () {
+        //         Route::get('/ekle', [KullaniciController::class, 'modalEkle']);
+        //         Route::get('/duzenle/{id}', [KullaniciController::class, 'modalDuzenle']);
+        //     });
+        // });
 
         Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
             Route::get('/kamular', [KullaniciController::class, 'kamular'])->name('kamular');

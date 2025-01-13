@@ -25,7 +25,7 @@
                     <label for="kullanici_{{ $sifreli_kullanicilar_id }}"
                         class="inline-flex items-center gap-2 cursor-pointer select-none">
                         <span class="pointer-events-none">
-                            <img src="{{ $kullanici->profilFotoUrl }}" class="size-10 rounded-full" alt="">
+                            <img src="{{ $kullanici->profilFotoUrl }}" class="size-10 rounded-full object-contain" alt="">
                         </span>
                         <span class="pointer-events-none">{{ $kullanici->ad }} {{ $kullanici->soyad }}</span>
                     </label>

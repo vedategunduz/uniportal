@@ -22,6 +22,7 @@ class KullaniciSeeder extends Seeder
             'soyad'     => 'Köksal',
             'email'     => 'ziyaretci@nku.edu.tr',
             'password'  => '12345600',
+            'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=501'
         ]);
         Kullanici::create([
             'roller_id' => 3,
@@ -29,6 +30,7 @@ class KullaniciSeeder extends Seeder
             'soyad'     => 'Şenlik',
             'email'     => 'ziyaretci2@nku.edu.tr',
             'password'  => '12345600',
+            'profilFotoUrl' => '//bidb.nku.edu.tr/resim.php?no=2641'
         ]);
         Kullanici::create([
             'roller_id'     => 3,

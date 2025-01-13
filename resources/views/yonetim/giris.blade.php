@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.empty')
 
 @section('title', 'Giriş yap')
 
@@ -15,4 +15,5 @@
         </div>
         <x-button type="submit" text="Oturum aç" id="" />
     </form>
+    {{-- IGAAQR07AbQChBZAE1WMEZAOWUZAjOC1nRTBfWWhhZATJ0cHNCZA0Uwc01BVmxSUDZACeTJmemx5NVBhYm1DU01VVVdYSmsyblQwZAEJrRlVsVGFsQ3VLYS1Jal95dDY5X0QtNlNxU1ZAHSUZARMFZAobDl6M1VfakNCVFZAveHRqd0dMa0Y5QQZDZD --}}
 @endsection

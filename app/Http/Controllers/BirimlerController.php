@@ -34,12 +34,14 @@ class BirimlerController extends Controller
 
     public function personelEklemeListesi(string $birimler_id, string $search)
     {
-        $isletmePersonelleri = IsletmeYetkili::personeller(143);
+        $isletmeBirimPersonelleri = IsletmeYetkili::birimPersoneller($birimler_id, 143);
 
-        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $isletmePersonelleri)
-            ->where('ad', 'like', '%' . $search . '%')
-            ->orWhere('soyad', 'like', '%' . $search . '%')
-            ->orWhere('email', 'like', '%' . $search . '%')
+        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $isletmeBirimPersonelleri)
+            ->where(function ($query) use ($search) {
+                $query->where('ad', 'like', '%' . $search . '%')
+                    ->orWhere('soyad', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            })
             ->get();
 
         $data = [
@@ -186,7 +188,7 @@ class BirimlerController extends Controller
                             </div>
                             <div class="flex items-center justify-between mb-2">
                                 <a href="#">
-                                    <img class="size-14 rounded-full" src="' . $rowPersonel->kullanici->profilFotoUrl . '"
+                                    <img class="size-14 rounded-full object-contain" src="' . $rowPersonel->kullanici->profilFotoUrl . '"
                                         alt="Jese Leos">
                                 </a>
                                 <label class="inline-flex items-center cursor-pointer">

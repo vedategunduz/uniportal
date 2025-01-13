@@ -76,25 +76,20 @@
     <section class="modal hidden" id="birimDegistir">
         <div class="modal-outside close-modal" data-modal="birimDegistir"></div>
 
-        <div class="modal-content max-w-sm min-h-24 p-6 rounded-lg">
-            <header class="mb-6 flex justify-between">
+        <div class="modal-content max-w-sm min-h-24 rounded-lg">
+            <header class="flex items-center justify-between bg-yellow-400 text-white px-6 py-3 rounded-t-lg">
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-950">Birim değiştir</h2>
-                    <p class="text-sm text-gray-500">
-                        Kullanıcının birimini değiştirmek için yeni bir birim seçin.
-                    </p>
+                    <h2 class="font-medium text-lg text-white">Birimi Değiştir</h2>
                 </div>
-                <div>
-                    <button class="close-modal" data-modal="birimDegistir">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-5 pointer-events-none">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
+                <button class="close-modal" data-modal="birimDegistir">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-5 pointer-events-none">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </header>
 
-            <form action="" method="POST" id="birimDegistirForm">
+            <form action="" method="POST" id="birimDegistirForm" class="p-6">
                 <section>
                     <input type="hidden" name="hidden_isletme_birimleri_id" value="" hidden
                         placeholder="isletme birimi">
@@ -146,8 +141,7 @@
 
                 <footer class="grid grid-cols-2 gap-2">
                     <button data-modal="confirmModal" type="button"
-                        class="close-modal bg-gray-50 text-gray-900 px-3 py-2 rounded hover:bg-gray-100 transition"
-                        data-modal="confirmModal">Hayır</button>
+                        class="close-modal bg-gray-50 text-gray-900 px-3 py-2 rounded hover:bg-gray-100 transition">Hayır</button>
 
                     <button type="submit"
                         class="bg-red-700 text-white px-3 py-2 rounded hover:bg-red-800 transition">Evet</button>

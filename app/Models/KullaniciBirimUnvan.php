@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class KullaniciBirimUnvan extends Model
 {
