@@ -21,6 +21,6 @@ class PersonelPopoverCart extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('yonetim.birimler.components.personel-popover-cart');
+        return view('components.birimler.personel-popover-cart');
     }
 }

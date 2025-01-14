@@ -21,6 +21,6 @@ class PersonelEklemeListesi extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.personel-ekleme-listesi');
+        return view('components.birimler.personel-ekleme-listesi');
     }
 }

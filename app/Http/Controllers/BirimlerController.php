@@ -48,7 +48,7 @@ class BirimlerController extends Controller
             'kullanicilar' => $kullanicilar,
         ];
 
-        $html = view('yonetim.birimler.components.personel-ekleme-listesi', $data)->render();
+        $html = view('components.birimler.personel-ekleme-listesi', $data)->render();
 
         return response()->json([
             'success' => true,
@@ -114,7 +114,7 @@ class BirimlerController extends Controller
             'birimTurleri' => BirimTip::birimTurleriGetir()
         ];
 
-        $html = view('yonetim.birimler.components.birim-detay-modal', $data)->render();
+        $html = view('components.birimler.birim-detay-modal', $data)->render();
 
         return response()->json([
             'success' => true,
@@ -138,7 +138,7 @@ class BirimlerController extends Controller
             'isletmeBirimleri' => $isletmeBirimleri,
         ];
 
-        $html = view('yonetim.birimler.components.personel-listesi', $data)->render();
+        $html = view('components.birimler.personel-listesi', $data)->render();
 
         return response()->json([
             'success' => true,
@@ -154,7 +154,7 @@ class BirimlerController extends Controller
             'birimPersonelleri' => IsletmeBirim::isletmeBirimPersonelBul($decryptedId),
         ];
 
-        $html = view('yonetim.birimler.components.personel-popover-cart', $data)->render();
+        $html = view('components.birimler.personel-popover-cart', $data)->render();
 
         return response()->json([
             'success' => true,

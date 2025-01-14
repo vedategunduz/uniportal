@@ -98,12 +98,12 @@
                         </li>
                     </ul>
                     <div class="py-1">
-                        <a href="{{ route('yonetim.cikis') }}"
+                        <a href="{{ route('cikis') }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Çıkış</a>
                     </div>
                 </div>
             @else
-                <a href="{{ route('yonetim.giris.form') }}"
+                <a href="{{ route('giris.form') }}"
                     class="flex text-white bg-blue-700 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center">
                     <span>Oturum aç</span>
 

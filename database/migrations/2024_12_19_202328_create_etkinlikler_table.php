@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('kapakResmiYolu')->nullable();
             $table->string('baslik', 255)->nullable();
             $table->longText('aciklama')->nullable();
-            $table->boolean('sosyalMedyadaPaylas', 1)->default(1);
-            $table->boolean('yorumDurumu')->default(1);
+            $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
+            $table->boolean('yorumDurumu')->nullable()->default(1);
             $table->timestamps();
 
             $table->foreign('etkinlik_turleri_id')->references('etkinlik_turleri_id')->on('etkinlik_turleri');
@@ -48,8 +48,8 @@ return new class extends Migration
             $table->string('kapakResmiYolu')->nullable();
             $table->string('baslik', 255)->nullable();
             $table->longText('aciklama')->nullable();
-            $table->boolean('sosyalMedyadaPaylas', 1)->default(1);
-            $table->boolean('yorumDurumu')->default(1);
+            $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
+            $table->boolean('yorumDurumu')->nullable()->default(1);
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });

@@ -38,7 +38,7 @@
                 </ul>
 
                 <div class="mt-auto">
-                    <a href="{{ route('yonetim.cikis') }}"
+                    <a href="{{ route('cikis') }}"
                         class="flex items-center py-2 px-3 rounded-lg hover:bg-gray-100 transition">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                             class="size-6 me-2">
@@ -52,7 +52,7 @@
             </nav>
         </aside>
 
-        <main class="p-4 w-full" style="min-height: 300vh">
+        <main class="p-4 w-full">
             @yield('content')
         </main>
 

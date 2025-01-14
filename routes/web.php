@@ -9,31 +9,22 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
-use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\IsletmelerController;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
 });
 
-Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
-    Route::get('/', [IsletmelerController::class, 'index'])->name('index');
-});
+Route::prefix('api')->name('api.')->group(function () {
 
-Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-    Route::get('/', [EtkinlikController::class, 'index'])->name('index');
+    Route::prefix('modal')->name('modal.')->group(function () {
+        Route::post('/etkinlik/{id}', [EventController::class, 'modalGetir']);
+    });
 
-    Route::prefix('ekle')->name('ekle.')->group(function () {
-        Route::post('/', [EtkinlikController::class, 'store'])->name('store');
+    Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
+        Route::post('ekle', [EventController::class, 'store']);
     });
 });
-
-
-Route::resource('yonetim/etkinlikler', EventController::class);
-
-Route::post('api/modal/etkinlik/{id}', [EventController::class, 'modalGetir']);
-
 
 Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
 Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
@@ -60,38 +51,22 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy']);
             // Route::post('/patates', [BirimlerController::class, 'change']);
         });
-        // Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-        //     // Route::get('/', [EtkinlikController::class, 'index'])->name('index');
 
-        //     // Route::post('/', [EtkinlikController::class, 'store']);
-        //     Route::post('/duzenle/{id}', [EtkinlikController::class, 'update']);
-        //     // Etkinlik modalları
-        //     Route::prefix('modal')->group(function () {
-        //         Route::get('/ekle', [KullaniciController::class, 'modalEkle']);
-        //         Route::get('/duzenle/{id}', [KullaniciController::class, 'modalDuzenle']);
-        //     });
-        // });
-
-        Route::prefix('isletmeler')->name('isletmeler.')->group(function () {
-            Route::get('/kamular', [KullaniciController::class, 'kamular'])->name('kamular');
-            Route::get('/firmalar', [KullaniciController::class, 'firmalar'])->name('firmalar');
-            Route::get('/sendikalar', [KullaniciController::class, 'sendikalar'])->name('sendikalar');
+        Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
+            Route::get('/', [EventController::class, 'index'])->name('index');
+            Route::get('/show', [EventController::class, 'getDataTableDatas'])->name('show');
         });
     });
-
-    // Giriş rota grubu
-    Route::prefix('giris')->name('giris.')->group(function () {
-        // Giriş formu
-        Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
-        // Giriş işlemi
-        Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
-    })->middleware(NotAuthMiddleware::class);
-
-    // Çıkış rotası
-    Route::get('/cikis', [KullaniciController::class, 'cikis'])
-        ->name('cikis')
-        ->middleware(AuthMiddleware::class);
 });
+
+// Giriş rota grubu
+Route::prefix('giris')->name('giris.')->group(function () {
+    Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
+    Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
+})->middleware(NotAuthMiddleware::class);
+
+// Çıkış rotası
+Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
 
 Route::prefix('editor')->name('editor.')->group(function () {
     Route::prefix('file')->name('file.')->group(function () {

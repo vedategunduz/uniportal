@@ -17,7 +17,7 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('yonetim.giris.form');
+            return redirect()->route('giris.form');
         }
         return $next($request);
     }

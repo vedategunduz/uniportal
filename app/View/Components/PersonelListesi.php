@@ -21,6 +21,6 @@ class PersonelListesi extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('yonetim.birimler.components.personel-listesi');
+        return view('components.birimler.personel-listesi');
     }
 }

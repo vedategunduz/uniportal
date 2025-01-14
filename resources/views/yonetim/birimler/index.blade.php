@@ -5,15 +5,15 @@
 @section('links')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.dataTables.css" />
     <style>
-        select.dt-input {
-            width: 60px;
-        }
+        /* select.dt-input {
+                width: 60px;
+            } */
 
-        .datatable-search {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* .datatable-search {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            } */
     </style>
 @endsection
 
@@ -39,19 +39,21 @@
         </div>
     </div>
 
-    <table id="birimler" class="display nowrap stripe" style="width:100%">
-        <thead>
-            <tr>
-                <th class="w-96">Birim adı</th>
-                <th data-dt-order="disable">Personel listesi</th>
-                <th class="w-4" data-dt-order="disable"></th>
-                <th class="w-4" data-dt-order="disable"></th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
+    <div class="overflow-y-auto">
+        <table id="birimler" class="display nowrap stripe" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Birim adı</th>
+                    <th data-dt-order="disable">Personel listesi</th>
+                    <th class="w-4" data-dt-order="disable"></th>
+                    <th class="w-4" data-dt-order="disable"></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <section class="custom-modal hidden" id="birimDetay">
         <div class="modal-outside close-modal" data-modal="birimDetay"></div>

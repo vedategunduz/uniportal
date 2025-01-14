@@ -21,6 +21,6 @@ class BirimDetayModal extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('yonetim.birimler.components.birim-detay-modal');
+        return view('components.birimler.birim-detay-modal');
     }
 }

@@ -169,3 +169,57 @@ label {
         border: 2px solid #3b82f6;
     }
 }
+
+.skeleton {
+    display: block;
+    background-color: #e2e8f0;
+    /* Açık gri ton */
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Parlayan efekt için */
+.skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    height: 100%;
+    width: 150%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    from {
+        left: -150%;
+    }
+
+    to {
+        left: 100%;
+    }
+}
+
+/* Skeleton boyutları */
+.skeleton-img {
+    width: 56px;
+    /* .size-14 den uyumlu */
+    height: 56px;
+}
+
+.skeleton-text {
+    width: 120px;
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-text-small {
+    width: 80px;
+    height: 0.8em;
+}
+
+.skeleton-button {
+    width: 200px;
+    height: 1em;
+}
