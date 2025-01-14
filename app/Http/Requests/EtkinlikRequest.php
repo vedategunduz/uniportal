@@ -34,8 +34,8 @@ class EtkinlikRequest extends FormRequest
             'baslik'                     => 'required|string|max:255',
             'aciklama'                   => 'nullable|string',
 
-            'sosyalMedyadaPaylas' => 'nullable|boolean',
-            'yorumDurumu'         => 'nullable|boolean',
+            'sosyalMedyadaPaylas' => 'nullable',
+            'yorumDurumu'         => 'nullable',
 
             // Kapak resmi
             'kapakResmiYolu' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',

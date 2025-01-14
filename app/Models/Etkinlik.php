@@ -33,6 +33,9 @@ class Etkinlik extends Model
 
     public static function ekle($validatedData)
     {
+        $validatedData['yorumDurumu']         = (bool) $validatedData['yorumDurumu'];
+        $validatedData['sosyalMedyadaPaylas'] = (bool) $validatedData['sosyalMedyadaPaylas'];
+
         $validatedData['iller_id']            = decrypt($validatedData['iller_id']);
         $validatedData['isletmeler_id']       = decrypt($validatedData['isletmeler_id']);
         $validatedData['etkinlik_turleri_id'] = decrypt($validatedData['etkinlik_turleri_id']);

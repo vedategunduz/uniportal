@@ -133,6 +133,7 @@ label {
     }
 
     .modal-content {
+        width: 100%;
         overflow: auto;
         margin: 0 auto;
         /* background-color: #fff; */

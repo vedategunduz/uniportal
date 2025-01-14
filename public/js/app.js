@@ -113,7 +113,7 @@ window.addEventListener('click', function (event) {
 
         MODAL.classList.remove('flex');
         MODAL.classList.add('hidden');
-        MODAL.querySelector('.modal-content').innerHTML = '';
+        // MODAL.querySelector('.modal-content').innerHTML = '';
 
         document.body.classList.remove('overflow-hidden');
     }
@@ -230,6 +230,7 @@ function callResimler() {
             // "Resmi kaldır" butonunu işaretle
             const removeBtn = skeletonWrapper.querySelector('.remove-btn');
             removeBtn.addEventListener('click', function () {
+                document.getElementById('kapakResmiEklemeContainer').classList.remove('hidden');
                 skeletonWrapper.remove();
             });
         };
@@ -237,7 +238,7 @@ function callResimler() {
     }
 
     // Çoklu dosya input olayını yöneten bölüm
-    document.getElementById('resimYolu').addEventListener('change', function (event) {
+    document.getElementById('resimYolu')?.addEventListener('change', function (event) {
         const container = document.getElementById('resimYoluContainer');
         // Çoklu dosya seçimine izin verildiği için var olan içerikleri korumak isteyebilirsiniz.
         // Eğer temizlemek isterseniz: container.innerHTML = '';
@@ -253,7 +254,7 @@ function callResimler() {
     });
 
     // Tek dosya input olayını yöneten bölüm
-    document.getElementById('kapakResmiYolu').addEventListener('change', function (event) {
+    document.getElementById('kapakResmiYolu')?.addEventListener('change', function (event) {
         const container = document.getElementById('kapakResmiContainer');
         // Tek dosya seçildiği için var olan içerikleri temizlemek isteyebilirsiniz.
         container.innerHTML = '';
