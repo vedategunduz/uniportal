@@ -7,6 +7,7 @@ class ImageUploadService
     public function storeSingleImage($image, string $folder = ''): string
     {
         $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+
         return $image->storeAs(
             'images/' . $folder,
             $filename,
@@ -14,11 +15,14 @@ class ImageUploadService
         );
     }
 
-    // private function storeMultipleImages(array $imageFiles, int $etkinlikId, string $folder)
-    // {
-    //     foreach ($imageFiles as $image) {
-    //         $path = $this->storeSingleImage($image, $folder);
-    //         Resim::create([]);
-    //     }
-    // }
+    public function storeMultipleImages($images, $referenceCode)
+    {
+        $paths = [];
+
+        foreach ($images as $image) {
+            $paths[] = ['resimYolu' => $this->storeSingleImage($image, $referenceCode)];
+        }
+
+        return $paths;
+    }
 }

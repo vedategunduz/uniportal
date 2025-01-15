@@ -52,6 +52,10 @@ h6 {
     font-size: 1rem;
 }
 
+a {
+    font-weight: normal!important;
+}
+
 a:not(.underline) {
 
     &:hover,
@@ -60,7 +64,12 @@ a:not(.underline) {
     }
 }
 
+p {
+    margin-bottom: 0;
+}
+
 label {
+    font-weight: normal;
     margin: 0;
 }
 
@@ -125,6 +134,7 @@ label {
 
     .modal-outside {
         position: absolute;
+        z-index: -10;
         top: 0;
         left: 0;
         width: 100%;
@@ -133,10 +143,10 @@ label {
     }
 
     .modal-content {
-        width: 100%;
+        /* width: 100%; */
         overflow: auto;
         margin: 0 auto;
-        /* background-color: #fff; */
+        background-color: #fff;
         animation: zoomIn .3s;
     }
 }
@@ -146,6 +156,7 @@ label {
 /* width */
 .hidden-scroll::-webkit-scrollbar {
     width: 1px;
+    height: 1px;
 }
 
 /* Track */
@@ -223,4 +234,9 @@ label {
 .skeleton-button {
     width: 200px;
     height: 1em;
+}
+
+
+.oppo:hover .oppo-hover {
+    display: block !important;
 }

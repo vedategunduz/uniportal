@@ -1,6 +1,7 @@
 @php
     $form_baslik = 'Yeni Etkinlik Oluştur';
     $form_submit = 'Oluştur';
+    $event_type = 'insert';
 
     $baslik = '';
     $isletmeler_id = 0;
@@ -13,12 +14,13 @@
     $etkinlikBitisTarihi = '';
     $aciklama = '';
     $yorumDurumu = 0;
-    $sosyalMedyadaPaylas = 0;
+    $sosyalMedyadaPaylas = 1;
     $kapakResmiYolu = '';
 
     if (!empty($etkinlik)) {
         $form_baslik = 'Etkinlik Düzenle';
         $form_submit = 'Güncelle';
+        $event_type = 'update';
 
         $baslik = $etkinlik->baslik;
         $isletmeler_id = $etkinlik->isletmeler_id;
@@ -52,7 +54,7 @@
     <section class="p-6 space-y-3">
         {{-- ETKİNLİK ID --}}
         @if (!empty($etkinlik))
-            <input type="hidden" name="etkinlik_id" value="{{ encrypt($etkinlik->etkinlik_id) }}">
+            <input type="hidden" name="etkinlikler_id" value="{{ encrypt($etkinlik->etkinlikler_id) }}" />
         @endif
         {{-- SELECT İşletmeler --}}
         <div class="">
@@ -120,7 +122,7 @@
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
             <div
                 class="bg-blue-700 font-medium text-white text-sm rounded flex items-center justify-center col-span-2 lg:col-span-1 p-2.5">
-                <span>Etkinlik Başvuru Başlangıç/Bitiş</span>
+                <span>Başvuru Başlangıç/Bitiş</span>
             </div>
             {{-- INPUT Etkinlik başvuru başlangıç tarihi --}}
             <div class="">
@@ -177,11 +179,11 @@
         <div id="kapakResmiContainer">
             @if (!empty($kapakResmiYolu))
                 <div class="flex items-center justify-center border border-dashed mb-2 py-2">
-                    <div class="relative">
-                        <img src="{{ asset('storage/' . $kapakResmiYolu) }}"
-                            class="h-36 object-cover rounded">
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                            <label for="kapakResmiYolu" class="ml-auto text-sm hover:underline text-nowrap bg-gray-50 text-gray-900 font-normal px-1.5 py-1">
+                    <div class="relative oppo group">
+                        <img src="{{ asset('storage/' . $kapakResmiYolu) }}" class="h-36 object-cover rounded">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 oppo-hover hidden">
+                            <label for="kapakResmiYolu"
+                                class="ml-auto text-sm hover:bg-gray-100 text-nowrap bg-gray-50 text-gray-900 font-normal px-1 py-0.5 rounded transition cursor-pointer shadow">
                                 Resmi değiştir
                             </label>
                         </div>
@@ -196,14 +198,32 @@
 
             <label for="resimYolu"
                 class="border border-dashed flex flex-col items-center justify-center gap-4 h-36 cursor-pointer">
-                <p class="font-normal text-sm text-gray-700 mb-0">Diğer fotoğraflarınızı buraya sürükleyin veya <span
-                        class="text-blue-500 hover:underline cursor-pointer">Cihazdan göz atın</span></p>
+                <p class="font-normal text-sm text-gray-700 mb-0">Diğer fotoğraflarınızı buraya sürükleyin veya
+                    <span class="text-blue-500 hover:underline cursor-pointer">Cihazdan göz atın</span>
+                </p>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-8 pointer-events-none">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                 </svg>
             </label>
+        </div>
+        <div id="sozdeDinamikGaleri">
+            @if (!empty($galeri))
+                @foreach ($galeri as $rowGaleri)
+                    <div class="flex items-center gap-4 border-b pb-2 mb-2 galeri-resmi">
+                        <img src="{{ asset('storage/' . $rowGaleri->resimYolu) }}" alt="Resim Önizleme"
+                            class="size-14 rounded">
+                        <p class="flex flex-col justify-between mb-0">
+                            Galeri resmi
+                        </p>
+                        <button type="button" data-id="{{ encrypt($rowGaleri->resimler_id) }}"
+                            class="galeri-resmi-kaldir ml-auto text-sm hover:underline">
+                            Resmi kaldır
+                        </button>
+                    </div>
+                @endforeach
+            @endif
         </div>
         <div id="resimYoluContainer"></div>
         {{-- INPUT CHECKBOX Etkinlik yorum durumu --}}
@@ -235,9 +255,9 @@
         <button data-modal="modal" type="button"
             class="close-modal bg-gray-50 text-gray-900 px-3 py-2 rounded hover:bg-gray-100 transition">Vazgeç</button>
 
-        <button type="submit" data-event-type="@if (empty($etkinlik)) insert @else update @endif"
+        <button type="submit" data-event-type="{{ $event_type }}"
             @class([
-                'etkinlikSubmit text-white px-3 py-2 rounded transition focus:ring-4 disabled:bg-black',
+                'etkinlik-submit text-white px-3 py-2 rounded transition focus:ring-4 disabled:bg-black',
                 'bg-blue-700 hover:bg-blue-800 ring-blue-300' => empty($etkinlik),
                 'bg-yellow-400 hover:bg-yellow-500 ring-yellow-300' => !empty($etkinlik),
             ])>{{ $form_submit }}</button>

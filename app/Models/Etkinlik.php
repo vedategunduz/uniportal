@@ -28,14 +28,12 @@ class Etkinlik extends Model
         'aciklama',
         'kontenjan',
         'yorumDurumu',
-        'sosyalMedyadaPaylas'
+        'sosyalMedyadaPaylas',
+        'aktiflik',
     ];
 
     public static function ekle($validatedData)
     {
-        $validatedData['yorumDurumu']         = (bool) $validatedData['yorumDurumu'];
-        $validatedData['sosyalMedyadaPaylas'] = (bool) $validatedData['sosyalMedyadaPaylas'];
-
         $validatedData['iller_id']            = decrypt($validatedData['iller_id']);
         $validatedData['isletmeler_id']       = decrypt($validatedData['isletmeler_id']);
         $validatedData['etkinlik_turleri_id'] = decrypt($validatedData['etkinlik_turleri_id']);
@@ -43,6 +41,10 @@ class Etkinlik extends Model
         return self::create($validatedData);
     }
 
+    public function galeri()
+    {
+        return $this->hasMany(Resim::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
 
     // public function isletme()
     // {

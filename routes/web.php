@@ -10,6 +10,7 @@ use App\Http\Controllers\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ResimController;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -18,11 +19,17 @@ Route::prefix('/')->name('main.')->group(function () {
 Route::prefix('api')->name('api.')->group(function () {
 
     Route::prefix('modal')->name('modal.')->group(function () {
-        Route::post('/etkinlik/{id}', [EventController::class, 'modalGetir']);
+        Route::prefix('etkinlik')->group(function () {
+            Route::post('/{id}', [EventController::class, 'modalGetir']);
+            Route::post('sil/{id}', [EventController::class, 'silmeModalGetir']);
+        });
     });
 
     Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
         Route::post('ekle', [EventController::class, 'store']);
+        Route::post('guncelle', [EventController::class, 'update']);
+        Route::post('sil', [EventController::class, 'etkinlikSil']);
+        Route::post('resmi-kaldir/{id}', [ResimController::class,'destroy']);
     });
 });
 
@@ -59,15 +66,6 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
     });
 });
 
-// Giriş rota grubu
-Route::prefix('giris')->name('giris.')->group(function () {
-    Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
-    Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
-})->middleware(NotAuthMiddleware::class);
-
-// Çıkış rotası
-Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
-
 Route::prefix('editor')->name('editor.')->group(function () {
     Route::prefix('file')->name('file.')->group(function () {
         Route::post('upload', [EditorController::class, 'fileUpload'])->name('yukle');
@@ -77,3 +75,12 @@ Route::prefix('editor')->name('editor.')->group(function () {
         Route::post('upload', [EditorController::class, 'imageUpload'])->name('yukle');
     });
 });
+
+// Giriş rota grubu
+Route::prefix('giris')->name('giris.')->group(function () {
+    Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
+    Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
+})->middleware(NotAuthMiddleware::class);
+
+// Çıkış rotası
+Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);

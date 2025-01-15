@@ -2,6 +2,10 @@
 
 @section('title', 'Giriş yap')
 
+@section('links')
+
+@endsection
+
 @section('content')
     <form action="{{ route('giris.yap') }}" method="POST" class="max-w-sm mx-auto">
         @csrf
@@ -15,4 +19,8 @@
         </div>
         <x-button type="submit" text="Oturum aç" id="" />
     </form>
+@endsection
+
+@section('scripts')
+
 @endsection

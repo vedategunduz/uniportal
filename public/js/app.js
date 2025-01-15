@@ -32,8 +32,8 @@ async function fetchData(url, data = {}, isFormData = false, method = 'POST') {
 
 function createAlert(message, type = 'success') {
     const ALERT_CONTAINER = document.createElement('div');
-    const ALERT_HEAD      = document.createElement('p');
-    const ALERT_MESSAGE   = document.createElement('p');
+    const ALERT_HEAD = document.createElement('p');
+    const ALERT_MESSAGE = document.createElement('p');
 
     ALERT_HEAD.classList.add('mb-0');
 
@@ -173,10 +173,10 @@ function callSummernote(id) {
         function uploadFile(file, context) {
             let data = new FormData();
             data.append('file', file);
-            data.append('_token', '{{ csrf_token() }}');
+            data.append('_token', CSRF_TOKEN);
 
             $.ajax({
-                url: '',
+                url: `${BASE_URL}/editor/file/upload`,
                 type: 'POST',
                 data: data,
                 contentType: false,
@@ -198,70 +198,93 @@ function callSummernote(id) {
 }
 
 function callResimler() {
-    // Tek bir dosya için resim gösterim işlemini yöneten fonksiyon
-    function handleFileLoad(file, container) {
-        // Skeletonu ekle
+    function handleFileLoad(file, container, index, input) {
+        // Skeleton oluştur
         const skeletonWrapper = document.createElement('div');
         skeletonWrapper.className = 'flex items-center gap-4 border-b pb-2 mb-2';
+
+        // Data attribute ile index’i saklıyoruz
+        skeletonWrapper.setAttribute('data-file-index', index);
+
         skeletonWrapper.innerHTML = `
-            <div class="skeleton skeleton-img"></div>
-            <div class="flex flex-col justify-between mb-0 w-full">
-                <div class="skeleton skeleton-text"></div>
-                <div class="skeleton skeleton-text-small mb-1"></div>
-                <div class="skeleton skeleton-text-small"></div>
-            </div>`;
+        <div class="skeleton skeleton-img"></div>
+        <div class="flex flex-col justify-between mb-0 w-full">
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text-small mb-1"></div>
+            <div class="skeleton skeleton-text-small"></div>
+        </div>
+      `;
         container.appendChild(skeletonWrapper);
 
         const reader = new FileReader();
         reader.onload = function (e) {
-            // Resim yüklendiğinde skeletonu gerçek içerik ile değiştir
+            // Skeletonun yerine gerçek içeriği yaz
             const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
             skeletonWrapper.innerHTML = `
-                <img src="${e.target.result}" alt="Resim Önizleme" class="size-14 rounded">
-                <p class="flex flex-col justify-between mb-0">
-                    <span class="text-sm">${file.name}</span>
-                    <span class="text-xs">Galeri resmi</span>
-                    <span class="text-xs text-gray-500">${fileSizeMB}</span>
-                </p>
-                <button type="button" class="ml-auto text-sm hover:underline remove-btn">
-                    Resmi kaldır
-                </button>`;
+          <img src="${e.target.result}" alt="Resim Önizleme" class="size-14 rounded">
+          <p class="flex flex-col justify-between mb-0">
+              <span class="text-sm">${file.name}</span>
+              <span class="text-xs">Galeri resmi</span>
+              <span class="text-xs text-gray-500">${fileSizeMB}</span>
+          </p>
+          <button type="button" class="ml-auto text-sm hover:underline remove-btn">
+              Resmi kaldır
+          </button>
+        `;
 
-            // "Resmi kaldır" butonunu işaretle
+            // Silme butonu
             const removeBtn = skeletonWrapper.querySelector('.remove-btn');
             removeBtn.addEventListener('click', function () {
-                document.getElementById('kapakResmiEklemeContainer').classList.remove('hidden');
+                // 1) Hangi index'e sahip elemanın silineceğini tespit et
+                const fileIndex = skeletonWrapper.getAttribute('data-file-index');
+
+                // 2) DataTransfer nesnesi oluştur
+                const dt = new DataTransfer();
+
+                // 3) input.files dizisini dönerek bu index’e sahip olanı hariç tut
+                for (let i = 0; i < input.files.length; i++) {
+                    if (String(i) !== fileIndex) {
+                        dt.items.add(input.files[i]);
+                    }
+                }
+
+                // 4) Input’un yeni dosya listesini atayalım
+                input.files = dt.files;
+
+                // 5) Önizlemeyi DOM'dan kaldıralım
                 skeletonWrapper.remove();
             });
         };
         reader.readAsDataURL(file);
     }
 
-    // Çoklu dosya input olayını yöneten bölüm
+    // Çoklu resimler
     document.getElementById('resimYolu')?.addEventListener('change', function (event) {
         const container = document.getElementById('resimYoluContainer');
-        // Çoklu dosya seçimine izin verildiği için var olan içerikleri korumak isteyebilirsiniz.
-        // Eğer temizlemek isterseniz: container.innerHTML = '';
+        const input = document.getElementById('resimYolu');
 
         const files = event.target.files;
         if (!files.length) return;
 
-        Array.from(files).forEach(file => {
+        // Her bir dosyaya index atayıp handleFileLoad fonksiyonuna gönderiyoruz
+        Array.from(files).forEach((file, index) => {
             if (file && file.type.startsWith('image/')) {
-                handleFileLoad(file, container);
+                handleFileLoad(file, container, index, input);
             }
         });
     });
 
-    // Tek dosya input olayını yöneten bölüm
+    // Tek resim (örnek kapak resmi)
     document.getElementById('kapakResmiYolu')?.addEventListener('change', function (event) {
         const container = document.getElementById('kapakResmiContainer');
-        // Tek dosya seçildiği için var olan içerikleri temizlemek isteyebilirsiniz.
+        const input = document.getElementById('kapakResmiYolu');
+
         container.innerHTML = '';
 
         const file = event.target.files[0];
         if (!file) return;
 
-        handleFileLoad(file, container);
+        // Tek resim seçtiğimiz için index = 0 atıyoruz
+        handleFileLoad(file, container, 0, input);
     });
 }

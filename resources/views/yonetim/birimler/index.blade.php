@@ -2,23 +2,8 @@
 
 @section('title', 'User dashboard')
 
-@section('links')
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.dataTables.css" />
-    <style>
-        /* select.dt-input {
-                width: 60px;
-            } */
-
-        /* .datatable-search {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            } */
-    </style>
-@endsection
-
 @section('content')
-    <div class="p-2 bg-blue-700 text-white mb-8 flex space-x-2 items-center justify-between">
+    <div class="p-2 bg-blue-700 text-white mb-8 flex space-x-2 items-center justify-between rounded">
         <h4>Birim işlemleri</h4>
         <div class="flex item-center">
             <button type="button" data-modal="personellerModal"
@@ -58,7 +43,7 @@
     <section class="custom-modal hidden" id="birimDetay">
         <div class="modal-outside close-modal" data-modal="birimDetay"></div>
 
-        <div class="modal-content max-w-screen-sm min-h-24 rounded">
+        <div class="modal-content min-w-96 max-w-screen-sm min-h-24 rounded">
             <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t">
                 <div>
                     <h2 class="font-medium text-lg text-white">Birim detayları</h2>
@@ -120,8 +105,8 @@
     <section class="custom-modal hidden" id="confirmModal">
         <div class="modal-outside close-modal" data-modal="confirmModal"></div>
 
-        <div class="modal-content max-w-sm rounded">
-            <header class="flex items-center justify-between bg-red-700 text-white px-6 py-3 rounded-t">
+        <div class="modal-content w-96 rounded">
+            <header class="flex items-center justify-between bg-red-500 text-white px-6 py-3 rounded-t">
                 <div>
                     <h2 class="font-medium text-lg text-white">Birimi kaldır</h2>
                 </div>
@@ -139,14 +124,21 @@
                         placeholder="isletme birimi">
                 </section>
 
-                <p class="mb-4">Birimi kaldırmak istediğinizden emin misiniz?</p>
+                <div class="text-center mb-4 space-y-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-16 mx-auto">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                    </svg>
+                    <p class="mb-0 text-sm">Birimi kaldırmak istediğinizden emin misiniz?</p>
+                </div>
 
                 <footer class="grid grid-cols-2 gap-2">
                     <button data-modal="confirmModal" type="button"
                         class="close-modal bg-gray-50 text-gray-900 px-3 py-2 rounded hover:bg-gray-100 transition">Hayır</button>
 
                     <button type="submit"
-                        class="bg-red-700 text-white px-3 py-2 rounded hover:bg-red-800 transition">Evet</button>
+                        class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-700 transition">Evet</button>
                 </footer>
             </form>
         </div>
@@ -179,6 +171,7 @@
 @section('scripts')
     <script>
         $('#birimler').DataTable({
+            responsive: true,
             lengthMenu: [20, 40, 100, {
                 'label': 'Hepsi',
                 'value': -1

@@ -43,8 +43,6 @@ class ViewServiceProvider extends ServiceProvider
 
         View::composer('components.etkinlik.*', function ($view) {
             if (Auth::check()) {
-                $user = Auth::user();
-
                 $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
                 $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
