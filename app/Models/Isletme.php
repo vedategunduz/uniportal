@@ -33,4 +33,8 @@ class Isletme extends Model
     public static function referans_kodu($isletmeler_id) {
         return self::where('isletmeler_id', $isletmeler_id)->value('referans_kodu');
     }
+
+    public static function isletmelerimiGetir() {
+
+    }
 }

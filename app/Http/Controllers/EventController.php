@@ -184,13 +184,13 @@ class EventController extends Controller
         }
     }
 
-    public function getDataTableDatas()
+    public function getDataTableDatas(string $isletmeler_id)
     {
         // İşletme id'sini çözüyoruz.
         // $decryptedId = decrypt($isletmeler_id);
-        $decryptedId = 143;
+        $decryptedId = decrypt($isletmeler_id);
         // Etkinlik verilerini çekiyoruz.
-        $etkinlikler = Etkinlik::where('isletmeler_id', $decryptedId)->where('aktiflik', 1)->orderBy('created_at', 'desc')->get();
+        $etkinlikler = Etkinlik::where('isletmeler_id', $decryptedId)->where('aktiflik', 1)->where('etkinlik_turleri_id', '<=', 8)->orderBy('created_at', 'desc')->get();
         // Tablo satırı değişkeni
         $data = [];
         // Etkinlik verilerini satır haline getiriyoruz.
@@ -220,7 +220,7 @@ class EventController extends Controller
         $decryptedId = decrypt($etkinlik_id);
         // Etkinlik verisini çekiyoruz.
         $etkinlik = Etkinlik::findOrFail($decryptedId);
-
+        // Veriyi diziye atıyoruz.
         $data = [
             'etkinlik' => $etkinlik
         ];

@@ -8,9 +8,10 @@ use App\Http\Middleware\NotAuthMiddleware;
 use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\BirimlerController;
 use App\Http\Controllers\EditorController;
-use App\Http\Controllers\KullaniciController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ResimController;
+use App\Http\Controllers\Yonetim\KullaniciController;
+use App\Http\Controllers\YonetimController;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -29,7 +30,7 @@ Route::prefix('api')->name('api.')->group(function () {
         Route::post('ekle', [EventController::class, 'store']);
         Route::post('guncelle', [EventController::class, 'update']);
         Route::post('sil', [EventController::class, 'etkinlikSil']);
-        Route::post('resmi-kaldir/{id}', [ResimController::class,'destroy']);
+        Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
     });
 });
 
@@ -39,7 +40,7 @@ Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
 Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
     Route::middleware(AuthMiddleware::class)->group(function () {
-        Route::get('/', [KullaniciController::class, 'index'])->name('index');
+        Route::get('/', [YonetimController::class, 'index'])->name('index');
 
         Route::prefix('birimler')->name('birimler.')->group(function () {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
@@ -61,7 +62,11 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [EventController::class, 'index'])->name('index');
-            Route::get('/show', [EventController::class, 'getDataTableDatas'])->name('show');
+            Route::get('/show/{isletmeler_id}', [EventController::class, 'getDataTableDatas'])->name('show');
+        });
+
+        Route::prefix('kullanicilar')->name('kullanicilar.')->group(function () {
+            Route::get('/', [KullaniciController::class, 'index']);
         });
     });
 });

@@ -1,5 +1,5 @@
 const BASE_URL = window.location.origin;
-const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
 async function fetchData(url, data = {}, isFormData = false, method = 'POST') {
     try {
@@ -98,6 +98,10 @@ function warningAlert(message) {
     createAlert(message, 'warning');
 }
 
+document.querySelector('.asideToggle')?.addEventListener('click', function () {
+    document.getElementById('aside-nav').classList.toggle('deneme');
+});
+
 window.addEventListener('click', function (event) {
     if (event.target.matches('.open-modal')) {
         const MODAL = document.getElementById(event.target.dataset.modal);
@@ -116,6 +120,23 @@ window.addEventListener('click', function (event) {
         // MODAL.querySelector('.modal-content').innerHTML = '';
 
         document.body.classList.remove('overflow-hidden');
+    }
+
+    if (event.target.matches('.aside-accordion')) {
+        const button = event.target;
+        const accordionMenu = button.nextElementSibling;
+        const buttonArrow = button.querySelector('.arrow');
+
+        button.classList.toggle('active');
+
+        if (button.classList.contains('active')) {
+            document.getElementById('aside-nav').classList.remove('deneme');
+            buttonArrow.classList.add('rotate-180');
+            accordionMenu.classList.remove('hidden');
+        } else {
+            buttonArrow.classList.remove('rotate-180');
+            accordionMenu.classList.add('hidden');
+        }
     }
 });
 
@@ -286,5 +307,26 @@ function callResimler() {
 
         // Tek resim seçtiğimiz için index = 0 atıyoruz
         handleFileLoad(file, container, 0, input);
+    });
+}
+
+// DataTables için veri çekme
+function getDataTableDatas(datatable_id, url) {
+    $(`${datatable_id}`).DataTable({
+        responsive: true,
+        ordering: false,
+        lengthMenu: [20, 40, 100, {
+            'label': 'Hepsi',
+            'value': -1
+        }],
+        ajax: {
+            url: `${BASE_URL}/${url}`,
+            type: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            },
+            dataSrc: 'data',
+        },
     });
 }

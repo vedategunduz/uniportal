@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Kullanici Paneli')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- <link rel="stylesheet" href="{{ asset('css/glocal.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     @yield('links')
 </head>
 
@@ -18,7 +18,9 @@
     </main>
 
     {{-- JS ve diğer betikler buraya --}}
+    <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
+
 </body>
 
 </html>

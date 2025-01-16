@@ -72,7 +72,7 @@ class MenuSeeder extends Seeder
                 ],
                 [
                     'menuAd'           => 'Kullanici işlemleri',
-                    'menuLink'         => '/yonetim/islem',
+                    'menuLink'         => '/yonetim/kullanicilar',
                     'menuSira'         => 430,
                     'menuIcon'         => '',
                     'bagli_menuler_id' => 7,

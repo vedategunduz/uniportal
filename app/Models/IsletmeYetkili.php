@@ -32,6 +32,11 @@ class IsletmeYetkili extends Model
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 
+    public static function personeller($isletmeler_id)
+    {
+        return self::where('isletmeler_id', $isletmeler_id)->get();
+    }
+
     /**
      * @return array => kullanıcının yetkili olduğu işletmeleri döndürür.
      */

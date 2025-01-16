@@ -36,8 +36,10 @@ class ViewServiceProvider extends ServiceProvider
                     ->whereNull('bagli_menuler_id')
                     ->orderBy('menuSira', 'asc')
                     ->get();
+                $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
+                $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
-                $view->with(compact('menuler'));
+                $view->with(compact('menuler', 'isletmeler'));
             }
         });
 
@@ -46,7 +48,7 @@ class ViewServiceProvider extends ServiceProvider
                 $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
                 $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
-                $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->get();
+                $etkinlikTurleri = EtkinlikTur::select('etkinlik_turleri_id', 'baslik')->where('tip', 1)->orderBy('baslik', 'asc')->get();
                 $iller = Il::select('iller_id', 'baslik')->get();
 
                 $view->with(compact('isletmeler', 'etkinlikTurleri', 'iller'));

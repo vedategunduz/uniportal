@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="p-2 bg-blue-700 text-white mb-8 flex space-x-2 items-center justify-between rounded">
-        <h4>Birim işlemleri</h4>
+        <h4>Birim yönetimi</h4>
         <div class="flex item-center">
             <button type="button" data-modal="personellerModal"
                 class="open-modal personelListesi bg-red-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white">
@@ -20,6 +20,7 @@
                 <span class="pointer-events-none">
                     Ekle
                 </span>
+                <a href=""></a>
             </button>
         </div>
     </div>

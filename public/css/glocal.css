@@ -53,7 +53,7 @@ h6 {
 }
 
 a {
-    font-weight: normal!important;
+    font-weight: normal !important;
 }
 
 a:not(.underline) {
@@ -239,4 +239,50 @@ label {
 
 .oppo:hover .oppo-hover {
     display: block !important;
+}
+
+.gradient-aside {
+    height: calc(100vh - 5rem);
+    overflow-y: auto;
+
+    background:
+        linear-gradient(135deg, rgba(13, 94, 201, 0.9) 10%, rgba(28, 182, 248, 0.9) 100%),
+        url('../image/bg-navbar.png') center/cover no-repeat;
+
+    a,
+    button {
+        color: white;
+        opacity: .8;
+    }
+
+    .active {
+        opacity: 1;
+    }
+
+
+}
+
+/* width */
+.gradient-aside::-webkit-scrollbar {
+    width: 6px;
+    height: 1px;
+}
+
+/* Track */
+.gradient-aside::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Handle */
+.gradient-aside::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+}
+
+.gradient-aside:hover::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, .7);
+}
+
+.deneme .menu-text {
+    display: none !important;
 }

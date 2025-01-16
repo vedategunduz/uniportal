@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('etkinlik_turleri', function (Blueprint $table) {
             $table->id('etkinlik_turleri_id');
             $table->string('baslik', 55);
+            $table->integer('tip');
             $table->timestamps();
         });
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::create('etkinlik_turleri_log', function (Blueprint $table) {
             $table->integer('etkinlik_turleri_id');
             $table->string('baslik', 55);
+            $table->integer('tip')->nullable();
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
@@ -37,6 +39,7 @@ return new class extends Migration
                 INSERT INTO etkinlik_turleri_log (
                     etkinlik_turleri_id,
                     baslik,
+                    tip,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -46,6 +49,7 @@ return new class extends Migration
                 VALUES (
                     NEW.etkinlik_turleri_id,
                     NEW.baslik,
+                    NEW.tip,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -63,6 +67,7 @@ return new class extends Migration
                 INSERT INTO etkinlik_turleri_log (
                     etkinlik_turleri_id,
                     baslik,
+                    tip,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -72,6 +77,7 @@ return new class extends Migration
                 VALUES (
                     NEW.etkinlik_turleri_id,
                     NEW.baslik,
+                    NEW.tip,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,

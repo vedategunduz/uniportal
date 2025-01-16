@@ -14,22 +14,52 @@ class EtkinlikTurSeeder extends Seeder
     {
         EtkinlikTur::insert([
             [
-                'baslik' => 'konser veya performans',
+                'baslik' => 'Konser',
+                'tip' => 1,
             ],
             [
-                'baslik' => 'eğitim',
+                'baslik' => 'Kongre',
+                'tip' => 1,
             ],
             [
-                'baslik' => 'kongre',
+                'baslik' => 'Konferans',
+                'tip' => 1,
             ],
             [
-                'baslik' => 'konferans',
+                'baslik' => 'Festival',
+                'tip' => 1,
             ],
             [
-                'baslik' => 'festival veya fuar',
+                'baslik' => 'Gala',
+                'tip' => 1,
             ],
             [
-                'baslik' => 'gala',
+                'baslik' => 'Etkinlik',
+                'tip' => 1,
+            ],
+            [
+                'baslik' => 'Çalıştay',
+                'tip' => 1,
+            ],
+            [
+                'baslik' => 'Sempozyum',
+                'tip' => 1,
+            ],
+            [
+                'baslik' => 'Ortak alım',
+                'tip' => 2,
+            ],
+            [
+                'baslik' => 'Sarf istek',
+                'tip' => 2,
+            ],
+            [
+                'baslik' => 'Sponsor talep',
+                'tip' => 2,
+            ],
+            [
+                'baslik' => 'Eğitim',
+                'tip' => 2,
             ],
         ]);
     }
