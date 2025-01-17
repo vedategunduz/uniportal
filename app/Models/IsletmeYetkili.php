@@ -17,6 +17,7 @@ class IsletmeYetkili extends Model
     protected $fillable = [
         'kullanicilar_id',
         'isletmeler_id',
+        'aktiflik'
     ];
 
     public static function birimPersoneller(string $birimler_id,  int $id)
@@ -34,7 +35,9 @@ class IsletmeYetkili extends Model
 
     public static function personeller($isletmeler_id)
     {
-        return self::where('isletmeler_id', $isletmeler_id)->get();
+        $array_kullanicilar_id = self::where('isletmeler_id', $isletmeler_id)->where('aktiflik', 1)->pluck('kullanicilar_id')->toArray();
+
+        return Kullanici::kullanicilariGetir($array_kullanicilar_id);
     }
 
     /**
@@ -43,5 +46,10 @@ class IsletmeYetkili extends Model
     public static function aitOldugumIsletmeleriGetir()
     {
         return IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('isletmeler_id');
+    }
+
+    public static function personelinAitOlduguBirimleriGetir(int $kullanicilar_id)
+    {
+        return IsletmeYetkili::where('kullanicilar_id', $kullanicilar_id)->pluck('isletme_birimleri_id');
     }
 }

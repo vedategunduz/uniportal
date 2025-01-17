@@ -24,6 +24,17 @@ Route::prefix('api')->name('api.')->group(function () {
             Route::post('/{id}', [EventController::class, 'modalGetir']);
             Route::post('sil/{id}', [EventController::class, 'silmeModalGetir']);
         });
+        Route::prefix('kullanicilar')->group(function () {
+            // Kullanici id'si ve işletme id'si form ile gönderilecek
+            Route::post('/', [KullaniciController::class, 'silmeModalGetir']);
+        });
+    });
+
+    Route::prefix('yonetim')->name('yonetim.')->group(function () {
+        Route::prefix('kullanicilar')->group(function() {
+            Route::get('show/{isletmeler_id}', [KullaniciController::class, 'show']);
+            Route::post('sil', [KullaniciController::class, 'sil']);
+        });
     });
 
     Route::prefix('etkinlik')->name('etkinlik.')->group(function () {

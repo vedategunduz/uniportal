@@ -6,6 +6,7 @@ use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class Kullanici extends Authenticatable
@@ -32,12 +33,23 @@ class Kullanici extends Authenticatable
         'remember_token',
     ];
 
+    public static function kullanicilariGetir(array $kullanicilar_id)
+    {
+        return self::whereIn('kullanicilar_id', $kullanicilar_id)
+            ->whereNot('kullanicilar_id', 1)
+            ->where('aktiflik', 1)
+            ->get();
+    }
+
+    // kullanıcı kayıt olduğu gibi şifresi hashlenir
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
     }
 
-    public function YetkiliOlduguIsletmeler(){
+    // Gereksiz herhalde
+    public function YetkiliOlduguIsletmeler()
+    {
         return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id');
     }
 

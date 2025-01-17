@@ -28,6 +28,8 @@ class IsletmeBirim extends Model
     {
         $birimPersonelleri = KullaniciBirimUnvan::with('kullanici', 'unvan')
             ->where('isletme_birimleri_id', $isletme_birimleri_id)
+            ->where('aktiflik', 1)
+            ->whereNot('kullanicilar_id', 1)
             ->get()
             ->sortBy(function ($item) {
                 return $item->unvan->unvanSira;

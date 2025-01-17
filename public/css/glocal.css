@@ -53,7 +53,9 @@ h6 {
 }
 
 a {
-    font-weight: normal !important;
+    &:not(.font-bold):not(.font-semibold):not(.font-medium):not(.font-light):not(.font-thin):not(.font-extralight):not(.font-extrabold):not(.font-black) {
+        font-weight: normal !important;
+    }
 }
 
 a:not(.underline) {

@@ -17,27 +17,30 @@ class KullaniciSeeder extends Seeder
             'password'  => '12345600',
         ]);
         Kullanici::create([
-            'roller_id' => 2,
-            'ad'        => 'Evren',
-            'soyad'     => 'Köksal',
-            'email'     => 'ziyaretci@nku.edu.tr',
-            'password'  => '12345600',
+            'roller_id'     => 2,
+            'ad'            => 'Evren',
+            'soyad'         => 'Köksal',
+            'email'         => 'ekoksal@nku.edu.tr',
+            'password'      => '12345600',
+            'telefon'      => '0532 123 45 67',
             'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=501'
         ]);
         Kullanici::create([
-            'roller_id' => 3,
-            'ad'        => 'Gökhan',
-            'soyad'     => 'Şenlik',
-            'email'     => 'ziyaretci2@nku.edu.tr',
-            'password'  => '12345600',
+            'roller_id'     => 3,
+            'ad'            => 'Gökhan',
+            'soyad'         => 'Şenlik',
+            'email'         => 'gsenlik@nku.edu.tr',
+            'password'      => '12345600',
+            'telefon'       => '0532 123 45 67',
             'profilFotoUrl' => '//bidb.nku.edu.tr/resim.php?no=2641'
         ]);
         Kullanici::create([
             'roller_id'     => 3,
             'ad'            => 'Vedat Emre',
             'soyad'         => 'Gündüz',
-            'email'         => 'ziyaretci3@nku.edu.tr',
+            'email'         => 'vgunduz@nku.edu.tr',
             'password'      => '12345600',
+            'telefon'       => '0532 123 45 67',
             'profilFotoUrl' => 'https://avatars.githubusercontent.com/u/94452068?v=4'
         ]);
     }

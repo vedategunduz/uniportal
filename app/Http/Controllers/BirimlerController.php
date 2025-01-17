@@ -22,6 +22,7 @@ class BirimlerController extends Controller
         return view('yonetim.birimler.index', compact('isletmeBirimleri', 'birimYerlesmemisKullanicilarSayisi'));
     }
 
+    // ============= duzenle =================
     public function birimeYerlesmemisPersonelSayisi()
     {
         $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi();
@@ -42,6 +43,8 @@ class BirimlerController extends Controller
                     ->orWhere('soyad', 'like', '%' . $search . '%')
                     ->orWhere('email', 'like', '%' . $search . '%');
             })
+            ->where('aktiflik', '>', 0)
+            ->whereNot('kullanicilar_id', 1)
             ->get();
 
         $data = [
@@ -294,7 +297,7 @@ class BirimlerController extends Controller
     {
         $decryptedId = decrypt($id);
         try {
-            KullaniciBirimUnvan::findOrFail($decryptedId)->delete();
+            KullaniciBirimUnvan::find($decryptedId)->delete();
 
             return response()->json([
                 'success' => true,

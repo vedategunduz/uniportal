@@ -17,6 +17,7 @@ class KullaniciBirimUnvan extends Model
         'kullanicilar_id',
         'isletme_birimleri_id',
         'unvanlar_id',
+        'aktiflik'
     ];
 
     public function kullanici()
@@ -29,6 +30,22 @@ class KullaniciBirimUnvan extends Model
         return $this->belongsTo(Unvan::class, 'unvanlar_id', 'unvanlar_id');
     }
 
+    public function birim()
+    {
+        return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id');
+    }
+
+    public static function personelinBirimleri($kullanicilar_id)
+    {
+        return self::with('unvan', 'birim')
+            ->where('kullanicilar_id', $kullanicilar_id)
+            ->get();
+    }
+
+    /**
+     * =================== Düzenle bu fonksiyonu ===================
+     * @param string $birimler_id
+     */
     public static function birimiOlmayanKullanicilar()
     {
         return self::rightJoin(
@@ -39,13 +56,11 @@ class KullaniciBirimUnvan extends Model
         )
             ->whereNull('kullanici_birim_unvan_iliskileri.kullanicilar_id')
             ->where('isletme_yetkilileri.isletmeler_id', 143)
+            ->where('isletme_yetkilileri.aktiflik', 1)
+            ->whereNot('isletme_yetkilileri.kullanicilar_id', 1)
             ->get();
     }
-
-    public static function oBirimeAitOlmayanIsletmeKullanicilari($birimler_id)
-    {
-    }
-
+    // =================== Düzenle bu fonksiyonu ===================
     public static function birimeYerlesmemisPersonelSayisi()
     {
         return self::birimiOlmayanKullanicilar()->pluck('kullanicilar_id')->count();
