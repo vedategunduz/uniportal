@@ -59,6 +59,22 @@
             // Sayfa yüklendiğinde mevcut değeri al ve tabloyu oluştur
             let isletmeler_id = isletmeSelectElement.value;
 
+            async function sendForm(url, form) {
+                const formData = new FormData(form);
+
+                const RESPONSE_DATA =
+                    await fetchData(url, formData, true);
+
+                if (RESPONSE_DATA.success) {
+                    successAlert(RESPONSE_DATA.message);
+                    $(dataTableName).DataTable().ajax.reload(null, false);
+                    modal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                } else {
+                    errorAlert(RESPONSE_DATA.message);
+                }
+            }
+
             getDataTableDatas(dataTableName, `api/yonetim/kullanicilar/show/${isletmeler_id}`);
 
             // Değer değiştiğinde tabloyu güncelle
@@ -71,8 +87,30 @@
                 getDataTableDatas(dataTableName, `api/yonetim/kullanicilar/show/${isletmeler_id}`);
             });
 
+            document.addEventListener('change', async (e) => {
+                if (e.target.matches('.unvanDegistir')) {
+                    const formData = new FormData();
+
+                    formData.append('kullanicilar_id', e.target.dataset.kullanicilarId);
+                    formData.append('isletme_birimleri_id', e.target.dataset.birimId);
+                    formData.append('unvanlar_id', e.target.value);
+
+                    const RESPONSE_DATA =
+                        await fetchData(`api/yonetim/kullanicilar/unvan-degistir`, formData, true);
+
+                    if (RESPONSE_DATA.success) {
+                        successAlert(RESPONSE_DATA.message);
+                        $(dataTableName).DataTable().ajax.reload(null, false);
+
+                    } else {
+                        errorAlert(RESPONSE_DATA.message);
+                    }
+                }
+            });
+
             document.addEventListener('click', async (e) => {
                 if (e.target.matches('.open-modal')) {
+                    // Kullanici silme modalı
                     if (e.target.dataset.eventType == 'deleteModalForKullanici') {
                         const formData = new FormData();
 
@@ -88,23 +126,48 @@
                             errorAlert('Modal içeriği yüklenirken bir hata oluştu.');
                         }
                     }
-                }
+                    // Birimden çıkartma modalı
+                    if (e.target.dataset.eventType == 'deleteModalForBirimdenCikart') {
+                        const formData = new FormData();
 
+                        formData.append('kullanicilar_id', e.target.dataset.id);
+                        formData.append('isletme_birimleri_id', e.target.dataset.birimId);
+
+                        const RESPONSE_DATA =
+                            await fetchData(`api/modal/kullanicilar/birimden-cikart`, formData,
+                                true);
+
+                        if (RESPONSE_DATA.success) {
+                            modal_content.innerHTML = RESPONSE_DATA.html;
+                        } else {
+                            errorAlert('Modal içeriği yüklenirken bir hata oluştu.');
+                        }
+                    }
+
+                    if (e.target.dataset.eventType == 'kullaniciDuzenle') {
+
+                        const RESPONSE_DATA =
+                            await fetchData(
+                                `api/modal/kullanicilar/detay/${e.target.dataset.id}`);
+
+                        if (RESPONSE_DATA.success) {
+                            modal_content.innerHTML = RESPONSE_DATA.html;
+                        } else {
+                            errorAlert('Modal içeriği yüklenirken bir hata oluştu.');
+                        }
+                    }
+                }
                 if (e.target.matches('.deleteKullaniciForIsletmeSubmit')) {
                     e.preventDefault();
-                    const formData = new FormData(e.target.closest('form'));
-
-                    const RESPONSE_DATA =
-                        await fetchData('api/yonetim/kullanicilar/sil', formData, true);
-
-                    if (RESPONSE_DATA.success) {
-                        successAlert(RESPONSE_DATA.message);
-                        $(dataTableName).DataTable().ajax.reload(null, false);
-                        modal.classList.add('hidden');
-                        document.body.classList.remove('overflow-hidden');
-                    } else {
-                        errorAlert(RESPONSE_DATA.message);
-                    }
+                    sendForm('api/yonetim/kullanicilar/sil', e.target.closest('form'));
+                }
+                if (e.target.matches('.deleteKullaniciForIsletmeBirimSubmit')) {
+                    e.preventDefault();
+                    sendForm('api/yonetim/kullanicilar/birimden-cikart', e.target.closest('form'));
+                }
+                if (e.target.matches('.updateKullaniciSubmit')) {
+                    e.preventDefault();
+                    sendForm('api/yonetim/kullanicilar/duzenle', e.target.closest('form'));
                 }
             });
         });

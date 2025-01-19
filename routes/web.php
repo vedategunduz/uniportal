@@ -27,13 +27,18 @@ Route::prefix('api')->name('api.')->group(function () {
         Route::prefix('kullanicilar')->group(function () {
             // Kullanici id'si ve işletme id'si form ile gönderilecek
             Route::post('/', [KullaniciController::class, 'silmeModalGetir']);
+            Route::post('birimden-cikart', [KullaniciController::class, 'birimdenCikarModalGetir']);
+            Route::post('detay/{id}', [KullaniciController::class, 'detayModalGetir']);
         });
     });
 
     Route::prefix('yonetim')->name('yonetim.')->group(function () {
-        Route::prefix('kullanicilar')->group(function() {
+        Route::prefix('kullanicilar')->group(function () {
             Route::get('show/{isletmeler_id}', [KullaniciController::class, 'show']);
             Route::post('sil', [KullaniciController::class, 'sil']);
+            Route::post('birimden-cikart', [KullaniciController::class, 'birimdenCikart']);
+            Route::post('unvan-degistir', [KullaniciController::class, 'unvanDegistir']);
+            Route::post('duzenle', [KullaniciController::class, 'update']);
         });
     });
 

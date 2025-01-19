@@ -5,8 +5,8 @@
             <span
                 class="block rounded p-1 px-2 capitalize bg-blue-900 text-white">{{ $rowBirimBilgileri->unvan->baslik }}</span>
 
-            <button type="button" data-modal="modal" data-id=""
-                data-event-type="" class="open-modal bg-rose-500 text-white p-1.5 rounded"
+            <button type="button" data-modal="modal" data-id="{{ encrypt($kullanicilar_id) }}" data-birim-id="{{ encrypt($rowBirimBilgileri->isletme_birimleri_id) }}"
+                data-event-type="deleteModalForBirimdenCikart" class="open-modal bg-rose-500 text-white p-1.5 rounded"
                 title="birimden silme onay kutusunu aç">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-3 pointer-events-none">

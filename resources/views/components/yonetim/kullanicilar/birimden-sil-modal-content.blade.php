@@ -1,6 +1,6 @@
 <header class="flex items-center justify-between bg-rose-500 text-white px-6 py-3 rounded-t">
     <div>
-        <h2 class="font-medium text-lg text-white"> İşletmeden kaldır </h2>
+        <h2 class="font-medium text-lg text-white"> Birimden çıkart </h2>
     </div>
     <button class="close-modal" data-modal="modal">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -11,7 +11,7 @@
 </header>
 
 <form action="" class="p-6 w-96">
-    <input type="hidden" name="isletmeler_id" value="{{ encrypt($isletmeler_id) }}">
+    <input type="hidden" name="isletme_birimleri_id" value="{{ encrypt($isletme_birimi->isletme_birimleri_id) }}">
     <input type="hidden" name="kullanicilar_id" value="{{ encrypt($kullanici->kullanicilar_id) }}">
 
     <div class="text-center mb-4 space-y-2">
@@ -21,7 +21,14 @@
                 d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
         </svg>
         <h4>Emin misiniz?</h4>
-        <p class="mb-0 text-sm"><span class="font-bold">{{ $kullanici->ad }} {{ $kullanici->soyad }}</span> işletme ile olan bütün ilişiği kesilecektir.</p>
+        <p class="mb-0 text-sm">
+            Kişinin
+            <span class="font-bold">
+                ({{ $kullanici->ad }} {{ $kullanici->soyad }}),
+                {{ $isletme_birimi->baslik }}
+            </span>
+            ile olan bütün ilişiği kesilecektir.
+        </p>
     </div>
 
     {{-- MODAL Standart butonlar --}}
@@ -30,7 +37,7 @@
             class="close-modal bg-gray-50 text-gray-900 px-3 py-2 rounded hover:bg-gray-100 transition">Vazgeç</button>
 
         <button type="submit" @class([
-            'deleteKullaniciForIsletmeSubmit text-white px-3 py-2 rounded transition focus:ring-4 bg-rose-500 hover:bg-rose-800 ring-rose-300',
+            'deleteKullaniciForIsletmeBirimSubmit text-white px-3 py-2 rounded transition focus:ring-4 bg-rose-500 hover:bg-rose-800 ring-rose-300',
         ])>Çıkart</button>
     </footer>
 </form>

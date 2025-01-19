@@ -23,7 +23,7 @@ class IsletmeYetkili extends Model
     public static function birimPersoneller(string $birimler_id,  int $id)
     {
         $birimPersonelleri   = KullaniciBirimUnvan::where('isletme_birimleri_id', decrypt($birimler_id))->pluck('kullanicilar_id');
-        $isletmePersonelleri = IsletmeYetkili::whereNotIn('kullanicilar_id', $birimPersonelleri)->where('isletmeler_id', $id)->pluck('kullanicilar_id');
+        $isletmePersonelleri = IsletmeYetkili::whereNotIn('kullanicilar_id', $birimPersonelleri)->where('aktiflik', '>', 0)->where('isletmeler_id', $id)->pluck('kullanicilar_id');
 
         return $isletmePersonelleri;
     }

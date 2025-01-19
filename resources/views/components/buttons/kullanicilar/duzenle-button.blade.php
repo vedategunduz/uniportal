@@ -1,4 +1,4 @@
-<button type="button" data-modal="modal" data-id="{{ encrypt($kullanicilar_id) }}" class="open-modal bg-yellow-400 text-white p-2 rounded" data-event-type="update">
+<button type="button" data-modal="modal" data-id="{{ encrypt($kullanicilar_id) }}" class="open-modal bg-yellow-400 text-white p-2 rounded" data-event-type="kullaniciDuzenle">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="size-3 pointer-events-none">
         <path stroke-linecap="round" stroke-linejoin="round"

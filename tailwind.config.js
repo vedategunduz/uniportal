@@ -8,13 +8,14 @@ export default {
         './resources/**/*.blade.php',
         './resources/**/*.js',
         './resources/**/*.vue',
+        './public/js/app.js',
         './app/View/Components/*.php',
         './app/Http/Controllers/*.php',
         "./node_modules/flowbite/**/*.js",
     ],
     safelist: [
         {
-            pattern: /^(bg|border)-(pink|red|yellow|indigo|blue|green|gray|purple|teal)-(50|100|200|300|400|500|600|700|800|900|950)$/,
+            pattern: /^(bg|border|text)-(pink|red|yellow|indigo|blue|green|gray|purple|teal)-(50|100|200|300|400|500|600|700|800|900|950)$/,
         },
     ],
     theme: {
