@@ -5,7 +5,6 @@
 *::after {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 html,
@@ -53,6 +52,10 @@ h6 {
 }
 
 a {
+    &:hover {
+        color: inherit;
+    }
+
     &:not(.font-bold):not(.font-semibold):not(.font-medium):not(.font-light):not(.font-thin):not(.font-extralight):not(.font-extrabold):not(.font-black) {
         font-weight: normal !important;
     }
@@ -283,8 +286,4 @@ label {
 
 .gradient-aside:hover::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, .7);
-}
-
-.deneme .menu-text {
-    display: none !important;
 }

@@ -6,12 +6,14 @@ use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\NotAuthMiddleware;
 
 use App\Http\Controllers\AnasayfaController;
-use App\Http\Controllers\BirimlerController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Personel\PersonelController;
+use App\Http\Controllers\Yonetim\EventController;
 use App\Http\Controllers\ResimController;
 use App\Http\Controllers\Yonetim\KullaniciController;
-use App\Http\Controllers\YonetimController;
+use App\Http\Controllers\Yonetim\YonetimController;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -53,6 +55,10 @@ Route::prefix('api')->name('api.')->group(function () {
 Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
 Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
 
+Route::prefix('personel')->name('personel.')->group(function () {
+    Route::get('/{kullanici_id}', [PersonelController::class, 'show'])->name('profil');
+});
+
 Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
     Route::middleware(AuthMiddleware::class)->group(function () {
@@ -73,7 +79,6 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('/modal/birimKullanicilari/{id}', [BirimlerController::class, 'getModalIsletmeKullanicilari']);
 
             Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy']);
-            // Route::post('/patates', [BirimlerController::class, 'change']);
         });
 
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
@@ -99,9 +104,9 @@ Route::prefix('editor')->name('editor.')->group(function () {
 
 // Giriş rota grubu
 Route::prefix('giris')->name('giris.')->group(function () {
-    Route::get('/', [KullaniciController::class, 'girisForm'])->name('form');
-    Route::post('/', [KullaniciController::class, 'girisYap'])->name('yap');
+    Route::get('/', [AuthController::class, 'girisForm'])->name('form');
+    Route::post('/', [AuthController::class, 'girisYap'])->name('yap');
 })->middleware(NotAuthMiddleware::class);
 
 // Çıkış rotası
-Route::get('/cikis', [KullaniciController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
+Route::get('/cikis', [AuthController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);

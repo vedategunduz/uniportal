@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('adres', 155)->nullable();
             $table->string('profilFotoUrl', 155)->default('https://placehold.co/128');
             $table->string('password');
+            $table->boolean('aramaIzni')->default(1);
+            $table->boolean('veriGosterimIzni')->default(1);
             $table->rememberToken();
             $table->timestamps();
 
@@ -38,6 +40,8 @@ return new class extends Migration
             $table->string('telefon', 155)->nullable();
             $table->string('adres', 155)->nullable();
             $table->string('profileFotoUrl', 155)->nullable();
+            $table->boolean('aramaIzni');
+            $table->boolean('veriGosterimIzni');
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
@@ -56,6 +60,8 @@ return new class extends Migration
                     telefon,
                     adres,
                     profileFotoUrl,
+                    aramaIzni,
+                    veriGosterimIzni,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -71,6 +77,8 @@ return new class extends Migration
                     NEW.telefon,
                     NEW.adres,
                     NEW.profilFotoUrl,
+                    NEW.aramaIzni,
+                    NEW.veriGosterimIzni,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -94,6 +102,8 @@ return new class extends Migration
                     telefon,
                     adres,
                     profileFotoUrl,
+                    aramaIzni,
+                    veriGosterimIzni,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -109,6 +119,8 @@ return new class extends Migration
                     NEW.telefon,
                     NEW.adres,
                     NEW.profilFotoUrl,
+                    NEW.aramaIzni,
+                    NEW.veriGosterimIzni,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,

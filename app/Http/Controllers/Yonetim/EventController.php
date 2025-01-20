@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Yonetim;
 
 use App\Http\Requests\EtkinlikRequest;
 use App\Models\Etkinlik;
@@ -9,6 +9,7 @@ use App\Services\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class EventController extends Controller
 {

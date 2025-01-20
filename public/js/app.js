@@ -98,10 +98,6 @@ function warningAlert(message) {
     createAlert(message, 'warning');
 }
 
-document.querySelector('.asideToggle')?.addEventListener('click', function () {
-    document.getElementById('aside-nav').classList.toggle('deneme');
-});
-
 window.addEventListener('click', function (event) {
     if (event.target.matches('.open-modal')) {
         const MODAL = document.getElementById(event.target.dataset.modal);
@@ -130,12 +126,13 @@ window.addEventListener('click', function (event) {
         button.classList.toggle('active');
 
         if (button.classList.contains('active')) {
-            document.getElementById('aside-nav').classList.remove('deneme');
             buttonArrow.classList.add('rotate-180');
-            accordionMenu.classList.remove('hidden');
+            accordionMenu.style.maxHeight = accordionMenu.scrollHeight + 'px';
+            // accordionMenu.classList.remove('hidden');
         } else {
             buttonArrow.classList.remove('rotate-180');
-            accordionMenu.classList.add('hidden');
+            accordionMenu.style.maxHeight = 0;
+            // accordionMenu.classList.add('hidden');
         }
     }
 });

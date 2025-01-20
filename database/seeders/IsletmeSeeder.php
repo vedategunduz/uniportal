@@ -190,5 +190,11 @@ class IsletmeSeeder extends Seeder
                 'digerUrl'           => $faker->url,
             ]);
         }
+
+        $bizim = Isletme::find(143);
+
+        $bizim->update([
+            'logoUrl' => asset('image/_TNKU_LOGO_TR.jpg')
+        ]);
     }
 }

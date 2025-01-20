@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Yonetim;
 
+use App\Http\Controllers\Controller;
 use App\Models\BirimTip;
 use App\Models\IsletmeBirim;
 use App\Models\IsletmeYetkili;

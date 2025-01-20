@@ -76,7 +76,7 @@ class IsletmeBirimSeeder extends Seeder
             ['birim_ad' => "Kurum Genel", 'birim_tip_id' => 9, 'aktiflik' => 0],
         ];
 
-        $isletmeler = Isletme::whereIn('isletmeler_id', [143, 144])->get();
+        $isletmeler = Isletme::whereIn('isletmeler_id', [143])->get();
 
         foreach ($isletmeler as $isletme) {
             foreach ($universiteBirimleri as $birim) {

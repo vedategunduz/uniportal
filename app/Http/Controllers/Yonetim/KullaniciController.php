@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Yonetim;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\IsletmeBirim;
@@ -179,27 +178,5 @@ class KullaniciController extends Controller
             "success" => true,
             "message" => "Kullanıcı başarıyla kaldırıldı."
         ], 200);
-    }
-
-    public function girisForm()
-    {
-        return view('yonetim.giris');
-    }
-
-    public function girisYap(Request $request)
-    {
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $request->session()->regenerate();
-            return redirect()->intended('yonetim');
-        }
-        return redirect()->back();
-    }
-
-    public function cikis(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect()->route('main.index');
     }
 }

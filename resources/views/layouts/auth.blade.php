@@ -24,23 +24,8 @@
 </head>
 
 <body>
-    {{-- <nav class="px-4">
-        <header class="h-12 flex items-center gap-4">
-            <button type="button" class="p-2 ml-2 asideToggle">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-list size-5"
-                    viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-                </svg>
-            </button>
-            <a href="#" class="flex items-center">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="size-8 me-3" alt="Flowbite Logo" />
-                <span class="text-2xl font-semibold whitespace-nowrap">uniportal</span>
-            </a>
-        </header>
-    </nav>
     <div class="flex items-start">
-        <nav class="flex flex-col p-4 deneme" id="aside-nav">
+        <nav class="flex flex-col w-full p-4 text-sm" id="aside-nav">
             <div class="gradient-aside rounded p-2">
                 <a href="" class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-pie-chart-fill size-4"
@@ -50,52 +35,85 @@
                     </svg>
                     <span class="ml-4 text-nowrap menu-text">Dashboard</span>
                 </a>
-                @for ($i = 0; $i <= 30; $i++)
-                    <button type="button"
-                        class="aside-accordion flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                            class="bi bi-calendar2-event-fill size-4 pointer-events-none" viewBox="0 0 16 16">
-                            <path
-                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5M11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-                        </svg>
-                        <div class="flex items-center justify-between gap-2 pointer-events-none menu-text">
-                            <span class="ml-4 text-nowrap">Kurum işlemleri</span>
+                <button type="button"
+                    class="aside-accordion flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        class="bi bi-calendar2-event-fill size-4 pointer-events-none" viewBox="0 0 16 16">
+                        <path
+                            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5M11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
+                    </svg>
+                    <span class="ml-4 text-nowrap">Kurum işlemleri</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-4 ml-auto arrow duration-300 pointer-events-none">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </button>
+                <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-menu-content">
+                    <li>
+                        <a href=""
+                            class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                            <span class="text-nowrap pointer-events-none">Etkinlikler</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href=""
+                            class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                            <span class="text-nowrap pointer-events-none">Ortak alım talepleri</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href=""
+                            class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                            <span class="text-nowrap pointer-events-none">Sarf istek fazla</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href=""
+                            class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                            <span class="text-nowrap pointer-events-none">Sponsor talepleri</span>
+                        </a>
+                    </li>
+                    <li>
+                        <button type="button"
+                            class="aside-accordion flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                            <span class="text-nowrap">Kurum işlemleri</span>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor"
-                                class="size-4 ml-auto arrow duration-300">
+                                class="size-4 ml-auto arrow duration-300 pointer-events-none">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
-                        </div>
-                    </button>
-                    <ul class="pl-8 hidden transition-all deneme border-r-2 border-emerald-500">
-                        <li>
-                            <a href=""
-                                class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
-                                <span class="text-nowrap pointer-events-none">Etkinlikler</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href=""
-                                class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
-                                <span class="text-nowrap pointer-events-none">Ortak alım talepleri</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href=""
-                                class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
-                                <span class="text-nowrap pointer-events-none">Sarf istek fazla</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href=""
-                                class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
-                                <span class="text-nowrap pointer-events-none">Sponsor talepleri</span>
-                            </a>
-                        </li>
-                    </ul>
-                @endfor
+                        </button>
+                        <ul class="pl-3 max-h-0 overflow-hidden duration-300 accordion-menu-content">
+                            <li>
+                                <a href=""
+                                    class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                                    <span class="text-nowrap pointer-events-none">Etkinlikler</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                                    <span class="text-nowrap pointer-events-none">Ortak alım talepleri</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                                    <span class="text-nowrap pointer-events-none">Sarf istek fazla</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href=""
+                                    class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
+                                    <span class="text-nowrap pointer-events-none">Sponsor talepleri</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-        </nav> --}}
+        </nav>
+    </div>
 
     <div class="flex">
         <aside class="w-72 h-screen shadow bg-white text-gray-900">
@@ -133,7 +151,6 @@
         </main>
     </div>
 
-    </div>
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 

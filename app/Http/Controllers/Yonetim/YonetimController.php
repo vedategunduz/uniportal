@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Yonetim;
 
+use App\Http\Controllers\Controller;
 
 class YonetimController extends Controller
 {
