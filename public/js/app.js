@@ -127,12 +127,22 @@ window.addEventListener('click', function (event) {
 
         if (button.classList.contains('active')) {
             buttonArrow.classList.add('rotate-180');
+
             accordionMenu.style.maxHeight = accordionMenu.scrollHeight + 'px';
             // accordionMenu.classList.remove('hidden');
         } else {
             buttonArrow.classList.remove('rotate-180');
             accordionMenu.style.maxHeight = 0;
             // accordionMenu.classList.add('hidden');
+        }
+
+        let parentContent = accordionMenu.parentElement.closest('.accordion-content');
+        while (parentContent) {
+            const parentButton = parentContent.previousElementSibling;
+            if (parentButton && parentButton.classList.contains('active')) {
+                parentContent.style.maxHeight = parentContent.scrollHeight + accordionMenu.scrollHeight + 'px';
+            }
+            parentContent = parentContent.parentElement.closest('.accordion-content');
         }
     }
 });
