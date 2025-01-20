@@ -48,7 +48,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-content baba">
+                <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-content">
                     <li>
                         <a href=""
                             class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">
@@ -125,7 +125,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                     </svg>
                 </button>
-                <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-content baba">
+                <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-content">
                     <li>
                         <a href=""
                             class="flex items-center w-full px-3 h-8 rounded text-white hover:opacity-100">

@@ -128,7 +128,8 @@ window.addEventListener('click', function (event) {
         if (button.classList.contains('active')) {
             buttonArrow.classList.add('rotate-180');
 
-            accordionMenu.style.maxHeight = accordionMenu.scrollHeight + 'px';
+            accordionMenu.style.maxHeight = 'fit-content';
+
             // accordionMenu.classList.remove('hidden');
         } else {
             buttonArrow.classList.remove('rotate-180');
