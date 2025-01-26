@@ -248,7 +248,7 @@ label {
 }
 
 .gradient-aside {
-    height: calc(100vh - 5rem);
+    height: calc(100vh - 2rem - 64px);
     overflow-y: auto;
 
     background: linear-gradient(
@@ -292,4 +292,11 @@ label {
 
 .accordion-content {
     interpolate-size: allow-keywords;
+}
+
+
+@media screen and (min-width: 768px) {
+    .aside-padding {
+        padding-left: 21rem;
+    }
 }

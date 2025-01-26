@@ -13,7 +13,6 @@
 
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.dataTables.min.css">
 
-
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
@@ -24,8 +23,8 @@
 </head>
 
 <body>
+    <x-menu.head />
     <div class="items-start lg:flex">
-
         <x-menu />
 
 
