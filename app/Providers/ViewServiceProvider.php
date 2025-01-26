@@ -27,17 +27,23 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer(['yonetim.*', 'personel.*'], function ($view) {
+        View::composer(['yonetim.*', 'personel.*', 'components.menu.*'], function ($view) {
             if (Auth::check()) {
-                $menuler = Menu::whereHas('MenuRolDetayi', function ($query) {
-                    $query->where('roller_id', Auth::user()->roller_id);
-                })
-                    ->with('altMenuler')
-                    ->whereNull('bagli_menuler_id')
-                    ->orderBy('menuSira', 'asc')
-                    ->get();
+                // $menuler = Menu::whereHas('MenuRolDetayi', function ($query) {
+                //     $query->where('roller_id', Auth::user()->roller_id);
+                // })
+                //     ->with('altMenuler')
+                //     ->whereNull('bagli_menuler_id')
+                //     ->orderBy('menuSira', 'asc')
+                //     ->get();
+
                 $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
                 $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
+
+                $menuler = Menu::whereNull('bagli_menuler_id')
+                    ->with('children')
+                    ->orderBy('menuSira') // sıraya göre listelemek için
+                    ->get();
 
                 $view->with(compact('menuler', 'isletmeler'));
             }
