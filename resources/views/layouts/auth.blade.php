@@ -33,7 +33,13 @@
         </main>
     </div>
 
+    <div id="modal" class="custom-modal hidden">
+        <section class="modal-outside close-modal" data-modal="modal"></section>
 
+        <section id="modal-content" class="modal-content max-w-screen-md rounded max-h-screen overflow-auto hidden-scroll">
+        </section>
+    </div>
+    
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
     <script src="{{ asset('js/data-table.js') }}"></script>

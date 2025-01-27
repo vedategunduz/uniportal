@@ -27,23 +27,18 @@
         </div>
     </div>
 
-    <table id="kullanicilar" class="display nowrap stripe">
-        <thead>
-            <tr>
-                <th class="">Personel</th>
-                <th></th>
-                <th class="w-4"></th>
-                <th class="w-4"></th>
-            </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-    </table>
-
-    <div id="modal" class="custom-modal hidden">
-        <section class="modal-outside close-modal" data-modal="modal"></section>
-
-        <section id="modal-content" class="modal-content max-w-screen-md rounded max-h-screen overflow-auto hidden-scroll">
-        </section>
+    <div class="overflow-x-auto">
+        <table id="kullanicilar" class="display nowrap stripe">
+            <thead>
+                <tr>
+                    <th class="">Personel</th>
+                    <th></th>
+                    <th class="w-4"></th>
+                    <th class="w-4"></th>
+                </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
     </div>
 
 @endsection

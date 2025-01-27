@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="w-full overflow-auto hidden-scroll">
+    <div class="w-full overflow-x-auto">
         <table id="etkinlikler" class="display nowrap stripe">
             <thead>
                 <tr>

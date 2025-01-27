@@ -1,4 +1,4 @@
-<aside class="sticky top-16 z-10 w-80">
+<aside class="sticky z-10 w-full lg:w-80 collapsible-menu" style="top:56px">
     <nav class="flex flex-col p-4 text-sm" id="aside-nav">
         <div class="gradient-aside rounded p-2">
             @foreach ($menuler as $menu)
@@ -13,7 +13,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
-                    <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-content">
+                    <ul class="pl-11 max-h-0 overflow-hidden duration-300 accordion-content border-r-2 border-emerald-500">
                         @foreach ($menu->children as $submenu)
                             <li>
                                 @if ($submenu->children->count() > 0)

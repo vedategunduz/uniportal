@@ -9,9 +9,12 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Personel\PersonelController;
 use App\Http\Controllers\Yonetim\EventController;
 use App\Http\Controllers\ResimController;
+use App\Http\Controllers\Toplanti\ToplantiController;
+use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
 
@@ -26,11 +29,23 @@ Route::prefix('api')->name('api.')->group(function () {
             Route::post('/{id}', [EventController::class, 'modalGetir']);
             Route::post('sil/{id}', [EventController::class, 'silmeModalGetir']);
         });
+
         Route::prefix('kullanicilar')->group(function () {
             // Kullanici id'si ve işletme id'si form ile gönderilecek
             Route::post('/', [KullaniciController::class, 'silmeModalGetir']);
             Route::post('birimden-cikart', [KullaniciController::class, 'birimdenCikarModalGetir']);
             Route::post('detay/{id}', [KullaniciController::class, 'detayModalGetir']);
+        });
+
+        Route::prefix('toplantilar')->group(function () {
+
+            Route::prefix('ziyaret')->group(function () {
+                Route::prefix('talep')->group(function () {
+                    Route::post('/', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
+                    Route::post('personeller', [ZiyaretController::class, 'personeller']);
+                    Route::post('personel-card', [ZiyaretController::class, 'personelCard']);
+                });
+            });
         });
     });
 
@@ -86,6 +101,10 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::get('/show/{isletmeler_id}', [EventController::class, 'getDataTableDatas'])->name('show');
         });
 
+        Route::prefix('toplantilar')->name('toplantilar.')->group(function () {
+            Route::get('/ziyaret-talep', [ToplantiController::class, 'ziyaretTalep']);
+        });
+
         Route::prefix('kullanicilar')->name('kullanicilar.')->group(function () {
             Route::get('/', [KullaniciController::class, 'index']);
         });
@@ -101,6 +120,8 @@ Route::prefix('editor')->name('editor.')->group(function () {
         Route::post('upload', [EditorController::class, 'imageUpload'])->name('yukle');
     });
 });
+
+Route::get('/sendMail', [MailController::class, 'sendMail']);
 
 // Giriş rota grubu
 Route::prefix('giris')->name('giris.')->group(function () {

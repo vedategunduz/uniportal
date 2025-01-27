@@ -62,6 +62,7 @@ a {
 }
 
 a:not(.underline) {
+
     &:hover,
     &:focus {
         text-decoration: none !important;
@@ -176,7 +177,7 @@ label {
     background: #555;
 }
 
-.group input:checked + label {
+.group input:checked+label {
     color: #3b82f6;
 
     img {
@@ -201,12 +202,10 @@ label {
     left: -150%;
     height: 100%;
     width: 150%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
     animation: loading 1.5s infinite;
 }
 
@@ -248,14 +247,12 @@ label {
 }
 
 .gradient-aside {
-    height: calc(100vh - 2rem - 64px);
+    height: calc(100vh - 96px);
     overflow-y: auto;
 
-    background: linear-gradient(
-            135deg,
+    background: linear-gradient(135deg,
             rgba(13, 94, 201, 0.9) 10%,
-            rgba(28, 182, 248, 0.9) 100%
-        ),
+            rgba(28, 182, 248, 0.9) 100%),
         url('../image/bg-navbar.png') center/cover no-repeat;
 
     a,
@@ -294,8 +291,17 @@ label {
     interpolate-size: allow-keywords;
 }
 
+.collapsible-menu {
+    display: block;
+}
 
-@media screen and (min-width: 768px) {
+@media screen and (max-width: 1023.98px) {
+    .collapsible-menu:not(.show) {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1024px) {
     .aside-padding {
         padding-left: 21rem;
     }

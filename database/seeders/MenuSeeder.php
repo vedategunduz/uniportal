@@ -111,7 +111,7 @@ class MenuSeeder extends Seeder
                 ],
                 // 14
                 [
-                    'menuAd'           => 'Toplantılar',
+                    'menuAd'           => 'Toplantılar/Ziyaretler',
                     'menuLink'         => '/',
                     'menuSira'         => 600,
                     'menuIcon'         => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-briefcase-fill size-4 pointer-events-none" viewBox="0 0 16 16"><path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5"/><path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85z"/></svg>',
@@ -300,6 +300,14 @@ class MenuSeeder extends Seeder
                     'menuSira'         => 20,
                     'menuIcon'         => '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stack-overflow size-4 pointer-events-none" viewBox="0 0 16 16"><path d="M12.412 14.572V10.29h1.428V16H1v-5.71h1.428v4.282z"/><path d="M3.857 13.145h7.137v-1.428H3.857zM10.254 0 9.108.852l4.26 5.727 1.146-.852zm-3.54 3.377 5.484 4.567.913-1.097L7.627 2.28l-.914 1.097zM4.922 6.55l6.47 3.013.603-1.294-6.47-3.013zm-.925 3.344 6.985 1.469.294-1.398-6.985-1.468z"/></svg>',
                     'bagli_menuler_id' => null,
+                ],
+                // 38
+                [
+                    'menuAd'           => 'Ziyaret talep',
+                    'menuLink'         => '/yonetim/toplantilar/ziyaret-talep',
+                    'menuSira'         => 605,
+                    'menuIcon'         => '',
+                    'bagli_menuler_id' => 14,
                 ],
             ]
         );

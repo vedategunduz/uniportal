@@ -42,7 +42,7 @@ class ViewServiceProvider extends ServiceProvider
 
                 $menuler = Menu::whereNull('bagli_menuler_id')
                     ->with('children')
-                    ->orderBy('menuSira') // sıraya göre listelemek için
+                    ->orderBy('menuSira', 'asc') // sıraya göre listelemek için
                     ->get();
 
                 $view->with(compact('menuler', 'isletmeler'));

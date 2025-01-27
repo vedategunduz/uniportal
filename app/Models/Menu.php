@@ -30,7 +30,7 @@ class Menu extends Model
     public function children()
     {
         return $this->hasMany(Menu::class, 'bagli_menuler_id', 'menuler_id')
-            ->with('children');
+            ->with('children')->orderBy('menuSira', 'asc');
         // Burada ->with('children') ekleyerek, çok seviyeli iç içe menülerde
         // altın da altını otomatik olarak çekebiliriz (recursive eager loading).
     }

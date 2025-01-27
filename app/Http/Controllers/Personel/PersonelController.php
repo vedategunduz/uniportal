@@ -20,8 +20,6 @@ class PersonelController extends Controller
 
         $sonGirisler = $kullanici->sonGirisler()->get();
 
-
-
         return view('personel.profil', [
             'kullanici' => $kullanici,
             'birimDetaylari' => $birimDetaylari,

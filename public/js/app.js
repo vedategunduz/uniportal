@@ -338,3 +338,8 @@ function getDataTableDatas(datatable_id, url) {
         },
     });
 }
+
+document.querySelector('.burger-menu')?.addEventListener('click', function () {
+    document.querySelector('.collapsible-menu').classList.toggle('show');
+    document.body.classList.toggle('overflow-hidden');
+});

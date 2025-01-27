@@ -3,7 +3,7 @@
 @section('title', 'User dashboard')
 
 @section('content')
-    <div class="max-w-screen-xl mx-auto grid grid-cols-2 border rounded">
+    <div class=" grid grid-cols-2 border rounded">
         <div class="border-r p-4">
             <section class="grid grid-cols-2">
                 <div class="space-y-4 flex flex-col items-center text-center">
