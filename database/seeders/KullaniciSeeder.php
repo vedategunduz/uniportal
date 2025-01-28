@@ -43,5 +43,14 @@ class KullaniciSeeder extends Seeder
             'telefon'       => '0532 123 45 67',
             'profilFotoUrl' => 'https://avatars.githubusercontent.com/u/94452068?v=4'
         ]);
+        Kullanici::create([
+            'roller_id'     => 3,
+            'ad'            => 'Emre',
+            'soyad'         => 'Gündüz',
+            'email'         => 'vgunduz12@nku.edu.tr',
+            'password'      => '12345600',
+            'telefon'       => '0532 123 45 67',
+            'profilFotoUrl' => 'https://avatars.githubusercontent.com/u/94452068?v=4'
+        ]);
     }
 }

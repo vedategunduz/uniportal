@@ -69,33 +69,51 @@
             }
             await getModal();
 
-            const SELECTED_PERSONEL = document.querySelector('#selectedPersonel');
-            const CREATED_ISLETME   = document.querySelector('#olusturan_isletmeler_id');
-            const SEARCH            = document.querySelector('#search');
-            const PERSONEL_COTAINER = document.querySelector('#gidecekPersoneller');
-            let selectedPersonelEmails = [];
+            const submit = document.querySelector('button[type="submit"]');
 
-            async function createPersonelCard(id) {
+            // Ziyaret Ekibi
+            let selectedGidenPersonelEmails = [];
+            const SELECTED_PERSONEL = document.querySelector('#selectedPersonel');
+            const CREATED_ISLETME = document.querySelector('#olusturan_isletmeler_id');
+            const SEARCH = document.querySelector('#search');
+            const PERSONEL_COTAINER = document.querySelector('#gidecekPersoneller');
+
+            // Gidilen Kurum
+            let selectedGidilecekPersonelEmails = [];
+            const OTHER_SEARCH = document.querySelector('#otherSearch');
+            const ISLETME = document.querySelector('#gidilen_isletmeler_id');
+            const ARAMA_CONTAINER = document.querySelector('#gidilecekPersoneller');
+            const SELECTED_GIDILECEK_PERSONEL = document.querySelector('#selectedGidilecekPersonel');
+
+            async function createPersonelCard(id, list, container, isDavetci = false) {
                 const formData = new FormData();
                 formData.append('kullanicilar_id', id);
 
-                const RESPONSE_DATA =
-                    await fetchData('api/modal/toplantilar/ziyaret/talep/personel-card', formData, true);
+                let URL = 'api/modal/toplantilar/ziyaret/talep/personel-card';
+
+
+                if (isDavetci) {
+                    URL += '/davetci';
+                }
+
+                const RESPONSE_DATA = await fetchData(URL, formData, true);
 
                 if (RESPONSE_DATA.success) {
-                    SELECTED_PERSONEL.innerHTML += RESPONSE_DATA.html;
-                    selectedPersonelEmails.push(RESPONSE_DATA.email);
+                    container.innerHTML += RESPONSE_DATA.html;
+                    list.push(RESPONSE_DATA.email);
                 } else {
                     errorAlert(RESPONSE_DATA.message);
                 }
             }
-            await createPersonelCard('{{ encrypt(Auth::user()->kullanicilar_id) }}');
+            await createPersonelCard('{{ encrypt(Auth::user()->kullanicilar_id) }}',
+                selectedGidenPersonelEmails, SELECTED_PERSONEL);
 
             async function getPersonel() {
                 const formData = new FormData();
 
                 formData.append('isletmeler_id', CREATED_ISLETME.value);
                 formData.append('search', SEARCH.value);
+                selectedGidenPersonelEmails.forEach(item => formData.append('searchNot[]', item));
 
                 const RESPONSE_DATA =
                     await fetchData('api/modal/toplantilar/ziyaret/talep/personeller', formData, true);
@@ -106,10 +124,46 @@
                     const checkboxes = PERSONEL_COTAINER.querySelectorAll('input[type="checkbox"]');
                     checkboxes.forEach((checkbox) => {
                         checkbox.addEventListener('change', () => {
-                            createPersonelCard(checkbox.value);
+                            if (checkbox.checked) {
+                                createPersonelCard(checkbox.value,
+                                    selectedGidenPersonelEmails, SELECTED_PERSONEL);
+                                checkbox.closest('.flex').remove();
+                            }
                         });
 
-                        if (selectedPersonelEmails.includes(checkbox.dataset.email)) {
+                        if (selectedGidenPersonelEmails.includes(checkbox.dataset.email)) {
+                            checkbox.checked = true;
+                        }
+                    });
+                } else
+                    errorAlert(RESPONSE_DATA.message);
+            }
+
+            async function getYonetici() {
+                const formData = new FormData();
+
+                formData.append('isletmeler_id', ISLETME.value);
+                formData.append('search', OTHER_SEARCH.value);
+
+                const RESPONSE_DATA =
+                    await fetchData('api/modal/toplantilar/ziyaret/talep/personeller/yonetici', formData,
+                        true);
+
+                if (RESPONSE_DATA.success) {
+                    ARAMA_CONTAINER.innerHTML = RESPONSE_DATA.html;
+
+                    const checkboxes = ARAMA_CONTAINER.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach((checkbox) => {
+                        checkbox.addEventListener('change', () => {
+                            if (checkbox.checked) {
+                                createPersonelCard(checkbox.value,
+                                    selectedGidilecekPersonelEmails,
+                                    SELECTED_GIDILECEK_PERSONEL, true);
+                                checkbox.closest('.flex').remove();
+                            }
+                        });
+
+                        if (selectedGidilecekPersonelEmails.includes(checkbox.dataset.email)) {
                             checkbox.checked = true;
                         }
                     });
@@ -121,6 +175,33 @@
                 await getPersonel();
             });
 
+            submit.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(submit.closest('form'));
+
+                console.log(Object.fromEntries(formData));
+
+                const RESPONSE_DATA = await fetchData('api/modal/toplantilar/ziyaret/talep/olustur',
+                    formData, true);
+
+                if (RESPONSE_DATA.success) {
+                    successAlert(RESPONSE_DATA.message);
+                } else {
+                    errorAlert(RESPONSE_DATA.message);
+                }
+            })
+
+            ISLETME.addEventListener('change', async () => {
+                if (ISLETME.value != "") {
+                    ISLETME.nextElementSibling.disabled = false;
+                    ISLETME.nextElementSibling.placeholder = "Ara...";
+                } else {
+                    ISLETME.nextElementSibling.disabled = true;
+                    ISLETME.nextElementSibling.placeholder = "Kurum seçiniz";
+                }
+            });
+
             SEARCH.addEventListener('input', async () => {
                 if (SEARCH.value.length < 3) {
                     PERSONEL_COTAINER.innerHTML = '';
@@ -128,6 +209,32 @@
                 }
                 await getPersonel();
             });
+
+            OTHER_SEARCH.addEventListener('input', async () => {
+                if (OTHER_SEARCH.value.length < 3) {
+                    ARAMA_CONTAINER.innerHTML = '';
+                    return;
+                }
+                await getYonetici();
+            })
+
+            SELECTED_PERSONEL.addEventListener('click', function(event) {
+                if (event.target.matches('.removeSelectedGidenPersonelEmail')) {
+                    event.target.closest('.flex').remove();
+                    selectedGidenPersonelEmails = selectedGidenPersonelEmails.filter(
+                        email => email !== event.target.dataset.email
+                    );
+                }
+            })
+
+            SELECTED_GIDILECEK_PERSONEL.addEventListener('click', function(event) {
+                if (event.target.matches('.removeSelectedDavetPersonelEmail')) {
+                    event.target.closest('.flex').remove();
+                    selectedGidilecekPersonelEmails = selectedGidilecekPersonelEmails.filter(
+                        email => email !== event.target.dataset.email
+                    );
+                }
+            })
         });
     </script>
 @endsection

@@ -34,5 +34,9 @@ class IsletmeYetkiliSeeder extends Seeder
             'kullanicilar_id' => 4,
             'isletmeler_id'   => 143,
         ]);
+        IsletmeYetkili::create([
+            'kullanicilar_id' => 5,
+            'isletmeler_id'   => 1,
+        ]);
     }
 }

@@ -3,23 +3,22 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrnekMail extends Mailable
+class DenemeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-
-    public $text;
     /**
      * Create a new message instance.
      */
-    public function __construct($text)
+    public function __construct()
     {
-        $this->text = $text;
+        //
     }
 
     /**
@@ -28,7 +27,7 @@ class OrnekMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ornek Mail',
+            subject: 'Deneme Mail',
         );
     }
 
@@ -38,7 +37,7 @@ class OrnekMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail'
+            view: 'mail.deneme-mail',
         );
     }
 

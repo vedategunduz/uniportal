@@ -86,6 +86,10 @@ input[type='checkbox']:focus {
     outline: none;
 }
 
+button * {
+    pointer-events: none !important;
+}
+
 @keyframes zoomIn {
     from {
         transform: scale(0.7);
@@ -149,6 +153,7 @@ label {
 
     .modal-content {
         /* width: 100%; */
+        height: max-content;
         overflow: auto;
         margin: 0 auto;
         background-color: #fff;

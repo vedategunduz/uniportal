@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id('etkinlik_katilimlari_id');
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
             $table->unsignedBigInteger('kullanicilar_id')->nullable();
-            $table->unsignedBigInteger('isletmeler_id');
+            $table->unsignedBigInteger('isletmeler_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
             $table->timestamps();
         });
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('etkinlik_katilimlari_id');
             $table->integer('etkinlikler_id')->nullable();
             $table->integer('kullanicilar_id')->nullable();
-            $table->integer('isletmeler_id');
+            $table->integer('isletmeler_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
             $table->char('yapilanIslem', 1);
             $table->timestamps();

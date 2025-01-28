@@ -25,14 +25,23 @@ class KullaniciBirimUnvan extends Model
         return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
+    public function IzinliKullanici()
+    {
+        return $this
+            ->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id')
+            ->where('veriGosterimIzni', 1)
+            ->where('aktiflik', 1)
+            ->orderBy('ad', 'asc');
+    }
+
     public function unvan()
     {
-        return $this->belongsTo(Unvan::class, 'unvanlar_id', 'unvanlar_id');
+        return $this->belongsTo(Unvan::class, 'unvanlar_id', 'unvanlar_id')->where('aktiflik', 1);
     }
 
     public function birim()
     {
-        return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id');
+        return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id')->where('aktiflik', 1);
     }
 
     public static function personelinBirimleri($kullanicilar_id)

@@ -42,8 +42,17 @@ Route::prefix('api')->name('api.')->group(function () {
             Route::prefix('ziyaret')->group(function () {
                 Route::prefix('talep')->group(function () {
                     Route::post('/', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
-                    Route::post('personeller', [ZiyaretController::class, 'personeller']);
-                    Route::post('personel-card', [ZiyaretController::class, 'personelCard']);
+                    Route::post('/olustur', [ZiyaretController::class, 'store']);
+
+                    Route::prefix('personeller')->group(function () {
+                        Route::post('/', [ZiyaretController::class, 'personeller']);
+                        Route::post('/yonetici', [ZiyaretController::class, 'kurumPersoneller']);
+                    });
+
+                    Route::prefix('personel-card')->group(function () {
+                        Route::post('/', [ZiyaretController::class, 'personelCard']);
+                        Route::post('davetci', [ZiyaretController::class, 'kurumPersonelCard']);
+                    });
                 });
             });
         });
@@ -64,6 +73,8 @@ Route::prefix('api')->name('api.')->group(function () {
         Route::post('guncelle', [EventController::class, 'update']);
         Route::post('sil', [EventController::class, 'etkinlikSil']);
         Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
+
+        // Route::get('/katilim/{parametre}', [])
     });
 });
 
@@ -120,8 +131,6 @@ Route::prefix('editor')->name('editor.')->group(function () {
         Route::post('upload', [EditorController::class, 'imageUpload'])->name('yukle');
     });
 });
-
-Route::get('/sendMail', [MailController::class, 'sendMail']);
 
 // Giriş rota grubu
 Route::prefix('giris')->name('giris.')->group(function () {

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('etkinlikler_id');
             $table->unsignedBigInteger('etkinlik_turleri_id');
             $table->unsignedBigInteger('isletmeler_id');
-            $table->unsignedBigInteger('iller_id');
+            $table->unsignedBigInteger('iller_id')->nullable();
             $table->integer('kontenjan')->nullable();
             $table->timestamp('etkinlikBasvuruTarihi')->nullable();
             $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->integer('etkinlikler_id');
             $table->integer('etkinlik_turleri_id');
             $table->integer('isletmeler_id');
-            $table->integer('iller_id');
+            $table->integer('iller_id')->nullable();
             $table->integer('kontenjan')->nullable();
             $table->timestamp('etkinlikBasvuruTarihi')->nullable();
             $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();

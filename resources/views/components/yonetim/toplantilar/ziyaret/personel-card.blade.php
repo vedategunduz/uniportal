@@ -1,7 +1,6 @@
-<input type="hidden" name="kullanicilar_id[]" value="{{ encrypt($kullanici->kullanicilar_id) }}">
-
 <div class="flex items-center gap-2">
-    <img src="{{ $kullanici->profilFotoUrl }}" class="size-14 rounded-full" alt="">
+    <input type="hidden" name="kullanicilar_id[]" value="{{ encrypt($kullanici->kullanicilar_id) }}">
+    <img src="{{ $kullanici->profilFotoUrl }}" class="size-14 object-contain rounded-full" alt="">
 
     <div class="flex flex-col">
         <span class="font-semibold">{{ $kullanici->ad . ' ' . $kullanici->soyad }}</span>
@@ -9,7 +8,7 @@
         <span class="text-xs text-gray-500">{{ $kullanici->email }}</span>
     </div>
 
-    <button type="button" class="ml-auto" onclick="this.closest('.flex').remove()">
+    <button type="button" class="ml-auto removeSelectedGidenPersonelEmail" data-email="{{ $kullanici->email }}">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x size-6"
             viewBox="0 0 16 16">
             <path

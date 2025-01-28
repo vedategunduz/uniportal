@@ -8,18 +8,27 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrnekMail extends Mailable
+class ZiyaretTalebiMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-
-    public $text;
+    public $kurumBaslik;
+    public $baslik;
+    public $kullanicilar;
+    public $etkinlikBaslamaTarihi;
+    public $etkinlikBitisTarihi;
+    public $aciklama;
     /**
      * Create a new message instance.
      */
-    public function __construct($text)
+    public function __construct($kurumBaslik, $baslik, $kullanicilar, $etkinlikBaslamaTarihi, $etkinlikBitisTarihi, $aciklama)
     {
-        $this->text = $text;
+        $this->kurumBaslik = $kurumBaslik;
+        $this->baslik = $baslik;
+        $this->kullanicilar = $kullanicilar;
+        $this->etkinlikBaslamaTarihi = $etkinlikBaslamaTarihi;
+        $this->etkinlikBitisTarihi = $etkinlikBitisTarihi;
+        $this->aciklama = $aciklama;
     }
 
     /**
@@ -28,7 +37,7 @@ class OrnekMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ornek Mail',
+            subject: 'Ziyaret Talebi Mail',
         );
     }
 
@@ -38,7 +47,7 @@ class OrnekMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail'
+            view: 'mail.ziyaret-talebi-mail',
         );
     }
 
