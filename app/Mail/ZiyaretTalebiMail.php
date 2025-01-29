@@ -14,6 +14,7 @@ class ZiyaretTalebiMail extends Mailable
 
     public $kurumBaslik;
     public $baslik;
+    public $etkinlikler_id;
     public $kullanicilar;
     public $etkinlikBaslamaTarihi;
     public $etkinlikBitisTarihi;
@@ -21,10 +22,11 @@ class ZiyaretTalebiMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct($kurumBaslik, $baslik, $kullanicilar, $etkinlikBaslamaTarihi, $etkinlikBitisTarihi, $aciklama)
+    public function __construct($kurumBaslik, $baslik, $etkinlikler_id, $kullanicilar, $etkinlikBaslamaTarihi, $etkinlikBitisTarihi, $aciklama)
     {
         $this->kurumBaslik = $kurumBaslik;
         $this->baslik = $baslik;
+        $this->etkinlikler_id = $etkinlikler_id;
         $this->kullanicilar = $kullanicilar;
         $this->etkinlikBaslamaTarihi = $etkinlikBaslamaTarihi;
         $this->etkinlikBitisTarihi = $etkinlikBitisTarihi;

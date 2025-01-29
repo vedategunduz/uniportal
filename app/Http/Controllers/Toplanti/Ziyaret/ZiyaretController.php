@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\OrnekMail;
 use App\Mail\ZiyaretTalebiMail;
 use App\Models\Etkinlik;
+use App\Models\EtkinlikKatilim;
 use Illuminate\Http\Request;
 use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
@@ -192,7 +193,7 @@ class ZiyaretController extends Controller
             $validated['isletmeler_id']       = decrypt($request->olusturan_isletmeler_id);
             $validated['etkinlik_turleri_id'] = 9;
 
-            Etkinlik::create($validated);
+            $etkinlik = Etkinlik::create($validated);
 
             $ids = array_map('decrypt', $validated['kullanicilar_id']);
             $gidecekKullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
@@ -207,14 +208,34 @@ class ZiyaretController extends Controller
                     ->send(
                         new ZiyaretTalebiMail(
                             $isletme->baslik,
-                            $request->baslik,
+                            $validated['baslik'],
+                            $etkinlik->etkinlikler_id,
                             $gidecekKullanicilar,
-                            $request->etkinlikBaslamaTarihi,
-                            $request->etkinlikBitisTarihi,
-                            $request->aciklama
+                            $validated['etkinlikBaslamaTarihi'],
+                            $validated['etkinlikBitisTarihi'],
+                            $validated['aciklama']
                         )
                     );
+                EtkinlikKatilim::create([
+                    'etkinlikler_id' => $etkinlik->etkinlikler_id,
+                    'kullanicilar_id' => $kullanici->kullanicilar_id,
+                    'isletmeler_id' => $validated['isletmeler_id'],
+                    'durum' => 'beklemede',
+                    'katilimciTipi' => 'davetli'
+                ]);
             }
+
+            foreach ($gidecekKullanicilar as $kullanici) {
+                // Mail taslağı oluştur davet eden için
+                EtkinlikKatilim::create([
+                    'etkinlikler_id' => $etkinlik->etkinlikler_id,
+                    'kullanicilar_id' => $kullanici->kullanicilar_id,
+                    'isletmeler_id' => $validated['isletmeler_id'],
+                    'durum' => 'beklemede',
+                    'katilimciTipi' => 'davetEden'
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Ziyaret talebi başarıyla oluşturuldu.'

@@ -9,6 +9,7 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\Katilim\ZiyaretKatilimController;
 use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Personel\PersonelController;
 use App\Http\Controllers\Yonetim\EventController;
@@ -74,7 +75,10 @@ Route::prefix('api')->name('api.')->group(function () {
         Route::post('sil', [EventController::class, 'etkinlikSil']);
         Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
 
-        // Route::get('/katilim/{parametre}', [])
+        Route::prefix('katilim')->name('katilim.')->group(function () {
+            Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
+            Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');
+        });
     });
 });
 

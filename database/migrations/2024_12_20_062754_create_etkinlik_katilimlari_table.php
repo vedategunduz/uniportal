@@ -19,7 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
             $table->unsignedBigInteger('kullanicilar_id')->nullable();
             $table->unsignedBigInteger('isletmeler_id')->nullable();
-            $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
+            $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
+            $table->enum('katilimciTipi', ['davetli', 'davetEden', 'katilimci']);
             $table->timestamps();
         });
 
@@ -30,7 +31,8 @@ return new class extends Migration
             $table->integer('etkinlikler_id')->nullable();
             $table->integer('kullanicilar_id')->nullable();
             $table->integer('isletmeler_id')->nullable();
-            $table->enum('durum', ['beklemede', 'onaylandi', 'iptal']);
+            $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
+            $table->enum('katilimciTipi', ['davetli', 'davetEden', 'katilimci']);
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
@@ -46,6 +48,7 @@ return new class extends Migration
                     kullanicilar_id,
                     isletmeler_id,
                     durum,
+                    katilimciTipi,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -58,6 +61,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.isletmeler_id,
                     NEW.durum,
+                    NEW.katilimciTipi,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -78,6 +82,7 @@ return new class extends Migration
                     kullanicilar_id,
                     isletmeler_id,
                     durum,
+                    katilimciTipi,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -90,6 +95,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.isletmeler_id,
                     NEW.durum,
+                    NEW.katilimciTipi,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,

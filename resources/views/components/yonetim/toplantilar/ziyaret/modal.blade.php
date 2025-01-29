@@ -41,7 +41,7 @@
         </div>
 
         <div class="">
-            <textarea id="aciklama" rows="4"
+            <textarea id="aciklama" name="aciklama" rows="4"
                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Ziyaret bilgisi..."></textarea>
         </div>

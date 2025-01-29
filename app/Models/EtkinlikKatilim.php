@@ -20,6 +20,7 @@ class EtkinlikKatilim extends Model
         'kullanicilar_id',
         'isletmeler_id',
         'durum',
+        'katilimciTipi'
     ];
 
     // Durum ENUM => ['beklemede', 'onaylandi', 'iptal']
