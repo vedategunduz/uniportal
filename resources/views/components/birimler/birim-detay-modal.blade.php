@@ -14,15 +14,33 @@
     }
 @endphp
 
-<form action="" method="POST" id="birimDetayForm">
-    <div class="mb-2">
-        <label for="baslik">Birim adı</label>
-        <input type="text" id="baslik" name="baslik" value="{{ $baslik }}"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-        <input type="hidden" name="isletme_birimleri_id" value="{{ encrypt($isletme_birimleri_id) }}">
+<header class="flex items-center justify-between bg-blue-700 text-white px-6 py-3 rounded-t">
+    <div>
+        <h2 class="font-medium text-lg text-white"> Birim İşlemleri </h2>
+    </div>
+    <button class="close-modal" data-modal="modal">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+            class="size-5 pointer-events-none">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+    </button>
+</header>
+
+<div class="ozelBoyut"></div>
+
+<form action="" method="POST" id="birimDetayForm" class="p-6">
+    <input type="hidden" name="isletme_birimleri_id" value="{{ encrypt($isletme_birimleri_id) }}">
+    {{-- INPUT Etkinlik başlığı --}}
+    <div class="relative">
+        <input type="text" name="baslik" id="baslik"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-transparent rounded border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            placeholder=" " value="{{ $baslik }}" />
+        <label for="baslik"
+            class="absolute text-sm font-medium text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">
+            Birim adı
+        </label>
     </div>
     <div class="mb-2">
-        <label for="birim_tipleri_id">Bağlı olduğu birim</label>
         <select name="birim_tipleri_id" id="birim_tipleri_id"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             <option value="">Birim türü</option>

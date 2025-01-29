@@ -32,7 +32,7 @@ class KullaniciSeeder extends Seeder
             'email'         => 'gsenlik@nku.edu.tr',
             'password'      => '12345600',
             'telefon'       => '0532 123 45 67',
-            'profilFotoUrl' => '//bidb.nku.edu.tr/resim.php?no=2641'
+            'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=2641'
         ]);
         Kullanici::create([
             'roller_id'     => 3,

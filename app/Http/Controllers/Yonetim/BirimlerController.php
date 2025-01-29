@@ -166,28 +166,30 @@ class BirimlerController extends Controller
         ], 200);
     }
 
-    public function getTable()
+    public function getTable($isletmeler_id)
     {
-        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
+        $isletmeler = decrypt($isletmeler_id);
 
-        $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
+        $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir([$isletmeler]);
+
+        $data = [];
 
         foreach ($isletmeBirimleri as $rowBirim) {
             $row = array();
 
-            $row[] = '<div class="flex items-center justify-between gap-4"><span>' . $rowBirim->baslik . '</span><span class="inline-block text-white font-medium me-2 px-2 py-0.5 rounded border ' . $rowBirim->isletmeBirimTipi->CSSClass . ' "  style="font-size:11px">' . $rowBirim->isletmeBirimTipi->baslik . '</span></div>';
+            $row[] = '<div class="flex items-center justify-between gap-4" style="font-size: 14px"><span>' . $rowBirim->isletme_birimleri_id . ' ' . $rowBirim->baslik . '</span><span class="inline-block text-white font-medium me-2 px-2 py-0.5 rounded border ' . $rowBirim->isletmeBirimTipi->CSSClass . ' "  style="font-size:11px">' . $rowBirim->isletmeBirimTipi->baslik . '</span></div>';
             $personelBilgileri = "";
             $birimPersonelleri = (new IsletmeBirim())->isletmeBirimPersonelBul($rowBirim->isletme_birimleri_id);
             $personelBilgileri .= '<div class="flex sm:24 lg:w-96 flex-wrap">';
             foreach ($birimPersonelleri as $rowPersonel) {
                 $sifreli_kullanici_birim_unvan_iliskileri_id = encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id);
-                $personelBilgileri .= '<img data-person-id="' . $sifreli_kullanici_birim_unvan_iliskileri_id . '" src="' . $rowPersonel->kullanici->profilFotoUrl . '" class="rounded-full size-10 shadow" alt="" data-popover-target="popover-default_' . $sifreli_kullanici_birim_unvan_iliskileri_id . '">';
+                $personelBilgileri .= '<img data-person-id="' . $sifreli_kullanici_birim_unvan_iliskileri_id . '" src="' . $rowPersonel->kullanici->profilFotoUrl . '" class="rounded-full size-9 shadow" alt="" data-popover-target="popover-default_' . $sifreli_kullanici_birim_unvan_iliskileri_id . '">';
                 $personelBilgileri .= '
                 <div data-popover id="popover-default_' . $sifreli_kullanici_birim_unvan_iliskileri_id . '"
                         role="tooltip"
                         class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
                         <div class="p-3">
-                            <div class="text-sm font-semibold leading-none text-gray-900 dark:text-white mb-3">
+                            <div class="font-semibold leading-none text-gray-900 dark:text-white mb-3" style="font-size: 14px">
                                 ' . $rowBirim->baslik . '
                             </div>
                             <div class="flex items-center justify-between mb-2">

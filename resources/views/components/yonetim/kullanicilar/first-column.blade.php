@@ -1,4 +1,4 @@
-<div class="flex">
+<div class="flex w-60">
     <img src="{{ $personel->profilFotoUrl }}" class="size-16 rounded" alt="">
 
     <div class="flex flex-col ms-2">

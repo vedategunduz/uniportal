@@ -1,5 +1,5 @@
 <aside class="sticky z-10 w-full lg:w-80 collapsible-menu" style="top:56px">
-    <nav class="flex flex-col p-4 text-sm" id="aside-nav">
+    <nav class="flex flex-col p-4" id="aside-nav">
         <div class="gradient-aside rounded p-2">
             @foreach ($menuler as $menu)
                 @if ($menu->children->count() > 0)

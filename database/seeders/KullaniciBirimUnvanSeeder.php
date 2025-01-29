@@ -32,6 +32,11 @@ class KullaniciBirimUnvanSeeder extends Seeder
                 'kullanicilar_id'      => 3,
                 'isletme_birimleri_id' => 42,
                 'unvanlar_id'          => 3
+            ],
+            [
+                'kullanicilar_id'      => 5,
+                'isletme_birimleri_id' => 70,
+                'unvanlar_id'          => 3
             ]
         ]);
     }

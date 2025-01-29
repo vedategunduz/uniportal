@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Toplanti\Ziyaret;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ZiyaretRequest;
 use App\Mail\OrnekMail;
 use App\Mail\ZiyaretTalebiMail;
 use App\Models\Etkinlik;
@@ -12,6 +13,7 @@ use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
 use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -185,67 +187,58 @@ class ZiyaretController extends Controller
         return $this->createDavetCard($decryptedId);
     }
 
-    public function store(Request $request)
+    public function store(ZiyaretRequest $request)
     {
-        try {
-            // $this->sendMails();
-            $validated = $request->all();
-            $validated['isletmeler_id']       = decrypt($request->olusturan_isletmeler_id);
-            $validated['etkinlik_turleri_id'] = 9;
+        $validated = $request->all();
+        $validated['isletmeler_id'] = decrypt($request->olusturan_isletmeler_id);
+        $validated['etkinlik_turleri_id'] = 13;
 
-            $etkinlik = Etkinlik::create($validated);
+        $etkinlik = Etkinlik::create($validated);
 
-            $ids = array_map('decrypt', $validated['kullanicilar_id']);
-            $gidecekKullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
+        $ids = array_map('decrypt', $validated['kullanicilar_id']);
+        $gidecekKullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
 
-            $ids = array_map('decrypt', $validated['davet_kullanicilar_id']);
-            $kullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
+        $ids = array_map('decrypt', $validated['davet_kullanicilar_id']);
+        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
 
-            $isletme = Isletme::find($validated['isletmeler_id']);
+        $isletme = Isletme::find($validated['isletmeler_id']);
 
-            foreach ($kullanicilar as $kullanici) {
-                Mail::to($kullanici->email)
-                    ->send(
-                        new ZiyaretTalebiMail(
-                            $isletme->baslik,
-                            $validated['baslik'],
-                            $etkinlik->etkinlikler_id,
-                            $gidecekKullanicilar,
-                            $validated['etkinlikBaslamaTarihi'],
-                            $validated['etkinlikBitisTarihi'],
-                            $validated['aciklama']
-                        )
-                    );
-                EtkinlikKatilim::create([
-                    'etkinlikler_id' => $etkinlik->etkinlikler_id,
-                    'kullanicilar_id' => $kullanici->kullanicilar_id,
-                    'isletmeler_id' => $validated['isletmeler_id'],
-                    'durum' => 'beklemede',
-                    'katilimciTipi' => 'davetli'
-                ]);
-            }
-
-            foreach ($gidecekKullanicilar as $kullanici) {
-                // Mail taslağı oluştur davet eden için
-                EtkinlikKatilim::create([
-                    'etkinlikler_id' => $etkinlik->etkinlikler_id,
-                    'kullanicilar_id' => $kullanici->kullanicilar_id,
-                    'isletmeler_id' => $validated['isletmeler_id'],
-                    'durum' => 'beklemede',
-                    'katilimciTipi' => 'davetEden'
-                ]);
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Ziyaret talebi başarıyla oluşturuldu.'
-            ], 201);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => $th->getMessage()
-            ], 500);
-            Log::error($th->getMessage());
+        foreach ($kullanicilar as $kullanici) {
+            Mail::to($kullanici->email)
+                ->send(
+                    new ZiyaretTalebiMail(
+                        $isletme->baslik,
+                        $validated['baslik'],
+                        $etkinlik->etkinlikler_id,
+                        $gidecekKullanicilar,
+                        $validated['etkinlikBaslamaTarihi'],
+                        $validated['etkinlikBitisTarihi'],
+                        $validated['aciklama']
+                    )
+                );
+            EtkinlikKatilim::create([
+                'etkinlikler_id' => $etkinlik->etkinlikler_id,
+                'kullanicilar_id' => $kullanici->kullanicilar_id,
+                'isletmeler_id' => $validated['isletmeler_id'],
+                'durum' => 'beklemede',
+                'katilimciTipi' => 'davetli'
+            ]);
         }
+
+        foreach ($gidecekKullanicilar as $kullanici) {
+            // Mail taslağı oluştur davet eden için
+            EtkinlikKatilim::create([
+                'etkinlikler_id' => $etkinlik->etkinlikler_id,
+                'kullanicilar_id' => $kullanici->kullanicilar_id,
+                'isletmeler_id' => $validated['isletmeler_id'],
+                'durum' => 'beklemede',
+                'katilimciTipi' => 'davetEden'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ziyaret talebi başarıyla oluşturuldu.'
+        ], 201);
     }
 }

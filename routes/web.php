@@ -10,7 +10,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\Katilim\ZiyaretKatilimController;
-use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Personel\PersonelController;
 use App\Http\Controllers\Yonetim\EventController;
 use App\Http\Controllers\ResimController;
@@ -26,6 +25,13 @@ Route::prefix('/')->name('main.')->group(function () {
 Route::prefix('api')->name('api.')->group(function () {
 
     Route::prefix('modal')->name('modal.')->group(function () {
+
+        Route::prefix('yonetim')->group(function () {
+            Route::prefix('birimler')->group(function () {
+                Route::post('/{id}', [BirimlerController::class, 'getModal']);
+            });
+        });
+
         Route::prefix('etkinlik')->group(function () {
             Route::post('/{id}', [EventController::class, 'modalGetir']);
             Route::post('sil/{id}', [EventController::class, 'silmeModalGetir']);
@@ -67,6 +73,17 @@ Route::prefix('api')->name('api.')->group(function () {
             Route::post('unvan-degistir', [KullaniciController::class, 'unvanDegistir']);
             Route::post('duzenle', [KullaniciController::class, 'update']);
         });
+
+        Route::prefix('toplantilar')->group(function () {
+            Route::get('/{isletmeler_id}', [ToplantiController::class, 'getDataTableDatas']);
+        });
+
+        Route::prefix('birimler')->group(function () {
+            Route::post('/guncelle', [BirimlerController::class, 'guncelle']);
+            Route::post('/ekle', [BirimlerController::class, 'ekle']);
+            Route::get('show/{isletmeler_id}', [BirimlerController::class, 'getTable']);
+            Route::post('sil/', [BirimlerController::class, 'birimSil']);
+        });
     });
 
     Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
@@ -78,12 +95,10 @@ Route::prefix('api')->name('api.')->group(function () {
         Route::prefix('katilim')->name('katilim.')->group(function () {
             Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
             Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');
+            Route::get('download-ics/{id}', [ZiyaretKatilimController::class, 'downloadIcs'])->name('download-ics');
         });
     });
 });
-
-Route::post('/birimler/getir', [BirimlerController::class, 'getTable']);
-Route::post('/birimler/sil/', [BirimlerController::class, 'birimSil']);
 
 Route::prefix('personel')->name('personel.')->group(function () {
     Route::get('/{kullanici_id}', [PersonelController::class, 'show'])->name('profil');
@@ -97,15 +112,12 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
         Route::prefix('birimler')->name('birimler.')->group(function () {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
 
-            Route::post('/guncelle', [BirimlerController::class, 'guncelle']);
-            Route::post('/ekle', [BirimlerController::class, 'ekle']);
+
             Route::post('/personeller', [BirimlerController::class, 'personeller']);
             Route::post('/birimeYerlesmemisPersonelSayisi', [BirimlerController::class, 'birimeYerlesmemisPersonelSayisi']);
             Route::post('/personelBirimDegistir', [BirimlerController::class, 'change']);
             Route::post('/personelBirimAta', [BirimlerController::class, 'personelBirimAta']);
             Route::post('/personelEklemeListesi/{birimler_id}/{search}', [BirimlerController::class, 'personelEklemeListesi']);
-
-            Route::post('/modal/{id}', [BirimlerController::class, 'getModal']);
             Route::post('/modal/birimKullanicilari/{id}', [BirimlerController::class, 'getModalIsletmeKullanicilari']);
 
             Route::post('/kullanici/{id}', [BirimlerController::class, 'destroy']);

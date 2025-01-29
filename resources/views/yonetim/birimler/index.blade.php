@@ -3,16 +3,25 @@
 @section('title', 'User dashboard')
 
 @section('content')
-    <div class="p-2 bg-blue-700 text-white mb-8 flex space-x-2 items-center justify-between rounded">
+    <div
+        class="p-2 bg-blue-700 text-white mb-4 flex flex-col lg:flex-row lg:space-x-2 lg:items-center justify-between rounded">
         <h4>Birim yönetimi</h4>
         <div class="flex item-center">
             <button type="button" data-modal="personellerModal"
-                class="open-modal personelListesi bg-red-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white">
+                class="open-modal personelListesi bg-red-500 text-sm pl-2 py-1.5 pr-4 me-2 rounded flex items-center text-white">
                 Birime yerleşmemiş kullanıcılar({{ $birimYerlesmemisKullanicilarSayisi }})
             </button>
+            <select name="isletmeler_id" id="isletmeChange" @class([
+                'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-72 px-2.5 py-1',
+                'hidden' => count($isletmeler) <= 1,
+            ])>
+                @foreach ($isletmeler as $rowIsletme)
+                    <option value="{{ encrypt($rowIsletme->isletmeler_id) }}">{{ $rowIsletme->baslik }}</option>
+                @endforeach
+            </select>
             <button type="button"
                 class="bg-emerald-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white ms-2 open-modal birimDuzenle"
-                data-modal="birimDetay" data-id="{{ encrypt(0) }}">
+                data-modal="modal" data-id="{{ encrypt(0) }}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-5 pointer-events-none">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -171,26 +180,21 @@
 
 @section('scripts')
     <script>
-        $('#birimler').DataTable({
-            responsive: true,
-            lengthMenu: [20, 40, 100, {
-                'label': 'Hepsi',
-                'value': -1
-            }],
-            ajax: {
-                url: '/birimler/getir',
-                type: 'POST',
-                body: {
-                    _token: CSRF_TOKEN
-                },
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': CSRF_TOKEN
-                },
-                dataSrc: 'data',
-            },
+        const modal = document.querySelector('#modal');
+        const modal_content = document.querySelector('#modal-content');
+        const isletmeSelectElement = document.getElementById('isletmeChange');
+        const dataTableName = '#birimler';
+        // Değer değiştiğinde tabloyu güncelle
+
+        getDataTableDatas(dataTableName, `api/yonetim/birimler/show/${isletmeSelectElement.value}`);
+
+        isletmeSelectElement.addEventListener('change', () => {
+            // Yeni değeri al
+            isletmeler_id = isletmeSelectElement.value;
+
+            // Önceki DataTable'ı yok et ve yenisini oluştur
+            $(dataTableName).DataTable().destroy();
+            getDataTableDatas(dataTableName, `api/yonetim/birimler/show/${isletmeler_id}`);
         });
         $('#birimler').on('draw.dt', function() {
             document.querySelectorAll('[data-popover-target]').forEach(triggerEl => {
@@ -223,11 +227,12 @@
             if (event.target.matches('.birimDuzenle')) {
                 (async function() {
                     const RESPONSE_DATA = await fetchData(
-                        `yonetim/birimler/modal/${event.target.dataset.id}`);
+                        `api/modal/yonetim/birimler/${event.target.dataset.id}`);
 
                     if (RESPONSE_DATA.success) {
-                        document.getElementById('modalContent').innerHTML = RESPONSE_DATA.html;
-                        modalPersonelListesiGuncelle(event.target.dataset.id);
+                        console.log(RESPONSE_DATA.html);
+                        modal_content.innerHTML = RESPONSE_DATA.html;
+                        // modalPersonelListesiGuncelle(event.target.dataset.id);
                     } else {
                         errorAlert('Kayıt gösterilemedi.');
                     }
@@ -292,7 +297,8 @@
 
                 if (event.target.dataset.buttonType === 'duzenle') {
                     (async () => {
-                        const RESPONSE_DATA = await fetchData('yonetim/birimler/guncelle', formData, true);
+                        const RESPONSE_DATA = await fetchData('api/yonetim/birimler/guncelle', formData,
+                            true);
 
                         if (RESPONSE_DATA.success) {
                             $('#birimler').DataTable().ajax.reload(null, false);
@@ -306,7 +312,7 @@
                     })();
                 } else {
                     (async () => {
-                        const RESPONSE_DATA = await fetchData('yonetim/birimler/ekle', formData, true);
+                        const RESPONSE_DATA = await fetchData('api/yonetim/birimler/ekle', formData, true);
 
                         if (RESPONSE_DATA.success) {
                             $('#birimler').DataTable().ajax.reload(null, false);
@@ -402,7 +408,7 @@
         document.getElementById('confirmForm')?.addEventListener('submit', async function(event) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            const RESPONSE_DATA = await fetchData('birimler/sil', formData, true)
+            const RESPONSE_DATA = await fetchData('api/yonetim/birimler/sil', formData, true)
 
             if (RESPONSE_DATA.success) {
                 $('#birimler').DataTable().ajax.reload(null, false);

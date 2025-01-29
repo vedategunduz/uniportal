@@ -9,7 +9,7 @@
 
 html,
 body {
-    font-size: 16px;
+    font-size: 14px;
     font-family: 'Inter', serif;
     font-optical-sizing: auto;
     font-weight: 400;
@@ -304,10 +304,14 @@ label {
     .collapsible-menu:not(.show) {
         display: none;
     }
+    .ozelBoyut {}
 }
 
 @media screen and (min-width: 1024px) {
     .aside-padding {
         padding-left: 21rem;
+    }
+    .ozelBoyut {
+        width: 720px;
     }
 }

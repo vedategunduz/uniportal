@@ -6,8 +6,10 @@
     <div class="p-2 bg-blue-700 text-white mb-8 flex space-x-2 items-center justify-between rounded">
         <h4>Kullanıcı yönetimi</h4>
         <div class="flex item-center">
-            <select name="isletmeler_id" id="isletmeChange"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-72 px-2.5 py-1">
+            <select name="isletmeler_id" id="isletmeChange" @class([
+                'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-72 px-2.5 py-1',
+                'hidden' => count($isletmeler) <= 1,
+            ])>
                 @foreach ($isletmeler as $rowIsletme)
                     <option value="{{ encrypt($rowIsletme->isletmeler_id) }}">{{ $rowIsletme->baslik }}</option>
                 @endforeach
@@ -32,7 +34,7 @@
             <thead>
                 <tr>
                     <th class="">Personel</th>
-                    <th></th>
+                    <th>Çalıştığı Birimler</th>
                     <th class="w-4"></th>
                     <th class="w-4"></th>
                 </tr>

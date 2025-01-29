@@ -87,5 +87,17 @@ class IsletmeBirimSeeder extends Seeder
                 ]);
             }
         }
+
+        $isletmeler = Isletme::whereIn('isletmeler_id', [1])->get();
+
+        foreach ($isletmeler as $isletme) {
+            foreach ($universiteBirimleri as $birim) {
+                IsletmeBirim::create([
+                    'isletmeler_id'    => $isletme['isletmeler_id'],
+                    'birim_tipleri_id' => $birim['birim_tip_id'],
+                    'baslik'           => $birim['birim_ad'],
+                ]);
+            }
+        }
     }
 }

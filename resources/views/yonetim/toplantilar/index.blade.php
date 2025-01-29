@@ -7,7 +7,7 @@
     <div class="flex justify-between items-center bg-blue-700 text-white mb-8 p-2 rounded">
         <h4>Ziyaret Yönetimi</h4>
         <div class="flex items-center gap-4">
-            <select name="isletmeler_id" id="isletmeChange" @class([
+            <select name="isletmeler_id" id="isletmeler_select" @class([
                 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-72 px-2.5 py-1',
                 'hidden' => count($isletmeler) <= 1,
             ])>
@@ -33,29 +33,26 @@
         <table id="toplantilar" class="display nowrap stripe">
             <thead>
                 <tr>
-                    <th class="">Ad</th>
-                    <th class="">Konu</th>
+                    <th class="">Başlık</th>
+                    <th class="">Ekip</th>
                     <th class="">Tarih</th>
-                    <th>Durum</th>
+                    <th class="w-4"></th>
                     <th class="w-4"></th>
                 </tr>
             </thead>
             <tbody id="table-body"></tbody>
         </table>
     </div>
-
-    <div class="space-y-2">
-        <div class="h-4 bg-gray-500 w-96"></div>
-        <div class="h-4 bg-gray-500 max-w-screen-lg"></div>
-        <div class="h-4 bg-gray-500 max-w-screen-xl"></div>
-        <div class="h-4 bg-gray-500 max-w-screen-2xl"></div>
-    </div>
 @endsection
 
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            const modal = document.querySelector('#modal');
             const modal_content = document.querySelector('#modal-content');
+            const isletmeler_select = document.querySelector('#isletmeler_select');
+
+            getDataTableDatas('#toplantilar', `api/yonetim/toplantilar/${isletmeler_select.value}`);
 
             async function getModal() {
                 const RESPONSE_DATA =
@@ -177,18 +174,34 @@
 
             submit.addEventListener('click', async (e) => {
                 e.preventDefault();
+                submit.disabled = true;
+                try {
+                    const formData = new FormData(submit.closest('form'));
 
-                const formData = new FormData(submit.closest('form'));
+                    console.log(Object.fromEntries(formData));
 
-                console.log(Object.fromEntries(formData));
+                    const RESPONSE_DATA = await fetchData(
+                        'api/modal/toplantilar/ziyaret/talep/olustur',
+                        formData, true);
 
-                const RESPONSE_DATA = await fetchData('api/modal/toplantilar/ziyaret/talep/olustur',
-                    formData, true);
+                    if (RESPONSE_DATA.success) {
+                        successAlert(RESPONSE_DATA.message);
+                        modal.classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                        $('#toplantilar').DataTable().ajax.reload(null, false);
+                    } else {
+                        if (RESPONSE_DATA.errors) {
+                            for (const [key, value] of Object.entries(RESPONSE_DATA.errors)) {
+                                errorAlert(value);
+                            }
+                        } else {
+                            errorAlert(RESPONSE_DATA.message);
+                        }
+                    }
+                } catch (error) {
 
-                if (RESPONSE_DATA.success) {
-                    successAlert(RESPONSE_DATA.message);
-                } else {
-                    errorAlert(RESPONSE_DATA.message);
+                } finally {
+                    submit.disabled = false;
                 }
             })
 

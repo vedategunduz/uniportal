@@ -11,7 +11,7 @@
     {{-- Summernote ve Datatable için --}}
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.0/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="{{ asset('css/customDataTable.css') }}">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
@@ -26,7 +26,6 @@
     <x-menu.head />
     <div class="items-start lg:flex">
         <x-menu />
-
 
         <main class="p-4 w-full">
             @yield('content')
