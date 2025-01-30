@@ -39,6 +39,13 @@
         </section>
     </div>
 
+    <div id="alert-modal" class="alert-custom-modal hidden">
+        <section class="modal-outside close-modal" data-modal="alert-modal"></section>
+
+        <section id="alert-modal-content" class="modal-content max-w-screen-md rounded max-h-screen hidden-scroll">
+        </section>
+    </div>
+
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
     <script src="{{ asset('js/data-table.js') }}"></script>

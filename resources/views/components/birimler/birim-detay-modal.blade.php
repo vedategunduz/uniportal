@@ -28,8 +28,7 @@
 
 <div class="ozelBoyut"></div>
 
-<form action="" method="POST" id="birimDetayForm" class="p-6">
-    <input type="hidden" name="isletme_birimleri_id" value="{{ encrypt($isletme_birimleri_id) }}">
+<form action="" method="POST" id="birimDetayForm" class="p-6 space-y-2">
     {{-- INPUT Etkinlik başlığı --}}
     <div class="relative">
         <input type="text" name="baslik" id="baslik"
@@ -40,7 +39,7 @@
             Birim adı
         </label>
     </div>
-    <div class="mb-2">
+    <div class="">
         <select name="birim_tipleri_id" id="birim_tipleri_id"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             <option value="">Birim türü</option>
@@ -52,6 +51,7 @@
         </select>
     </div>
     @if ($butonIslemTipi != 'ekle')
+        <input type="hidden" name="isletme_birimleri_id" value="{{ encrypt($isletme_birimleri_id) }}">
         <div class="mb-4">
             <p class="mb-2">Personeller</p>
 
@@ -79,10 +79,8 @@
                     </div>
 
                     <div class="top-full mt-2 w-full shadow rounded-b bg-gray-50">
-                        <form action="">
-                            <div id="personelEklemeListesi"
-                                class=" px-4 space-y-2 max-h-48 overflow-y-auto hidden-scroll"></div>
-                        </form>
+                        <div id="personelEklemeListesi" class=" px-4 space-y-2 max-h-48 overflow-y-auto hidden-scroll">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -91,12 +89,13 @@
     @endif
 
     <div class="grid grid-cols-2 gap-4">
-        <button type="submit" data-button-type="{{ $butonIslemTipi }}"
-            class="birimDetayModalSubmit px-3 py-2 text-white rounded @if (!empty($veriler)) {{ 'bg-yellow-400' }}
-        @else
-        {{ 'bg-green-500 hover:bg-green-600' }} @endif">
+        <button type="button" data-modal="modal" class="close-modal px-3 py-2 border rounded">Vazceç</button>
+        <button type="submit" data-button-type="{{ $butonIslemTipi }}" @class([
+            'birimDetayModalSubmit px-3 py-2 text-white rounded',
+            'bg-yellow-400' => !empty($veriler),
+            'bg-green-500 hover:bg-green-600' => empty($veriler),
+        ])>
             {{ $butonIslemAdi }}
         </button>
-        <button type="button" data-modal="birimDetay" class="close-modal px-3 py-2 border rounded">Vazceç</button>
     </div>
 </form>

@@ -37,12 +37,10 @@
                 <button type="button"
                     onclick="birimdenCikart('{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}', '{{ encrypt($rowPersonel->isletme_birimleri_id) }}')"
                     data-id="{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
-                    data-birimid="{{ encrypt($rowPersonel->isletme_birimleri_id) }}"
                     class="text-white birimdenCikart bg-rose-700 hover:bg-rose-800 focus:ring-2 focus:ring-rose-300 font-medium rounded-lg text-xs px-2 py-1">Birimden
                     çıkart</button>
-                <button type="button" data-modal="birimDegistir"
+                <button type="button" data-modal="modal"
                     data-id="{{ encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) }}"
-                    data-birimid="{{ encrypt($rowPersonel->isletme_birimleri_id) }}"
                     class="birimDegistir open-modal text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-400 font-medium rounded-lg text-xs px-2 py-1">Birim
                     değiştir</button>
             </div>

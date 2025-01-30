@@ -130,7 +130,7 @@ label {
     z-index: 0;
 }
 
-.custom-modal {
+.custom-modal, .alert-custom-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -153,12 +153,15 @@ label {
 
     .modal-content {
         /* width: 100%; */
-        height: max-content;
         overflow: auto;
         margin: 0 auto;
         background-color: #fff;
         animation: zoomIn 0.3s;
     }
+}
+
+.alert-custom-modal {
+    z-index: 15;
 }
 
 /* width */
@@ -304,13 +307,26 @@ label {
     .collapsible-menu:not(.show) {
         display: none;
     }
-    .ozelBoyut {}
 }
+
+@media screen and (max-width: 575.98px) {
+    .ozelBoyut {
+        width: 340px;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .ozelBoyut {
+        width: 540px;
+    }
+}
+
 
 @media screen and (min-width: 1024px) {
     .aside-padding {
         padding-left: 21rem;
     }
+
     .ozelBoyut {
         width: 720px;
     }

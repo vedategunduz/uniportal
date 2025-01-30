@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('kullanicilar', function (Blueprint $table) {
             $table->id('kullanicilar_id');
             $table->unsignedBigInteger('roller_id');
+            $table->unsignedBigInteger('unvanlar_id');
             $table->string('ad', 155);
             $table->string('soyad', 155)->nullable();
             $table->string('email', 255)->unique();
@@ -34,6 +35,7 @@ return new class extends Migration
         Schema::create('kullanicilar_log', function (Blueprint $table) {
             $table->integer('kullanicilar_id');
             $table->integer('roller_id');
+            $table->unsignedBigInteger('unvanlar_id');
             $table->string('ad', 155);
             $table->string('soyad', 155)->nullable();
             $table->string('email', 255)->nullable();
@@ -54,6 +56,7 @@ return new class extends Migration
                 INSERT INTO kullanicilar_log (
                     kullanicilar_id,
                     roller_id,
+                    unvanlar_id,
                     ad,
                     soyad,
                     email,
@@ -71,6 +74,7 @@ return new class extends Migration
                 VALUES (
                     NEW.kullanicilar_id,
                     NEW.roller_id,
+                    NEW.unvanlar_id,
                     NEW.ad,
                     NEW.soyad,
                     NEW.email,
@@ -96,6 +100,7 @@ return new class extends Migration
                 INSERT INTO kullanicilar_log (
                     kullanicilar_id,
                     roller_id,
+                    unvanlar_id,
                     ad,
                     soyad,
                     email,
@@ -113,6 +118,7 @@ return new class extends Migration
                 VALUES (
                     NEW.kullanicilar_id,
                     NEW.roller_id,
+                    NEW.unvanlar_id,
                     NEW.ad,
                     NEW.soyad,
                     NEW.email,

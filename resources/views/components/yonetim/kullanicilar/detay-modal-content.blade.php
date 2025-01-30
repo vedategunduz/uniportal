@@ -10,10 +10,12 @@
     </button>
 </header>
 
+<div class="ozelBoyut"></div>
+
 <form action="" class="p-6 space-y-4">
-    <div class="flex gap-6">
-        <section class="relative">
-            <img src="{{ asset($kullanici->profilFotoUrl) }}" class="size-48 rounded" alt="">
+    <div class="lg:flex gap-6">
+        <section class="relative min-w-48">
+            <img src="{{ asset($kullanici->profilFotoUrl) }}" class="size-48 mx-auto rounded" alt="">
 
             <button type="button" class="rounded-full bg-white shadow top-0 right-0 absolute -mt-4 -mr-4 p-2.5">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -25,7 +27,7 @@
                 </svg>
             </button>
         </section>
-        <section class="space-y-4">
+        <section class="space-y-4 w-full">
             <input type="hidden" name="kullanicilar_id" value="{{ encrypt($kullanici->kullanicilar_id) }}">
             {{-- Personel ad ve soyad --}}
             <div class="grid grid-cols-2 gap-2">
@@ -49,14 +51,25 @@
                 </div>
             </div>
             {{-- Personel e-posta --}}
-            <div class="relative">
-                <input type="email" name="email" id="email"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-transparent rounded border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    placeholder=" " value="{{ $kullanici->email }}" />
-                <label for="email"
-                    class="absolute text-sm font-medium text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">
-                    E-posta
-                </label>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="relative">
+                    <input type="email" name="email" id="email"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-transparent rounded border-1 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        placeholder=" " value="{{ $kullanici->email }}" />
+                    <label for="email"
+                        class="absolute text-sm font-medium text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 start-1">
+                        E-posta
+                    </label>
+                </div>
+                    <select name="unvanlar_id" id="unvanlar_id"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+
+                        @foreach ($unvanlar as $unvan)
+                            <option value="{{ encrypt($unvan->unvanlar_id) }}"
+                                @if ($kullanici->unvanlar_id == $unvan->unvanlar_id) selected @endif>
+                                {{ $unvan->baslik }}</option>{{ $unvan->baslik }}</option>
+                        @endforeach
+                    </select>
             </div>
             {{-- Personel telefon --}}
             <div class="relative">
@@ -73,12 +86,12 @@
 
     <div class="space-y-4">
         @foreach ($birimDetaylari as $rowBirimDetaylari)
-            <div class="flex items-center justify-between gap-2 pb-4 odd:border-b">
+            <div class="lg:flex items-center justify-between gap-2 pb-4 odd:border-b">
                 <span class="text-nowrap">{{ $rowBirimDetaylari->birim->baslik }}</span>
-                <select name="unvanlar_id" id="unvanlar_id"
+                <select name="alt_unvanlar_id" id="alt_unvanlar_id"
                     data-kullanicilar-id="{{ encrypt($kullanici->kullanicilar_id) }}"
                     data-birim-id="{{ encrypt($rowBirimDetaylari->birim->isletme_birimleri_id) }}"
-                    class="unvanDegistir bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                    class="unvanDegistir w-full max-w-96 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block p-2.5">
 
                     @foreach ($unvanlar as $unvan)
                         <option value="{{ encrypt($unvan->unvanlar_id) }}"

@@ -11,6 +11,7 @@ class KullaniciSeeder extends Seeder
     {
         Kullanici::create([
             'roller_id' => 1,
+            'unvanlar_id' => 1,
             'ad'        => 'Hayati',
             'soyad'     => 'Tehlike',
             'email'     => 'admin@nku.edu.tr',
@@ -18,6 +19,7 @@ class KullaniciSeeder extends Seeder
         ]);
         Kullanici::create([
             'roller_id'     => 2,
+            'unvanlar_id' => 1,
             'ad'            => 'Evren',
             'soyad'         => 'Köksal',
             'email'         => 'ekoksal@nku.edu.tr',
@@ -27,6 +29,7 @@ class KullaniciSeeder extends Seeder
         ]);
         Kullanici::create([
             'roller_id'     => 3,
+            'unvanlar_id' => 3,
             'ad'            => 'Gökhan',
             'soyad'         => 'Şenlik',
             'email'         => 'gsenlik@nku.edu.tr',
@@ -36,6 +39,7 @@ class KullaniciSeeder extends Seeder
         ]);
         Kullanici::create([
             'roller_id'     => 3,
+            'unvanlar_id' => 2,
             'ad'            => 'Vedat Emre',
             'soyad'         => 'Gündüz',
             'email'         => 'vgunduz@nku.edu.tr',
@@ -45,6 +49,7 @@ class KullaniciSeeder extends Seeder
         ]);
         Kullanici::create([
             'roller_id'     => 3,
+            'unvanlar_id' => 1,
             'ad'            => 'Emre',
             'soyad'         => 'Gündüz',
             'email'         => 'vgunduz12@nku.edu.tr',

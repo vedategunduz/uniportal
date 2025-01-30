@@ -18,6 +18,7 @@ class Kullanici extends Authenticatable
 
     protected $fillable = [
         'roller_id',
+        'unvanlar_id',
         'ad',
         'soyad',
         'email',
@@ -59,11 +60,9 @@ class Kullanici extends Authenticatable
         return Isletme::whereIn('isletmeler_id', $isletmeler_id)->get();
     }
 
-    // // Gereksiz herhalde
-    // public function YetkiliOlduguIsletmeler()
-    // {
-    //     return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id');
-    // }
+    public function anaUnvan() {
+        return $this->belongsTo(Unvan::class, 'unvanlar_id');
+    }
 
     public function rol()
     {

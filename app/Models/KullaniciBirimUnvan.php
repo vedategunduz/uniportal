@@ -55,7 +55,7 @@ class KullaniciBirimUnvan extends Model
      * =================== Düzenle bu fonksiyonu ===================
      * @param string $birimler_id
      */
-    public static function birimiOlmayanKullanicilar()
+    public static function birimiOlmayanKullanicilar($isletmeler_id)
     {
         return self::rightJoin(
             'isletme_yetkilileri',
@@ -64,14 +64,14 @@ class KullaniciBirimUnvan extends Model
             'kullanici_birim_unvan_iliskileri.kullanicilar_id'
         )
             ->whereNull('kullanici_birim_unvan_iliskileri.kullanicilar_id')
-            ->where('isletme_yetkilileri.isletmeler_id', 143)
+            ->where('isletme_yetkilileri.isletmeler_id', $isletmeler_id)
             ->where('isletme_yetkilileri.aktiflik', 1)
             ->whereNot('isletme_yetkilileri.kullanicilar_id', 1)
             ->get();
     }
     // =================== Düzenle bu fonksiyonu ===================
-    public static function birimeYerlesmemisPersonelSayisi()
+    public static function birimeYerlesmemisPersonelSayisi($isletmeler_id)
     {
-        return self::birimiOlmayanKullanicilar()->pluck('kullanicilar_id')->count();
+        return self::birimiOlmayanKullanicilar($isletmeler_id)->pluck('kullanicilar_id')->count();
     }
 }

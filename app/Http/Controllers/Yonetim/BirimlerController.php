@@ -18,15 +18,17 @@ class BirimlerController extends Controller
 
         $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
 
-        $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi();
+        $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi($isletmeler[0]);
 
         return view('yonetim.birimler.index', compact('isletmeBirimleri', 'birimYerlesmemisKullanicilarSayisi'));
     }
 
     // ============= duzenle =================
-    public function birimeYerlesmemisPersonelSayisi()
+    public function birimeYerlesmemisPersonelSayisi(string $isletmeler_id)
     {
-        $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi();
+        $isletmeler_id = decrypt($isletmeler_id);
+
+        $birimYerlesmemisKullanicilarSayisi = KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi($isletmeler_id);
 
         return response()->json([
             'success' => true,
@@ -60,28 +62,41 @@ class BirimlerController extends Controller
         ], 200);
     }
 
-    public function ekle(Request $request)
+    public function birimEkle(string $isletmeler_id, Request $request)
     {
-        IsletmeBirim::create([
-            'baslik'           => $request->baslik,
-            'isletmeler_id'    => 143,
-            'birim_tipleri_id' => decrypt($request->birim_tipleri_id),
-        ]);
+        try {
+            $isletmeler_id = decrypt($isletmeler_id);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Birim başarıyla eklendi.'
-        ], 201);
+            IsletmeBirim::create([
+                'baslik'           => $request->baslik,
+                'isletmeler_id'    => $isletmeler_id,
+                'birim_tipleri_id' => decrypt($request->birim_tipleri_id),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Birim başarıyla eklendi.'
+            ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Birim eklenirken bir hata oluştu.'
+            ], 201);
+        }
     }
 
-    public function guncelle(Request $request)
+    public function birimGuncelle(Request $request)
     {
-        $isletmeBirimi = IsletmeBirim::findOrFail(decrypt($request->isletme_birimleri_id));
+        $isletmeler_id        = decrypt($request->isletmeler_id);
+        $birim_tipleri_id     = decrypt($request->birim_tipleri_id);
+        $isletme_birimleri_id = decrypt($request->isletme_birimleri_id);
+
+        $isletmeBirimi = IsletmeBirim::findOrFail($isletme_birimleri_id);
 
         $isletmeBirimi->update([
             'baslik'           => $request->baslik,
-            'isletmeler_id'    => 143,
-            'birim_tipleri_id' => decrypt($request->birim_tipleri_id),
+            'isletmeler_id'    => $isletmeler_id,
+            'birim_tipleri_id' => $birim_tipleri_id,
         ]);
 
         return response()->json([
@@ -92,25 +107,37 @@ class BirimlerController extends Controller
 
     public function personelBirimAta(Request $request)
     {
-        foreach ($request->kullanicilar as $kullanici) {
-            KullaniciBirimUnvan::create([
-                'kullanicilar_id' => decrypt($kullanici),
-                'isletme_birimleri_id' => decrypt($request->isletme_birimleri_id),
-            ]);
+        try {
+            foreach ($request->kullanicilar as $kullanici) {
+
+                $kullanici = decrypt($kullanici);
+                $kullaniciBilgisi = Kullanici::findOrFail($kullanici);
+
+                KullaniciBirimUnvan::create([
+                    'kullanicilar_id' => $kullanici,
+                    'isletme_birimleri_id' => decrypt($request->isletme_birimleri_id),
+                    'unvanlar_id' => $kullaniciBilgisi->unvanlar_id,
+                ]);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Kullanıcılar başarıyla birime atandı.'
+            ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kullanıcı/Birim seçilmedi.'
+            ], 201);
         }
-        return response()->json([
-            'success' => true,
-            'message' => 'Kullanıcılar başarıyla birime atandı.'
-        ], 201);
     }
 
-    public function getModal(string $id)
+    public function modalBirimGoster(string $birimler_id)
     {
-        $decryptedId = decrypt($id);
+        $birimler_id = decrypt($birimler_id);
         $verileryeni = "";
 
-        if ((int) $decryptedId > 0) {
-            $verileryeni = IsletmeBirim::findOrFail($decryptedId);
+        if ((int) $birimler_id > 0) {
+            $verileryeni = IsletmeBirim::findOrFail($birimler_id);
         }
 
         $data = [
@@ -119,30 +146,6 @@ class BirimlerController extends Controller
         ];
 
         $html = view('components.birimler.birim-detay-modal', $data)->render();
-
-        return response()->json([
-            'success' => true,
-            'html' => $html
-        ], 200);
-    }
-
-    public function personeller()
-    {
-
-        $birimYerlesmemisKullanicilar = KullaniciBirimUnvan::birimiOlmayanKullanicilar()->pluck('kullanicilar_id');
-
-        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $birimYerlesmemisKullanicilar)->get();
-
-        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
-
-        $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir($isletmeler);
-
-        $data = [
-            'kullanicilar' => $kullanicilar,
-            'isletmeBirimleri' => $isletmeBirimleri,
-        ];
-
-        $html = view('components.birimler.personel-listesi', $data)->render();
 
         return response()->json([
             'success' => true,
@@ -221,7 +224,7 @@ class BirimlerController extends Controller
                                     onclick="birimdenCikart(`' . encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) . '`, 0)"
                                     class="text-white bg-rose-700 hover:bg-rose-800 focus:ring-2 focus:ring-rose-300 font-medium rounded-lg text-xs px-2 py-1">Birimden
                                     çıkart</button>
-                                <button type="button" data-modal="birimDegistir"
+                                <button type="button" data-modal="modal"
                                     data-id="' . encrypt($rowPersonel->kullanici_birim_unvan_iliskileri_id) . '" data-birimid="0"
                                     class="birimDegistir open-modal text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-2 focus:ring-yellow-400 font-medium rounded-lg text-xs px-2 py-1">Birim
                                     değiştir</button>
@@ -236,12 +239,12 @@ class BirimlerController extends Controller
             $personelBilgileri .= '</div>';
             $row[] = $personelBilgileri;
             $row[] = '
-            <button type="button" data-modal="birimDetay" data-id="' . encrypt($rowBirim->isletme_birimleri_id) . '"
-                class="open-modal birimDuzenle bg-yellow-400 text-white p-2 rounded">
+            <button type="button" data-modal="modal" data-id="' . encrypt($rowBirim->isletme_birimleri_id) . '"
+                class="open-modal modalBirimGoster bg-yellow-400 text-white p-2 rounded">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3 pointer-events-none"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" /></svg>
             </button>
             ';
-            $row[] = '<button type="button" data-modal="confirmModal" data-id="' . encrypt($rowBirim->isletme_birimleri_id) . '"
+            $row[] = '<button type="button" data-modal="modal" data-id="' . encrypt($rowBirim->isletme_birimleri_id) . '"
                 class="open-modal birimSil bg-rose-500 text-white p-2 rounded" title="silme onay kutusunu aç">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="size-3 pointer-events-none">
@@ -257,7 +260,7 @@ class BirimlerController extends Controller
         ], 200);
     }
 
-    public function change(Request $request)
+    public function personelBirimDegistir(Request $request)
     {
         try {
             KullaniciBirimUnvan::findOrFail(decrypt($request->kullanici_birim_unvan_iliskileri_id))
@@ -277,12 +280,96 @@ class BirimlerController extends Controller
         }
     }
 
+    public function birimDegistirmeModalContent(Request $request)
+    {
+        $islemeler_id = decrypt($request->isletmeler_id);
+
+        $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir([$islemeler_id]);
+
+        $kullanici_birim_unvan_iliskileri_id = decrypt($request->kullanici_birim_unvan_iliskileri_id);
+
+        $kullaniciBilgileri = KullaniciBirimUnvan::with('kullanici')
+            ->where('kullanici_birim_unvan_iliskileri_id', $kullanici_birim_unvan_iliskileri_id)->first();
+
+        $data = [
+            'kullanici_birim_unvan_iliskileri_id' => $request->kullanici_birim_unvan_iliskileri_id,
+            'isletmeBirimleri' => $isletmeBirimleri,
+            'kullaniciBilgileri' => $kullaniciBilgileri->kullanici
+        ];
+
+        $html = view('components.birimler.birim-degistirme-modal-content', $data)->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ], 200);
+    }
+
+    public function silmeModalContent(string $birimler_id)
+    {
+        $birimler_id = decrypt($birimler_id);
+
+        $birim = IsletmeBirim::findOrFail($birimler_id);
+
+        $data = [
+            'birim' => $birim
+        ];
+
+        $html = view('components.birimler.silme-modal-content', $data)->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ], 200);
+    }
+
+    public function birimeYerlesmemisPersonelModalContent(Request $request)
+    {
+        $islemeler_id = decrypt($request->isletmeler_id);
+
+        $isletmeBirimleri = IsletmeBirim::isletmeBirimleriGetir([$islemeler_id]);
+
+        // $birimYerlesmemisKullanicilar = KullaniciBirimUnvan::birimiOlmayanKullanicilar($islemeler_id)->pluck('kullanicilar_id');
+
+        // $kullanicilar = Kullanici::whereIn('kullanicilar_id', $birimYerlesmemisKullanicilar)->get();
+
+        $data = [
+            'isletmeBirimleri' => $isletmeBirimleri,
+        ];
+
+        $html = view('components.birimler.birime-yerlesmemis-personel-modal-content', $data)->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ], 200);
+    }
+
+    public function birimeYerlesmemisPersoneller(Request $request)
+    {
+        $islemeler_id = decrypt($request->isletmeler_id);
+
+        $birimYerlesmemisKullanicilar = KullaniciBirimUnvan::birimiOlmayanKullanicilar($islemeler_id)->pluck('kullanicilar_id');
+
+        $kullanicilar = Kullanici::whereIn('kullanicilar_id', $birimYerlesmemisKullanicilar)->get();
+
+        $data = [
+            'kullanicilar' => $kullanicilar,
+        ];
+
+        $html = view('components.birimler.birime-yerlesmemis-kullanicilar', $data)->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ], 200);
+    }
+
     public function birimSil(Request $request)
     {
-        $id = decrypt($request->silme_hidden_isletme_birimleri_id);
-
         try {
-            IsletmeBirim::isletmeBirimSil($id);
+            $isletme_birimleri_id = decrypt($request->isletme_birimleri_id);
+            IsletmeBirim::isletmeBirimSil($isletme_birimleri_id);
 
             return response()->json([
                 'success' => true,
@@ -290,13 +377,13 @@ class BirimlerController extends Controller
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error'   => true,
-                'message' => $e->getMessage()
+                'success'   => false,
+                'message' => 'Birim silinirken bir hata oluştu.'
             ], 500);
         }
     }
 
-    public function destroy(string $id)
+    public function birimPersonelSil(string $id)
     {
         $decryptedId = decrypt($id);
         try {
@@ -307,10 +394,7 @@ class BirimlerController extends Controller
                 'message' => 'Kullanıcı birimden kaldırıldı.'
             ], 201);
         } catch (\Exception $e) {
-            return response()->json([
-                'error'   => true,
-                'message' => $e->getMessage()
-            ], 500);
+
         }
     }
 }
