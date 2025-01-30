@@ -215,7 +215,10 @@ class KullaniciController extends Controller
 
                 // .edu.tr uzantılı olup olmadığını kontrol etme
                 if (substr($domain, -6) === 'edu.tr') { // 'edu.tr' 6 karakter + nokta
-                    $eduTrMailler[] = $mail;
+
+                    if (!in_array($mail, $eduTrMailler)) {
+                        $eduTrMailler[] = $mail;
+                    }
                 }
             }
         }
