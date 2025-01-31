@@ -46,12 +46,12 @@
         </table>
     </div>
 
-    <div id="modal" class="custom-modal hidden">
+    {{-- <div id="modal" class="custom-modal hidden">
         <section class="modal-outside close-modal" data-modal="modal"></section>
 
         <section id="modal-content" class="modal-content max-w-screen-md rounded max-h-screen overflow-auto hidden-scroll">
         </section>
-    </div>
+    </div> --}}
 @endsection
 
 @section('scripts')

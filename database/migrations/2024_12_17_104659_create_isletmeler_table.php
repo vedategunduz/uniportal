@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('referans', 20)->nullable();
             $table->string('baslik', 255)->nullable();
             $table->string('adres', 500)->nullable();
+            $table->string('mailUzanti', 50)->nullable();
+            $table->string('vectorelLogoUrl', 500)->nullable();
             $table->string('logoUrl', 500)->nullable();
             $table->string('websiteUrl', 255)->nullable();
             $table->string('xUrl', 255)->nullable();
@@ -42,6 +44,8 @@ return new class extends Migration
             $table->string('referans', 20)->nullable();
             $table->string('baslik', 255)->nullable();
             $table->string('adres', 500)->nullable();
+            $table->string('mailUzanti', 50)->nullable();
+            $table->string('vectorelLogoUrl', 500)->nullable();
             $table->string('logoUrl', 500)->nullable();
             $table->string('websiteUrl', 255)->nullable();
             $table->string('xUrl', 255)->nullable();
@@ -65,6 +69,8 @@ return new class extends Migration
                     referans,
                     baslik,
                     adres,
+                    mailUzanti,
+                    vectorelLogoUrl,
                     logoUrl,
                     websiteUrl,
                     xUrl,
@@ -84,6 +90,8 @@ return new class extends Migration
                     NEW.referans,
                     NEW.baslik,
                     NEW.adres,
+                    NEW.mailUzanti,
+                    NEW.vectorelLogoUrl,
                     NEW.logoUrl,
                     NEW.websiteUrl,
                     NEW.xUrl,
@@ -112,6 +120,8 @@ return new class extends Migration
                     referans,
                     baslik,
                     adres,
+                    mailUzanti,
+                    vectorelLogoUrl,
                     logoUrl,
                     websiteUrl,
                     xUrl,
@@ -131,6 +141,8 @@ return new class extends Migration
                     NEW.referans,
                     NEW.baslik,
                     NEW.adres,
+                    NEW.mailUzanti,
+                    NEW.vectorelLogoUrl,
                     NEW.logoUrl,
                     NEW.websiteUrl,
                     NEW.xUrl,

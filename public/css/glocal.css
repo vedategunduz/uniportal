@@ -62,10 +62,9 @@ a {
 }
 
 a:not(.underline) {
-
     &:hover,
     &:focus {
-        text-decoration: none !important;
+        text-decoration: none;
     }
 }
 

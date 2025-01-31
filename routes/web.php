@@ -17,6 +17,7 @@ use App\Http\Controllers\Toplanti\ToplantiController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
+use Google\Service\BeyondCorp\Resource\V;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -153,10 +154,33 @@ Route::prefix('editor')->name('editor.')->group(function () {
 });
 
 // Giriş rota grubu
-Route::prefix('giris')->name('giris.')->group(function () {
-    Route::get('/', [AuthController::class, 'girisForm'])->name('form');
-    Route::post('/', [AuthController::class, 'girisYap'])->name('yap');
-})->middleware(NotAuthMiddleware::class);
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::middleware(NotAuthMiddleware::class)->group(function () {
+        Route::prefix('giris')->name('giris.')->group(function () {
+            Route::get('/', [AuthController::class, 'girisForm'])->name('form');
+            Route::post('/', [AuthController::class, 'girisYap'])->name('yap');
+        });
 
-// Çıkış rotası
-Route::get('/cikis', [AuthController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
+        Route::prefix('kayit')->name('kayit.')->group(function () {
+            Route::get('/', [AuthController::class, 'kayitForm'])->name('form');
+            Route::post('/', [AuthController::class, 'kayitYap'])->name('yap');
+        });
+    });
+
+    Route::prefix('onay')->name('onay.')->group(function () {
+        Route::get('/{token}', [AuthController::class, 'onayla'])->name('onayla');
+    });
+
+    // Çıkış rotası
+    Route::get('/cikis', [AuthController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
+});
+
+Route::get('/onizle', function() {
+    return view('mail.hesap-onaylama-mail');
+});
+
+Route::prefix('error')->name('error.')->group(function () {
+    Route::get('/404', function () {
+        return view('404');
+    })->name('404');
+});

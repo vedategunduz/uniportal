@@ -15,6 +15,7 @@ class KullaniciSeeder extends Seeder
             'ad'        => 'Hayati',
             'soyad'     => 'Tehlike',
             'email'     => 'admin@nku.edu.tr',
+            'email_verified_at' => now(),
             'password'  => '12345600',
         ]);
         Kullanici::create([
@@ -23,6 +24,7 @@ class KullaniciSeeder extends Seeder
             'ad'            => 'Evren',
             'soyad'         => 'Köksal',
             'email'         => 'ekoksal@nku.edu.tr',
+            'email_verified_at' => now(),
             'password'      => '12345600',
             'telefon'      => '0532 123 45 67',
             'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=501'
@@ -33,6 +35,7 @@ class KullaniciSeeder extends Seeder
             'ad'            => 'Gökhan',
             'soyad'         => 'Şenlik',
             'email'         => 'gsenlik@nku.edu.tr',
+            'email_verified_at' => now(),
             'password'      => '12345600',
             'telefon'       => '0532 123 45 67',
             'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=2641'
@@ -43,6 +46,7 @@ class KullaniciSeeder extends Seeder
             'ad'            => 'Vedat Emre',
             'soyad'         => 'Gündüz',
             'email'         => 'vgunduz@nku.edu.tr',
+            'email_verified_at' => now(),
             'password'      => '12345600',
             'telefon'       => '0532 123 45 67',
             'profilFotoUrl' => 'https://avatars.githubusercontent.com/u/94452068?v=4'
@@ -53,6 +57,7 @@ class KullaniciSeeder extends Seeder
             'ad'            => 'Emre',
             'soyad'         => 'Gündüz',
             'email'         => 'vgunduz12@nku.edu.tr',
+            'email_verified_at' => now(),
             'password'      => '12345600',
             'telefon'       => '0532 123 45 67',
             'profilFotoUrl' => 'https://avatars.githubusercontent.com/u/94452068?v=4'

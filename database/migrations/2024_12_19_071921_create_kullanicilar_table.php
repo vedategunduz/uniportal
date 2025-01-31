@@ -14,11 +14,12 @@ return new class extends Migration
     {
         Schema::create('kullanicilar', function (Blueprint $table) {
             $table->id('kullanicilar_id');
-            $table->unsignedBigInteger('roller_id');
-            $table->unsignedBigInteger('unvanlar_id');
+            $table->unsignedBigInteger('roller_id')->nullable();
+            $table->unsignedBigInteger('unvanlar_id')->default(46);
             $table->string('ad', 155);
-            $table->string('soyad', 155)->nullable();
+            $table->string('soyad', 155);
             $table->string('email', 255)->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('telefon', 155)->nullable();
             $table->string('adres', 155)->nullable();
             $table->string('profilFotoUrl', 155)->default('https://placehold.co/128');
@@ -32,13 +33,20 @@ return new class extends Migration
             $table->foreign('roller_id')->references('roller_id')->on('roller')->onDelete('restrict');
         });
 
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
         Schema::create('kullanicilar_log', function (Blueprint $table) {
             $table->integer('kullanicilar_id');
-            $table->integer('roller_id');
-            $table->unsignedBigInteger('unvanlar_id');
+            $table->integer('roller_id')->nullable();
+            $table->unsignedBigInteger('unvanlar_id')->nullable();
             $table->string('ad', 155);
-            $table->string('soyad', 155)->nullable();
+            $table->string('soyad', 155);
             $table->string('email', 255)->nullable();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('telefon', 155)->nullable();
             $table->string('adres', 155)->nullable();
             $table->string('profileFotoUrl', 155)->nullable();
@@ -60,6 +68,7 @@ return new class extends Migration
                     ad,
                     soyad,
                     email,
+                    email_verified_at,
                     telefon,
                     adres,
                     profileFotoUrl,
@@ -78,6 +87,7 @@ return new class extends Migration
                     NEW.ad,
                     NEW.soyad,
                     NEW.email,
+                    NEW.email_verified_at,
                     NEW.telefon,
                     NEW.adres,
                     NEW.profilFotoUrl,
@@ -104,6 +114,7 @@ return new class extends Migration
                     ad,
                     soyad,
                     email,
+                    email_verified_at,
                     telefon,
                     adres,
                     profileFotoUrl,
@@ -122,6 +133,7 @@ return new class extends Migration
                     NEW.ad,
                     NEW.soyad,
                     NEW.email,
+                    NEW.email_verified_at,
                     NEW.telefon,
                     NEW.adres,
                     NEW.profilFotoUrl,
@@ -145,6 +157,7 @@ return new class extends Migration
         DB::unprepared("DROP TRIGGER IF EXISTS kullanicilar_insert");
         DB::unprepared("DROP TRIGGER IF EXISTS kullanicilar_update");
         Schema::dropIfExists('kullanicilar');
+        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('kullanicilar_log');
     }
 };

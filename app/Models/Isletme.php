@@ -21,6 +21,8 @@ class Isletme extends Model
         'referans',
         'baslik',
         'adres',
+        'mailUzanti',
+        'vectorelLogoUrl',
         'logoUrl',
         'websiteUrl',
         'xUrl',

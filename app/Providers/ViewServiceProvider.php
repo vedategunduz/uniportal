@@ -40,9 +40,12 @@ class ViewServiceProvider extends ServiceProvider
                 $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
                 $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
-                $menuler = Menu::whereNull('bagli_menuler_id')
+                $menuler = Menu::whereHas('MenuRolDetayi', function ($query) {
+                    $query->where('roller_id', Auth::user()->roller_id);
+                })
+                    ->whereNull('bagli_menuler_id')
                     ->with('children')
-                    ->orderBy('menuSira', 'asc') // sıraya göre listelemek için
+                    ->orderBy('menuSira', 'asc')
                     ->get();
 
                 $view->with(compact('menuler', 'isletmeler'));

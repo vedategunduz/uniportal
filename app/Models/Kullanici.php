@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\IslemYapanTrait;
+use App\Mail\HesapOnaylamaMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class Kullanici extends Authenticatable
 {
@@ -33,6 +34,11 @@ class Kullanici extends Authenticatable
         'remember_token',
     ];
 
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
     public static function kullanicilariGetir(array $kullanicilar_id)
     {
         return self::whereIn('kullanicilar_id', $kullanicilar_id)
@@ -48,24 +54,23 @@ class Kullanici extends Authenticatable
             ->limit($limit);
     }
 
-    // kullanıcı kayıt olduğu gibi şifresi hashlenir
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
-
     public function isletme()
     {
         $isletmeler_id = $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id')->pluck('isletmeler_id')->toArray();
         return Isletme::whereIn('isletmeler_id', $isletmeler_id)->get();
     }
 
-    public function anaUnvan() {
+    public function anaUnvan()
+    {
         return $this->belongsTo(Unvan::class, 'unvanlar_id');
     }
 
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'roller_id');
+    }
+
+    public function sendEmailVerificationNotification() {
+        Mail::to($this->email)->send(new HesapOnaylamaMail($this));
     }
 }
