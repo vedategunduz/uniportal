@@ -25,7 +25,7 @@
                         <img src="{{ asset('image/googleclander.webp') }}" class="size-8" alt="">
                         <span class="ml-2">Google Takvim</span>
                     </a>
-                    <a href="{{ route('api.etkinlik.katilim.download-ics', ['id' => encrypt($etkinlik->etkinlikler_id)]) }}"
+                    <a href="{{ route('yonetim.etkinlikler.katilim.download-ics', ['id' => encrypt($etkinlik->etkinlikler_id)]) }}"
                         class="flex items-center border py-1 px-2 rounded">
                         <span class="ml-2">ICS Dosyası</span>
                     </a>
@@ -39,7 +39,7 @@
                 </p>
 
                 <div class="">
-                    <a href="{{ route('api.etkinlik.katilim.onayla', ['parametre' => $parametre]) }}"
+                    <a href="{{ route('yonetim.etkinlikler.katilim.onayla', ['parametre' => $parametre]) }}"
                         class="text-center block hover:text-white bg-blue-700 text-white text-sm rounded px-4 py-2.5 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
                         Daveti onayla
                     </a>

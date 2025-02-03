@@ -22,7 +22,7 @@ class KullaniciBirimUnvan extends Model
 
     public function kullanici()
     {
-        return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
+        return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id')->where('aktiflik', 1);
     }
 
     public function IzinliKullanici()
@@ -70,7 +70,7 @@ class KullaniciBirimUnvan extends Model
             ->get();
     }
     // =================== Düzenle bu fonksiyonu ===================
-    public static function birimeYerlesmemisPersonelSayisi($isletmeler_id)
+    public static function birimeYerlesmemisPersonelSayisi($isletmeler_id) : int
     {
         return self::birimiOlmayanKullanicilar($isletmeler_id)->pluck('kullanicilar_id')->count();
     }

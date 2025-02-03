@@ -83,13 +83,13 @@
                 // İşlem tipine göre url belirliyoruz
                 switch (eventType) {
                     case 'insert':
-                        url = 'api/etkinlik/ekle';
+                        url = 'yonetim/etkinlikler/ekle';
                         break;
                     case 'update':
-                        url = 'api/etkinlik/guncelle';
+                        url = 'yonetim/etkinlikler/guncelle';
                         break;
                     case 'delete':
-                        url = 'api/etkinlik/sil';
+                        url = 'yonetim/etkinlikler/sil';
                         break;
                     default:
                         errorAlert('Bir hata oluştu.');
@@ -133,7 +133,7 @@
                     (async () => {
                         try {
                             const RESPONSE_DATA = await fetchData(
-                                `api/modal/etkinlik/${event.target.dataset.id}`);
+                                `yonetim/etkinlikler/modalGetir/${event.target.dataset.id}`);
 
                             if (RESPONSE_DATA.success) {
                                 modalContent.innerHTML = RESPONSE_DATA.html;
@@ -153,7 +153,7 @@
                     (async () => {
                         try {
                             const RESPONSE_DATA = await fetchData(
-                                `api/modal/etkinlik/sil/${event.target.dataset.id}`);
+                                `yonetim/etkinlikler/silmeModalGetir/${event.target.dataset.id}`);
 
                             if (RESPONSE_DATA.success) {
                                 modalContent.innerHTML = RESPONSE_DATA.html;
@@ -184,7 +184,7 @@
                 (async () => {
                     try {
                         const RESPONSE_DATA = await fetchData(
-                            `api/etkinlik/resmi-kaldir/${event.target.dataset.id}`);
+                            `yonetim/etkinlikler/resmi-kaldir/${event.target.dataset.id}`);
 
                         if (RESPONSE_DATA.success) {
                             event.target.closest('.galeri-resmi').remove();

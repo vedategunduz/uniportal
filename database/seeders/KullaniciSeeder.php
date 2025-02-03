@@ -10,7 +10,6 @@ class KullaniciSeeder extends Seeder
     public function run(): void
     {
         Kullanici::create([
-            'roller_id' => 1,
             'unvanlar_id' => 1,
             'ad'        => 'Hayati',
             'soyad'     => 'Tehlike',
@@ -19,7 +18,6 @@ class KullaniciSeeder extends Seeder
             'password'  => '12345600',
         ]);
         Kullanici::create([
-            'roller_id'     => 2,
             'unvanlar_id' => 1,
             'ad'            => 'Evren',
             'soyad'         => 'Köksal',
@@ -30,7 +28,6 @@ class KullaniciSeeder extends Seeder
             'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=501'
         ]);
         Kullanici::create([
-            'roller_id'     => 3,
             'unvanlar_id' => 3,
             'ad'            => 'Gökhan',
             'soyad'         => 'Şenlik',
@@ -41,7 +38,6 @@ class KullaniciSeeder extends Seeder
             'profilFotoUrl' => 'https://bidb.nku.edu.tr/resim.php?no=2641'
         ]);
         Kullanici::create([
-            'roller_id'     => 3,
             'unvanlar_id' => 2,
             'ad'            => 'Vedat Emre',
             'soyad'         => 'Gündüz',
@@ -52,7 +48,6 @@ class KullaniciSeeder extends Seeder
             'profilFotoUrl' => 'https://avatars.githubusercontent.com/u/94452068?v=4'
         ]);
         Kullanici::create([
-            'roller_id'     => 3,
             'unvanlar_id' => 1,
             'ad'            => 'Emre',
             'soyad'         => 'Gündüz',

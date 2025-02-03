@@ -14,7 +14,6 @@ return new class extends Migration
     {
         Schema::create('kullanicilar', function (Blueprint $table) {
             $table->id('kullanicilar_id');
-            $table->unsignedBigInteger('roller_id')->nullable();
             $table->unsignedBigInteger('unvanlar_id')->default(46);
             $table->string('ad', 155);
             $table->string('soyad', 155);
@@ -28,9 +27,6 @@ return new class extends Migration
             $table->boolean('veriGosterimIzni')->default(1);
             $table->rememberToken();
             $table->timestamps();
-
-            // Foreign Keys
-            $table->foreign('roller_id')->references('roller_id')->on('roller')->onDelete('restrict');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -41,7 +37,6 @@ return new class extends Migration
 
         Schema::create('kullanicilar_log', function (Blueprint $table) {
             $table->integer('kullanicilar_id');
-            $table->integer('roller_id')->nullable();
             $table->unsignedBigInteger('unvanlar_id')->nullable();
             $table->string('ad', 155);
             $table->string('soyad', 155);
@@ -63,7 +58,6 @@ return new class extends Migration
             BEGIN
                 INSERT INTO kullanicilar_log (
                     kullanicilar_id,
-                    roller_id,
                     unvanlar_id,
                     ad,
                     soyad,
@@ -82,7 +76,6 @@ return new class extends Migration
                 )
                 VALUES (
                     NEW.kullanicilar_id,
-                    NEW.roller_id,
                     NEW.unvanlar_id,
                     NEW.ad,
                     NEW.soyad,
@@ -109,7 +102,6 @@ return new class extends Migration
             BEGIN
                 INSERT INTO kullanicilar_log (
                     kullanicilar_id,
-                    roller_id,
                     unvanlar_id,
                     ad,
                     soyad,
@@ -128,7 +120,6 @@ return new class extends Migration
                 )
                 VALUES (
                     NEW.kullanicilar_id,
-                    NEW.roller_id,
                     NEW.unvanlar_id,
                     NEW.ad,
                     NEW.soyad,

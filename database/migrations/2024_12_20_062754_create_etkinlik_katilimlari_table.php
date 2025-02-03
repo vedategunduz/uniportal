@@ -18,10 +18,16 @@ return new class extends Migration
             $table->id('etkinlik_katilimlari_id');
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
             $table->unsignedBigInteger('kullanicilar_id')->nullable();
-            $table->unsignedBigInteger('isletmeler_id')->nullable();
+            $table->unsignedBigInteger('giden_isletmeler_id')->nullable();
+            $table->unsignedBigInteger('gidilen_isletmeler_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
             $table->enum('katilimciTipi', ['davetli', 'davetEden', 'katilimci']);
             $table->timestamps();
+
+            $table->foreign('etkinlikler_id')->references('etkinlikler_id')->on('etkinlikler')->restrictOnDelete();
+            $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->restrictOnDelete();
+            $table->foreign('giden_isletmeler_id')->references('isletmeler_id')->on('isletmeler')->restrictOnDelete();
+            $table->foreign('gidilen_isletmeler_id')->references('isletmeler_id')->on('isletmeler')->restrictOnDelete();
         });
 
         Schema::enableForeignKeyConstraints();
@@ -30,7 +36,8 @@ return new class extends Migration
             $table->integer('etkinlik_katilimlari_id');
             $table->integer('etkinlikler_id')->nullable();
             $table->integer('kullanicilar_id')->nullable();
-            $table->integer('isletmeler_id')->nullable();
+            $table->unsignedBigInteger('giden_isletmeler_id')->nullable();
+            $table->unsignedBigInteger('gidilen_isletmeler_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
             $table->enum('katilimciTipi', ['davetli', 'davetEden', 'katilimci']);
             $table->char('yapilanIslem', 1);
@@ -46,7 +53,8 @@ return new class extends Migration
                     etkinlik_katilimlari_id,
                     etkinlikler_id,
                     kullanicilar_id,
-                    isletmeler_id,
+                    giden_isletmeler_id,
+                    gidilen_isletmeler_id,
                     durum,
                     katilimciTipi,
                     yapilanIslem,
@@ -59,7 +67,8 @@ return new class extends Migration
                     NEW.etkinlik_katilimlari_id,
                     NEW.etkinlikler_id,
                     NEW.kullanicilar_id,
-                    NEW.isletmeler_id,
+                    NEW.giden_isletmeler_id,
+                    NEW.gidilen_isletmeler_id,
                     NEW.durum,
                     NEW.katilimciTipi,
                     'E',
@@ -80,7 +89,8 @@ return new class extends Migration
                     etkinlik_katilimlari_id,
                     etkinlikler_id,
                     kullanicilar_id,
-                    isletmeler_id,
+                    giden_isletmeler_id,
+                    gidilen_isletmeler_id,
                     durum,
                     katilimciTipi,
                     yapilanIslem,
@@ -93,7 +103,8 @@ return new class extends Migration
                     NEW.etkinlik_katilimlari_id,
                     NEW.etkinlikler_id,
                     NEW.kullanicilar_id,
-                    NEW.isletmeler_id,
+                    NEW.giden_isletmeler_id,
+                    NEW.gidilen_isletmeler_id,
                     NEW.durum,
                     NEW.katilimciTipi,
                     'G',

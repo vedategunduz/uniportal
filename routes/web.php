@@ -17,73 +17,9 @@ use App\Http\Controllers\Toplanti\ToplantiController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
-use Google\Service\BeyondCorp\Resource\V;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
-});
-
-Route::prefix('api')->name('api.')->group(function () {
-
-    Route::prefix('modal')->name('modal.')->group(function () {
-
-        Route::prefix('etkinlik')->group(function () {
-            Route::post('/{id}', [EventController::class, 'modalGetir']);
-            Route::post('sil/{id}', [EventController::class, 'silmeModalGetir']);
-        });
-
-        Route::prefix('toplantilar')->group(function () {
-
-            Route::prefix('ziyaret')->group(function () {
-                Route::prefix('talep')->group(function () {
-                    Route::post('/', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
-                    Route::post('/olustur', [ZiyaretController::class, 'store']);
-
-                    Route::prefix('personeller')->group(function () {
-                        Route::post('/', [ZiyaretController::class, 'personeller']);
-                        Route::post('/yonetici', [ZiyaretController::class, 'kurumPersoneller']);
-                    });
-
-                    Route::prefix('personel-card')->group(function () {
-                        Route::post('/', [ZiyaretController::class, 'personelCard']);
-                        Route::post('davetci', [ZiyaretController::class, 'kurumPersonelCard']);
-                    });
-                });
-            });
-        });
-    });
-
-    Route::prefix('yonetim')->name('yonetim.')->group(function () {
-
-
-        Route::prefix('{isletmeler_id}')->group(function () {
-
-            Route::prefix('birimler')->name('birimler.')->group(function () {
-                Route::post('/', [BirimlerController::class, 'store']);
-            });
-        });
-
-        Route::prefix('toplantilar')->group(function () {
-            Route::get('/{isletmeler_id}', [ToplantiController::class, 'getDataTableDatas']);
-        });
-
-        // Route::prefix('birimler')->group(function () {
-        //     Route::post('/guncelle', [BirimlerController::class, 'guncelle']);
-        // });
-    });
-
-    Route::prefix('etkinlik')->name('etkinlik.')->group(function () {
-        Route::post('ekle', [EventController::class, 'store']);
-        Route::post('guncelle', [EventController::class, 'update']);
-        Route::post('sil', [EventController::class, 'etkinlikSil']);
-        Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
-
-        Route::prefix('katilim')->name('katilim.')->group(function () {
-            Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
-            Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');
-            Route::get('download-ics/{id}', [ZiyaretKatilimController::class, 'downloadIcs'])->name('download-ics');
-        });
-    });
 });
 
 Route::prefix('personel')->name('personel.')->group(function () {
@@ -117,10 +53,40 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
             Route::get('/', [EventController::class, 'index'])->name('index');
             Route::get('/show/{isletmeler_id}', [EventController::class, 'getDataTableDatas'])->name('show');
+            Route::post('modalGetir/{id}', [EventController::class, 'modalGetir']);
+            Route::post('silmeModalGetir/{id}', [EventController::class, 'silmeModalGetir']);
+            Route::post('ekle', [EventController::class, 'store']);
+            Route::post('guncelle', [EventController::class, 'update']);
+            Route::post('sil', [EventController::class, 'etkinlikSil']);
+            Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
+
+            Route::prefix('katilim')->name('katilim.')->group(function () {
+                Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
+                Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');
+                Route::get('download-ics/{id}', [ZiyaretKatilimController::class, 'downloadIcs'])->name('download-ics');
+            });
         });
 
         Route::prefix('toplantilar')->name('toplantilar.')->group(function () {
-            Route::get('/ziyaret-talep', [ToplantiController::class, 'ziyaretTalep']);
+            Route::get('/{isletmeler_id}', [ToplantiController::class, 'getDataTableDatas']);
+
+            Route::prefix('ziyaret')->group(function () {
+                Route::prefix('talep')->group(function () {
+                    Route::get('/', [ToplantiController::class, 'index']);
+                    Route::post('/ziyaretTalepModalGetir', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
+                    Route::post('/olustur', [ZiyaretController::class, 'store']);
+
+                    Route::prefix('personeller')->group(function () {
+                        Route::post('/', [ZiyaretController::class, 'personeller']);
+                        Route::post('/yonetici', [ZiyaretController::class, 'kurumPersoneller']);
+                    });
+
+                    Route::prefix('personel-card')->group(function () {
+                        Route::post('/', [ZiyaretController::class, 'personelCard']);
+                        Route::post('davetci', [ZiyaretController::class, 'kurumPersonelCard']);
+                    });
+                });
+            });
         });
 
         Route::prefix('kullanicilar')->name('kullanicilar.')->group(function () {
@@ -175,12 +141,12 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/cikis', [AuthController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
 });
 
-Route::get('/onizle', function() {
+Route::get('/onizle', function () {
     return view('mail.hesap-onaylama-mail');
 });
 
-Route::prefix('error')->name('error.')->group(function () {
+Route::prefix('errors')->name('errors.')->group(function () {
     Route::get('/404', function () {
-        return view('404');
+        return view('errors.404');
     })->name('404');
 });

@@ -22,7 +22,6 @@ class ZiyaretRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'isletmeler_id'         => 'required',
             'etkinlikBaslamaTarihi' => 'required|date',
             'etkinlikBitisTarihi'   => 'required|date|after_or_equal:etkinlikBaslamaTarihi',
             'baslik'                => 'required|string|max:255',
@@ -35,8 +34,6 @@ class ZiyaretRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'isletmeler_id.required' => 'Ziyaret işletmesi zorunludur.',
-
             'baslik.required' => 'Ziyaret başlığı zorunludur.',
             'baslik.string'   => 'Ziyaret başlığı geçerli bir metin olmalıdır.',
             'baslik.max'      => 'Ziyaret başlığı en fazla 255 karakter olabilir.',

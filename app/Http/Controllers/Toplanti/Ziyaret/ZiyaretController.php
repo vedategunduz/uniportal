@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toplanti\Ziyaret;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ZiyaretRequest;
 use App\Mail\OrnekMail;
+use App\Mail\ZiyaretEkibiMail;
 use App\Mail\ZiyaretTalebiMail;
 use App\Models\Etkinlik;
 use App\Models\EtkinlikKatilim;
@@ -13,8 +14,6 @@ use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
 use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ZiyaretController extends Controller
@@ -103,6 +102,9 @@ class ZiyaretController extends Controller
             ->whereIn('kullanicilar_id', $kullanici_ids);
 
         $search = $request->search;
+        $searchNot = $request->searchNot;
+
+        // $birimPersonellerQuery = $birimPersonellerQuery->whereNotIn('IzinliKullanici.email', $searchNot);
 
         if (!empty($search)) {
             $birimPersonellerQuery->where(function ($query) use ($search) {
@@ -117,6 +119,14 @@ class ZiyaretController extends Controller
                             ->orWhere('soyad', 'like', '%' . $search . '%')
                             ->orWhere('email', 'like', '%' . $search . '%');
                     });
+            });
+        }
+
+        if (!empty($searchNot)) {
+            $birimPersonellerQuery->where(function ($query) use ($searchNot) {
+                $query->whereHas('IzinliKullanici', function ($q) use ($searchNot) {
+                    $q->whereNotIn('email', $searchNot);
+                });
             });
         }
 
@@ -153,10 +163,10 @@ class ZiyaretController extends Controller
         ]);
     }
 
-    public function createDavetCard($kullanici_id)
+    public function createDavetCard($kullanici_birim_unvan_iliskileri)
     {
         $kullanici = KullaniciBirimUnvan::with('unvan', 'birim', 'IzinliKullanici')
-            ->where('kullanicilar_id', $kullanici_id)
+            ->where('kullanici_birim_unvan_iliskileri_id', $kullanici_birim_unvan_iliskileri)
             ->first();
 
         $html = view(
@@ -168,7 +178,8 @@ class ZiyaretController extends Controller
 
         return response()->json([
             'success' => true,
-            'html'    => $html
+            'html'    => $html,
+            'email'   => $kullanici->IzinliKullanici->email
         ]);
     }
 
@@ -191,6 +202,8 @@ class ZiyaretController extends Controller
     {
         $validated = $request->all();
         $validated['isletmeler_id'] = decrypt($request->olusturan_isletmeler_id);
+        $validated['giden_isletmeler_id'] = decrypt($request->olusturan_isletmeler_id);
+        $validated['gidilen_isletmeler_id'] = decrypt($request->gidilen_isletmeler_id);
         $validated['etkinlik_turleri_id'] = 13;
 
         $etkinlik = Etkinlik::create($validated);
@@ -201,40 +214,55 @@ class ZiyaretController extends Controller
         $ids = array_map('decrypt', $validated['davet_kullanicilar_id']);
         $kullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
 
-        $isletme = Isletme::find($validated['isletmeler_id']);
+        $giden_isletme = Isletme::find($validated['giden_isletmeler_id']);
+        $gidilen_isletme = Isletme::find($validated['gidilen_isletmeler_id']);
+
 
         foreach ($kullanicilar as $kullanici) {
             Mail::to($kullanici->email)
                 ->send(
                     new ZiyaretTalebiMail(
-                        $isletme->baslik,
-                        $validated['baslik'],
-                        $etkinlik->etkinlikler_id,
+                        $kullanici,
+                        $giden_isletme,
                         $gidecekKullanicilar,
-                        $validated['etkinlikBaslamaTarihi'],
-                        $validated['etkinlikBitisTarihi'],
-                        $validated['aciklama']
+                        $etkinlik
                     )
                 );
             EtkinlikKatilim::create([
                 'etkinlikler_id' => $etkinlik->etkinlikler_id,
                 'kullanicilar_id' => $kullanici->kullanicilar_id,
-                'isletmeler_id' => $validated['isletmeler_id'],
+                'giden_isletmeler_id' => $validated['giden_isletmeler_id'],
+                'gidilen_isletmeler_id' => $validated['gidilen_isletmeler_id'],
                 'durum' => 'beklemede',
                 'katilimciTipi' => 'davetli'
             ]);
         }
 
-        foreach ($gidecekKullanicilar as $kullanici) {
-            // Mail taslağı oluştur davet eden için
-            EtkinlikKatilim::create([
-                'etkinlikler_id' => $etkinlik->etkinlikler_id,
-                'kullanicilar_id' => $kullanici->kullanicilar_id,
-                'isletmeler_id' => $validated['isletmeler_id'],
-                'durum' => 'beklemede',
-                'katilimciTipi' => 'davetEden'
-            ]);
-        }
+        // foreach ($gidecekKullanicilar as $kullanici) {
+        //     Mail::to($kullanici->email)
+        //         ->send(
+        //             new ZiyaretEkibiMail(
+        //                 $kullanici,
+        //                 $kullanicilar,
+        //                 $gidilen_isletme->baslik,
+        //                 $validated['baslik'],
+        //                 $etkinlik->etkinlikler_id,
+        //                 $gidecekKullanicilar,
+        //                 $validated['etkinlikBaslamaTarihi'],
+        //                 $validated['etkinlikBitisTarihi'],
+        //                 $validated['aciklama']
+        //             )
+        //         );
+        //     // Mail taslağı oluştur davet eden için
+        //     EtkinlikKatilim::create([
+        //         'etkinlikler_id' => $etkinlik->etkinlikler_id,
+        //         'kullanicilar_id' => $kullanici->kullanicilar_id,
+        //         'giden_isletmeler_id' => $validated['giden_isletmeler_id'],
+        //         'gidilen_isletmeler_id' => $validated['gidilen_isletmeler_id'],
+        //         'durum' => 'beklemede',
+        //         'katilimciTipi' => 'davetEden'
+        //     ]);
+        // }
 
         return response()->json([
             'success' => true,

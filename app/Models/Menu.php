@@ -5,6 +5,7 @@ namespace App\Models;
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Menu extends Model
 {
@@ -29,10 +30,12 @@ class Menu extends Model
      */
     public function children()
     {
-        return $this->hasMany(Menu::class, 'bagli_menuler_id', 'menuler_id')
+        $roller = Kullanici::find(Auth::user()->kullanicilar_id)->roller()->pluck('roller_id');
+        $menuler_id = MenuRolIliski::whereIn('roller_id', $roller)->pluck('menuler_id');
+
+        return $this
+            ->hasMany(Menu::class, 'bagli_menuler_id', 'menuler_id')->whereIn('menuler_id', $menuler_id)
             ->with('children')->orderBy('menuSira', 'asc');
-        // Burada ->with('children') ekleyerek, çok seviyeli iç içe menülerde
-        // altın da altını otomatik olarak çekebiliriz (recursive eager loading).
     }
 
     /**

@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class ToplantiController extends Controller
 {
-    public function ziyaretTalep()
+    public function index()
     {
         return view('yonetim.toplantilar.index');
     }
@@ -27,7 +27,7 @@ class ToplantiController extends Controller
             $row[] = '<p class="w-48 text-wrap">' . $ziyaret->baslik . '</p>';
             $row[] = "2";
             $row[] = Carbon::parse($ziyaret->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i');
-            $row[] = "3";
+            $row[] = "Ziyaret sohbet odası";
             $row[] = "4";
 
             $data[] = $row;

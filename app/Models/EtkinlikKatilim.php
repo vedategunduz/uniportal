@@ -18,7 +18,8 @@ class EtkinlikKatilim extends Model
     protected $fillable = [
         'etkinlikler_id',
         'kullanicilar_id',
-        'isletmeler_id',
+        'giden_isletmeler_id',
+        'gidilen_isletmeler_id',
         'durum',
         'katilimciTipi'
     ];

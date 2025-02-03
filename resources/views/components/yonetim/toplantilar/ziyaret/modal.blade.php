@@ -61,12 +61,12 @@
 
                 <div class="relative">
                     <div id="gidecekPersoneller"
-                        class="max-h-80 space-y-4 overflow-y-auto px-4 absolute top-0 left-0 bg-white z-20 w-full shadow rounded">
+                        class="max-h-80 space-y-4 overflow-y-auto px-4 absolute top-0 left-0 bg-gray-50 z-20 w-full shadow rounded">
                     </div>
                 </div>
 
+                <h2 class="font-medium text-lg border-b mb-4">Ziyaret Ekibi</h2>
                 <div id="selectedPersonel" class="space-y-2 pb-12 max-h-80 overflow-y-auto">
-                    <h2 class="font-medium text-lg border-b mb-4">Ziyaret Ekibi</h2>
                 </div>
             </div>
             <div class="space-y-4">
@@ -83,12 +83,12 @@
 
                 <div class="relative">
                     <div id="gidilecekPersoneller"
-                        class="max-h-80 space-y-4 overflow-y-auto px-4 absolute top-0 left-0 bg-white z-20 w-full shadow rounded">
+                        class="max-h-80 space-y-4 overflow-y-auto px-4 absolute top-0 left-0 bg-gray-50  z-20 w-full shadow rounded">
                     </div>
                 </div>
 
+                <h2 class="font-medium text-lg border-b mb-4">Kurum Ekibi</h2>
                 <div id="selectedGidilecekPersonel" class="space-y-2 pb-12 max-h-80 overflow-y-auto">
-                    <h2 class="font-medium text-lg border-b mb-4">Kurum Ekibi</h2>
                 </div>
             </div>
         </div>

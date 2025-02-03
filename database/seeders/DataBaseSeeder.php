@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             IsletmeBirimSeeder::class,
             UnvanSeeder::class,
             KullaniciBirimUnvanSeeder::class,
+            KullaniciRolIlıskiSeeder::class,
         ]);
     }
 }

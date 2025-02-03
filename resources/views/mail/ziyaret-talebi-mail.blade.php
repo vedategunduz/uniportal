@@ -48,7 +48,7 @@
                         </td>
                     </tr>
 
-                    <!-- Email Body -->
+                    {{-- <!-- Email Body -->
                     <tr>
                         <td class="body" width="100%" cellpadding="0" cellspacing="0"
                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; -premailer-cellpadding: 0; -premailer-cellspacing: 0; -premailer-width: 100%; background-color: #edf2f7; border-bottom: 1px solid #edf2f7; border-top: 1px solid #edf2f7; margin: 0; padding: 0; width: 100%; border: hidden !important;">
@@ -70,15 +70,25 @@
                                         style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; max-width: 100vw; padding: 32px;">
                                         <h1
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; color: #3d4852; font-size: 18px; font-weight: bold; margin-top: 0; text-align: left;">
-                                            Merhaba,</h1>
+                                            Sayın {{ $kullanici->ad . ' ' . $kullanici->soyad }},
+                                        </h1>
                                         <p
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                            <strong>{{ $kurumBaslik }}</strong> tarafından
-                                            {{ \Carbon\Carbon::parse($etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i') }}
+                                            <strong>{{ $kurum->baslik }}</strong> olarak ürün ve hizmetlerimiz hakkında
+                                            kısa bilgi sunmak amacıyla
+                                            {{ \Carbon\Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i') }}
                                             -
-                                            {{ \Carbon\Carbon::parse($etkinlikBitisTarihi)->translatedFormat('d F Y H:i') }}
-                                            tarihlerinde düzenlenecek olan
-                                            <strong>{{ $baslik }}</strong> etkinliğine davet edildiniz.
+                                            {{ \Carbon\Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d F Y H:i') }}
+                                            tarihlerinde ziayaret etmek istemekteyiz.
+
+                                            {{ $etkinlik->aciklama }}
+
+                                            Görüşme hakkında bilgi almak için [telefon numarası] veya
+                                            [e-posta adresi] üzerinden bizimle iletişime geçebilirsiniz.
+
+                                            Görüşme talebimize olumlu yanıt vermenizi umar, ilginize teşekkür ederiz.
+
+                                            Saygılarımla,
                                         </p>
 
                                         <p
@@ -90,7 +100,7 @@
 
                                         <ul
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.4; text-align: left; list-style-type: none; padding-left: 0;">
-                                            @foreach ($kullanicilar as $kullanici)
+                                            @foreach ($gidenKullanicilar as $kullanici)
                                                 <li
                                                     style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
                                                     <table style="margin-bottom: 8px;">
@@ -115,15 +125,15 @@
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                             Katılımınızı onaylamak veya reddetmek için
                                             aşağıdaki butonlara tıklayınız.
-                                        </p>
+                                        </p> --}}
 
                                         @php
-                                            $parametre = "{$etkinlikler_id}-{$kullanici->kullanicilar_id}";
+                                            $parametre = "{$etkinlik->etkinlikler_id}-{$kullanici->kullanicilar_id}";
                                             $parametre = encrypt($parametre);
-                                            $onayLinki = route('api.etkinlik.katilim.onayla', [
+                                            $onayLinki = route('yonetim.etkinlikler.katilim.onayla', [
                                                 'parametre' => $parametre,
                                             ]);
-                                            $redLinki = route('api.etkinlik.katilim.red', [
+                                            $redLinki = route('yonetim.etkinlikler.katilim.red', [
                                                 'parametre' => $parametre,
                                             ]);
                                         @endphp

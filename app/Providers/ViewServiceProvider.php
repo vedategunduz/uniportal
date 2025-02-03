@@ -7,7 +7,10 @@ use App\Models\Il;
 use App\Models\Isletme;
 use App\Models\IsletmeBirim;
 use App\Models\IsletmeYetkili;
+use App\Models\Kullanici;
+use App\Models\KullaniciBirimUnvan;
 use App\Models\Menu;
+use App\Models\MenuRolIliski;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -29,26 +32,30 @@ class ViewServiceProvider extends ServiceProvider
     {
         View::composer(['yonetim.*', 'personel.*', 'components.menu.*'], function ($view) {
             if (Auth::check()) {
-                // $menuler = Menu::whereHas('MenuRolDetayi', function ($query) {
-                //     $query->where('roller_id', Auth::user()->roller_id);
-                // })
-                //     ->with('altMenuler')
-                //     ->whereNull('bagli_menuler_id')
-                //     ->orderBy('menuSira', 'asc')
-                //     ->get();
+                $roller = Kullanici::find(Auth::user()->kullanicilar_id)->roller()->pluck('roller_id');
+                $menuler_id = MenuRolIliski::whereIn('roller_id', $roller)->pluck('menuler_id');
 
                 $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
                 $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
-                $menuler = Menu::whereHas('MenuRolDetayi', function ($query) {
-                    $query->where('roller_id', Auth::user()->roller_id);
-                })
+                $bildirimler = [];
+
+                $birimeYerlesmemisPersonelSayisi = 0;
+
+                foreach ($isletmeler as $isletme) {
+                    $birimeYerlesmemisPersonelSayisi += KullaniciBirimUnvan::birimeYerlesmemisPersonelSayisi($isletme->isletmeler_id);
+                }
+
+                $bildirimler['birimeYerlesmemisPersonelSayisi'] = $birimeYerlesmemisPersonelSayisi;
+                $bildirimler['mesajlar'] = "5 yeni mesajınız var.";
+
+                $menuler =
+                    Menu::whereIn('menuler_id', $menuler_id)
                     ->whereNull('bagli_menuler_id')
-                    ->with('children')
                     ->orderBy('menuSira', 'asc')
                     ->get();
 
-                $view->with(compact('menuler', 'isletmeler'));
+                $view->with(compact('menuler', 'isletmeler', 'bildirimler'));
             }
         });
 

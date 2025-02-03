@@ -19,7 +19,11 @@ class IsletmeYetkili extends Model
         'isletmeler_id',
         'aktiflik'
     ];
-    
+
+    public function kullanici() {
+        
+    }
+
     public static function birimPersoneller(string $birimler_id,  int $id)
     {
         $birimPersonelleri   = KullaniciBirimUnvan::where('isletme_birimleri_id', decrypt($birimler_id))->pluck('kullanicilar_id');

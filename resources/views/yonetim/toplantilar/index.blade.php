@@ -52,11 +52,11 @@
             const modal_content = document.querySelector('#modal-content');
             const isletmeler_select = document.querySelector('#isletmeler_select');
 
-            getDataTableDatas('#toplantilar', `api/yonetim/toplantilar/${isletmeler_select.value}`);
+            getDataTableDatas('#toplantilar', `yonetim/toplantilar/${isletmeler_select.value}`);
 
             async function getModal() {
                 const RESPONSE_DATA =
-                    await fetchData('api/modal/toplantilar/ziyaret/talep');
+                    await fetchData('yonetim/toplantilar/ziyaret/talep/ziyaretTalepModalGetir');
 
                 if (RESPONSE_DATA.success) {
                     modal_content.innerHTML = RESPONSE_DATA.html;
@@ -84,10 +84,11 @@
 
             async function createPersonelCard(id, list, container, isDavetci = false) {
                 const formData = new FormData();
+                // Sol taraf kullanıcılar id gönderilir
+                // Sağ taraf için kullanici_birim_unvan_iliskileri_id gönderilir
                 formData.append('kullanicilar_id', id);
 
-                let URL = 'api/modal/toplantilar/ziyaret/talep/personel-card';
-
+                let URL = 'yonetim/toplantilar/ziyaret/talep/personel-card';
 
                 if (isDavetci) {
                     URL += '/davetci';
@@ -98,6 +99,7 @@
                 if (RESPONSE_DATA.success) {
                     container.innerHTML += RESPONSE_DATA.html;
                     list.push(RESPONSE_DATA.email);
+                    console.log(list);
                 } else {
                     errorAlert(RESPONSE_DATA.message);
                 }
@@ -113,7 +115,7 @@
                 selectedGidenPersonelEmails.forEach(item => formData.append('searchNot[]', item));
 
                 const RESPONSE_DATA =
-                    await fetchData('api/modal/toplantilar/ziyaret/talep/personeller', formData, true);
+                    await fetchData('yonetim/toplantilar/ziyaret/talep/personeller', formData, true);
 
                 if (RESPONSE_DATA.success) {
                     PERSONEL_COTAINER.innerHTML = RESPONSE_DATA.html;
@@ -141,12 +143,14 @@
 
                 formData.append('isletmeler_id', ISLETME.value);
                 formData.append('search', OTHER_SEARCH.value);
+                selectedGidilecekPersonelEmails.forEach(item => formData.append('searchNot[]', item));
 
                 const RESPONSE_DATA =
-                    await fetchData('api/modal/toplantilar/ziyaret/talep/personeller/yonetici', formData,
+                    await fetchData('yonetim/toplantilar/ziyaret/talep/personeller/yonetici', formData,
                         true);
 
                 if (RESPONSE_DATA.success) {
+                    console.log(1);
                     ARAMA_CONTAINER.innerHTML = RESPONSE_DATA.html;
 
                     const checkboxes = ARAMA_CONTAINER.querySelectorAll('input[type="checkbox"]');
@@ -161,6 +165,7 @@
                         });
 
                         if (selectedGidilecekPersonelEmails.includes(checkbox.dataset.email)) {
+                            console.log(2);
                             checkbox.checked = true;
                         }
                     });
@@ -181,7 +186,7 @@
                     console.log(Object.fromEntries(formData));
 
                     const RESPONSE_DATA = await fetchData(
-                        'api/modal/toplantilar/ziyaret/talep/olustur',
+                        'yonetim/toplantilar/ziyaret/talep/olustur',
                         formData, true);
 
                     if (RESPONSE_DATA.success) {

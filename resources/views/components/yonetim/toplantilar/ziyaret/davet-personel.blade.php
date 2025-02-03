@@ -1,6 +1,6 @@
 @foreach ($personeller as $personel)
     @php
-        $personelId = encrypt($personel->IzinliKullanici->kullanicilar_id);
+        $personelId = encrypt($personel->kullanici_birim_unvan_iliskileri_id);;
     @endphp
     <div class="flex items-center gap-2 border-b pb-2 last:border-none">
         <input type="checkbox" name="kullanicilar_id[]" id="checkbox_{{ $personelId }}" value="{{ $personelId }}"
@@ -9,7 +9,6 @@
 
         <img src="{{ $personel->IzinliKullanici->profilFotoUrl }}" class="size-14 object-contain rounded-full"
             alt="">
-
         <label for="checkbox_{{ $personelId }}">
             <div class="flex flex-col">
                 <span class="font-medium text-sm">

@@ -70,7 +70,7 @@
                                         style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; max-width: 100vw; padding: 32px;">
                                         <h1
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; color: #3d4852; font-size: 18px; font-weight: bold; margin-top: 0; text-align: left;">
-                                            Merhaba,</h1>
+                                            Sayın {{ $kullanici->ad . ' ' . $kullanici->soyad }},
                                         <p
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                             <strong>{{ $kurumBaslik }}</strong> tarafından
@@ -90,7 +90,39 @@
 
                                         <ul
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.4; text-align: left; list-style-type: none; padding-left: 0;">
-                                            @foreach ($kullanicilar as $kullanici)
+                                            @foreach ($davetEdilenKullanici as $kullanici)
+                                                <li
+                                                    style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
+                                                    <table style="margin-bottom: 8px;">
+                                                        <tr>
+                                                            <!-- Profil Resmi Hücresi -->
+                                                            <td style="vertical-align: middle; padding-right: 8px;">
+                                                                <img src="{{ $kullanici->profilFotoUrl }}"
+                                                                    alt="Profil Foto"
+                                                                    style="border-radius: 100%; width: 52px; height: 52px; object-fit: contain">
+                                                            </td>
+                                                            <!-- Ad Soyad Hücresi -->
+                                                            <td style="vertical-align: middle;">
+                                                                {{ $kullanici->ad }} {{ $kullanici->soyad }}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+
+
+                                        <p
+                                            style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
+                                            <strong
+                                                style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
+                                                Ziyaret Edilen Kurum Ekibi
+                                            </strong>
+                                        </p>
+
+                                        <ul
+                                            style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.4; text-align: left; list-style-type: none; padding-left: 0;">
+                                            @foreach ($gidenKullanicilar as $kullanici)
                                                 <li
                                                     style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
                                                     <table style="margin-bottom: 8px;">
@@ -120,10 +152,10 @@
                                         @php
                                             $parametre = "{$etkinlikler_id}-{$kullanici->kullanicilar_id}";
                                             $parametre = encrypt($parametre);
-                                            $onayLinki = route('api.etkinlik.katilim.onayla', [
+                                            $onayLinki = route('yonetim.etkinlikler.katilim.onayla', [
                                                 'parametre' => $parametre,
                                             ]);
-                                            $redLinki = route('api.etkinlik.katilim.red', [
+                                            $redLinki = route('yonetim.etkinlikler.katilim.red', [
                                                 'parametre' => $parametre,
                                             ]);
                                         @endphp

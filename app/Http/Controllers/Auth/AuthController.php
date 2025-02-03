@@ -7,6 +7,7 @@ use App\Http\Requests\KullaniciRequest;
 use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
 use App\Models\Kullanici;
+use App\Models\KullaniciRolIliski;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -83,6 +84,11 @@ class AuthController extends Controller
                     'isletmeler_id' => $isletme->isletmeler_id,
                     'kullanicilar_id' => $kullanici->kullanicilar_id
                 ]);
+
+                KullaniciRolIliski::create([
+                    'kullanicilar_id' => $kullanici->kullanicilar_id,
+                    'roller_id' => 18
+                ]);
             }
 
             return view('mail.yanit.hesap-onay', [
@@ -90,7 +96,7 @@ class AuthController extends Controller
                 'message' => 'Hesabınız başarıyla aktive edildi.'
             ]);
         } catch (\Throwable $th) {
-            return redirect()->route('error.404');
+            return redirect()->route('errors.404');
         }
     }
 

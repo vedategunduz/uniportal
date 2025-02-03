@@ -18,7 +18,6 @@ class Kullanici extends Authenticatable
     protected $primaryKey = 'kullanicilar_id';
 
     protected $fillable = [
-        'roller_id',
         'unvanlar_id',
         'ad',
         'soyad',
@@ -70,7 +69,15 @@ class Kullanici extends Authenticatable
         return $this->belongsTo(Rol::class, 'roller_id');
     }
 
-    public function sendEmailVerificationNotification() {
+    public function roller()
+    {
+        return $this->hasMany(KullaniciRolIliski::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
+
+
+    public function sendEmailVerificationNotification()
+    {
         Mail::to($this->email)->send(new HesapOnaylamaMail($this));
     }
 }

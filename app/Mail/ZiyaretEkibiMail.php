@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,10 +12,12 @@ class ZiyaretEkibiMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $kullanici;
+    public $davetEdilenKullanici;
     public $kurumBaslik;
     public $baslik;
     public $etkinlikler_id;
-    public $kullanicilar;
+    public $gidenKullanicilar;
     public $etkinlikBaslamaTarihi;
     public $etkinlikBitisTarihi;
     public $aciklama;
@@ -24,9 +25,17 @@ class ZiyaretEkibiMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($kullanici, $davetEdilenKullanici, $kurumBaslik, $baslik, $etkinlikler_id, $gidenKullanicilar, $etkinlikBaslamaTarihi, $etkinlikBitisTarihi, $aciklama)
     {
-        //
+        $this->kullanici = $kullanici;
+        $this->davetEdilenKullanici = $davetEdilenKullanici;
+        $this->kurumBaslik = $kurumBaslik;
+        $this->baslik = $baslik;
+        $this->etkinlikler_id = $etkinlikler_id;
+        $this->gidenKullanicilar = $gidenKullanicilar;
+        $this->etkinlikBaslamaTarihi = $etkinlikBaslamaTarihi;
+        $this->etkinlikBitisTarihi = $etkinlikBitisTarihi;
+        $this->aciklama = $aciklama;
     }
 
     /**

@@ -12,25 +12,19 @@ class ZiyaretTalebiMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $kurumBaslik;
-    public $baslik;
-    public $etkinlikler_id;
-    public $kullanicilar;
-    public $etkinlikBaslamaTarihi;
-    public $etkinlikBitisTarihi;
-    public $aciklama;
+    public $kullanici;
+    public $giden_isletme;
+    public $gidenKullanicilar;
+    public $etkinlik;
     /**
      * Create a new message instance.
      */
-    public function __construct($kurumBaslik, $baslik, $etkinlikler_id, $kullanicilar, $etkinlikBaslamaTarihi, $etkinlikBitisTarihi, $aciklama)
+    public function __construct($kullanici, $giden_isletme, $gidenKullanicilar, $etkinlik)
     {
-        $this->kurumBaslik = $kurumBaslik;
-        $this->baslik = $baslik;
-        $this->etkinlikler_id = $etkinlikler_id;
-        $this->kullanicilar = $kullanicilar;
-        $this->etkinlikBaslamaTarihi = $etkinlikBaslamaTarihi;
-        $this->etkinlikBitisTarihi = $etkinlikBitisTarihi;
-        $this->aciklama = $aciklama;
+        $this->kullanici = $kullanici;
+        $this->giden_isletme = $giden_isletme;
+        $this->gidenKullanicilar = $gidenKullanicilar;
+        $this->etkinlik = $etkinlik;
     }
 
     /**
