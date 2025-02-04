@@ -9,14 +9,15 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
-use App\Http\Controllers\Katilim\ZiyaretKatilimController;
 use App\Http\Controllers\Personel\PersonelController;
 use App\Http\Controllers\Yonetim\EventController;
 use App\Http\Controllers\ResimController;
 use App\Http\Controllers\Toplanti\ToplantiController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
+use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretKatilimController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
+use App\Models\Etkinlik;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -73,8 +74,9 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::prefix('ziyaret')->group(function () {
                 Route::prefix('talep')->group(function () {
                     Route::get('/', [ToplantiController::class, 'index']);
-                    Route::post('/ziyaretTalepModalGetir', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
+                    Route::post('/ziyaretTalepModalGetir/{etkinlikler_id?}', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
                     Route::post('/olustur', [ZiyaretController::class, 'store']);
+                    Route::post('/duzenle', [ZiyaretController::class, 'duzenle']);
 
                     Route::prefix('personeller')->group(function () {
                         Route::post('/', [ZiyaretController::class, 'personeller']);

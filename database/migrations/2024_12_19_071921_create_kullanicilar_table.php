@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('kullanicilar', function (Blueprint $table) {
             $table->id('kullanicilar_id');
             $table->unsignedBigInteger('unvanlar_id')->default(46);
@@ -27,7 +28,10 @@ return new class extends Migration
             $table->boolean('veriGosterimIzni')->default(1);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('unvanlar_id')->references('unvanlar_id')->on('unvanlar');
         });
+        Schema::enableForeignKeyConstraints();
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

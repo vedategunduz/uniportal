@@ -34,11 +34,13 @@ class ZiyaretRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'davet_kullanicilar_id.required' => 'Davet edilen kullanıcılar zorunludur.',
+
             'baslik.required' => 'Ziyaret başlığı zorunludur.',
             'baslik.string'   => 'Ziyaret başlığı geçerli bir metin olmalıdır.',
             'baslik.max'      => 'Ziyaret başlığı en fazla 255 karakter olabilir.',
 
-              // Başlama tarihi
+            // Başlama tarihi
             'etkinlikBaslamaTarihi.required' => 'Ziyaret başlangıç tarihi zorunludur.',
             'etkinlikBaslamaTarihi.date'     => 'Ziyaret başlangıç tarihi geçerli bir tarih olmalıdır.',
 

@@ -14,8 +14,10 @@
                 Üzgünüz, aradığınız sayfa bulunamadı.
             </p>
             <div class="flex items-center justify-center space-x-2 mt-4">
-                <a href="{{ route('main.index') }}" class="uppercase bg-white text-blue-900 px-3 py-2 rounded-full font-medium hover:text-blue-900 transition">Anasayfa</a>
-                <a href="{{ route('main.index') }}" class="uppercase border text-white px-3 py-2 rounded-full font-medium hover:bg-white hover:text-blue-900 transition">İletişim</a>
+                <a href="{{ route('main.index') }}"
+                    class="uppercase bg-white text-blue-900 px-3 py-2 rounded-full font-medium hover:text-blue-900 transition">Anasayfa</a>
+                <a href="{{ route('main.index') }}"
+                    class="uppercase border text-white px-3 py-2 rounded-full font-medium hover:bg-white hover:text-blue-900 transition">İletişim</a>
             </div>
         </div>
     </div>

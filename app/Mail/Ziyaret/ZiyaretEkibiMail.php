@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Ziyaret;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -8,23 +8,26 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ZiyaretTalebiMail extends Mailable
+class ZiyaretEkibiMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $kullanici;
-    public $giden_isletme;
+    public $davetEdilenKullanicilar;
     public $gidenKullanicilar;
     public $etkinlik;
+    public $kurum;
+
     /**
      * Create a new message instance.
      */
-    public function __construct($kullanici, $giden_isletme, $gidenKullanicilar, $etkinlik)
+    public function __construct($etkinlik, $kullanici, $kurum, $davetEdilenKullanicilar, $gidenKullanicilar)
     {
-        $this->kullanici = $kullanici;
-        $this->giden_isletme = $giden_isletme;
-        $this->gidenKullanicilar = $gidenKullanicilar;
         $this->etkinlik = $etkinlik;
+        $this->kullanici = $kullanici;
+        $this->kurum = $kurum;
+        $this->davetEdilenKullanicilar = $davetEdilenKullanicilar;
+        $this->gidenKullanicilar = $gidenKullanicilar;
     }
 
     /**
@@ -33,7 +36,7 @@ class ZiyaretTalebiMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ziyaret Talebi Mail',
+            subject: "{$this->kurum->baslik} Ziyareti Hakkında Bilgilendirme",
         );
     }
 
@@ -43,7 +46,7 @@ class ZiyaretTalebiMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.ziyaret-talebi-mail',
+            view: 'mail.ziyaret.ziyaret-ekibi-mail',
         );
     }
 

@@ -91,6 +91,10 @@ button * {
     pointer-events: none !important;
 }
 
+img {
+    border: inherit !important;
+}
+
 @keyframes zoomIn {
     from {
         transform: scale(0.7);

@@ -33,9 +33,11 @@
         <table id="toplantilar" class="display nowrap stripe">
             <thead>
                 <tr>
-                    <th class="">Başlık</th>
-                    <th class="">Ekip</th>
+                    <th class="">Ziyaret Edilen Kurum</th>
+                    <th class="">Ziyaret Başlık</th>
                     <th class="">Tarih</th>
+                    <th class="">Ziyaret Eden Kişiler</th>
+                    <th class="">Ziyaret Edilen Kişiler</th>
                     <th class="w-4"></th>
                     <th class="w-4"></th>
                 </tr>
@@ -54,33 +56,70 @@
 
             getDataTableDatas('#toplantilar', `yonetim/toplantilar/${isletmeler_select.value}`);
 
-            async function getModal() {
-                const RESPONSE_DATA =
-                    await fetchData('yonetim/toplantilar/ziyaret/talep/ziyaretTalepModalGetir');
+            isletmeler_select.addEventListener('change', async () => {
+                $('#toplantilar').DataTable().destroy();
+                getDataTableDatas('#toplantilar', `yonetim/toplantilar/${isletmeler_select.value}`);
+            });
+
+            document.body.addEventListener('click', async (event) => {
+                if (event.target.matches('.open-modal')) {
+                    if (event.target.dataset.eventType === "duzenle") {
+                        await getModal(event.target.dataset.id);
+                    } else {
+                        await getModal();
+                        await createPersonelCard('{{ encrypt(Auth::user()->kullanicilar_id) }}',
+                            selectedGidenPersonelEmails, SELECTED_PERSONEL);
+                    }
+                }
+                if (event.target.matches('.removeSelectedGidenPersonelEmail')) {
+                    event.target.closest('.flex').remove();
+                    selectedGidenPersonelEmails = selectedGidenPersonelEmails.filter(
+                        email => email !== event.target.dataset.email
+                    );
+                }
+                if (event.target.matches('.removeSelectedDavetPersonelEmail')) {
+                    event.target.closest('.flex').remove();
+                    selectedGidilecekPersonelEmails = selectedGidilecekPersonelEmails.filter(
+                        email => email !== event.target.dataset.email
+                    );
+                }
+            });
+
+            // Ziyaret Ekibi
+            let selectedGidenPersonelEmails;
+            let SELECTED_PERSONEL;
+            let CREATED_ISLETME;
+            let SEARCH;
+            let PERSONEL_CONTAINER;
+
+            // Gidilen Kurum
+            let selectedGidilecekPersonelEmails;
+            let OTHER_SEARCH;
+            let ISLETME;
+            let ARAMA_CONTAINER;
+            let SELECTED_GIDILECEK_PERSONEL;
+
+            let submit;
+
+            async function getModal($etkinlikler_id = null) {
+                let URL = 'yonetim/toplantilar/ziyaret/talep/ziyaretTalepModalGetir';
+
+                if ($etkinlikler_id) {
+                    URL += `/${$etkinlikler_id}`;
+                }
+
+                const RESPONSE_DATA = await fetchData(URL);
 
                 if (RESPONSE_DATA.success) {
                     modal_content.innerHTML = RESPONSE_DATA.html;
+                    //
+                    tanimlamalariYap(RESPONSE_DATA.gidenKullanicilarEmails, RESPONSE_DATA
+                        .gidilecekKullanicilarEmails);
                 } else {
                     errorAlert(RESPONSE_DATA.message);
                 }
             }
             await getModal();
-
-            const submit = document.querySelector('button[type="submit"]');
-
-            // Ziyaret Ekibi
-            let selectedGidenPersonelEmails = [];
-            const SELECTED_PERSONEL = document.querySelector('#selectedPersonel');
-            const CREATED_ISLETME = document.querySelector('#olusturan_isletmeler_id');
-            const SEARCH = document.querySelector('#search');
-            const PERSONEL_COTAINER = document.querySelector('#gidecekPersoneller');
-
-            // Gidilen Kurum
-            let selectedGidilecekPersonelEmails = [];
-            const OTHER_SEARCH = document.querySelector('#otherSearch');
-            const ISLETME = document.querySelector('#gidilen_isletmeler_id');
-            const ARAMA_CONTAINER = document.querySelector('#gidilecekPersoneller');
-            const SELECTED_GIDILECEK_PERSONEL = document.querySelector('#selectedGidilecekPersonel');
 
             async function createPersonelCard(id, list, container, isDavetci = false) {
                 const formData = new FormData();
@@ -99,7 +138,6 @@
                 if (RESPONSE_DATA.success) {
                     container.innerHTML += RESPONSE_DATA.html;
                     list.push(RESPONSE_DATA.email);
-                    console.log(list);
                 } else {
                     errorAlert(RESPONSE_DATA.message);
                 }
@@ -118,9 +156,9 @@
                     await fetchData('yonetim/toplantilar/ziyaret/talep/personeller', formData, true);
 
                 if (RESPONSE_DATA.success) {
-                    PERSONEL_COTAINER.innerHTML = RESPONSE_DATA.html;
+                    PERSONEL_CONTAINER.innerHTML = RESPONSE_DATA.html;
 
-                    const checkboxes = PERSONEL_COTAINER.querySelectorAll('input[type="checkbox"]');
+                    const checkboxes = PERSONEL_CONTAINER.querySelectorAll('input[type="checkbox"]');
                     checkboxes.forEach((checkbox) => {
                         checkbox.addEventListener('change', () => {
                             if (checkbox.checked) {
@@ -173,86 +211,87 @@
                     errorAlert(RESPONSE_DATA.message);
             }
 
-            CREATED_ISLETME.addEventListener('change', async () => {
-                await getPersonel();
-            });
+            function tanimlamalariYap(gidenKullanicilarEmails, gidilecekKullanicilarEmails) {
+                // Ziyaret Ekibi
+                selectedGidenPersonelEmails = gidenKullanicilarEmails;
+                SELECTED_PERSONEL = document.querySelector('#selectedPersonel');
+                CREATED_ISLETME = document.querySelector('#olusturan_isletmeler_id');
+                SEARCH = document.querySelector('#search');
+                PERSONEL_CONTAINER = document.querySelector('#gidecekPersoneller');
 
-            submit.addEventListener('click', async (e) => {
-                e.preventDefault();
-                submit.disabled = true;
-                try {
-                    const formData = new FormData(submit.closest('form'));
+                // Gidilen Kurum
+                selectedGidilecekPersonelEmails = gidilecekKullanicilarEmails;
+                OTHER_SEARCH = document.querySelector('#otherSearch');
+                ISLETME = document.querySelector('#gidilen_isletmeler_id');
+                ARAMA_CONTAINER = document.querySelector('#gidilecekPersoneller');
+                SELECTED_GIDILECEK_PERSONEL = document.querySelector('#selectedGidilecekPersonel');
 
-                    console.log(Object.fromEntries(formData));
+                submit = document.querySelector('button[type="submit"]')
 
-                    const RESPONSE_DATA = await fetchData(
-                        'yonetim/toplantilar/ziyaret/talep/olustur',
-                        formData, true);
+                submit.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    submit.disabled = true;
+                    submit.textContent = 'Gönderiliyor...';
+                    try {
+                        const formData = new FormData(submit.closest('form'));
+                        console.log(Object.fromEntries(formData));
 
-                    if (RESPONSE_DATA.success) {
-                        successAlert(RESPONSE_DATA.message);
-                        modal.classList.add('hidden');
-                        document.body.classList.remove('overflow-hidden');
-                        $('#toplantilar').DataTable().ajax.reload(null, false);
-                    } else {
-                        if (RESPONSE_DATA.errors) {
-                            for (const [key, value] of Object.entries(RESPONSE_DATA.errors)) {
-                                errorAlert(value);
-                            }
+                        let URL = 'yonetim/toplantilar/ziyaret/talep/';
+
+                        if (e.target.dataset.eventType == 'duzenle')
+                            URL += 'duzenle';
+                        else
+                            URL += 'olustur';
+
+                        const RESPONSE_DATA = await fetchData(URL, formData, true);
+
+                        if (RESPONSE_DATA.success) {
+                            successAlert(RESPONSE_DATA.message);
+                            modal.classList.add('hidden');
+                            document.body.classList.remove('overflow-hidden');
+                            $('#toplantilar').DataTable().ajax.reload(null, false);
                         } else {
-                            errorAlert(RESPONSE_DATA.message);
+                            if (RESPONSE_DATA.errors) {
+                                for (const [key, value] of Object.entries(RESPONSE_DATA.errors))
+                                    errorAlert(value);
+                            } else
+                                errorAlert(RESPONSE_DATA.message);
                         }
+                    } catch (error) {
+                        errorAlert(error);
+                    } finally {
+                        e.target.textContent = e.target.dataset.eventType == 'duzenle' ?
+                            'Ziyaret Düzenle' : 'Ziyaret Oluştur';
+                        submit.disabled = false;
                     }
-                } catch (error) {
+                })
 
-                } finally {
-                    submit.disabled = false;
-                }
-            })
+                ISLETME.addEventListener('change', async () => {
+                    if (ISLETME.value != "") {
+                        ISLETME.nextElementSibling.disabled = false;
+                        ISLETME.nextElementSibling.placeholder = "Ara...";
+                    } else {
+                        ISLETME.nextElementSibling.disabled = true;
+                        ISLETME.nextElementSibling.placeholder = "Kurum seçiniz";
+                    }
+                });
 
-            ISLETME.addEventListener('change', async () => {
-                if (ISLETME.value != "") {
-                    ISLETME.nextElementSibling.disabled = false;
-                    ISLETME.nextElementSibling.placeholder = "Ara...";
-                } else {
-                    ISLETME.nextElementSibling.disabled = true;
-                    ISLETME.nextElementSibling.placeholder = "Kurum seçiniz";
-                }
-            });
+                SEARCH.addEventListener('input', async () => {
+                    if (SEARCH.value.length < 3) {
+                        PERSONEL_CONTAINER.innerHTML = '';
+                        return;
+                    }
+                    await getPersonel();
+                });
 
-            SEARCH.addEventListener('input', async () => {
-                if (SEARCH.value.length < 3) {
-                    PERSONEL_COTAINER.innerHTML = '';
-                    return;
-                }
-                await getPersonel();
-            });
-
-            OTHER_SEARCH.addEventListener('input', async () => {
-                if (OTHER_SEARCH.value.length < 3) {
-                    ARAMA_CONTAINER.innerHTML = '';
-                    return;
-                }
-                await getYonetici();
-            })
-
-            SELECTED_PERSONEL.addEventListener('click', function(event) {
-                if (event.target.matches('.removeSelectedGidenPersonelEmail')) {
-                    event.target.closest('.flex').remove();
-                    selectedGidenPersonelEmails = selectedGidenPersonelEmails.filter(
-                        email => email !== event.target.dataset.email
-                    );
-                }
-            })
-
-            SELECTED_GIDILECEK_PERSONEL.addEventListener('click', function(event) {
-                if (event.target.matches('.removeSelectedDavetPersonelEmail')) {
-                    event.target.closest('.flex').remove();
-                    selectedGidilecekPersonelEmails = selectedGidilecekPersonelEmails.filter(
-                        email => email !== event.target.dataset.email
-                    );
-                }
-            })
+                OTHER_SEARCH.addEventListener('input', async () => {
+                    if (OTHER_SEARCH.value.length < 3) {
+                        ARAMA_CONTAINER.innerHTML = '';
+                        return;
+                    }
+                    await getYonetici();
+                })
+            }
         });
     </script>
 @endsection

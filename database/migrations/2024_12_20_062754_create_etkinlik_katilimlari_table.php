@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('giden_isletmeler_id')->nullable();
             $table->unsignedBigInteger('gidilen_isletmeler_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
-            $table->enum('katilimciTipi', ['davetli', 'davetEden', 'katilimci']);
+            $table->enum('katilimciTipi', ['davetli', 'giden', 'katilimci']);
             $table->timestamps();
 
             $table->foreign('etkinlikler_id')->references('etkinlikler_id')->on('etkinlikler')->restrictOnDelete();
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->unsignedBigInteger('giden_isletmeler_id')->nullable();
             $table->unsignedBigInteger('gidilen_isletmeler_id')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
-            $table->enum('katilimciTipi', ['davetli', 'davetEden', 'katilimci']);
+            $table->enum('katilimciTipi', ['davetli', 'giden', 'katilimci']);
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });

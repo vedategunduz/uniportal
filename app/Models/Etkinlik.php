@@ -32,6 +32,21 @@ class Etkinlik extends Model
         'aktiflik',
     ];
 
+    public function etkinlikKatilim()
+    {
+        return $this->belongsTo(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
+    public function katilimcilar()
+    {
+        return $this->belongsToMany(
+            Kullanici::class,
+            'etkinlik_katilimlari',
+            'etkinlikler_id',
+            'kullanicilar_id'
+        );
+    }
+
     public static function ekle($validatedData)
     {
         $validatedData['iller_id']            = decrypt($validatedData['iller_id']);
@@ -41,53 +56,8 @@ class Etkinlik extends Model
         return self::create($validatedData);
     }
 
-    public function galeri()
-    {
-        return $this->hasMany(Resim::class, 'etkinlikler_id', 'etkinlikler_id');
-    }
-
-    // public function isletme()
+    // public function galeri()
     // {
-    //     return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
-    // }
-
-    // public function il()
-    // {
-    //     return $this->belongsTo(Il::class, 'iller_id', 'iller_id');
-    // }
-
-    // public function etkinlikTuru()
-    // {
-    //     return $this->belongsTo(EtkinlikTur::class, 'etkinlik_turleri_id', 'etkinlik_turleri_id');
-    // }
-
-    // public function etkinlikIlDetayi()
-    // {
-    //     return $this->hasMany(EtkinlikIlDetaylari::class, 'etkinlikler_id', 'etkinlikler_id');
-    // }
-    // MODEL
-    // public static function etkinlikUpdate(array $veriler)
-    // {
-    //     $etkinlik = self::find($veriler['etkinlikler_id']);
-    //     if ($etkinlik) {
-    //         $etkinlik->update(
-    //             [
-    //                 'baslik'                     => $veriler['etkinlikBaslik'],
-    //                 'aciklama'                   => $veriler['etkinlikAciklama'],
-    //                 'etkinlik_turleri_id'        => $veriler['etkinlik_turleri_id'],
-    //                 'isletmeler_id'              => $veriler['isletmeler_id'],
-    //                 'iller_id'                   => $veriler['iller_id'],
-    //                 'kontenjan'                  => $veriler['etkinlikKontenjan'],
-    //                 'etkinlikBasvuruTarihi'      => $veriler['etkinlikBasvuru'],
-    //                 'etkinlikBasvuruBitisTarihi' => $veriler['etkinlikBasvuruBitis'],
-    //                 'etkinlikBaslamaTarihi'      => $veriler['etkinlikBaslangic'],
-    //                 'etkinlikBitisTarihi'        => $veriler['etkinlikBitis'],
-    //                 'sosyalMedyadaPaylas'        => $veriler['sosyalMedyadaPaylas'],
-    //                 'yorumDurumu'                => $veriler['yorumDurumu'],
-    //                 'kapakResmiYolu'             => $veriler['etkinlikKapakResmi']
-    //             ]
-    //         );
-    //     }
-    //     return $etkinlik;
+    //     return $this->hasMany(Resim::class, 'etkinlikler_id', 'etkinlikler_id');
     // }
 }

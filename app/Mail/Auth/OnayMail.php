@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Auth;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -8,18 +8,17 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrnekMail extends Mailable
+class OnayMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-
-    public $text;
+    public $kullanici;
     /**
      * Create a new message instance.
      */
-    public function __construct($text)
+    public function __construct($kullanici)
     {
-        $this->text = $text;
+        $this->kullanici = $kullanici;
     }
 
     /**
@@ -28,7 +27,7 @@ class OrnekMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ornek Mail',
+            subject: 'Onay Mail',
         );
     }
 
@@ -38,7 +37,7 @@ class OrnekMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail'
+            view: 'mail.auth.onay-mail',
         );
     }
 

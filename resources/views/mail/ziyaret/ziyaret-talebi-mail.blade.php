@@ -71,14 +71,23 @@
                                         <h1
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; color: #3d4852; font-size: 18px; font-weight: bold; margin-top: 0; text-align: left;">
                                             Sayın {{ $kullanici->ad . ' ' . $kullanici->soyad }},
+                                        </h1>
                                         <p
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                            <strong>{{ $kurumBaslik }}</strong> tarafından
-                                            {{ \Carbon\Carbon::parse($etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i') }}
+                                            <strong>{{ $kurum->baslik }}</strong> olarak ürün ve hizmetlerimiz hakkında kısa bilgi sunmak amacıyla
+                                            {{ \Carbon\Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i') }}
                                             -
-                                            {{ \Carbon\Carbon::parse($etkinlikBitisTarihi)->translatedFormat('d F Y H:i') }}
-                                            tarihlerinde düzenlenecek olan
-                                            <strong>{{ $baslik }}</strong> etkinliğine davet edildiniz.
+                                            {{ \Carbon\Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d F Y H:i') }}
+                                            tarihlerinde ziayaret etmek istemekteyiz.
+                                            <br>
+                                            {{ $etkinlik->aciklama }}
+                                            <br>
+                                            Görüşme hakkında bilgi almak için <a href="tel:{{ Auth::user()->telefon }}">{{ Auth::user()->telefon }}</a> veya
+                                            <a href="mailto:{{ Auth::user()->email }}">{{ Auth::user()->email }}</a> üzerinden bizimle iletişime geçebilirsiniz.
+
+                                            Görüşme talebimize olumlu yanıt vermenizi umar, ilginize teşekkür ederiz.
+                                            <br>
+                                            Saygılarımla,
                                         </p>
 
                                         <p
@@ -90,52 +99,22 @@
 
                                         <ul
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.4; text-align: left; list-style-type: none; padding-left: 0;">
-                                            @foreach ($davetEdilenKullanici as $kullanici)
+                                            @foreach ($gidenKullanicilar as $gidenKullanici)
                                                 <li
                                                     style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
                                                     <table style="margin-bottom: 8px;">
                                                         <tr>
                                                             <!-- Profil Resmi Hücresi -->
                                                             <td style="vertical-align: middle; padding-right: 8px;">
-                                                                <img src="{{ $kullanici->profilFotoUrl }}"
+                                                                <img src="{{ $gidenKullanici->profilFotoUrl }}"
                                                                     alt="Profil Foto"
                                                                     style="border-radius: 100%; width: 52px; height: 52px; object-fit: contain">
                                                             </td>
                                                             <!-- Ad Soyad Hücresi -->
                                                             <td style="vertical-align: middle;">
-                                                                {{ $kullanici->ad }} {{ $kullanici->soyad }}
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-
-
-                                        <p
-                                            style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
-                                            <strong
-                                                style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
-                                                Ziyaret Edilen Kurum Ekibi
-                                            </strong>
-                                        </p>
-
-                                        <ul
-                                            style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.4; text-align: left; list-style-type: none; padding-left: 0;">
-                                            @foreach ($gidenKullanicilar as $kullanici)
-                                                <li
-                                                    style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative;">
-                                                    <table style="margin-bottom: 8px;">
-                                                        <tr>
-                                                            <!-- Profil Resmi Hücresi -->
-                                                            <td style="vertical-align: middle; padding-right: 8px;">
-                                                                <img src="{{ $kullanici->profilFotoUrl }}"
-                                                                    alt="Profil Foto"
-                                                                    style="border-radius: 100%; width: 52px; height: 52px; object-fit: contain">
-                                                            </td>
-                                                            <!-- Ad Soyad Hücresi -->
-                                                            <td style="vertical-align: middle;">
-                                                                {{ $kullanici->ad }} {{ $kullanici->soyad }}
+                                                                {{ $gidenKullanici->ad }} {{ $gidenKullanici->soyad }}
+                                                                <br>
+                                                                {{  $gidenKullanici->anaUnvan->baslik }}
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -150,7 +129,7 @@
                                         </p>
 
                                         @php
-                                            $parametre = "{$etkinlikler_id}-{$kullanici->kullanicilar_id}";
+                                            $parametre = "{$etkinlik->etkinlikler_id}-{$kullanici->kullanicilar_id}";
                                             $parametre = encrypt($parametre);
                                             $onayLinki = route('yonetim.etkinlikler.katilim.onayla', [
                                                 'parametre' => $parametre,
@@ -194,7 +173,6 @@
                                         <p
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.5em; margin-top: 0; color: #b0adc5; font-size: 12px; text-align: center;">
                                             © 2025 uniportal. All rights reserved.</p>
-
                                     </td>
                                 </tr>
                             </table>

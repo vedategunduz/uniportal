@@ -1,31 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\Katilim;
+namespace App\Http\Controllers\Toplanti\Ziyaret;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Ziyaret\KatilimDurumMail;
 use App\Models\Etkinlik;
 use App\Models\EtkinlikKatilim;
+use App\Models\Kullanici;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class ZiyaretKatilimController extends Controller
 {
     public function onay(string $parametre)
     {
         $decryptedParam = decrypt($parametre);
-        [$etkinlikId, $kullaniciId] = explode('-', $decryptedParam);
+        [$etkinlik_id, $kullanici_id] = explode('-', $decryptedParam);
 
         // Etkinlik katılımını bul ve güncelle
-        $etkinlikKatilim = EtkinlikKatilim::where('etkinlikler_id', $etkinlikId)
-            ->where('kullanicilar_id', $kullaniciId)
+        $etkinlikKatilim = EtkinlikKatilim::where('etkinlikler_id', $etkinlik_id)
+            ->where('kullanicilar_id', $kullanici_id)
             ->firstOrFail(); // İlk kaydı bulamazsa 404 hatası verir
 
-        $this->onaylaEtkinlikKatilim($etkinlikKatilim);
+        $etkinlikKatilim->durum = 'onaylandi';
+        $etkinlikKatilim->save();
 
         // Etkinliği bul
-        $etkinlik = Etkinlik::findOrFail($etkinlikId);
+        $etkinlik = Etkinlik::findOrFail($etkinlik_id);
 
         // Google Takvim URL'sini oluştur
         $googleCalendarUrl = $this->createGoogleCalendarUrl($etkinlik);
+
+        $this->sendInfoMail(true, $etkinlik_id, $kullanici_id);
 
         // Başarı mesajını döndür
         return view('mail.yanit.index')->with([
@@ -36,16 +42,45 @@ class ZiyaretKatilimController extends Controller
         ]);
     }
 
-    /**
-     * Etkinlik katılımını onayla ve kaydet.
-     *
-     * @param EtkinlikKatilim $etkinlikKatilim
-     * @return void
-     */
-    protected function onaylaEtkinlikKatilim(EtkinlikKatilim $etkinlikKatilim)
+    public function red(string $parametre)
     {
-        $etkinlikKatilim->durum = 'onaylandi';
-        $etkinlikKatilim->save();
+        $decryptedParam = decrypt($parametre);
+
+        [$etkinlik_id, $kullanici_id] = explode('-', $decryptedParam);
+
+        $etkinlik = EtkinlikKatilim::where('etkinlikler_id', $etkinlik_id)
+            ->where('kullanicilar_id', $kullanici_id)
+            ->first();
+
+        $etkinlik->durum = 'reddedildi';
+
+        $etkinlik->save();
+
+        $this->sendInfoMail(false, $etkinlik_id, $kullanici_id);
+
+        return view('mail.yanit.index')->with([
+            'success' => false,
+            'message' => 'Davet reddedildi',
+            'parametre' => $parametre,
+        ]);
+    }
+
+    public function sendInfoMail($durum, $etkinlikler_id, $kullanicilar_id)
+    {
+        $cevaplayanKullanici = Kullanici::findOrFail($kullanicilar_id);
+        $etkinlik = Etkinlik::findOrFail($etkinlikler_id);
+
+        $katilanKullanicilar = EtkinlikKatilim::where('etkinlikler_id', $etkinlikler_id)
+            ->whereNot('kullanicilar_id', $kullanicilar_id)
+            ->pluck('kullanicilar_id')
+            ->toArray();
+
+        $katilanKullaniciListesi = Kullanici::whereIn('kullanicilar_id', $katilanKullanicilar)->get();
+
+        foreach ($katilanKullaniciListesi as $katilanKullanici) {
+            Mail::to($katilanKullanici->email)
+                ->send(new KatilimDurumMail($durum, $etkinlik, $cevaplayanKullanici, $katilanKullanici));
+        }
     }
 
     /**
@@ -77,6 +112,22 @@ class ZiyaretKatilimController extends Controller
     protected function formatForCalendar(string $tarih): string
     {
         return Carbon::parse($tarih)->utc()->format('Ymd\THis\Z');
+    }
+
+
+    public function downloadIcs($id)
+    {
+        $id = decrypt($id);
+
+        $etkinlik = Etkinlik::findOrFail($id);
+
+        $icsContent = $this->createIcsFile($etkinlik);
+
+        $fileName = "{$etkinlik->baslik}.ics";
+
+        return response($icsContent)
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', "attachment; filename={$fileName}");
     }
 
     /**
@@ -112,41 +163,5 @@ class ZiyaretKatilimController extends Controller
             END:VCALENDAR";
 
         return $icsContent;
-    }
-
-    public function downloadIcs($id)
-    {
-        $id = decrypt($id);
-
-        $etkinlik = Etkinlik::findOrFail($id);
-
-        $icsContent = $this->createIcsFile($etkinlik);
-
-        $fileName = "{$etkinlik->baslik}.ics";
-
-        return response($icsContent)
-            ->header('Content-Type', 'text/calendar; charset=utf-8')
-            ->header('Content-Disposition', "attachment; filename={$fileName}");
-    }
-
-    public function red(string $parametre)
-    {
-        $decryptedParam = decrypt($parametre);
-
-        [$etkinlik_id, $kullanici_id] = explode('-', $decryptedParam);
-
-        $etkinlik = EtkinlikKatilim::where('etkinlikler_id', $etkinlik_id)
-            ->where('kullanicilar_id', $kullanici_id)
-            ->first();
-
-        $etkinlik->durum = 'reddedildi';
-
-        $etkinlik->save();
-
-        return view('mail.yanit.index')->with([
-            'success' => false,
-            'message' => 'Davet reddedildi',
-            'parametre' => $parametre,
-        ]);
     }
 }

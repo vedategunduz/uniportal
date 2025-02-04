@@ -1,25 +1,34 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Ziyaret;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class HesapOnaylamaMail extends Mailable
+class ZiyaretTalebiMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    // Kullanici::class
     public $kullanici;
+    // Isletme::class
+    public $kurum;
+    // Kullanici::class array
+    public $gidenKullanicilar;
+    // Etkinlik::class
+    public $etkinlik;
     /**
      * Create a new message instance.
      */
-    public function __construct($kullanici)
+    public function __construct($kullanici, $kurum, $gidenKullanicilar, $etkinlik)
     {
-        $this->kullanici = $kullanici;
+        $this->kullanici         = $kullanici;
+        $this->kurum             = $kurum;
+        $this->gidenKullanicilar = $gidenKullanicilar;
+        $this->etkinlik          = $etkinlik;
     }
 
     /**
@@ -28,7 +37,7 @@ class HesapOnaylamaMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Hesap Onaylama Mail',
+            subject: "{$this->kurum->baslik} Ziyaret Talebi",
         );
     }
 
@@ -38,7 +47,7 @@ class HesapOnaylamaMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.hesap-onaylama-mail',
+            view: 'mail.ziyaret.ziyaret-talebi-mail',
         );
     }
 

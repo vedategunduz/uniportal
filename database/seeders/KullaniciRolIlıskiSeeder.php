@@ -30,7 +30,7 @@ class KullaniciRolIlıskiSeeder extends Seeder
 
         // foreach ($kullanicilar as $kullanici) {
         //     foreach (range(1, 18) as $rolId) {
-        //         KullaniciRolIliski::create([
+        //         KullaniciRolIliskileri::create([
         //             'kullanicilar_id' => $kullanici->kullanicilar_id,
         //             'roller_id' => $rolId,
         //         ]);

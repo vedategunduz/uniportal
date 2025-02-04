@@ -24,5 +24,30 @@ class EtkinlikKatilim extends Model
         'katilimciTipi'
     ];
 
-    // Durum ENUM => ['beklemede', 'onaylandi', 'iptal']
+    public function bilgi()
+    {
+        return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
+    public function gidilenIsletme()
+    {
+        return $this->belongsTo(Isletme::class, 'gidilen_isletmeler_id', 'isletmeler_id');
+    }
+
+    public function gidenIsletme()
+    {
+        return $this->belongsTo(Isletme::class, 'giden_isletmeler_id', 'isletmeler_id');
+    }
+
+    public function gidenKullanicilar()
+    {
+        return $this->hasMany(EtkinlikKatilim::class, 'giden_isletmeler_id', 'giden_isletmeler_id')
+            ->where('katilimciTipi', 'giden');
+    }
+
+    public function gidilenKullanicilar()
+    {
+        return $this->hasMany(EtkinlikKatilim::class, 'giden_isletmeler_id', 'giden_isletmeler_id')
+            ->where('katilimciTipi', 'davetli');
+    }
 }

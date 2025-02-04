@@ -75,7 +75,6 @@ class Kullanici extends Authenticatable
     }
 
 
-
     public function sendEmailVerificationNotification()
     {
         Mail::to($this->email)->send(new HesapOnaylamaMail($this));
