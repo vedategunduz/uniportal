@@ -8,29 +8,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ZiyaretTalebiMail extends Mailable
+class ZiyaretKatilimIptal extends Mailable
 {
     use Queueable, SerializesModels;
 
-    // Kullanici::class
     public $kullanici;
-    // Isletme::class
-    public $kurum;
-    // Kullanici::class array
-    public $gidenKullanicilar;
-    // Etkinlik::class
     public $etkinlik;
-    public $guncellendi;
     /**
      * Create a new message instance.
      */
-    public function __construct($kullanici, $kurum, $gidenKullanicilar, $etkinlik, $guncellendi = false)
+    public function __construct($kullanici, $etkinlik)
     {
-        $this->kullanici         = $kullanici;
-        $this->kurum             = $kurum;
-        $this->gidenKullanicilar = $gidenKullanicilar;
-        $this->etkinlik          = $etkinlik;
-        $this->guncellendi       = $guncellendi;
+        $this->kullanici = $kullanici;
+        $this->etkinlik = $etkinlik;
     }
 
     /**
@@ -38,13 +28,8 @@ class ZiyaretTalebiMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        if ($this->guncellendi) {
-            return new Envelope(
-                subject: "{$this->kurum->baslik} Ziyaret Talebi Güncellendi",
-            );
-        }
         return new Envelope(
-            subject: "{$this->kurum->baslik} Ziyaret Talebi",
+            subject: 'Ziyaret Katilim Iptal',
         );
     }
 
@@ -54,7 +39,7 @@ class ZiyaretTalebiMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.ziyaret.ziyaret-talebi-mail',
+            view: 'mail.ziyaret.ziyaret-katilim-iptal',
         );
     }
 

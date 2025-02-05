@@ -35,8 +35,7 @@ class ViewServiceProvider extends ServiceProvider
                 $roller = Kullanici::find(Auth::user()->kullanicilar_id)->roller()->pluck('roller_id');
                 $menuler_id = MenuRolIliski::whereIn('roller_id', $roller)->pluck('menuler_id');
 
-                $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
-                $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
+                $isletmeler = Isletme::isletmelerimiGetir();
 
                 $bildirimler = [];
 

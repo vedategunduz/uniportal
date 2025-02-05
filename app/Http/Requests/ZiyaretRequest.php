@@ -34,7 +34,8 @@ class ZiyaretRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'davet_kullanicilar_id.required' => 'Davet edilen kullanıcılar zorunludur.',
+            'kullanicilar_id.required'       => 'Ziyaret ekibi en az 1 kişiden oluşmalıdır.',
+            'davet_kullanicilar_id.required' => 'Kurum ekibi en az 1 kişiden oluşmalıdır.',
 
             'baslik.required' => 'Ziyaret başlığı zorunludur.',
             'baslik.string'   => 'Ziyaret başlığı geçerli bir metin olmalıdır.',

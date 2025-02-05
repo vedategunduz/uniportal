@@ -18,6 +18,4 @@ class Rol extends Model
     protected $fillable = [
         'baslik',
     ];
-
-    public $timestamps = true;
 }

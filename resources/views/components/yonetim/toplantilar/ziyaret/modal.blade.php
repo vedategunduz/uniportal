@@ -13,8 +13,8 @@
         $etkinlikBaslik = $etkinlik->baslik;
         $etkinlikBaslamaTarihi = $etkinlik->etkinlikBaslamaTarihi;
         $etkinlikBitisTarihi = $etkinlik->etkinlikBitisTarihi;
-        $gidenIsletmelerId = $etkinlik->etkinlikKatilim->gidenIsletme->isletmeler_id;
-        $gidilenIsletmelerId = $etkinlik->etkinlikKatilim->gidilenIsletme->isletmeler_id;
+        $gidenIsletmelerId = $etkinlik->giden_isletme;
+        $gidilenIsletmelerId = $etkinlik->gidilen_isletme;
         $buton = 'Ziyaret Düzenle';
         $eventType = 'duzenle';
     }
@@ -100,7 +100,7 @@
                 </h2>
                 <div id="selectedPersonel" class="space-y-2 pb-12 max-h-80 overflow-y-auto">
                     @if (!empty($etkinlik))
-                        @foreach ($etkinlik->etkinlikKatilim->gidenKullanicilar as $kullanici)
+                        @foreach ($etkinlik->gidenKullanicilar as $kullanici)
                             <div class="flex items-center gap-2">
                                 <input type="hidden" name="kullanicilar_id[]"
                                     value="{{ encrypt($kullanici->bilgi->kullanicilar_id) }}">
@@ -151,7 +151,7 @@
                 <h2 class="font-medium text-lg border-b mb-4">Kurum Ekibi</h2>
                 <div id="selectedGidilecekPersonel" class="space-y-2 pb-12 max-h-80 overflow-y-auto">
                     @if (!empty($etkinlik))
-                        @foreach ($etkinlik->etkinlikKatilim->gidilenKullanicilar as $kullanici)
+                        @foreach ($etkinlik->gidilenKullanicilar as $kullanici)
                             <div class="flex items-center gap-2">
                                 <input type="hidden" name="davet_kullanicilar_id[]"
                                     value="{{ encrypt($kullanici->bilgi->kullanicilar_id) }}">
@@ -166,7 +166,7 @@
                                     <span class="text-xs text-gray-500">{{ $kullanici->bilgi->email }}</span>
                                 </div>
 
-                                <button type="button" class="ml-auto removeSelectedGidenPersonelEmail"
+                                <button type="button" class="ml-auto removeSelectedDavetPersonelEmail"
                                     data-email="{{ $kullanici->bilgi->email }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-x size-6" viewBox="0 0 16 16">

@@ -37,6 +37,7 @@ class Isletme extends Model
     }
 
     public static function isletmelerimiGetir() {
-
+        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
+        return Isletme::whereIn('isletmeler_id', $isletmeler)->orderBy('baslik', 'asc')->get();
     }
 }

@@ -21,7 +21,7 @@ class IsletmeYetkili extends Model
     ];
 
     public function kullanici() {
-        
+
     }
 
     public static function birimPersoneller(string $birimler_id,  int $id)
@@ -49,11 +49,11 @@ class IsletmeYetkili extends Model
      */
     public static function aitOldugumIsletmeleriGetir()
     {
-        return IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('isletmeler_id');
+        return IsletmeYetkili::where('kullanicilar_id', Auth::user()->kullanicilar_id)->where('aktiflik', 1)->pluck('isletmeler_id');
     }
 
     public static function personelinAitOlduguBirimleriGetir(int $kullanicilar_id)
     {
-        return IsletmeYetkili::where('kullanicilar_id', $kullanicilar_id)->pluck('isletme_birimleri_id');
+        return IsletmeYetkili::where('kullanicilar_id', $kullanicilar_id)->where('aktiflik', 1)->pluck('isletme_birimleri_id');
     }
 }

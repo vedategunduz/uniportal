@@ -22,14 +22,30 @@ class ZiyaretKatilimController extends Controller
             ->where('kullanicilar_id', $kullanici_id)
             ->firstOrFail(); // İlk kaydı bulamazsa 404 hatası verir
 
-        $etkinlikKatilim->durum = 'onaylandi';
-        $etkinlikKatilim->save();
+        $kontrol = false;
+
+        if ($etkinlikKatilim->durum == 'onaylandi') {
+            $kontrol = true;
+        }
 
         // Etkinliği bul
         $etkinlik = Etkinlik::findOrFail($etkinlik_id);
 
         // Google Takvim URL'sini oluştur
         $googleCalendarUrl = $this->createGoogleCalendarUrl($etkinlik);
+
+        if ($kontrol) {
+            return view('mail.yanit.index')->with([
+                'success' => true,
+                'message' => 'Davet zaten onaylandı',
+                'etkinlik' => $etkinlik,
+                'googleCalendarUrl' => $googleCalendarUrl,
+            ]);
+        }
+
+        $etkinlikKatilim->durum = 'onaylandi';
+        $etkinlikKatilim->save();
+
 
         $this->sendInfoMail(true, $etkinlik_id, $kullanici_id);
 
@@ -48,13 +64,27 @@ class ZiyaretKatilimController extends Controller
 
         [$etkinlik_id, $kullanici_id] = explode('-', $decryptedParam);
 
-        $etkinlik = EtkinlikKatilim::where('etkinlikler_id', $etkinlik_id)
+        $etkinlikKatilim = EtkinlikKatilim::where('etkinlikler_id', $etkinlik_id)
             ->where('kullanicilar_id', $kullanici_id)
-            ->first();
+            ->firstOrFail();
 
-        $etkinlik->durum = 'reddedildi';
+        $kontrol = false;
 
-        $etkinlik->save();
+        if ($etkinlikKatilim->durum == 'reddildi') {
+            $kontrol = true;
+        }
+
+        if ($kontrol) {
+            return view('mail.yanit.index')->with([
+                'success' => false,
+                'message' => 'Davet zaten reddildi',
+                'parametre' => $parametre,
+            ]);
+        }
+
+        $etkinlikKatilim->durum = 'reddedildi';
+
+        $etkinlikKatilim->save();
 
         $this->sendInfoMail(false, $etkinlik_id, $kullanici_id);
 
@@ -68,18 +98,16 @@ class ZiyaretKatilimController extends Controller
     public function sendInfoMail($durum, $etkinlikler_id, $kullanicilar_id)
     {
         $cevaplayanKullanici = Kullanici::findOrFail($kullanicilar_id);
+
+        $davetliKullanicilar = EtkinlikKatilim::katilimcilar($etkinlikler_id, "giden");
+
         $etkinlik = Etkinlik::findOrFail($etkinlikler_id);
 
-        $katilanKullanicilar = EtkinlikKatilim::where('etkinlikler_id', $etkinlikler_id)
-            ->whereNot('kullanicilar_id', $kullanicilar_id)
-            ->pluck('kullanicilar_id')
-            ->toArray();
-
-        $katilanKullaniciListesi = Kullanici::whereIn('kullanicilar_id', $katilanKullanicilar)->get();
-
-        foreach ($katilanKullaniciListesi as $katilanKullanici) {
-            Mail::to($katilanKullanici->email)
-                ->send(new KatilimDurumMail($durum, $etkinlik, $cevaplayanKullanici, $katilanKullanici));
+        foreach ($davetliKullanicilar as $davetliKullanici) {
+            if ($davetliKullanici->kullanicilar_id != $kullanicilar_id) {
+                Mail::to($davetliKullanici->bilgi->email)
+                    ->send(new KatilimDurumMail($durum, $etkinlik, $cevaplayanKullanici, $davetliKullanici->bilgi));
+            }
         }
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Toplanti\Ziyaret;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ZiyaretRequest;
 use App\Mail\Ziyaret\ZiyaretEkibiMail;
+use App\Mail\Ziyaret\ZiyaretKatilimIptal;
 use App\Mail\Ziyaret\ZiyaretTalebiMail;
 use App\Models\Etkinlik;
 use App\Models\EtkinlikKatilim;
@@ -13,17 +14,17 @@ use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
 use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
+use App\Models\SohbetKanal;
+use App\Models\SohbetKanalKatilimci;
 use Illuminate\Support\Facades\Mail;
 
 class ZiyaretController extends Controller
 {
     public function ziyaretTalepModalGetir(string $etkinlik_id = null)
     {
-        $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
+        $isletmeler = Isletme::isletmelerimiGetir();
 
         $tumIsletmeler = Isletme::all();
-
-        $isletmeler = Isletme::select('isletmeler_id', 'baslik')->whereIn('isletmeler_id', $isletmeler)->get();
 
         $etkinlik = [];
         $gidenKullanicilarEmails = [];
@@ -31,17 +32,26 @@ class ZiyaretController extends Controller
 
         if (!empty($etkinlik_id)) {
             $etkinlik_id = decrypt($etkinlik_id);
-            $etkinlik = Etkinlik::with([
-                'etkinlikKatilim.gidenIsletme',
-                'etkinlikKatilim.gidilenIsletme',
-                'etkinlikKatilim.gidenKullanicilar.bilgi',
-                'etkinlikKatilim.gidilenKullanicilar.bilgi.anaUnvan'
-            ])->find($etkinlik_id);
 
-            $gidenKullanicilarEmails = $etkinlik->etkinlikKatilim->gidenKullanicilar->pluck('bilgi.email')->toArray();
-            $gidilecekKullanicilarEmails = $etkinlik->etkinlikKatilim->gidilenKullanicilar->pluck('bilgi.email')->toArray();
+            $etkinlik = Etkinlik::find($etkinlik_id);
+
+            $katilim = EtkinlikKatilim::ziyaretIsletmeler($etkinlik_id);
+
+            if ($katilim) {
+                $etkinlik->giden_isletme   = $katilim->giden_isletmeler_id;
+                $etkinlik->gidilen_isletme = $katilim->gidilen_isletmeler_id;
+            }
+
+            $etkinlik->gidenKullanicilar = EtkinlikKatilim::katilimcilar($etkinlik_id, 'giden');
+            $gidenKullanicilarEmails = $etkinlik->gidenKullanicilar->map(function ($item) {
+                return $item->bilgi->email;
+            });
+
+            $etkinlik->gidilenKullanicilar = EtkinlikKatilim::katilimcilar($etkinlik_id, 'davetli');
+            $gidilecekKullanicilarEmails = $etkinlik->gidilenKullanicilar->map(function ($item) {
+                return $item->bilgi->email;
+            });
         }
-
 
         $html = view(
             'components.yonetim.toplantilar.ziyaret.modal',
@@ -228,8 +238,10 @@ class ZiyaretController extends Controller
 
         $etkinlik = Etkinlik::create($validated);
 
+        $sohbet_kanali = $etkinlik->sohbetKanaliOlustur('ziyaret');
+
         $ids = array_map('decrypt', $validated['kullanicilar_id']);
-        $gidenKullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
+        $gidenKullaniciIds = Kullanici::whereIn('kullanicilar_id', $ids)->get();
 
         $ids = array_map('decrypt', $validated['davet_kullanicilar_id']);
         $kullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->get();
@@ -238,15 +250,19 @@ class ZiyaretController extends Controller
         $gidilen_isletme = Isletme::find($validated['gidilen_isletmeler_id']);
 
         foreach ($kullanicilar as $kullanici) {
-            Mail::to($kullanici->email)
-                ->send(
-                    new ZiyaretTalebiMail(
-                        $kullanici,
-                        $giden_isletme,
-                        $gidenKullanicilar,
-                        $etkinlik
-                    )
-                );
+            try {
+                Mail::to($kullanici->email)
+                    ->send(
+                        new ZiyaretTalebiMail(
+                            $kullanici,
+                            $giden_isletme,
+                            $gidenKullaniciIds,
+                            $etkinlik
+                        )
+                    );
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
             EtkinlikKatilim::create([
                 'etkinlikler_id'        => $etkinlik->etkinlikler_id,
                 'kullanicilar_id'       => $kullanici->kullanicilar_id,
@@ -257,17 +273,26 @@ class ZiyaretController extends Controller
             ]);
         }
 
-        foreach ($gidenKullanicilar as $kullanici) {
-            Mail::to($kullanici->email)
-                ->send(
-                    new ZiyaretEkibiMail(
-                        $etkinlik,
-                        $kullanici,
-                        $gidilen_isletme,
-                        $kullanicilar,
-                        $gidenKullanicilar,
-                    )
-                );
+        foreach ($gidenKullaniciIds as $kullanici) {
+            SohbetKanalKatilimci::create([
+                'sohbet_kanallari_id' => $sohbet_kanali->sohbet_kanallari_id,
+                'kullanicilar_id'     => $kullanici->kullanicilar_id
+            ]);
+
+            try {
+                Mail::to($kullanici->email)
+                    ->send(
+                        new ZiyaretEkibiMail(
+                            $etkinlik,
+                            $kullanici,
+                            $gidilen_isletme,
+                            $kullanicilar,
+                            $gidenKullaniciIds,
+                        )
+                    );
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
             // Mail taslağı oluştur davet eden için
             EtkinlikKatilim::create([
                 'etkinlikler_id'        => $etkinlik->etkinlikler_id,
@@ -299,16 +324,93 @@ class ZiyaretController extends Controller
         $eskiEtkinlikTumKullanicilar = EtkinlikKatilim::where('etkinlikler_id', $etkinlikler_id)->pluck('kullanicilar_id');
 
         $ids = array_map('decrypt', $validated['kullanicilar_id']);
-        $gidenKullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->pluck('kullanicilar_id');
+        $gidenKullaniciIds = Kullanici::whereIn('kullanicilar_id', $ids)->pluck('kullanicilar_id');
 
         $ids = array_map('decrypt', $validated['davet_kullanicilar_id']);
-        $gidilecekKullanicilar = Kullanici::whereIn('kullanicilar_id', $ids)->pluck('kullanicilar_id');
+        $gidilecekKullaniciIds = Kullanici::whereIn('kullanicilar_id', $ids)->pluck('kullanicilar_id');
 
-        $etkinlikTumKullanicilar = $gidenKullanicilar->merge($gidilecekKullanicilar);
+        $etkinlikTumKullanicilar = $gidenKullaniciIds->merge($gidilecekKullaniciIds);
 
-        $cikartilanKullanicilar = $eskiEtkinlikTumKullanicilar->diff($etkinlikTumKullanicilar);
+        $eklenecekKullanicilar = $etkinlikTumKullanicilar->diff($eskiEtkinlikTumKullanicilar)->values();
+
+        $cikartilanKullanicilar = $eskiEtkinlikTumKullanicilar->diff($etkinlikTumKullanicilar)->values();
+
+        $sabitKullanicilar = $etkinlikTumKullanicilar->diff($eklenecekKullanicilar)->values();
+
+        $gidenKullanicilar = Kullanici::whereIn('kullanicilar_id', $gidenKullaniciIds)->get();
+        $gidilecekKullanicilar = Kullanici::whereIn('kullanicilar_id', $gidilecekKullaniciIds)->get();
+
+        $sohbet_kanali = SohbetKanal::where('etkinlikler_id', $etkinlikler_id)->where('tur', 'ziyaret')->first();
+
+        foreach ($eklenecekKullanicilar as $kullanicilar_id) {
+            $type = 'davetli';
+            if (in_array($kullanicilar_id, $gidenKullaniciIds->toArray())) {
+                SohbetKanalKatilimci::create([
+                    'sohbet_kanallari_id' => $sohbet_kanali->sohbet_kanallari_id,
+                    'kullanicilar_id'     => $kullanicilar_id
+                ]);
+
+                $type = 'giden';
+            }
+            EtkinlikKatilim::create([
+                'etkinlikler_id'        => $etkinlikler_id,
+                'kullanicilar_id'       => $kullanicilar_id,
+                'giden_isletmeler_id'   => $validated['giden_isletmeler_id'],
+                'gidilen_isletmeler_id' => $validated['gidilen_isletmeler_id'],
+                'durum'                 => 'beklemede',
+                'katilimciTipi'         => $type
+            ]);
+
+            $kullanici    = Kullanici::find($kullanicilar_id);
+            $gidilenKurum = Isletme::find($validated['gidilen_isletmeler_id']);
+            $gidenKurum    = Isletme::find($validated['giden_isletmeler_id']);
+
+            try {
+                if ($type == 'giden') {
+                    Mail::to($kullanici->email)
+                        ->send(new ZiyaretEkibiMail($etkinlik, $kullanici, $gidilenKurum, $gidilecekKullanicilar, $gidenKullanicilar, false));
+                } else {
+                    Mail::to($kullanici->email)
+                        ->send(new ZiyaretTalebiMail($kullanici, $gidenKurum,  $gidenKullanicilar, $etkinlik, false));
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
+
+        foreach ($sabitKullanicilar as $kullanicilar_id) {
+            $type = 'davetli';
+            if (in_array($kullanicilar_id, $gidenKullaniciIds->toArray())) {
+                $type = 'giden';
+            }
+
+            $kullanici    = Kullanici::find($kullanicilar_id);
+            $gidilenKurum = Isletme::find($validated['gidilen_isletmeler_id']);
+            $gidenKurum   = Isletme::find($validated['giden_isletmeler_id']);
+
+            try {
+                if ($type == 'giden') {
+                    Mail::to($kullanici->email)
+                        ->send(new ZiyaretEkibiMail($etkinlik, $kullanici, $gidilenKurum, $gidilecekKullanicilar, $gidenKullanicilar, true));
+                } else {
+                    Mail::to($kullanici->email)
+                        ->send(new ZiyaretTalebiMail($kullanici, $gidenKurum, $gidenKullanicilar, $etkinlik, true));
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        }
 
         foreach ($cikartilanKullanicilar as $kullanicilar_id) {
+            $kullanici = Kullanici::find($kullanicilar_id);
+
+            try {
+                Mail::to($kullanici->email)
+                    ->send(new ZiyaretKatilimIptal($kullanici, $etkinlik));
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+
             EtkinlikKatilim::where('etkinlikler_id', $etkinlikler_id)
                 ->where('kullanicilar_id', $kullanicilar_id)
                 ->delete();

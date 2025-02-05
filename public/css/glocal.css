@@ -166,6 +166,51 @@ label {
     }
 }
 
+@keyframes fadeDown {
+    from {
+        top: -100%;
+    }
+
+    to {
+        top: 0;
+    }
+}
+
+.aside-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    animation: fadeDown;
+    transition: .3s;
+
+    &:not(.active) {
+        top: -100% !important;
+    }
+
+    .aside-modal-outside {
+        position: absolute;
+        z-index: -10;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .aside-modal-content {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30rem;
+        height: 100%;
+        background-color: #fff;
+        box-shadow: -1px 0px 2px rgba(0, 0, 0, 0.1);
+    }
+}
+
 .alert-custom-modal {
     z-index: 15;
 }

@@ -17,7 +17,6 @@ use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretKatilimController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
-use App\Models\Etkinlik;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
@@ -145,6 +144,13 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
 Route::get('/onizle', function () {
     return view('mail.hesap-onaylama-mail');
+});
+
+Route::post('/gitgetir', function () {
+    return response()->json([
+        'success' => true,
+        'html' => view('components.mesaj.mesaj')->render(),
+    ]);
 });
 
 Route::prefix('errors')->name('errors.')->group(function () {

@@ -34,7 +34,7 @@ class Etkinlik extends Model
 
     public function etkinlikKatilim()
     {
-        return $this->belongsTo(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
+        return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
     public function katilimcilar()
@@ -46,6 +46,16 @@ class Etkinlik extends Model
             'kullanicilar_id'
         );
     }
+
+    public function sohbetKanaliOlustur($tur) {
+        return SohbetKanal::create([
+            'etkinlikler_id' => $this->etkinlikler_id,
+            'baslik'         => $this->baslik,
+            'tur'            => $tur,
+        ]);
+    }
+
+
 
     public static function ekle($validatedData)
     {

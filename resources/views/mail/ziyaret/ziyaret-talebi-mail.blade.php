@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <title>uniportal</title>
+    <title>{{ config('app.name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="color-scheme" content="light">
@@ -41,9 +41,9 @@
                     <tr>
                         <td class="header"
                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; padding: 25px 0; text-align: center;">
-                            <a href="http://127.0.0.1:8000"
+                            <a href="{{  route('main.index') }}"
                                 style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; color: #3d4852; font-size: 19px; font-weight: bold; text-decoration: none; display: inline-block;">
-                                uniportal
+                                {{ config('app.name') }}
                             </a>
                         </td>
                     </tr>
@@ -78,7 +78,7 @@
                                             {{ \Carbon\Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i') }}
                                             -
                                             {{ \Carbon\Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d F Y H:i') }}
-                                            tarihlerinde ziayaret etmek istemekteyiz.
+                                            tarihlerinde ziyaret etmek istemekteyiz.
                                             <br>
                                             {{ $etkinlik->aciklama }}
                                             <br>
@@ -153,7 +153,10 @@
                                         <p
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">
                                             Teşekkürler,<br>
-                                            uniportal
+                                            <a href="{{ route('main.index') }}"
+                                                style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; color: #3d4852; font-size: 19px; font-weight: bold; text-decoration: none; display: inline-block; color:#1a56db">
+                                                {{ config('app.name') }}
+                                            </a>
                                         </p>
                                     </td>
                                 </tr>
@@ -172,7 +175,7 @@
                                         style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; max-width: 100vw; padding: 32px;">
                                         <p
                                             style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; line-height: 1.5em; margin-top: 0; color: #b0adc5; font-size: 12px; text-align: center;">
-                                            © 2025 uniportal. All rights reserved.</p>
+                                            © 2025 {{ config('app.name') }}. All rights reserved.</p>
                                     </td>
                                 </tr>
                             </table>

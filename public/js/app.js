@@ -1,5 +1,6 @@
 const BASE_URL = window.location.origin;
 const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+const ASIDE_MODAL = document.getElementById('aside-modal');
 
 async function fetchData(url, data = {}, isFormData = false, method = 'POST') {
     try {
@@ -98,7 +99,7 @@ function warningAlert(message) {
     createAlert(message, 'warning');
 }
 
-window.addEventListener('click', function (event) {
+window.addEventListener('click', async function (event) {
     if (event.target.matches('.open-modal')) {
         const MODAL = document.getElementById(event.target.dataset.modal);
 
@@ -116,6 +117,52 @@ window.addEventListener('click', function (event) {
         // MODAL.querySelector('.modal-content').innerHTML = '';
 
         document.body.classList.remove('overflow-hidden');
+    }
+
+    if (event.target.matches('.open-aside-modal')) {
+        const MODAL = document.getElementById(event.target.dataset.modal);
+
+        MODAL.classList.add('active');
+
+        document.body.classList.add('overflow-hidden');
+    }
+
+    if (event.target.matches('.close-aside-modal')) {
+        const MODAL = document.getElementById(event.target.dataset.modal);
+
+        MODAL.classList.remove('active');
+
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    if (event.target.matches('.aside-message-accordion-button')) {
+        const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active');
+
+        ACCORDION_HEADERS.forEach((header) => {
+            if (header !== event.target) {
+                header.classList.remove('active');
+                header.classList.remove('border-l-blue-400');
+                header.nextElementSibling.style.maxHeight = 0;
+            }
+        });
+
+        const ACCORDION_HEADER = event.target;
+        const ACCORDION_BODY = ACCORDION_HEADER.nextElementSibling;
+
+        ACCORDION_HEADER.classList.toggle('active');
+        ACCORDION_HEADER.classList.toggle('border-l-blue-400');
+
+        const RESPONSE = await fetchData('gitgetir', {}, false);
+
+        if (RESPONSE.success) {
+            ACCORDION_BODY.innerHTML = RESPONSE.html;
+        }
+
+        if (ACCORDION_HEADER.classList.contains('active')) {
+            ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
+        } else {
+            ACCORDION_BODY.style.maxHeight = 0;
+        }
     }
 
     if (event.target.matches('.aside-accordion')) {

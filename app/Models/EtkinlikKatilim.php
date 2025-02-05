@@ -39,15 +39,13 @@ class EtkinlikKatilim extends Model
         return $this->belongsTo(Isletme::class, 'giden_isletmeler_id', 'isletmeler_id');
     }
 
-    public function gidenKullanicilar()
+    public static function katilimcilar($etkinlik_id, $type)
     {
-        return $this->hasMany(EtkinlikKatilim::class, 'giden_isletmeler_id', 'giden_isletmeler_id')
-            ->where('katilimciTipi', 'giden');
+        return self::with('bilgi')->where('etkinlikler_id', $etkinlik_id)->where('katilimciTipi', $type)->get();
     }
 
-    public function gidilenKullanicilar()
+    public static function ziyaretIsletmeler($etkinlik_id)
     {
-        return $this->hasMany(EtkinlikKatilim::class, 'giden_isletmeler_id', 'giden_isletmeler_id')
-            ->where('katilimciTipi', 'davetli');
+        return self::select('giden_isletmeler_id', 'gidilen_isletmeler_id')->where('etkinlikler_id', $etkinlik_id)->first();
     }
 }

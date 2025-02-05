@@ -17,17 +17,19 @@ class ZiyaretEkibiMail extends Mailable
     public $gidenKullanicilar;
     public $etkinlik;
     public $kurum;
+    public $guncellendi;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($etkinlik, $kullanici, $kurum, $davetEdilenKullanicilar, $gidenKullanicilar)
+    public function __construct($etkinlik, $kullanici, $kurum, $davetEdilenKullanicilar, $gidenKullanicilar, $guncellendi = false)
     {
         $this->etkinlik = $etkinlik;
         $this->kullanici = $kullanici;
         $this->kurum = $kurum;
         $this->davetEdilenKullanicilar = $davetEdilenKullanicilar;
         $this->gidenKullanicilar = $gidenKullanicilar;
+        $this->guncellendi = $guncellendi;
     }
 
     /**
@@ -35,6 +37,11 @@ class ZiyaretEkibiMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        if ($this->guncellendi) {
+            return new Envelope(
+                subject: "{$this->kurum->baslik} Ziyareti Güncellendi",
+            );
+        }
         return new Envelope(
             subject: "{$this->kurum->baslik} Ziyareti Hakkında Bilgilendirme",
         );

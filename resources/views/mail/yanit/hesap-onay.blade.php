@@ -10,7 +10,7 @@
     <div class="flex flex-col gap-4 items-center justify-center h-screen">
         <a href="{{ route('main.index') }}" class="flex items-center space-x-3">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
-            <span class="text-2xl font-semibold whitespace-nowrap">UniPortal</span>
+            <span class="text-2xl font-semibold whitespace-nowrap"> {{ config('app.name') }}</span>
         </a>
         <div class="bg-white p-8 rounded border shadow flex flex-col max-w-96 text-center">
             @if ($success)

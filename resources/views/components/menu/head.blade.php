@@ -16,6 +16,9 @@
         </div>
         <div class="flex items-center gap-2">
             <div class="">
+                <button type="button" class="open-aside-modal" data-modal="aside-modal">Mesajlar</button>
+            </div>
+            <div class="">
                 <button id="" data-dropdown-toggle="bildirimNavbar"
                     class="flex items-center justify-between text-gray-900 rounded hover:bg-gray-50 size-12">
                     <div class="relative mx-auto">
