@@ -11,6 +11,9 @@ use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
 use App\Models\Menu;
 use App\Models\MenuRolIliski;
+use App\Models\MesajKanal;
+use App\Models\MesajKanalKatilimci;
+use App\Models\SohbetKanalKatilimci;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -56,6 +59,13 @@ class ViewServiceProvider extends ServiceProvider
 
                 $view->with(compact('menuler', 'isletmeler', 'bildirimler'));
             }
+        });
+
+        View::composer(['layouts.auth',], function ($view) {
+
+            $kanallar = Kullanici::mesajKanallari();
+
+            $view->with(compact('kanallar'));
         });
 
         View::composer('components.etkinlik.*', function ($view) {

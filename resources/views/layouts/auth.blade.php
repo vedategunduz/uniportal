@@ -47,11 +47,10 @@
     </div>
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
-
     <div class="aside-modal active" id="aside-modal">
         <div class="aside-modal-outside close-aside-modal" data-modal="aside-modal"></div>
         <div class="aside-modal-content overflow-auto hidden-scroll">
-            <header class="flex items-center justify-between bg-blue-400 text-white px-6 py-2">
+            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-2">
                 <div>
                     <h2 class="font-medium text-lg"> Mesajlar </h2>
                 </div>
@@ -77,23 +76,13 @@
                 </header>
 
                 <div class="flex flex-col">
-                    @for ($i = 0; $i < 3; $i++)
-                        <div
-                            class="flex gap-4 px-4 py-3 border-b first:border-t border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button">
-                            <div class="pointer-events-none">
-                                <img src="https://prium.github.io/phoenix/v1.20.1/assets/img/team/40x40/57.webp"
-                                    class="rounded-full w-10 h-10" alt="">
-                            </div>
-
-                            <div class="flex flex-col pointer-events-none">
-                                <span>Jhon Doe</span>
-                                <span class="text-xs">En son mesajın 20 karakte...</span>
-                            </div>
-                        </div>
-                        <section class="max-h-0 transition-all overflow-hidden">
-
+                    @foreach ($kanallar as $kanal)
+                        <livewire:kanal-header-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
+                        <section class="max-h-0
+                            transition-all overflow-hidden">
+                            <livewire:mesajlar-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
                         </section>
-                    @endfor
+                    @endforeach
                 </div>
             </section>
         </div>
@@ -101,6 +90,49 @@
 
     <script src="{{ asset('js/data-table.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach ($kanallar as $kanal)
+                window.Echo.private(`mesaj-kanal.{{ $kanal->mesaj_kanallari_id }}`)
+                    .listen('MesajOlusturuldu', (event) => {
+                        console.log(123);
+                    });
+            @endforeach
+
+            const submitButtons = document.querySelectorAll('.mesaj-submit-button');
+
+            submitButtons.forEach((submitButton) => {
+                submitButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+
+                    e.target.disabled = true;
+                    e.target.textContent = 'Gönderiliyor...';
+
+                    try {
+                        const form = e.target.closest('form');
+                        const formData = new FormData(form);
+
+                        const RESPONSE = await ApiService.fetchData(
+                            "{{ route('yonetim.mesaj.store') }}",
+                            formData, 'POST');
+
+                        if (RESPONSE.status === 201) {
+                            // document.getElementById(
+                            //         `messageContainer${submitButton.dataset.channelId}`)
+                            //     .innerHTML += RESPONSE.data
+                            //     .html;
+                            form.reset();
+                        } else {
+                            alert('Mesaj gönderilirken bir hata oluştu.');
+                        }
+                    } finally {
+                        e.target.disabled = false;
+                        e.target.textContent = 'Gönder';
+                    }
+                });
+            });
+        });
+    </script>
     @yield('scripts')
 </body>
 

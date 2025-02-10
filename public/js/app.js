@@ -141,7 +141,7 @@ window.addEventListener('click', async function (event) {
         ACCORDION_HEADERS.forEach((header) => {
             if (header !== event.target) {
                 header.classList.remove('active');
-                header.classList.remove('border-l-blue-400');
+                header.classList.remove('!border-l-blue-400');
                 header.nextElementSibling.style.maxHeight = 0;
             }
         });
@@ -150,13 +150,7 @@ window.addEventListener('click', async function (event) {
         const ACCORDION_BODY = ACCORDION_HEADER.nextElementSibling;
 
         ACCORDION_HEADER.classList.toggle('active');
-        ACCORDION_HEADER.classList.toggle('border-l-blue-400');
-
-        const RESPONSE = await fetchData('gitgetir', {}, false);
-
-        if (RESPONSE.success) {
-            ACCORDION_BODY.innerHTML = RESPONSE.html;
-        }
+        ACCORDION_HEADER.classList.toggle('!border-l-blue-400');
 
         if (ACCORDION_HEADER.classList.contains('active')) {
             ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';

@@ -9,6 +9,7 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\MesajController;
 use App\Http\Controllers\Personel\PersonelController;
 use App\Http\Controllers\Yonetim\EventController;
 use App\Http\Controllers\ResimController;
@@ -30,6 +31,10 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
     Route::middleware(AuthMiddleware::class)->group(function () {
         Route::get('/', [YonetimController::class, 'index'])->name('index');
+
+        Route::prefix('mesaj')->name('mesaj.')->group(function () {
+            Route::post('/', [MesajController::class, 'store'])->name('store');
+        });
 
         Route::prefix('birimler')->name('birimler.')->group(function () {
             Route::get('/', [BirimlerController::class, 'index'])->name('index');
@@ -120,7 +125,6 @@ Route::prefix('editor')->name('editor.')->group(function () {
     });
 });
 
-// Giriş rota grubu
 Route::prefix('auth')->name('auth.')->group(function () {
     Route::middleware(NotAuthMiddleware::class)->group(function () {
         Route::prefix('giris')->name('giris.')->group(function () {

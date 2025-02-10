@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\IslemYapanTrait;
-use App\Mail\HesapOnaylamaMail;
+use App\Mail\Auth\OnayMail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class Kullanici extends Authenticatable
@@ -64,19 +65,25 @@ class Kullanici extends Authenticatable
         return $this->belongsTo(Unvan::class, 'unvanlar_id');
     }
 
-    public function rol()
-    {
-        return $this->belongsTo(Rol::class, 'roller_id');
-    }
-
     public function roller()
     {
         return $this->hasMany(KullaniciRolIliski::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
+    public static function mesajKanallari()
+    {
+        $kanalIdleri = MesajKanalKatilimci::where('kullanicilar_id', Auth::user()->kullanicilar_id)->pluck('mesaj_kanallari_id')->toArray();
+        return MesajKanal::whereIn('mesaj_kanallari_id', $kanalIdleri)->get();
+    }
 
+    public function mesajlar()
+    {
+        return $this->hasMany(Mesaj::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
+    // Bunu evente bağla
     public function sendEmailVerificationNotification()
     {
-        Mail::to($this->email)->send(new HesapOnaylamaMail($this));
+        Mail::to($this->email)->send(new OnayMail($this));
     }
 }

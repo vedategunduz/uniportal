@@ -92,7 +92,7 @@ button * {
 }
 
 img {
-    border: inherit !important;
+    border: none;
 }
 
 @keyframes zoomIn {
@@ -380,5 +380,57 @@ label {
 
     .ozelBoyut {
         width: 720px;
+    }
+}
+
+.dot-flashing {
+    position: relative;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background-color: #111827;
+    color: #111827;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+
+.dot-flashing::before {
+    left: -7.5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: #111827;
+    color: #111827;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 0s;
+}
+
+.dot-flashing::after {
+    left: 7.5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: #111827;
+    color: #111827;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 1s;
+}
+
+@keyframes dot-flashing {
+    0% {
+        background-color: #111827;
+    }
+
+    50%,
+    100% {
+        background-color: #f3f4f6;
     }
 }

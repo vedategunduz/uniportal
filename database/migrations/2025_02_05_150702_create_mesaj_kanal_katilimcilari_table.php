@@ -12,12 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
-        Schema::create('mesajlar', function (Blueprint $table) {
-            $table->id('mesajlar_id');
+        Schema::create('mesaj_kanal_katilimcilari', function (Blueprint $table) {
+            $table->id('mesaj_kanal_katilimcilari_id');
             $table->foreignId('mesaj_kanallari_id')->constrained('mesaj_kanallari', 'mesaj_kanallari_id')->restrictOnDelete();
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
-            $table->longText('mesaj');
-            $table->enum('durum', ['düzenlendi', 'silindi', 'kaydedildi'])->default('kaydedildi');
             $table->timestamps();
         });
         Schema::enableForeignKeyConstraints();
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mesajlar');
+        Schema::dropIfExists('mesaj_kanal_katilimcilari');
     }
 };

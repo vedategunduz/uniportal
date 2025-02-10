@@ -24,6 +24,9 @@ class DatabaseSeeder extends Seeder
             IsletmeBirimSeeder::class,
             KullaniciBirimUnvanSeeder::class,
             KullaniciRolIlıskiSeeder::class,
+            MesajKanalSeeder::class,
+            MesajKanalKatilimciSeeder::class,
+            MesajSeeder::class,
         ]);
     }
 }
