@@ -8,7 +8,9 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('mesaj-kanal.{kanalId}', function ($user, $kanalId) {
-    return MesajKanalKatilimci::where('mesaj_kanallari_id', $kanalId)
-        ->where('kullanicilar_id', $user->kullanicilar_id)
-        ->exists();
+    return true;
 });
+
+// MesajKanalKatilimci::where('mesaj_kanallari_id', $kanalId)
+//         ->where('kullanicilar_id', $user->kullanicilar_id)
+//         ->exists()

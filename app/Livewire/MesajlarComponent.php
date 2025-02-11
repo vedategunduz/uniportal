@@ -3,6 +3,9 @@
 namespace App\Livewire;
 
 use App\Models\Mesaj;
+use App\Models\MesajKanal;
+use App\Models\MesajKullaniciGoruntuleme;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -11,10 +14,16 @@ class MesajlarComponent extends Component
     public $mesajlar;
     public $mesajSayisi = 5;
     public $kanalId;
+    public $count = 0;
 
     public function mount($kanalId)
     {
         $this->kanalId = $kanalId;
+
+        $this->count = MesajKullaniciGoruntuleme::where('kullanicilar_id', Auth::id())->count();
+
+        if ($this->count > 5)
+            $this->mesajSayisi = $this->count;
 
         $this->mesajlar = Mesaj::with('kullanici')->where('mesaj_kanallari_id', $this->kanalId)
             ->orderBy('mesajlar_id', 'desc')
@@ -34,10 +43,8 @@ class MesajlarComponent extends Component
     #[On('echo-private:mesaj-kanal.{kanalId},MesajOlusturuldu')]
     public function messageCreated($message)
     {
-        dd($message);
-        $newMessage = $message['message'];
-        dd($newMessage, $this->mesajlar);
-        array_push($this->mesajlar, $newMessage);
+        $yeniMesaj = $message['mesaj'];
+        array_push($this->mesajlar, $yeniMesaj);
     }
 
     public function render()

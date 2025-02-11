@@ -49,7 +49,7 @@
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
     <div class="aside-modal active" id="aside-modal">
         <div class="aside-modal-outside close-aside-modal" data-modal="aside-modal"></div>
-        <div class="aside-modal-content overflow-auto hidden-scroll">
+        <div class="aside-modal-content overflow-auto hidden-scroll w-full md:w-1/2 lg:w-1/3">
             <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-2">
                 <div>
                     <h2 class="font-medium text-lg"> Mesajlar </h2>
@@ -70,22 +70,26 @@
                                 d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
                         </svg>
                         <input type="text" id="first_name"
-                            class="bg-gray-50 indent-7 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-gray-50 indent-7 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2"
                             placeholder="Mesajlarda ara" />
                     </div>
                 </header>
 
                 <div class="flex flex-col">
                     @foreach ($kanallar as $kanal)
-                        <livewire:kanal-header-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
-                        <section class="max-h-0
-                            transition-all overflow-hidden">
+                        <header
+                            class="border-b first:border-t border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button"
+                            data-channel-id="{{ $kanal->mesaj_kanallari_id }}">
+                            <livewire:kanal-header-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
+                        </header>
+                        <section class="max-h-0 transition-all overflow-hidden">
                             <livewire:mesajlar-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
                         </section>
                     @endforeach
                 </div>
             </section>
         </div>
+
     </div>
 
     <script src="{{ asset('js/data-table.js') }}"></script>
@@ -95,9 +99,57 @@
             @foreach ($kanallar as $kanal)
                 window.Echo.private(`mesaj-kanal.{{ $kanal->mesaj_kanallari_id }}`)
                     .listen('MesajOlusturuldu', (event) => {
-                        console.log(123);
+                        const ACCORDION_HEADERS = document.querySelector(
+                            '.aside-message-accordion-button.active');
+
+                        if (!ACCORDION_HEADERS)
+                            return;
+
+                        const ACCORDION_BODY = ACCORDION_HEADERS.nextElementSibling;
+
+                        ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
+
+                        const MESAJ_CONTAINER = ACCORDION_BODY.querySelector('.mesaj-container');
+
+                        setTimeout(() => {
+                            MESAJ_CONTAINER.scrollTo(0, MESAJ_CONTAINER.scrollHeight);
+                        }, 2000);
+
+                        (async () => {
+                            const kanalId = "{{ $kanal->mesaj_kanallari_id }}";
+                            const URL =
+                                "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
+                                .replace('___ID___', kanalId);
+
+                            const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
+
+                            if (RESPONSE.status === 200) {
+                                event.target.querySelector('.count').remove();
+                            } else {
+                                ApiService.alert.error("Bir hata oluştu");
+                            }
+                        })();
                     });
             @endforeach
+
+            document.addEventListener('click', function(event) {
+                if (event.target.matches('.aside-message-accordion-button')) {
+                    (async () => {
+                        const kanalId = event.target.dataset.channelId;
+                        const URL =
+                            "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
+                            .replace('___ID___', kanalId);
+
+                        const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
+
+                        if (RESPONSE.status === 200) {
+                            event.target.querySelector('.count').remove();
+                        } else {
+                            ApiService.alert.error("Mesajlar okunurken bir hata oluştu.");
+                        }
+                    })();
+                }
+            })
 
             const submitButtons = document.querySelectorAll('.mesaj-submit-button');
 
@@ -106,28 +158,40 @@
                     e.preventDefault();
 
                     e.target.disabled = true;
-                    e.target.textContent = 'Gönderiliyor...';
+                    e.target.classList.add('ozelanimasyon')
 
                     try {
                         const form = e.target.closest('form');
                         const formData = new FormData(form);
+                        const mesaj = formData.get('mesaj');
+
+                        if (!mesaj) {
+                            ApiService.alert.error('Mesaj boş olamaz.');
+                            return;
+                        }
 
                         const RESPONSE = await ApiService.fetchData(
                             "{{ route('yonetim.mesaj.store') }}",
                             formData, 'POST');
 
                         if (RESPONSE.status === 201) {
-                            // document.getElementById(
-                            //         `messageContainer${submitButton.dataset.channelId}`)
-                            //     .innerHTML += RESPONSE.data
-                            //     .html;
+                            const container = document.getElementById(submitButton.dataset
+                                .container);
+
+                            container.innerHTML += RESPONSE.data.html;
+
+                            const wrapper = container.closest('section');
+                            wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+
+                            container.scrollTo(0, container.scrollHeight);
+
                             form.reset();
                         } else {
-                            alert('Mesaj gönderilirken bir hata oluştu.');
+                            ApiService.alert.error('Mesaj gönderilirken bir hata oluştu.');
                         }
                     } finally {
                         e.target.disabled = false;
-                        e.target.textContent = 'Gönder';
+                        e.target.classList.remove('ozelanimasyon')
                     }
                 });
             });

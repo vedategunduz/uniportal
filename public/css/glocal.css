@@ -10,6 +10,7 @@
 
 html,
 body {
+    scroll-behavior: smooth;
     font-size: 16px;
     font-family: 'Poppins', 'Inter', serif;
     font-optical-sizing: auto;
@@ -184,7 +185,7 @@ label {
     height: 100vh;
     z-index: 10;
     animation: fadeDown;
-    transition: .3s;
+    transition: .3s ease-in-out;
 
     &:not(.active) {
         top: -100% !important;
@@ -204,7 +205,6 @@ label {
         position: absolute;
         top: 0;
         right: 0;
-        width: 30rem;
         height: 100%;
         background-color: #fff;
         box-shadow: -1px 0px 2px rgba(0, 0, 0, 0.1);
@@ -432,5 +432,36 @@ label {
     50%,
     100% {
         background-color: #f3f4f6;
+    }
+}
+
+.bg-motif {
+    background: url('../image/motif.png');
+    background-size: 40px;
+    background-repeat: repeat;
+}
+
+.ozelanimasyon {
+    position: relative;
+    overflow: hidden;
+    width: 49px;
+
+    svg {
+        animation: ozelAnimasyon 1s infinite;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+    }
+}
+
+@keyframes ozelAnimasyon {
+    0% {
+        left: 0;
+        bottom: 0;
+    }
+
+    100% {
+        left: 100%;
+        bottom: 100%;
     }
 }

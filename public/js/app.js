@@ -154,6 +154,7 @@ window.addEventListener('click', async function (event) {
 
         if (ACCORDION_HEADER.classList.contains('active')) {
             ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
+            ACCORDION_BODY.querySelector('.mesaj-container').scrollTo(0, ACCORDION_BODY.querySelector('.mesaj-container').scrollHeight);
         } else {
             ACCORDION_BODY.style.maxHeight = 0;
         }

@@ -16,10 +16,12 @@ return new class extends Migration
             $table->id('mesaj_kullanici_goruntuleme_id');
             $table->unsignedBigInteger('mesajlar_id');
             $table->unsignedBigInteger('kullanicilar_id');
+            $table->unsignedBigInteger('mesaj_kanallari_id');
             $table->timestamps();
 
             $table->foreign('mesajlar_id')->references('mesajlar_id')->on('mesajlar')->restrictOnDelete();
             $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->restrictOnDelete();
+            $table->foreign('mesaj_kanallari_id')->references('mesaj_kanallari_id')->on('mesaj_kanallari')->restrictOnDelete();
         });
         Schema::enableForeignKeyConstraints();
     }
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mesaj_kullanici_goruntulemes');
+        Schema::dropIfExists('mesaj_kullanici_goruntuleme');
     }
 };

@@ -34,6 +34,7 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
         Route::prefix('mesaj')->name('mesaj.')->group(function () {
             Route::post('/', [MesajController::class, 'store'])->name('store');
+            Route::delete('/{kanalId}', [MesajController::class, 'okundu'])->name('okundu');
         });
 
         Route::prefix('birimler')->name('birimler.')->group(function () {

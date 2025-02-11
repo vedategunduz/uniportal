@@ -3,10 +3,10 @@
 namespace App\Events;
 
 use App\Models\Mesaj;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class MesajOlusturuldu
+class MesajOlusturuldu implements ShouldBroadcast
 {
     public $mesaj;
     /**

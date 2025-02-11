@@ -16,5 +16,6 @@ class MesajKullaniciGoruntuleme extends Model
     protected $fillable = [
         'mesajlar_id',
         'kullanicilar_id',
+        'mesaj_kanallari_id',
     ];
 }
