@@ -8,5 +8,4 @@
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod illo quaerat cupiditate error vero doloremque
         laudantium dolore quam repellat hic, sit, veniam dolorum? Nam aut quaerat amet, voluptatum possimus suscipit?
     </p>
-    <div class="size-9"></div>
 @endsection

@@ -1,12 +1,4 @@
-@extends('layouts.empty')
-
-@section('title', 'Hesap oluştur')
-
-@section('links')
-
-@endsection
-
-@section('content')
+<x-empty-layout>
     <div class="flex flex-col items-center justify-center h-screen">
         <form class="max-w-sm w-full mx-auto text-gray-700 space-y-3">
             <div class="pb-8">
@@ -121,7 +113,8 @@
                 <span class=" font-medium">
                     <a href="#" class="text-blue-700 hover:text-blue-700 hover:underline"
                         tabindex="12">Şartları</a> ve
-                    <a href="#" class="text-blue-700 hover:text-blue-700 hover:underline" tabindex="13">gizlilik
+                    <a href="#" class="text-blue-700 hover:text-blue-700 hover:underline"
+                        tabindex="13">gizlilik
                         politikasını</a>
                     kabul ediyorum
                 </span>
@@ -137,9 +130,6 @@
             </div>
         </form>
     </div>
-@endsection
-
-@section('scripts')
     <script>
         const form = document.querySelector('form');
         const password = document.querySelector('input[name=password]');
@@ -240,4 +230,4 @@
             }
         });
     </script>
-@endsection
+</x-empty-layout>

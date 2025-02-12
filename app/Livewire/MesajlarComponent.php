@@ -47,6 +47,32 @@ class MesajlarComponent extends Component
         array_push($this->mesajlar, $yeniMesaj);
     }
 
+    #[On('echo-private:mesaj-kanal.{kanalId},MesajSilindi')]
+    public function messageDeleted($message)
+    {
+        $silinenMesaj = $message['mesaj'];
+
+        $this->mesajlar = array_map(function ($mesaj) use ($silinenMesaj) {
+            if ($mesaj['mesajlar_id'] == $silinenMesaj['mesajlar_id']) {
+                $mesaj = $silinenMesaj;
+            }
+            return $mesaj;
+        }, $this->mesajlar);
+    }
+
+    #[On('echo-private:mesaj-kanal.{kanalId},MesajGuncellendi')]
+    public function messageUpdated($message)
+    {
+        $guncellenenMesaj = $message['mesaj'];
+
+        $this->mesajlar = array_map(function ($mesaj) use ($guncellenenMesaj) {
+            if ($mesaj['mesajlar_id'] == $guncellenenMesaj['mesajlar_id']) {
+                $mesaj = $guncellenenMesaj;
+            }
+            return $mesaj;
+        }, $this->mesajlar);
+    }
+
     public function render()
     {
         return view('livewire.mesajlar-component');

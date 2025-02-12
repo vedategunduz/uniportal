@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MesajGuncellendi;
 use App\Events\MesajOlusturuldu;
+use App\Events\MesajSilindi;
 use App\Models\Mesaj;
 use App\Models\MesajKanalKatilimci;
 use App\Models\MesajKullaniciGoruntuleme;
@@ -57,6 +59,51 @@ class MesajController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Mesajlar okundu olarak işaretlendi.',
+        ], 200);
+    }
+
+    public function destroy($mesajId)
+    {
+        $mesajId = decrypt($mesajId);
+
+        $mesaj = Mesaj::with('kullanici')->find($mesajId);
+
+        $mesaj->durum = 'silindi';
+        $mesaj->save();
+
+        broadcast(new MesajSilindi($mesaj))->toOthers();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Mesaj silindi.",
+        ], 200);
+    }
+
+    public function update($mesajId, Request $request)
+    {
+        // dd($request->input(),$request->all());
+
+        $validated = $request->all();
+
+        $mesajId = decrypt($mesajId);
+
+        $mesaj = Mesaj::with('kullanici')->find($mesajId);
+
+        $pattern = '/(https?:\/\/\S+)/';
+        $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';
+        $validated['mesaj'] = preg_replace($pattern, $replacement, $validated['mesaj']);
+
+        $mesaj->mesaj = $validated['mesaj'];
+
+        $mesaj->durum = 'düzenlendi';
+
+        $mesaj->save();
+
+        broadcast(new MesajGuncellendi($mesaj))->toOthers();
+
+        return response()->json([
+            'success' => true,
+            'message' => "",
         ], 200);
     }
 }

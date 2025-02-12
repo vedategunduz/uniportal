@@ -34,7 +34,12 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
         Route::prefix('mesaj')->name('mesaj.')->group(function () {
             Route::post('/', [MesajController::class, 'store'])->name('store');
-            Route::delete('/{kanalId}', [MesajController::class, 'okundu'])->name('okundu');
+
+            Route::delete('/{mesajId}', [MesajController::class, 'destroy'])->name('destroy');
+
+            Route::delete('/okundu/{kanalId}', [MesajController::class, 'okundu'])->name('okundu');
+
+            Route::patch('/{mesajId}', [MesajController::class, 'update'])->name('update');
         });
 
         Route::prefix('birimler')->name('birimler.')->group(function () {

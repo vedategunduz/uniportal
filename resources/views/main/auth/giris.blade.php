@@ -1,14 +1,6 @@
-@extends('layouts.empty')
-
-@section('title', 'Giriş yap')
-
-@section('links')
-
-@endsection
-
-@section('content')
+<x-empty-layout>
     <div class="flex flex-col items-center justify-center h-screen">
-        <form action="{{ route('auth.giris.yap') }}" method="POST" class="max-w-sm w-full mx-auto text-gray-700">
+        <form action="{{ route('auth.giris.yap') }}" method="POST" class="max-w-sm w-full mx-auto text-gray-700 px-4">
             @csrf
             <div class="mb-8">
                 <a href="{{ route('main.index') }}" class="flex items-center w-fit mx-auto space-x-3">
@@ -79,9 +71,6 @@
             </div>
         </form>
     </div>
-@endsection
-
-@section('scripts')
     <script>
         const password_input = document.querySelector('input[type=password]');
         const change_password_type = document.querySelector('button[type=button]');
@@ -102,4 +91,4 @@
             errorAlert("{{ session('error') }}");
         @endif
     </script>
-@endsection
+</x-empty-layout>

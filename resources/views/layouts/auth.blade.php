@@ -24,6 +24,7 @@
 
 <body>
     <x-menu.head />
+
     <div class="items-start lg:flex">
         <x-menu />
 
@@ -47,6 +48,7 @@
     </div>
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
+
     <div class="aside-modal active" id="aside-modal">
         <div class="aside-modal-outside close-aside-modal" data-modal="aside-modal"></div>
         <div class="aside-modal-content overflow-auto hidden-scroll w-full md:w-1/2 lg:w-1/3">
@@ -94,8 +96,16 @@
 
     <script src="{{ asset('js/data-table.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+
     <script>
+        function dropdownTrigger(triggerEl) {
+            const targetEl = document.getElementById(triggerEl.getAttribute(
+                'data-dropdown-toggle'));
+            new Dropdown(targetEl, triggerEl);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+
             @foreach ($kanallar as $kanal)
                 window.Echo.private(`mesaj-kanal.{{ $kanal->mesaj_kanallari_id }}`)
                     .listen('MesajOlusturuldu', (event) => {
@@ -116,7 +126,7 @@
                         }, 2000);
 
                         (async () => {
-                            const kanalId = "{{ $kanal->mesaj_kanallari_id }}";
+                            const kanalId = ACCORDION_HEADERS.dataset.channelId;
                             const URL =
                                 "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
                                 .replace('___ID___', kanalId);
@@ -124,16 +134,27 @@
                             const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
 
                             if (RESPONSE.status === 200) {
-                                event.target.querySelector('.count').remove();
+                                // COUNT.remove();
                             } else {
                                 ApiService.alert.error("Bir hata oluştu");
                             }
                         })();
+                    })
+                    .listen('MesajSilindi', (event) => {
+
+                    })
+                    .listen('MesajGuncellendi', (event) => {
+
                     });
             @endforeach
 
             document.addEventListener('click', function(event) {
                 if (event.target.matches('.aside-message-accordion-button')) {
+                    const COUNT = event.target.querySelector('.count');
+
+                    if (!COUNT)
+                        return;
+
                     (async () => {
                         const kanalId = event.target.dataset.channelId;
                         const URL =
@@ -143,9 +164,80 @@
                         const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
 
                         if (RESPONSE.status === 200) {
-                            event.target.querySelector('.count').remove();
+                            COUNT.remove();
                         } else {
                             ApiService.alert.error("Mesajlar okunurken bir hata oluştu.");
+                        }
+                    })();
+                }
+
+                if (event.target.closest('.mesaj-sil')) {
+                    const wrapper = event.target.closest('.mesaj-wrapper');
+
+                    if (!wrapper)
+                        return;
+
+                    (async () => {
+                        const mesajId = event.target.dataset.id;
+                        const URL =
+                            "{{ route('yonetim.mesaj.destroy', ['mesajId' => '___ID___']) }}"
+                            .replace('___ID___', mesajId);
+
+                        const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
+
+                        if (RESPONSE.status === 200) {
+                            console.log(wrapper);
+                            console.log(wrapper.querySelector('.mesaj-body'));
+                            wrapper.querySelector('.mesaj-body').innerHTML =
+                                `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj siliniyor</small><div class="dot-flashing"></div></div>`;
+                        } else {
+                            ApiService.alert.error("Mesajlar okunurken bir hata oluştu.");
+                        }
+                    })();
+                }
+
+                if (event.target.closest('.mesaj-duzenle')) {
+                    const form = document.getElementById(event.target.dataset.form);
+                    const mesaj = form.previousElementSibling;
+
+                    form.classList.toggle('hidden');
+                    mesaj.classList.toggle('hidden');
+                }
+
+                if (event.target.closest('.mesaj-duzenle-submit-button')) {
+                    event.preventDefault();
+
+                    (async () => {
+                        event.target.disabled = true;
+
+                        try {
+                            const form = event.target.closest('form');
+
+                            const formData = new FormData(form);
+
+                            const mesaj = formData.get('mesaj');
+
+                            if (!mesaj) {
+                                ApiService.alert.error('Mesaj boş olamaz.');
+                                return;
+                            }
+
+                            const URL = form.getAttribute('action');
+
+                            const RESPONSE = await ApiService.fetchData(URL, formData, 'PATCH');
+
+                            if (RESPONSE.status === 200) {
+                                // const wrapper = container.closest('section');
+                                // wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+
+                                form.classList.add('hidden');
+                                form.nextElementSibling.classList.remove('hidden');
+                                form.nextElementSibling.innerHTML = `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj güncelleniyor</small><div class="dot-flashing"></div></div>`;
+                            } else {
+                                ApiService.alert.error('Mesaj güncellenirken bir hata oluştu.');
+                            }
+                        } finally {
+                            event.target.disabled = false;
                         }
                     })();
                 }
@@ -195,6 +287,7 @@
                     }
                 });
             });
+
         });
     </script>
     @yield('scripts')

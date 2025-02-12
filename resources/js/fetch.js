@@ -6,6 +6,7 @@ const CSRF_TOKEN = document.head.querySelector('meta[name="csrf-token"]').conten
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['X-CSRF-TOKEN'] = CSRF_TOKEN;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 async function fetchData(URL, DATA = null, METHOD = 'GET') {
     try {
@@ -17,7 +18,9 @@ async function fetchData(URL, DATA = null, METHOD = 'GET') {
         if (METHOD === 'GET' || METHOD === 'DELETE') {
             if (DATA)
                 config.params = DATA;
-        } else {
+        }
+        else
+        {
             config.data = DATA;
         }
 
