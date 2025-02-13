@@ -51,20 +51,21 @@
 
     <div class="aside-modal active" id="aside-modal">
         <div class="aside-modal-outside close-aside-modal" data-modal="aside-modal"></div>
+
         <div class="aside-modal-content overflow-auto hidden-scroll w-full md:w-1/2 lg:w-1/3">
-            <header class="flex items-center justify-between bg-blue-700 text-white px-6 py-2">
-                <div>
-                    <h2 class="font-medium text-lg"> Mesajlar </h2>
+            <header class="flex flex-col sticky top-0 z-20">
+                <div class="flex items-center justify-between bg-blue-700 text-white px-6 py-2">
+                    <div>
+                        <h2 class="font-medium text-lg"> Mesajlar </h2>
+                    </div>
+                    <button class="close-aside-modal" data-modal="aside-modal">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5 pointer-events-none">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                <button class="close-aside-modal" data-modal="aside-modal">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-5 pointer-events-none">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </header>
-            <section id="aside-modal-content-body" class="flex flex-col">
-                <header class="p-4">
+                <div class="px-6 py-4 bg-white">
                     <div class="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-search size-4 absolute top-1/2 -translate-y-1/2 left-3" viewBox="0 0 16 16">
@@ -75,8 +76,16 @@
                             class="bg-gray-50 indent-7 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2"
                             placeholder="Mesajlarda ara" />
                     </div>
-                </header>
 
+                    <div class="mt-4">
+                        <x-button>
+                            Yeni Mesaj
+                        </x-button>
+                    </div>
+                </div>
+            </header>
+
+            <section id="aside-modal-content-body" class="flex flex-col">
                 <div class="flex flex-col">
                     @foreach ($kanallar as $kanal)
                         <header
@@ -91,7 +100,6 @@
                 </div>
             </section>
         </div>
-
     </div>
 
     <script src="{{ asset('js/data-table.js') }}"></script>
@@ -186,8 +194,6 @@
                         const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
 
                         if (RESPONSE.status === 200) {
-                            console.log(wrapper);
-                            console.log(wrapper.querySelector('.mesaj-body'));
                             wrapper.querySelector('.mesaj-body').innerHTML =
                                 `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj siliniyor</small><div class="dot-flashing"></div></div>`;
                         } else {
@@ -196,11 +202,35 @@
                     })();
                 }
 
+                if (event.target.closest('.mesaj-alintila')){
+                    console.log('alinti butonu tıklandı');
+
+                    const channel = event.target.closest('.channel');
+                    const form = channel.querySelector('.mesaj-create-form');
+                    const input = document.querySelector('input[alintiId]');
+
+                    console.log(channel, form, input);
+
+
+                    input.value = event.target.dataset.id;
+                }
+
+                const active_form = document.querySelector('.active-form');
+
+                if (active_form) {
+                    if (event.target.closest('.mesaj-wrapper') != active_form.closest('.mesaj-wrapper')) {
+                        active_form.classList.add('hidden');
+                        active_form.classList.remove('active-form');
+                        active_form.previousElementSibling.classList.remove('hidden');
+                    }
+                }
+
                 if (event.target.closest('.mesaj-duzenle')) {
                     const form = document.getElementById(event.target.dataset.form);
                     const mesaj = form.previousElementSibling;
 
                     form.classList.toggle('hidden');
+                    form.classList.toggle('active-form');
                     mesaj.classList.toggle('hidden');
                 }
 
@@ -231,8 +261,10 @@
                                 // wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
 
                                 form.classList.add('hidden');
+                                form.classList.add('active-form');
                                 form.nextElementSibling.classList.remove('hidden');
-                                form.nextElementSibling.innerHTML = `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj güncelleniyor</small><div class="dot-flashing"></div></div>`;
+                                form.nextElementSibling.innerHTML =
+                                    `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj güncelleniyor</small><div class="dot-flashing"></div></div>`;
                             } else {
                                 ApiService.alert.error('Mesaj güncellenirken bir hata oluştu.');
                             }
@@ -241,6 +273,20 @@
                         }
                     })();
                 }
+            })
+
+            document.addEventListener('input', function(event) {
+                if (!event.target.matches('textarea'))
+                    return;
+
+                const textarea = event.target;
+
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+
+
+                textarea.closest('section').style.maxHeight = textarea.closest('section').scrollHeight +
+                    'px';
             })
 
             const submitButtons = document.querySelectorAll('.mesaj-submit-button');

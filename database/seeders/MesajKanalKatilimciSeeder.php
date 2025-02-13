@@ -101,6 +101,33 @@ class MesajKanalKatilimciSeeder extends Seeder
                 'mesaj_kanallari_id' => 10,
                 'kullanicilar_id' => 2,
             ],
+            //
+            [
+                'mesaj_kanallari_id' => 11,
+                'kullanicilar_id' => 1,
+            ],
+            [
+                'mesaj_kanallari_id' => 11,
+                'kullanicilar_id' => 2,
+            ],
+            //
+            [
+                'mesaj_kanallari_id' => 12,
+                'kullanicilar_id' => 1,
+            ],
+            [
+                'mesaj_kanallari_id' => 12,
+                'kullanicilar_id' => 2,
+            ],
+            //
+            [
+                'mesaj_kanallari_id' => 13,
+                'kullanicilar_id' => 1,
+            ],
+            [
+                'mesaj_kanallari_id' => 13,
+                'kullanicilar_id' => 2,
+            ],
         ]);
     }
 }

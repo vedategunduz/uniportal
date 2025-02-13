@@ -34,43 +34,61 @@ class MesajKanalSeeder extends Seeder
             // 4
             [
                 'baslik' => 'Salatalık',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/salatalık.webp',
                 'tur' => 'ozel',
             ],
             // 5
             [
                 'baslik' => 'Mısır',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/mısır.jpg',
                 'tur' => 'ozel',
             ],
             // 6
             [
                 'baslik' => 'Soğan',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/sogan.jpeg',
                 'tur' => 'ozel',
             ],
             // 7
             [
                 'baslik' => 'Tereyağ',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/tereyag.jpg',
                 'tur' => 'ozel',
             ],
             // 8
             [
                 'baslik' => 'Un',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/un.jpg',
                 'tur' => 'ozel',
             ],
             // 9
             [
                 'baslik' => 'Şeker',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/seker.jpg',
                 'tur' => 'ozel',
             ],
             // 10
             [
                 'baslik' => 'Helva',
-                'resim' =>  'image/marul.png',
+                'resim' =>  'image/helva.jpg',
+                'tur' => 'ozel',
+            ],
+            // 11
+            [
+                'baslik' => 'Bal',
+                'resim' =>  'image/bal.jpg',
+                'tur' => 'ozel',
+            ],
+            // 12
+            [
+                'baslik' => 'Peynir',
+                'resim' =>  'image/peynir.jpeg',
+                'tur' => 'ozel',
+            ],
+            // 13
+            [
+                'baslik' => 'Reçel',
+                'resim' =>  'image/recel.jpg',
                 'tur' => 'ozel',
             ],
         ]);

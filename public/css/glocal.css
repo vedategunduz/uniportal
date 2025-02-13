@@ -63,6 +63,12 @@ a {
     }
 }
 
+a[href="javascript:void(0)"] {
+    > * {
+        pointer-events: none;
+    }
+}
+
 a:not(.underline) {
 
     &:hover,
@@ -217,8 +223,8 @@ label {
 
 /* width */
 .hidden-scroll::-webkit-scrollbar {
-    width: 1px;
-    height: 1px;
+    width: 0px;
+    height: 0px;
 }
 
 /* Track */

@@ -22,6 +22,10 @@ class MesajController extends Controller
         $validated['mesaj'] = preg_replace($pattern, $replacement, $validated['mesaj']);
         $validated['kullanicilar_id'] = Auth::id();
 
+        if (!empty($validated['alintilanan_mesajlar_id'])) {
+            $validated['alintilanan_mesajlar_id'] = decrypt($validated['alintilanan_mesajlar_id']);
+        }
+
         $mesaj = Mesaj::create($validated);
 
         $kanalKullanicilari = MesajKanalKatilimci::where('mesaj_kanallari_id', $mesaj->mesaj_kanallari_id)->pluck('kullanicilar_id');
@@ -36,7 +40,7 @@ class MesajController extends Controller
             }
         }
 
-        $mesaj = Mesaj::with('kullanici')->find($mesaj->mesajlar_id);
+        $mesaj = Mesaj::with(['kullanici', 'alinti.kullanici'])->find($mesaj->mesajlar_id);
 
         broadcast(new MesajOlusturuldu($mesaj))->toOthers();
 
@@ -66,7 +70,7 @@ class MesajController extends Controller
     {
         $mesajId = decrypt($mesajId);
 
-        $mesaj = Mesaj::with('kullanici')->find($mesajId);
+        $mesaj = Mesaj::with('kullanici')->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
 
         $mesaj->durum = 'silindi';
         $mesaj->save();
@@ -81,13 +85,11 @@ class MesajController extends Controller
 
     public function update($mesajId, Request $request)
     {
-        // dd($request->input(),$request->all());
-
         $validated = $request->all();
 
         $mesajId = decrypt($mesajId);
 
-        $mesaj = Mesaj::with('kullanici')->find($mesajId);
+        $mesaj = Mesaj::with('kullanici')->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
 
         $pattern = '/(https?:\/\/\S+)/';
         $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';

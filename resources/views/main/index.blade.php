@@ -4,7 +4,7 @@
 
 @section('content')
 
-<div class="border-l-blue-400"></div>
+    <div class="border-l-blue-400"></div>
 
 @endsection
 
