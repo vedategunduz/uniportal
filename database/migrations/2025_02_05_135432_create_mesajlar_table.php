@@ -17,7 +17,9 @@ return new class extends Migration
             $table->foreignId('mesaj_kanallari_id')->constrained('mesaj_kanallari', 'mesaj_kanallari_id')->restrictOnDelete();
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
             $table->foreignId('alintilanan_mesajlar_id')->nullable()->constrained('mesajlar', 'mesajlar_id')->restrictOnDelete();
-            $table->longText('mesaj');
+            $table->foreignId('isletmeler_id')->nullable()->constrained('isletmeler', 'isletmeler_id')->restrictOnDelete();
+            $table->foreignId('unvanlar_id')->nullable()->constrained('unvanlar', 'unvanlar_id')->restrictOnDelete();
+            $table->text('mesaj');
             $table->enum('durum', ['düzenlendi', 'silindi', 'kaydedildi'])->default('kaydedildi');
             $table->timestamps();
         });

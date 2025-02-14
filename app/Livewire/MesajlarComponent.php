@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\EmojiTip;
 use App\Models\Mesaj;
 use App\Models\MesajKullaniciGoruntuleme;
 use Illuminate\Support\Facades\Auth;
@@ -11,13 +12,16 @@ use Livewire\Component;
 class MesajlarComponent extends Component
 {
     public $mesajlar;
-    public $mesajSayisi = 5;
+    public $mesajSayisi = 10;
     public $kanalId;
     public $count = 0;
+    public $emojiler;
 
     #[On('echo-private:mesaj-kanal.{kanalId},MesajGuncellendi')]
     public function mount($kanalId)
     {
+        $this->emojiler = EmojiTip::where('grup_id', 1)->get();
+
         $this->kanalId = $kanalId;
 
         $this->count = MesajKullaniciGoruntuleme::where('kullanicilar_id', Auth::id())->count();
@@ -25,12 +29,14 @@ class MesajlarComponent extends Component
         if ($this->count > 5)
             $this->mesajSayisi = $this->count;
 
-        $this->mesajlar = Mesaj::with(['kullanici', 'alinti.kullanici'])->where('mesaj_kanallari_id', $this->kanalId)
+        $this->mesajlar = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->where('mesaj_kanallari_id', $this->kanalId)
             ->orderBy('mesajlar_id', 'desc')
             ->take($this->mesajSayisi)
             ->get()->toArray();
 
         $this->mesajlar = array_reverse($this->mesajlar);
+
+        dump($this->mesajlar);
     }
 
     public function dahaFazlaMesaj()

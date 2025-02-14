@@ -14,6 +14,11 @@ class UnvanSeeder extends Seeder
     {
         Unvan::insert([
             [
+                'baslik'             => 'Admin',
+                'isletme_turleri_id' => 1,
+                'unvanSira'          => 1,
+            ],
+            [
                 'baslik'             => 'Daire Başkanı',
                 'isletme_turleri_id' => 1,
                 'unvanSira'          => 1,
@@ -234,15 +239,15 @@ class UnvanSeeder extends Seeder
                 'unvanSira'          => 43
             ],
             [
+                'baslik'             => 'Personel',
+                'isletme_turleri_id' => 1,
+                'unvanSira'          => 45
+            ],
+            [
                 'baslik'             => 'Operasyon Görevlisi',
                 'isletme_turleri_id' => 1,
                 'unvanSira'          => 44
             ],
-            [
-                'baslik'             => 'Personel',
-                'isletme_turleri_id' => 1,
-                'unvanSira'          => 45
-            ]
         ]);
     }
 }

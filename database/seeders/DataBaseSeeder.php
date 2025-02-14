@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             MesajKanalSeeder::class,
             MesajKanalKatilimciSeeder::class,
             MesajSeeder::class,
+            EmojiTipSeeder::class,
         ]);
     }
 }

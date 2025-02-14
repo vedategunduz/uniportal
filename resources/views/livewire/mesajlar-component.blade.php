@@ -99,6 +99,16 @@
                                                 </a>
                                             </li>
                                         @endif
+                                    @else
+                                        <li class="flex items-stretch">
+                                            @foreach ($emojiler as $emoji)
+                                                <a href="javascript:void(0)" data-mesaj-id="{{ $sifreliMesajlarId }}"
+                                                    data-emoji-id="{{ encrypt($emoji->emoji_tipleri_id) }}"
+                                                    class="emoji-ekle inline-block px-4 py-2 hover:bg-gray-50">
+                                                    {!! $emoji->url !!}
+                                                </a>
+                                            @endforeach
+                                        </li>
                                     @endif
                                     <li>
                                         <a href="javascript:void(0)" data-id="{{ $sifreliMesajlarId }}"
@@ -117,7 +127,7 @@
                                         @if ($mesaj['kullanicilar_id'] === auth()->id())
                                             <li>
                                                 <a href="javascript:void(0)" data-id="{{ $sifreliMesajlarId }}"
-                                                    class="mesaj-alintila flex items-center gap-2 px-4 py-2 hover:bg-gray-50 !text-rose-700">
+                                                    class="mesaj-alinti-kaldir flex items-center gap-2 px-4 py-2 hover:bg-gray-50 !text-pink-700">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="12"
                                                         height="12" fill="currentColor" class="bi bi-pin-angle-fill"
                                                         viewBox="0 0 16 16">
@@ -137,15 +147,25 @@
                     @endif
                 </div>
 
-                <div class="max-w-">
-                    <p class="text-xs">{{ $mesaj['kullanici']['ad'] . ' ' . $mesaj['kullanici']['soyad'] }}</p>
+                <div class="alintilanabilir">
+                    <p class="text-xs">
+                        {{ $mesaj['kullanici']['ad'] . ' ' . $mesaj['kullanici']['soyad'] }}
+
+                        @if (!empty($mesaj['isletme']))
+                            ({{ $mesaj['isletme']['kisaltma'] }} -
+                        @endif
+
+                        @if (!empty($mesaj['unvan']))
+                            {{ $mesaj['unvan']['baslik'] }})
+                        @endif
+                    </p>
                     <div @class([
                         'px-4 py-1 rounded shadow-sm',
                         'bg-emerald-50' => $mesaj['kullanicilar_id'] === auth()->id(),
                         'bg-blue-50' => $mesaj['kullanicilar_id'] !== auth()->id(),
                     ])>
 
-                        <div class="text-sm break-all mesaj-body">
+                        <div class="text-sm break-all mesaj-body relative">
                             @if ($mesaj['durum'] != 'silindi')
                                 @if (!empty($mesaj['alinti']))
                                     <p class="text-xs">
@@ -165,14 +185,15 @@
 
                                             <div class="text-right text-xs">
                                                 @php
-                                                    $saat = Carbon::parse(
-                                                        $mesaj['alinti']['created_at'],
-                                                    )->translatedFormat('H:i');
+                                                    $saat = new DateTime($mesaj['alinti']['created_at']);
+                                                    $saat->setTimezone(new DateTimeZone('Europe/Istanbul'));
+                                                    $saat = $saat->format('H:i');
+
                                                     if ($mesaj['alinti']['durum'] == 'düzenlendi') {
-                                                        $saat = Carbon::parse(
-                                                            $mesaj['alinti']['updated_at'],
-                                                        )->translatedFormat('H:i');
-                                                        $saat .= ' (düzenlendi)';
+                                                        $saat = new DateTime($mesaj['alinti']['updated_at']);
+                                                        $saat->setTimezone(new DateTimeZone('Europe/Istanbul'));
+                                                        $saat = $saat->format('H:i');
+                                                        $saat .= ' düzenlendi';
                                                     }
                                                 @endphp
                                                 <small>
@@ -186,42 +207,61 @@
                                 @endif
                                 <span>{!! $mesaj['mesaj'] !!}</span>
 
-                                <form action="{{ route('yonetim.mesaj.update', ['mesajId' => $sifreliMesajlarId]) }}"
-                                    class="hidden" id="mesaj-form-{{ $sifreliMesajlarId }}">
-                                    <div class="flex">
-                                        <input type="hidden" name="mesajlar_id" value="{{ $sifreliMesajlarId }}" />
+                                @if ($mesaj['kullanicilar_id'] === auth()->id())
+                                    <form
+                                        action="{{ route('yonetim.mesaj.update', ['mesajId' => $sifreliMesajlarId]) }}"
+                                        class="hidden" id="mesaj-form-{{ $sifreliMesajlarId }}">
+                                        <div class="flex mesaj-form-child">
+                                            <input type="hidden" name="mesajlar_id"
+                                                value="{{ $sifreliMesajlarId }}" />
 
-                                        @php
-                                            $pattern = '/<a[^>]+href=["\'](https?:\/\/\S+?)["\'][^>]*>(.*?)<\/a>/i';
-                                            $replacement = '$1';
-                                            $duzenlenmisMesaj = preg_replace($pattern, $replacement, $mesaj['mesaj']);
-                                        @endphp
+                                            @php
+                                                $pattern = '/<a[^>]+href=["\'](https?:\/\/\S+?)["\'][^>]*>(.*?)<\/a>/i';
+                                                $replacement = '$1';
+                                                $duzenlenmisMesaj = preg_replace(
+                                                    $pattern,
+                                                    $replacement,
+                                                    $mesaj['mesaj'],
+                                                );
+                                            @endphp
 
-                                        <x-textarea rows="1" name="mesaj"
-                                            class="overflow-auto hidden-scroll">{{ $duzenlenmisMesaj }}</x-textarea>
+                                            <x-textarea rows="1" name="mesaj"
+                                                class="overflow-auto hidden-scroll">{{ $duzenlenmisMesaj }}</x-textarea>
 
-                                        <x-button type="submit"
-                                            class="mesaj-duzenle-submit-button !border-none !shadow-none !bg-transparent">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                            </svg>
-                                        </x-button>
+                                            <x-button type="submit"
+                                                class="mesaj-duzenle-submit-button !border-none !shadow-none !bg-transparent">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                                                </svg>
+                                            </x-button>
+                                        </div>
+                                    </form>
+                                @endif
+
+                                @if (!empty($mesaj['detay']))
+                                    <div class="absolute bottom-0 left-0">
+
                                     </div>
-                                </form>
+                                @endif
                             @else
                                 <span class="text-gray-500">Mesaj silindi</span>
                             @endif
                         </div>
                         <div class="text-right text-xs">
                             @php
-                                $saat = Carbon::parse($mesaj['created_at'])->translatedFormat('H:i');
+                                $saat = new DateTime($mesaj['created_at']);
+                                $saat->setTimezone(new DateTimeZone('Europe/Istanbul'));
+                                $saat = $saat->format('H:i');
+
                                 if ($mesaj['durum'] == 'düzenlendi') {
-                                    $saat = Carbon::parse($mesaj['updated_at'])->translatedFormat('H:i');
-                                    $saat .= ' (düzenlendi)';
+                                    $saat = new DateTime($mesaj['updated_at']);
+                                    $saat->setTimezone(new DateTimeZone('Europe/Istanbul'));
+                                    $saat = $saat->format('H:i');
+                                    $saat .= ' düzenlendi';
                                 }
                             @endphp
                             <small>
@@ -237,6 +277,16 @@
         <form action="" class="p-4 mesaj-create-form">
             <input type="hidden" name="mesaj_kanallari_id" value="{{ $kanalId }}" />
             <input type="hidden" name="alintilanan_mesajlar_id" value="" alintiId />
+
+            <div class="alinti-gosterim hidden mb-4">
+                <div class="flex gap-2">
+                    <div class="alinti-gosterim-mesaj"></div>
+
+                    <div class="">
+                        <x-button type="button" class="alinti-iptal">İptal</x-button>
+                    </div>
+                </div>
+            </div>
 
             <div class="flex items-stretch">
                 <x-textarea name="mesaj" rows="1"

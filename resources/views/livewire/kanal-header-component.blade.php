@@ -1,8 +1,8 @@
-<div class="flex gap-4 px-4 py-3 pointer-events-none">
+<div class="flex gap-4 px-4 py-1.5 pointer-events-none">
     <img src="{{ asset($kanal->resim) }}" class="rounded-full w-10 h-10" alt="">
 
     <div class="flex flex-col">
-        <span class="flex items-center gap-1">
+        <span class="flex items-center gap-1 text-sm">
             {{ $kanal->baslik }}
             @if ($count > 0)
                 <span

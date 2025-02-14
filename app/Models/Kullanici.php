@@ -20,13 +20,13 @@ class Kullanici extends Authenticatable
 
     protected $fillable = [
         'unvanlar_id',
+        'isletmeler_id',
         'ad',
         'soyad',
         'email',
         'telefon',
         'adres',
         'profilFotoUrl',
-        'password',
     ];
 
     protected $hidden = [
@@ -52,6 +52,10 @@ class Kullanici extends Authenticatable
         return $this->hasMany(LoginHistory::class, 'kullanicilar_id')
             ->orderBy('created_at', 'desc')
             ->limit($limit);
+    }
+
+    public function anaIsletme() {
+        return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 
     public function isletme()

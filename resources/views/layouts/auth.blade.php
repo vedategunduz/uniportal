@@ -53,7 +53,7 @@
         <div class="aside-modal-outside close-aside-modal" data-modal="aside-modal"></div>
 
         <div class="aside-modal-content overflow-auto hidden-scroll w-full md:w-1/2 lg:w-1/3">
-            <header class="flex flex-col sticky top-0 z-20">
+            <header class="flex flex-col sticky top-0 z-20 border-b">
                 <div class="flex items-center justify-between bg-blue-700 text-white px-6 py-2">
                     <div>
                         <h2 class="font-medium text-lg"> Mesajlar </h2>
@@ -66,20 +66,24 @@
                     </button>
                 </div>
                 <div class="px-6 py-4 bg-white">
-                    <div class="relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-search size-4 absolute top-1/2 -translate-y-1/2 left-3" viewBox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                        </svg>
-                        <input type="text" id="first_name"
-                            class="bg-gray-50 indent-7 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2"
-                            placeholder="Mesajlarda ara" />
-                    </div>
-
-                    <div class="mt-4">
-                        <x-button>
-                            Yeni Mesaj
+                    <div class="flex items-stretch">
+                        <div class="relative w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-search size-4 absolute top-1/2 -translate-y-1/2 left-3"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                            </svg>
+                            <input type="text" id="search-channel"
+                                class="bg-gray-50 indent-7 border border-r-0 rounded-r-none border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2"
+                                placeholder="Kanal ara" />
+                        </div>
+                        <x-button class="text-nowrap rounded-l-none !bg-emerald-50 text-emerald-900 z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+                            </svg>
                         </x-button>
                     </div>
                 </div>
@@ -88,19 +92,27 @@
             <section id="aside-modal-content-body" class="flex flex-col">
                 <div class="flex flex-col">
                     @foreach ($kanallar as $kanal)
-                        <header
-                            class="border-b first:border-t border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button"
-                            data-channel-id="{{ $kanal->mesaj_kanallari_id }}">
-                            <livewire:kanal-header-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
-                        </header>
-                        <section class="max-h-0 transition-all overflow-hidden">
-                            <livewire:mesajlar-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
-                        </section>
+                        <div class="border-b" data-channel-name="{{ $kanal->baslik }}">
+                            <header
+                                class="border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button"
+                                data-channel-id="{{ $kanal->mesaj_kanallari_id }}">
+                                <livewire:kanal-header-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
+                            </header>
+                            <section class="max-h-0 transition-all overflow-hidden">
+                                <livewire:mesajlar-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
+                            </section>
+                        </div>
                     @endforeach
                 </div>
             </section>
         </div>
     </div>
+
+    <x-modal id="pat" title="Yeni Mesaj" class="w-full sm:w-11/12 md:w-3/4 lg:max-w-sm">
+
+        <x-relative-input id="search" type="text" placeholder=" " />
+
+    </x-modal>
 
     <script src="{{ asset('js/data-table.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
@@ -156,6 +168,22 @@
                     });
             @endforeach
 
+            document.getElementById('search-channel').addEventListener('input', function(event) {
+                const VALUE = event.target.value.toLowerCase();
+
+                const CHANNELS = document.querySelectorAll('[data-channel-name]');
+
+                CHANNELS.forEach((channel) => {
+                    const CHANNEL_NAME = channel.dataset.channelName.toLowerCase();
+
+                    if (CHANNEL_NAME.includes(VALUE)) {
+                        channel.classList.remove('hidden');
+                    } else {
+                        channel.classList.add('hidden');
+                    }
+                });
+            });
+
             document.addEventListener('click', function(event) {
                 if (event.target.matches('.aside-message-accordion-button')) {
                     const COUNT = event.target.querySelector('.count');
@@ -197,22 +225,64 @@
                             wrapper.querySelector('.mesaj-body').innerHTML =
                                 `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj siliniyor</small><div class="dot-flashing"></div></div>`;
                         } else {
-                            ApiService.alert.error("Mesajlar okunurken bir hata oluştu.");
+                            ApiService.alert.error("Mesaj silinirken bir hata oluştu.");
                         }
                     })();
                 }
 
-                if (event.target.closest('.mesaj-alintila')){
-                    console.log('alinti butonu tıklandı');
-
+                if (event.target.closest('.mesaj-alintila')) {
                     const channel = event.target.closest('.channel');
                     const form = channel.querySelector('.mesaj-create-form');
-                    const input = document.querySelector('input[alintiId]');
-
-                    console.log(channel, form, input);
-
+                    const input = form.querySelector('input[alintiId]');
 
                     input.value = event.target.dataset.id;
+
+                    form.querySelector('textarea').focus();
+
+                    const alintiGosterim = form.querySelector('.alinti-gosterim');
+                    const alintiGosterimMesaj = form.querySelector('.alinti-gosterim-mesaj');
+
+                    alintiGosterim.classList.remove('hidden');
+
+                    alintiGosterimMesaj.innerHTML = event.target.closest('.mesaj-wrapper').querySelector(
+                        '.alintilanabilir').innerHTML;
+
+
+                    channel.closest('section').style.maxHeight = channel.closest('section').scrollHeight +
+                        'px';
+
+                    alintiGosterimMesaj.querySelector('.mesaj-form-child')?.remove();
+                }
+
+                if (event.target.closest('.alinti-iptal')) {
+                    const wrapper = event.target.closest('.alinti-gosterim');
+                    wrapper.classList.add('hidden');
+
+                    document.querySelector('input[alintiId]').value = '';
+                }
+
+                if (event.target.closest('.mesaj-alinti-kaldir')) {
+                    console.log('alinti kaldır butonu tıklandı');
+                    const wrapper = event.target.closest('.mesaj-wrapper');
+
+                    if (!wrapper)
+                        return;
+
+                    const mesajId = event.target.dataset.id;
+                    const URL =
+                        "{{ route('yonetim.mesaj.alinti-kaldir', ['mesajId' => '___ID___']) }}"
+                        .replace('___ID___', mesajId);
+
+                    (async () => {
+                        const RESPONSE = await ApiService.fetchData(URL, {}, "PATCH");
+
+                        if (RESPONSE.status === 200) {
+                            wrapper.querySelector('.mesaj-body').innerHTML =
+                                `<div class="text-right flex items-center justify-end gap-4"><small>Alıntı kaldırılıyor</small><div class="dot-flashing"></div></div>`;
+                        } else {
+                            ApiService.alert.error("Alıntı kaldırılırken bir hata oluştu.");
+                        }
+                    })();
                 }
 
                 const active_form = document.querySelector('.active-form');
@@ -262,14 +332,34 @@
 
                                 form.classList.add('hidden');
                                 form.classList.add('active-form');
-                                form.nextElementSibling.classList.remove('hidden');
-                                form.nextElementSibling.innerHTML =
+                                form.previousElementSibling.classList.remove('hidden');
+                                form.previousElementSibling.innerHTML =
                                     `<div class="text-right flex items-center justify-end gap-4"><small>Mesaj güncelleniyor</small><div class="dot-flashing"></div></div>`;
                             } else {
                                 ApiService.alert.error('Mesaj güncellenirken bir hata oluştu.');
                             }
                         } finally {
                             event.target.disabled = false;
+                        }
+                    })();
+                }
+
+                if (event.target.closest('.emoji-ekle')) {
+                    const mesajId = event.target.dataset.mesajId;
+                    const emojiId = event.target.dataset.emojiId;
+
+                    (async () => {
+                        const URL =
+                            "{{ route('yonetim.mesaj.emoji', ['mesajId' => '___ID___', 'emojiId' => '___ID2___']) }}"
+                            .replace('___ID___', mesajId)
+                            .replace('___ID2___', emojiId);
+
+                        const RESPONSE = await ApiService.fetchData(URL, {}, 'POST');
+
+                        if (RESPONSE.status === 201) {
+                            ApiService.alert.success('Emoji eklendi.');
+                        } else {
+                            ApiService.alert.error('Emoji eklenirken bir hata oluştu.');
                         }
                     })();
                 }
@@ -313,6 +403,11 @@
                             formData, 'POST');
 
                         if (RESPONSE.status === 201) {
+                            const alintiGosterim = form.querySelector('.alinti-gosterim');
+                            alintiGosterim.classList.add('hidden');
+
+                            document.querySelector('input[alintiId]').value = '';
+
                             const container = document.getElementById(submitButton.dataset
                                 .container);
 

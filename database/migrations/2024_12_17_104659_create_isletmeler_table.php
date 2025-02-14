@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('referans', 20)->nullable();
             $table->string('baslik', 255)->nullable();
             $table->string('adres', 500)->nullable();
+            $table->string('kisaltma', 10)->nullable();
             $table->string('mailUzanti', 50)->nullable();
             $table->string('vectorelLogoUrl', 500)->nullable();
             $table->string('logoUrl', 500)->nullable();
@@ -44,6 +45,7 @@ return new class extends Migration
             $table->string('referans', 20)->nullable();
             $table->string('baslik', 255)->nullable();
             $table->string('adres', 500)->nullable();
+            $table->string('kisaltma', 10)->nullable();
             $table->string('mailUzanti', 50)->nullable();
             $table->string('vectorelLogoUrl', 500)->nullable();
             $table->string('logoUrl', 500)->nullable();
@@ -69,6 +71,7 @@ return new class extends Migration
                     referans,
                     baslik,
                     adres,
+                    kisaltma,
                     mailUzanti,
                     vectorelLogoUrl,
                     logoUrl,
@@ -90,6 +93,7 @@ return new class extends Migration
                     NEW.referans,
                     NEW.baslik,
                     NEW.adres,
+                    NEW.kisaltma,
                     NEW.mailUzanti,
                     NEW.vectorelLogoUrl,
                     NEW.logoUrl,
@@ -120,6 +124,7 @@ return new class extends Migration
                     referans,
                     baslik,
                     adres,
+                    kisaltma,
                     mailUzanti,
                     vectorelLogoUrl,
                     logoUrl,
@@ -141,6 +146,7 @@ return new class extends Migration
                     NEW.referans,
                     NEW.baslik,
                     NEW.adres,
+                    NEW.kisaltma,
                     NEW.mailUzanti,
                     NEW.vectorelLogoUrl,
                     NEW.logoUrl,

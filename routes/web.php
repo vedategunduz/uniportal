@@ -36,10 +36,12 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('/', [MesajController::class, 'store'])->name('store');
 
             Route::delete('/{mesajId}', [MesajController::class, 'destroy'])->name('destroy');
+            Route::patch('/{mesajId}', [MesajController::class, 'update'])->name('update');
+            Route::patch('alinti-kaldir/{mesajId}', [MesajController::class, 'alintiKaldir'])->name('alinti-kaldir');
 
             Route::delete('/okundu/{kanalId}', [MesajController::class, 'okundu'])->name('okundu');
+            Route::post('/{mesajId}/emoji/{emojiId}', [MesajController::class, 'emoji'])->name('emoji');
 
-            Route::patch('/{mesajId}', [MesajController::class, 'update'])->name('update');
         });
 
         Route::prefix('birimler')->name('birimler.')->group(function () {
