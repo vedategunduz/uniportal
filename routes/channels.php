@@ -18,3 +18,7 @@ Broadcast::channel('mesaj-okundu.{kanalId}', function ($user, $kanalId) {
         ->where('kullanicilar_id', $user->kullanicilar_id)
         ->exists();
 });
+
+Broadcast::channel('mesaj-kanallari', function ($user) {
+    return $user;
+});

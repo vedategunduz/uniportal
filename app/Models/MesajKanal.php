@@ -19,6 +19,7 @@ class MesajKanal extends Model
         'resim',
         'tur',
         'aktiflik',
+        'sadeceYonetici',
     ];
 
     public function mesajlar() {

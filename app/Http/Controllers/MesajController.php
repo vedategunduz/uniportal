@@ -44,7 +44,7 @@ class MesajController extends Controller
             }
         }
 
-        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici'])->find($mesaj->mesajlar_id);
+        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->find($mesaj->mesajlar_id);
 
         broadcast(new MesajOlusturuldu($mesaj))->toOthers();
 
@@ -93,7 +93,7 @@ class MesajController extends Controller
 
         $mesajId = decrypt($mesajId);
 
-        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
+        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
 
         $pattern = '/(https?:\/\/\S+)/';
         $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';
@@ -117,7 +117,7 @@ class MesajController extends Controller
     {
         $mesajId = decrypt($mesajId);
 
-        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
+        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'detay'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
 
         $mesaj->alintilanan_mesajlar_id = null;
 
@@ -136,19 +136,32 @@ class MesajController extends Controller
         $mesajId = decrypt($mesajId);
         $emojiId = decrypt($emojiId);
 
-        // MesajDetay::where('mesajlar_id', $mesajId)
-        //     ->where('kullanicilar_id', Auth::id())
-        //     ->delete();
+        $mesaj = Mesaj::where('mesajlar_id', $mesajId)->first();
 
-        MesajDetay::create([
-            'mesajlar_id'      => $mesajId,
-            'emoji_tipleri_id' => $emojiId,
-            'kullanicilar_id'  => Auth::id(),
-        ]);
+        $mesajDetay = MesajDetay::where('mesajlar_id', $mesajId)->where('emoji_tipleri_id', $emojiId)->where('kullanicilar_id', Auth::id())->first();
+
+        MesajDetay::where('kullanicilar_id', Auth::id())->where('mesajlar_id', $mesajId)->delete();
+
+        if (empty($mesajDetay)) {
+            if ($mesaj->kullanicilar_id != Auth::id()) {
+                MesajDetay::create([
+                    'mesajlar_id'      => $mesajId,
+                    'emoji_tipleri_id' => $emojiId,
+                    'kullanicilar_id'  => Auth::id(),
+                ]);
+            }
+        }
+
+        $mesaj = Mesaj::where('mesajlar_id', $mesajId)->with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->first();
+
+        $emojiCount = MesajDetay::where('mesajlar_id', $mesajId)->where('emoji_tipleri_id', $emojiId)->count();
+
+        broadcast(new MesajGuncellendi($mesaj))->toOthers();
 
         return response()->json([
             'success' => true,
             'message' => "Emoji eklendi.",
+            'count' => $emojiCount,
         ], 201);
     }
 }

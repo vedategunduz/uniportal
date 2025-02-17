@@ -16,6 +16,7 @@ class MesajKanalKatilimci extends Model
     protected $fillable = [
         'mesaj_kanallari_id',
         'kullanicilar_id',
+        'yoneticilikDurumu',
     ];
 
     public function kullanici() {

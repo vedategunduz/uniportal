@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\EmojiTip;
 use App\Models\Mesaj;
+use App\Models\MesajKanalKatilimci;
 use App\Models\MesajKullaniciGoruntuleme;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -29,14 +30,28 @@ class MesajlarComponent extends Component
         if ($this->count > 5)
             $this->mesajSayisi = $this->count;
 
-        $this->mesajlar = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->where('mesaj_kanallari_id', $this->kanalId)
+        $membershipPeriods = MesajKanalKatilimci::where('kullanicilar_id', Auth::id())
+            ->where('mesaj_kanallari_id', $this->kanalId)
+            ->get();
+
+        $this->mesajlar = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])
+            ->where('mesaj_kanallari_id', $this->kanalId)
+            ->where(function ($query) use ($membershipPeriods) {
+                // Her üyelik dönemi için "created_at" tarihinin, o döneme denk gelip gelmediğini kontrol ediyoruz.
+                foreach ($membershipPeriods as $period) {
+                    // Eğer kullanıcı halen gruptaysa, left_at değeri null olacağından, şu anki zaman ile kıyaslayabilirsiniz.
+                    $leftTime = $period->updated_at ?? now();
+                    $query->orWhereBetween('created_at', [$period->created_at, $leftTime]);
+                }
+            })
             ->orderBy('mesajlar_id', 'desc')
             ->take($this->mesajSayisi)
-            ->get()->toArray();
+            ->get()
+            ->toArray();
 
         $this->mesajlar = array_reverse($this->mesajlar);
 
-        dump($this->mesajlar);
+        // dump($this->mesajlar);
     }
 
     public function dahaFazlaMesaj()

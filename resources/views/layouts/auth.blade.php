@@ -78,7 +78,8 @@
                                 class="bg-gray-50 indent-7 border border-r-0 rounded-r-none border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2"
                                 placeholder="Kanal ara" />
                         </div>
-                        <x-button class="text-nowrap rounded-l-none !bg-emerald-50 text-emerald-900 z-10">
+                        <x-button class="open-modal text-nowrap rounded-l-none !bg-emerald-50 text-emerald-900 z-10"
+                            data-modal="modal-yeni-kanal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
                                 <path
@@ -91,26 +92,33 @@
 
             <section id="aside-modal-content-body" class="flex flex-col">
                 <div class="flex flex-col">
-                    @foreach ($kanallar as $kanal)
-                        <div class="border-b" data-channel-name="{{ $kanal->baslik }}">
-                            <header
-                                class="border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button"
-                                data-channel-id="{{ $kanal->mesaj_kanallari_id }}">
-                                <livewire:kanal-header-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
-                            </header>
-                            <section class="max-h-0 transition-all overflow-hidden">
-                                <livewire:mesajlar-component kanalId="{{ $kanal->mesaj_kanallari_id }}" />
-                            </section>
-                        </div>
-                    @endforeach
+                    <livewire:kanal-component />
                 </div>
             </section>
         </div>
     </div>
 
-    <x-modal id="pat" title="Yeni Mesaj" class="w-full sm:w-11/12 md:w-3/4 lg:max-w-sm">
+    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-11/12 md:w-3/4 lg:max-w-sm">
 
-        <x-relative-input id="search" type="text" placeholder=" " />
+        <form action="" class="space-y-2">
+            <x-relative-input label="Kanal adı" type="text" name="baslik" class="py-2" placeholder=" " />
+
+            <x-relative-input label="Kullanıcı ara" type="text" name="search" class="py-2" placeholder=" " />
+
+            <div class="">
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="" class="sr-only peer">
+                    <div
+                        class="relative w-7 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[\'\'] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600">
+                    </div>
+                    <span class="ms-3 text-sm font-normal text-gray-900 select-none">Sadece yöneticiler mesaj yazabilir.</span>
+                </label>
+            </div>
+
+            <x-button type="submit" id="kanal-olustur-submit-button">
+                Kanal Oluştur
+            </x-button>
+        </form>
 
     </x-modal>
 
@@ -126,17 +134,20 @@
 
         document.addEventListener('DOMContentLoaded', function() {
 
-            @foreach ($kanallar as $kanal)
-                window.Echo.private(`mesaj-kanal.{{ $kanal->mesaj_kanallari_id }}`)
+            window.Echo.private(`mesaj-kanallari`)
+                .listen('KanalOlusturuldu', (event) => {
+
+                });
+
+            function subscribeToKanal(kanalId) {
+                window.Echo.private(`mesaj-kanal.${kanalId}`)
                     .listen('MesajOlusturuldu', (event) => {
+                        console.log(event);
                         const ACCORDION_HEADERS = document.querySelector(
                             '.aside-message-accordion-button.active');
-
-                        if (!ACCORDION_HEADERS)
-                            return;
+                        if (!ACCORDION_HEADERS) return;
 
                         const ACCORDION_BODY = ACCORDION_HEADERS.nextElementSibling;
-
                         ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
 
                         const MESAJ_CONTAINER = ACCORDION_BODY.querySelector('.mesaj-container');
@@ -147,12 +158,9 @@
 
                         (async () => {
                             const kanalId = ACCORDION_HEADERS.dataset.channelId;
-                            const URL =
-                                "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
+                            const URL = "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
                                 .replace('___ID___', kanalId);
-
                             const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
-
                             if (RESPONSE.status === 200) {
                                 // COUNT.remove();
                             } else {
@@ -161,12 +169,18 @@
                         })();
                     })
                     .listen('MesajSilindi', (event) => {
-
+                        // Mesaj silindi event işlemleri
                     })
                     .listen('MesajGuncellendi', (event) => {
-
+                        // Mesaj güncellendi event işlemleri
                     });
+            }
+
+            @foreach ($kanallar as $kanal)
+                subscribeToKanal({{ $kanal->mesaj_kanallari_id }});
             @endforeach
+
+
 
             document.getElementById('search-channel').addEventListener('input', function(event) {
                 const VALUE = event.target.value.toLowerCase();
@@ -185,8 +199,9 @@
             });
 
             document.addEventListener('click', function(event) {
-                if (event.target.matches('.aside-message-accordion-button')) {
-                    const COUNT = event.target.querySelector('.count');
+                if (event.target.closest('.aside-message-accordion-button')) {
+                    const COUNT = event.target.closest('.aside-message-accordion-button').querySelector(
+                        '.count');
 
                     if (!COUNT)
                         return;
@@ -345,11 +360,14 @@
                 }
 
                 if (event.target.closest('.emoji-ekle')) {
+                    const element = event.target.closest('.emoji-ekle');
+
                     const mesajId = event.target.dataset.mesajId;
                     const emojiId = event.target.dataset.emojiId;
 
                     (async () => {
-                        const URL =
+                        const
+                            URL =
                             "{{ route('yonetim.mesaj.emoji', ['mesajId' => '___ID___', 'emojiId' => '___ID2___']) }}"
                             .replace('___ID___', mesajId)
                             .replace('___ID2___', emojiId);
@@ -357,9 +375,59 @@
                         const RESPONSE = await ApiService.fetchData(URL, {}, 'POST');
 
                         if (RESPONSE.status === 201) {
-                            ApiService.alert.success('Emoji eklendi.');
+                            if (element.querySelector('.emoji-count'))
+                                element.querySelector('.emoji-count').textContent = RESPONSE.data
+                                .count;
                         } else {
                             ApiService.alert.error('Emoji eklenirken bir hata oluştu.');
+                        }
+                    })();
+                }
+
+                if (event.target.closest('.mesaj-submit-button')) {
+                    event.preventDefault();
+
+                    (async () => {
+                        event.target.disabled = true;
+                        event.target.classList.add('ozelanimasyon')
+
+                        try {
+                            const form = event.target.closest('form');
+                            const formData = new FormData(form);
+                            const mesaj = formData.get('mesaj');
+
+                            if (!mesaj) {
+                                ApiService.alert.error('Mesaj boş olamaz.');
+                                return;
+                            }
+
+                            const RESPONSE = await ApiService.fetchData(
+                                "{{ route('yonetim.mesaj.store') }}",
+                                formData, 'POST');
+
+                            if (RESPONSE.status === 201) {
+                                const alintiGosterim = form.querySelector('.alinti-gosterim');
+                                alintiGosterim.classList.add('hidden');
+
+                                document.querySelector('input[alintiId]').value = '';
+
+                                const container = document.getElementById(event.target.dataset
+                                    .container);
+
+                                container.innerHTML += RESPONSE.data.html;
+
+                                const wrapper = container.closest('section');
+                                wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+
+                                container.scrollTo(0, container.scrollHeight);
+
+                                form.reset();
+                            } else {
+                                ApiService.alert.error('Mesaj gönderilirken bir hata oluştu.');
+                            }
+                        } finally {
+                            event.target.disabled = false;
+                            event.target.classList.remove('ozelanimasyon')
                         }
                     })();
                 }
@@ -379,55 +447,31 @@
                     'px';
             })
 
-            const submitButtons = document.querySelectorAll('.mesaj-submit-button');
+            document.getElementById('kanal-olustur-submit-button').addEventListener('click', function(e) {
+                e.preventDefault();
 
-            submitButtons.forEach((submitButton) => {
-                submitButton.addEventListener('click', async (e) => {
-                    e.preventDefault();
+                (async () => {
+                    const form = document.querySelector('#modal-yeni-kanal form');
+                    const formData = new FormData(form);
 
-                    e.target.disabled = true;
-                    e.target.classList.add('ozelanimasyon')
+                    const RESPONSE = await ApiService.fetchData(
+                        "{{ route('yonetim.kanal.store') }}",
+                        formData, 'POST');
 
-                    try {
-                        const form = e.target.closest('form');
-                        const formData = new FormData(form);
-                        const mesaj = formData.get('mesaj');
+                    if (RESPONSE.status === 201) {
+                        ApiService.alert.success('Kanal oluşturuldu.');
 
-                        if (!mesaj) {
-                            ApiService.alert.error('Mesaj boş olamaz.');
-                            return;
-                        }
+                        form.reset();
 
-                        const RESPONSE = await ApiService.fetchData(
-                            "{{ route('yonetim.mesaj.store') }}",
-                            formData, 'POST');
+                        document.getElementById('modal-yeni-kanal').classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
 
-                        if (RESPONSE.status === 201) {
-                            const alintiGosterim = form.querySelector('.alinti-gosterim');
-                            alintiGosterim.classList.add('hidden');
-
-                            document.querySelector('input[alintiId]').value = '';
-
-                            const container = document.getElementById(submitButton.dataset
-                                .container);
-
-                            container.innerHTML += RESPONSE.data.html;
-
-                            const wrapper = container.closest('section');
-                            wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
-
-                            container.scrollTo(0, container.scrollHeight);
-
-                            form.reset();
-                        } else {
-                            ApiService.alert.error('Mesaj gönderilirken bir hata oluştu.');
-                        }
-                    } finally {
-                        e.target.disabled = false;
-                        e.target.classList.remove('ozelanimasyon')
+                        subscribeToKanal(RESPONSE.data.data);
+                    } else {
+                        ApiService.alert.error('Kanal oluşturulurken bir hata oluştu.');
                     }
-                });
-            });
+                })();
+            })
 
         });
     </script>

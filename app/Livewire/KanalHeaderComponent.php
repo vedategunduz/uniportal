@@ -32,9 +32,6 @@ class KanalHeaderComponent extends Component
     #[On('echo-private:mesaj-kanal.{kanalId},MesajOlusturuldu')]
     public function sonMesaj($mesaj)
     {
-        // if ($mesaj['mesaj']['kullanicilar_id'] !== Auth::id())
-        //     $this->count++;
-
         $this->sonMesaj = $mesaj['mesaj'];
         $this->count = MesajKullaniciGoruntuleme::where('kullanicilar_id', Auth::id())->where('mesaj_kanallari_id', $this->kanalId)->count();
     }

@@ -135,18 +135,18 @@ window.addEventListener('click', async function (event) {
         document.body.classList.remove('overflow-hidden');
     }
 
-    if (event.target.matches('.aside-message-accordion-button')) {
+    if (event.target.closest('.aside-message-accordion-button')) {
         const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active');
 
         ACCORDION_HEADERS.forEach((header) => {
-            if (header !== event.target) {
+            if (header !== event.target.closest('.aside-message-accordion-button')) {
                 header.classList.remove('active');
                 header.classList.remove('!border-l-blue-400');
                 header.nextElementSibling.style.maxHeight = 0;
             }
         });
 
-        const ACCORDION_HEADER = event.target;
+        const ACCORDION_HEADER = event.target.closest('.aside-message-accordion-button');
         const ACCORDION_BODY = ACCORDION_HEADER.nextElementSibling;
 
         ACCORDION_HEADER.classList.toggle('active');

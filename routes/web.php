@@ -9,6 +9,7 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\KanalController;
 use App\Http\Controllers\MesajController;
 use App\Http\Controllers\Personel\PersonelController;
 use App\Http\Controllers\Yonetim\EventController;
@@ -42,6 +43,10 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::delete('/okundu/{kanalId}', [MesajController::class, 'okundu'])->name('okundu');
             Route::post('/{mesajId}/emoji/{emojiId}', [MesajController::class, 'emoji'])->name('emoji');
 
+        });
+
+        Route::prefix('kanal')->name('kanal.')->group(function () {
+            Route::post('/', [KanalController::class, 'store'])->name('store');
         });
 
         Route::prefix('birimler')->name('birimler.')->group(function () {
