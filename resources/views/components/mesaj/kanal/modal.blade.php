@@ -2,8 +2,8 @@
     $sifrelikMesajKanallari_id = encrypt($kanal->mesaj_kanallari_id);
 @endphp
 
-<x-modal id="modal-yeni-kanal-duzenle-{{ $sifrelikMesajKanallari_id }}" title="{{ $kanal->baslik }} Düzenle" visibility="flex"
-    class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm">
+<x-modal id="modal-yeni-kanal-duzenle-{{ $sifrelikMesajKanallari_id }}" title="{{ $kanal->baslik }} Düzenle"
+    visibility="flex" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm">
 
     <form action="" class="space-y-2">
         <section id="mesaj-kanal-katilimcilar"
@@ -26,9 +26,14 @@
             </x-switch>
         </div>
 
-        <x-button type="submit" id="kanal-olustur-submit-button" class="bg-yellow-500 hover:bg-yellow-600">
-            Kanal Düzenle
-        </x-button>
+        <div class="grid grid-cols-2 gap-2">
+            <x-button type="submit" id="kanal-olustur-submit-button" class="!text-center">
+                Vazgeç
+            </x-button> <x-button type="submit" id="kanal-olustur-submit-button"
+                class="!bg-yellow-400 hover:!bg-yellow-500 !text-white !text-center">
+                Kanal Düzenle
+            </x-button>
+        </div>
     </form>
 
 </x-modal>
