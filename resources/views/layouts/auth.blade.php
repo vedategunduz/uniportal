@@ -36,8 +36,7 @@
     <div id="modal" class="custom-modal hidden">
         <section class="modal-outside close-modal" data-modal="modal"></section>
 
-        <section id="modal-content" class="modal-content max-w-screen-md rounded max-h-screen hidden-scroll">
-        </section>
+        <section id="modal-content" class="modal-content max-w-screen-md rounded max-h-screen hidden-scroll"></section>
     </div>
 
     <div id="alert-modal" class="alert-custom-modal hidden">
@@ -98,21 +97,27 @@
         </div>
     </div>
 
-    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-11/12 md:w-3/4 lg:max-w-sm">
+    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm">
 
         <form action="" class="space-y-2">
+            <section id="mesaj-kanal-katilimcilar"
+                class="flex flex-nowrap items-center gap-2 w-full overflow-x-auto pb-2 custom-scroll"></section>
+
             <x-relative-input label="Kanal adı" type="text" name="baslik" class="py-2" placeholder=" " />
 
-            <x-relative-input label="Kullanıcı ara" type="text" name="search" class="py-2" placeholder=" " />
+            <div class="relative">
+                <x-relative-input label="Kullanıcı ara" type="text" name="mesaj-kanal-katilimci-search"
+                    class="py-2" placeholder=" " />
+
+                <section id="mesaj-kanal-katilimci-search-result"
+                    class="bg-white px-4 py-2 shadow-sm rounded w-full hidden flex-col absolute top-full left-0 z-20 space-y-2 overflow-y-auto max-h-48 custom-scroll">
+                </section>
+            </div>
 
             <div class="">
-                <label class="inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" class="sr-only peer">
-                    <div
-                        class="relative w-7 h-4 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[\'\'] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600">
-                    </div>
-                    <span class="ms-3 text-sm font-normal text-gray-900 select-none">Sadece yöneticiler mesaj yazabilir.</span>
-                </label>
+                <x-switch name="sadeceYonetici" class="peer">
+                    Sadece yöneticiler mesaj gönderebilir.
+                </x-switch>
             </div>
 
             <x-button type="submit" id="kanal-olustur-submit-button">
@@ -142,12 +147,17 @@
             function subscribeToKanal(kanalId) {
                 window.Echo.private(`mesaj-kanal.${kanalId}`)
                     .listen('MesajOlusturuldu', (event) => {
-                        console.log(event);
                         const ACCORDION_HEADERS = document.querySelector(
                             '.aside-message-accordion-button.active');
+
                         if (!ACCORDION_HEADERS) return;
 
-                        const ACCORDION_BODY = ACCORDION_HEADERS.nextElementSibling;
+
+                        console.log(ACCORDION_HEADERS);
+
+                        const kanalId = ACCORDION_HEADERS.dataset.channelId;
+
+                        const ACCORDION_BODY = ACCORDION_HEADERS.parentElement.nextElementSibling;
                         ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
 
                         const MESAJ_CONTAINER = ACCORDION_BODY.querySelector('.mesaj-container');
@@ -157,7 +167,6 @@
                         }, 2000);
 
                         (async () => {
-                            const kanalId = ACCORDION_HEADERS.dataset.channelId;
                             const URL = "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
                                 .replace('___ID___', kanalId);
                             const RESPONSE = await ApiService.fetchData(URL, {}, "DELETE");
@@ -180,8 +189,6 @@
                 subscribeToKanal({{ $kanal->mesaj_kanallari_id }});
             @endforeach
 
-
-
             document.getElementById('search-channel').addEventListener('input', function(event) {
                 const VALUE = event.target.value.toLowerCase();
 
@@ -198,6 +205,9 @@
                 });
             });
 
+
+            let MESAJ_KANAL_KATILIMCI_SEARCH_NOT = [];
+
             document.addEventListener('click', function(event) {
                 if (event.target.closest('.aside-message-accordion-button')) {
                     const COUNT = event.target.closest('.aside-message-accordion-button').querySelector(
@@ -207,7 +217,8 @@
                         return;
 
                     (async () => {
-                        const kanalId = event.target.dataset.channelId;
+                        const kanalId = event.target.closest('.aside-message-accordion-button')
+                            .dataset.channelId;
                         const URL =
                             "{{ route('yonetim.mesaj.okundu', ['kanalId' => '___ID___']) }}"
                             .replace('___ID___', kanalId);
@@ -314,8 +325,8 @@
                     const form = document.getElementById(event.target.dataset.form);
                     const mesaj = form.previousElementSibling;
 
-                    form.classList.toggle('hidden');
                     form.classList.toggle('active-form');
+                    form.querySelector('div').classList.toggle('hidden');
                     mesaj.classList.toggle('hidden');
                 }
 
@@ -345,7 +356,7 @@
                                 // const wrapper = container.closest('section');
                                 // wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
 
-                                form.classList.add('hidden');
+                                form.querySelector('div').classList.add('hidden');
                                 form.classList.add('active-form');
                                 form.previousElementSibling.classList.remove('hidden');
                                 form.previousElementSibling.innerHTML =
@@ -431,7 +442,117 @@
                         }
                     })();
                 }
+
+                if (event.target.matches('.mesaj-kanal-katilimci-ekle')) {
+                    const EMAIL = event.target.dataset.email;
+                    const MESAJ_KANAL_KATILIMCI_CONTAINER = document.getElementById(
+                        'mesaj-kanal-katilimcilar');
+                    const PARENT = event.target.parentElement;
+
+                    (async () => {
+                        const URL = "{{ route('yonetim.mesaj.kanal.katilimci.card.ekle') }}";
+                        const formData = new FormData();
+
+                        formData.append('email', EMAIL);
+
+                        const RESPONSE = await ApiService.fetchData(URL, formData, 'POST');
+
+                        if (RESPONSE.status === 200) {
+                            PARENT.remove();
+
+                            MESAJ_KANAL_KATILIMCI_SEARCH_NOT.push(EMAIL);
+                            MESAJ_KANAL_KATILIMCI_CONTAINER.innerHTML += RESPONSE.data.html;
+                        } else {
+                            ApiService.alert.error('Katılımcı eklenirken bir hata oluştu.');
+                        }
+                    })();
+                }
+
+                if (event.target.matches('.mesaj-kanal-katilimci-iptal')) {
+                    const PARENT = event.target.parentElement;
+                    const EMAIL = event.target.dataset.email;
+
+                    MESAJ_KANAL_KATILIMCI_SEARCH_NOT.splice(MESAJ_KANAL_KATILIMCI_SEARCH_NOT.indexOf(
+                        EMAIL), 1);
+
+                    PARENT.remove();
+                }
+
+                if (!event.target.closest('#mesaj-kanal-katilimci-search-result')) {
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.add('hidden');
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.remove('flex');
+                }
+
+                if (event.target.closest('.kanal-duzenle')) {
+                    event.target.disabled = true;
+                    const KANAL_ID = event.target.dataset.channelId;
+                    const URL = "{{ route('yonetim.mesaj.kanal.edit', ['kanalId' => '___ID___']) }}"
+                        .replace('___ID___', KANAL_ID);
+
+                    (async () => {
+                        const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                        if (RESPONSE.status === 200) {
+                            event.target.disabled = false;
+                            document.body.insertAdjacentHTML('beforeend', RESPONSE.data.html);
+                            document.body.classList.add('overflow-hidden');
+                        } else {
+                            ApiService.alert.error('Kanal düzenlenirken bir hata oluştu.');
+                        }
+                    })();
+                }
             })
+
+            const MESAJ_KANAL_KATILIMCI_SEARCH = document.querySelector('[name=mesaj-kanal-katilimci-search]');
+            const MESAJ_KANAL_KATILIMCI_SEARCH_RESULT = document.getElementById(
+                'mesaj-kanal-katilimci-search-result');
+
+            let debounceTimeout;
+
+            MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('input', function(event) {
+                const SEARCH = event.target.value.toLowerCase();
+
+                if (SEARCH.length < 3) {
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.add('hidden');
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.remove('flex');
+                    return;
+                }
+
+                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(debounceTimeout, this);
+            });
+
+            MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('focus', function(event) {
+                const SEARCH = event.target.value.toLowerCase();
+
+                if (SEARCH.length < 3) {
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.add('hidden');
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.remove('flex');
+                    return;
+                }
+
+                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(0, this);
+            });
+
+            function MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(debounceTimeout, el) {
+                clearTimeout(debounceTimeout);
+
+                debounceTimeout = setTimeout(async () => {
+                    const SEARCH = el.value.toLowerCase();
+                    const URL = "{{ route('yonetim.mesaj.kanal.katilimci.list') }}";
+                    const formData = new FormData();
+
+                    formData.append('search', SEARCH);
+                    formData.append('searchNot', MESAJ_KANAL_KATILIMCI_SEARCH_NOT);
+
+                    const RESPONSE = await ApiService.fetchData(URL, formData, 'POST');
+
+                    if (RESPONSE.status === 200) {
+                        MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.remove('hidden');
+                        MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.add('flex');
+                        MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.innerHTML = RESPONSE.data.html;
+                    }
+                }, 300);
+            }
 
             document.addEventListener('input', function(event) {
                 if (!event.target.matches('textarea'))
@@ -455,12 +576,14 @@
                     const formData = new FormData(form);
 
                     const RESPONSE = await ApiService.fetchData(
-                        "{{ route('yonetim.kanal.store') }}",
+                        "{{ route('yonetim.mesaj.kanal.store') }}",
                         formData, 'POST');
 
                     if (RESPONSE.status === 201) {
                         ApiService.alert.success('Kanal oluşturuldu.');
 
+                        document.getElementById('mesaj-kanal-katilimcilar').innerHTML = '';
+                        MESAJ_KANAL_KATILIMCI_SEARCH_NOT = [];
                         form.reset();
 
                         document.getElementById('modal-yeni-kanal').classList.add('hidden');

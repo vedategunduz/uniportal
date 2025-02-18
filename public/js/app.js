@@ -136,18 +136,20 @@ window.addEventListener('click', async function (event) {
     }
 
     if (event.target.closest('.aside-message-accordion-button')) {
-        const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active');
+        const accordionButtons = document.querySelectorAll('.aside-message-accordion-button.active');
+        const ACCORDION_HEADERS = Array.from(accordionButtons, button => button.parentElement);
+        // const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active').parentElement;
 
         ACCORDION_HEADERS.forEach((header) => {
-            if (header !== event.target.closest('.aside-message-accordion-button')) {
-                header.classList.remove('active');
-                header.classList.remove('!border-l-blue-400');
+            if (header !== event.target.closest('.aside-message-accordion-button').parentElement) {
+                header.querySelector('.aside-message-accordion-button').classList.remove('active');
+                header.querySelector('.aside-message-accordion-button').classList.remove('!border-l-blue-400');
                 header.nextElementSibling.style.maxHeight = 0;
             }
         });
 
         const ACCORDION_HEADER = event.target.closest('.aside-message-accordion-button');
-        const ACCORDION_BODY = ACCORDION_HEADER.nextElementSibling;
+        const ACCORDION_BODY = ACCORDION_HEADER.parentElement.nextElementSibling;
 
         ACCORDION_HEADER.classList.toggle('active');
         ACCORDION_HEADER.classList.toggle('!border-l-blue-400');
@@ -189,6 +191,33 @@ window.addEventListener('click', async function (event) {
         }
     }
 });
+
+function deneme() {
+    const accordionButtons = document.querySelectorAll('.aside-message-accordion-button.active');
+    const ACCORDION_HEADERS = Array.from(accordionButtons, button => button.parentElement);
+    // const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active').parentElement;
+
+    ACCORDION_HEADERS.forEach((header) => {
+        if (header !== event.target.closest('.aside-message-accordion-button').parentElement) {
+            header.querySelector('.aside-message-accordion-button').classList.remove('active');
+            header.querySelector('.aside-message-accordion-button').classList.remove('!border-l-blue-400');
+            header.nextElementSibling.style.maxHeight = 0;
+        }
+    });
+
+    const ACCORDION_HEADER = event.target.closest('.aside-message-accordion-button');
+    const ACCORDION_BODY = ACCORDION_HEADER.parentElement.nextElementSibling;
+
+    ACCORDION_HEADER.classList.toggle('active');
+    ACCORDION_HEADER.classList.toggle('!border-l-blue-400');
+
+    if (ACCORDION_HEADER.classList.contains('active')) {
+        ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
+        ACCORDION_BODY.querySelector('.mesaj-container').scrollTo(0, ACCORDION_BODY.querySelector('.mesaj-container').scrollHeight);
+    } else {
+        ACCORDION_BODY.style.maxHeight = 0;
+    }
+}
 
 // Dinamik olarak eklenen Summernote çağırmak için
 // @params id: Summernote çağrılacak elementin id'si
@@ -384,4 +413,17 @@ function getDataTableDatas(datatable_id, url) {
 document.querySelector('.burger-menu')?.addEventListener('click', function () {
     document.querySelector('.collapsible-menu').classList.toggle('show');
     document.body.classList.toggle('overflow-hidden');
+});
+
+const overflowXContainer = document.querySelectorAll('.overflow-x-auto');
+
+// Yatay scroll oluştur
+overflowXContainer.forEach(function (container) {
+    container.addEventListener('wheel', function (e) {
+        // Dikey scroll değerini yatay kaydırmaya ekleyelim
+        if (e.deltaY !== 0) {
+            e.preventDefault();
+            container.scrollLeft += (e.deltaY * 0.2);
+        }
+    });
 });

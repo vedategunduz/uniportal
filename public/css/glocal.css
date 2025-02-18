@@ -166,7 +166,7 @@ label {
 
     .modal-content {
         /* width: 100%; */
-        overflow: auto;
+        /* overflow: auto; */
         margin: 0 auto;
         background-color: #fff;
         animation: zoomIn 0.3s;
@@ -240,6 +240,28 @@ label {
 /* Handle on hover */
 .hidden-scroll::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* Track */
+.custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    /* background: #f1f1f1; */
+}
+
+/* Handle */
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 4px;
+}
+
+/* Handle on hover */
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
 }
 
 .group input:checked+label {

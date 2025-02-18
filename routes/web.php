@@ -43,10 +43,17 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::delete('/okundu/{kanalId}', [MesajController::class, 'okundu'])->name('okundu');
             Route::post('/{mesajId}/emoji/{emojiId}', [MesajController::class, 'emoji'])->name('emoji');
 
-        });
+            Route::prefix('kanal')->name('kanal.')->group(function () {
+                Route::post('/', [KanalController::class, 'store'])->name('store');
+                Route::get('/{kanalId}', [KanalController::class, 'edit'])->name('edit');
 
-        Route::prefix('kanal')->name('kanal.')->group(function () {
-            Route::post('/', [KanalController::class, 'store'])->name('store');
+                Route::prefix('katilimci')->name('katilimci.')->group(function () {
+                    Route::post('/', [KanalController::class, 'katilimciEkle'])->name('store');
+                    Route::post('/ara', [KanalController::class, 'katilimciListesi'])->name('list');
+                    Route::delete('/{katilimciId}', [KanalController::class, 'katilimciSil'])->name('destroy');
+                    Route::post('/card', [KanalController::class, 'katilimciCardEkle'])->name('card.ekle');
+                });
+            });
         });
 
         Route::prefix('birimler')->name('birimler.')->group(function () {
