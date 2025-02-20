@@ -17,6 +17,9 @@ class MesajKanalKatilimci extends Model
         'mesaj_kanallari_id',
         'kullanicilar_id',
         'yoneticilikDurumu',
+        'aktiflik',
+        'left_at',
+        'deleted_at'
     ];
 
     public function kullanici() {

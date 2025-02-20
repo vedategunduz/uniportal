@@ -77,7 +77,8 @@
                                 class="bg-gray-50 indent-7 border border-r-0 rounded-r-none border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-2"
                                 placeholder="Kanal ara" />
                         </div>
-                        <x-button class="open-modal text-nowrap rounded-l-none !bg-emerald-50 text-emerald-900 z-10"
+                        <x-button
+                            class="open-modal searchNotSifirla text-nowrap rounded-l-none !bg-emerald-50 text-emerald-900 z-10"
                             data-modal="modal-yeni-kanal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
@@ -97,7 +98,7 @@
         </div>
     </div>
 
-    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm">
+    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" visibility="flex" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm kanal-modal">
 
         <form action="" class="space-y-2">
             <section id="mesaj-kanal-katilimcilar"
@@ -120,7 +121,7 @@
                 </x-switch>
             </div>
 
-            <x-button type="submit" id="kanal-olustur-submit-button">
+            <x-button type="submit" class="!w-full !justify-center !bg-emerald-500 !text-white" id="kanal-olustur-submit-button">
                 Kanal Oluştur
             </x-button>
         </form>
@@ -129,7 +130,6 @@
 
     <script src="{{ asset('js/data-table.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-
     <script>
         function dropdownTrigger(triggerEl) {
             const targetEl = document.getElementById(triggerEl.getAttribute(
@@ -139,13 +139,16 @@
 
         document.addEventListener('DOMContentLoaded', function() {
 
-            window.Echo.private(`mesaj-kanallari`)
+            window.Echo.channel(`mesaj-kanallari`)
                 .listen('KanalOlusturuldu', (event) => {
-
+                    subscribeToKanal(event.kanal.mesaj_kanallari_id);
+                })
+                .listen('KanalGuncellendi', (event) => {
+                    subscribeToKanal(event.kanal.mesaj_kanallari_id);
                 });
 
             function subscribeToKanal(kanalId) {
-                window.Echo.private(`mesaj-kanal.${kanalId}`)
+                window.Echo.channel(`mesaj-kanal.${kanalId}`)
                     .listen('MesajOlusturuldu', (event) => {
                         const ACCORDION_HEADERS = document.querySelector(
                             '.aside-message-accordion-button.active');
@@ -177,38 +180,25 @@
                             }
                         })();
                     })
-                    .listen('MesajSilindi', (event) => {
-                        // Mesaj silindi event işlemleri
-                    })
-                    .listen('MesajGuncellendi', (event) => {
-                        // Mesaj güncellendi event işlemleri
-                    });
+                    .listen('MesajSilindi', (event) => {})
+                    .listen('MesajGuncellendi', (event) => {});
             }
 
             @foreach ($kanallar as $kanal)
                 subscribeToKanal({{ $kanal->mesaj_kanallari_id }});
             @endforeach
 
-            document.getElementById('search-channel').addEventListener('input', function(event) {
-                const VALUE = event.target.value.toLowerCase();
-
-                const CHANNELS = document.querySelectorAll('[data-channel-name]');
-
-                CHANNELS.forEach((channel) => {
-                    const CHANNEL_NAME = channel.dataset.channelName.toLowerCase();
-
-                    if (CHANNEL_NAME.includes(VALUE)) {
-                        channel.classList.remove('hidden');
-                    } else {
-                        channel.classList.add('hidden');
-                    }
-                });
-            });
-
-
             let MESAJ_KANAL_KATILIMCI_SEARCH_NOT = [];
+            let MESAJ_KANAL_KATILIMCI_SEARCH = document.querySelector('[name=mesaj-kanal-katilimci-search]');
+            let MESAJ_KANAL_KATILIMCI_SEARCH_RESULT = document.getElementById(
+                'mesaj-kanal-katilimci-search-result');
+            let debounceTimeout;
 
             document.addEventListener('click', function(event) {
+                if (event.target.closest('.searchNotSifirla')) {
+                    MESAJ_KANAL_KATILIMCI_SEARCH_NOT = [];
+                }
+
                 if (event.target.closest('.aside-message-accordion-button')) {
                     const COUNT = event.target.closest('.aside-message-accordion-button').querySelector(
                         '.count');
@@ -445,8 +435,10 @@
 
                 if (event.target.matches('.mesaj-kanal-katilimci-ekle')) {
                     const EMAIL = event.target.dataset.email;
-                    const MESAJ_KANAL_KATILIMCI_CONTAINER = document.getElementById(
-                        'mesaj-kanal-katilimcilar');
+                    const MESAJ_KANAL_KATILIMCI_CONTAINER = event.target.closest('.kanal-modal')
+                        .querySelector(
+                            '#mesaj-kanal-katilimcilar');
+                    // document.getElementById('mesaj-kanal-katilimcilar');
                     const PARENT = event.target.parentElement;
 
                     (async () => {
@@ -494,20 +486,120 @@
 
                         if (RESPONSE.status === 200) {
                             event.target.disabled = false;
+
                             document.body.insertAdjacentHTML('beforeend', RESPONSE.data.html);
                             document.body.classList.add('overflow-hidden');
+
+                            const EKLENEN_ICERIK = document.body.lastElementChild;
+
+                            const DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH = EKLENEN_ICERIK
+                                .querySelector('[name=mesaj-kanal-katilimci-search]');
+
+                            if (!DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH)
+                                return;
+
+                            const SEARCH_NOT_LIST = RESPONSE.data.searchNot;
+
+                            DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT =
+                                DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH.parentElement
+                                .nextElementSibling;
+
+                            DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('input', function(
+                                event) {
+                                const SEARCH = event.target.value.toLowerCase();
+
+                                if (SEARCH.length < 3) {
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList
+                                        .add(
+                                            'hidden');
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList
+                                        .remove(
+                                            'flex');
+                                    return;
+                                }
+
+                                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(this,
+                                    SEARCH_NOT_LIST,
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT, 0);
+                            });
+
                         } else {
                             ApiService.alert.error('Kanal düzenlenirken bir hata oluştu.');
                         }
                     })();
                 }
+
+                if (event.target.closest('.kanal-duzenle-submit-button')) {
+                    event.preventDefault();
+                    (async () => {
+                        event.target.disabled = true;
+
+                        try {
+                            const form = event.target.closest('form');
+                            const formData = new FormData(form);
+
+                            const RESPONSE = await ApiService.fetchData(form.getAttribute('action'),
+                                formData, 'PATCH');
+
+                            if (RESPONSE.status === 200) {
+                                ApiService.alert.success('Kanal düzenlendi.');
+                                document.getElementById(event.target.dataset.modal).remove();
+                                document.body.classList.remove('overflow-hidden');
+                            } else {
+                                ApiService.alert.error('Kanal düzenlenirken bir hata oluştu.');
+                            }
+                        } finally {
+                            event.target.disabled = false;
+                        }
+                    })();
+                }
+
+                if (event.target.closest('.mesaj-kanal-katilimci-sil')) {
+                    (async () => {
+                        const KANAL_ID = event.target.dataset.channelId;
+                        const KATILIMCI_ID = event.target.dataset.id;
+
+                        const URL =
+                            "{{ route('yonetim.mesaj.kanal.katilimci.destroy', ['kanalId' => '___ID___', 'katilimciId' => '___ID2___']) }}"
+                            .replace(
+                                '___ID___', KANAL_ID).replace('___ID2___', KATILIMCI_ID);
+
+                        const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
+
+                        if (RESPONSE.status === 200) {
+                            if (RESPONSE.data.self) {
+                                ApiService.alert.success('Kanal çıkıldı.');
+                                event.target.closest('.custom-modal').remove();
+                                document.body.classList.remove('overflow-hidden');
+                            } else {
+                                event.target.closest('.mesaj-katilimci').remove();
+                            }
+                        } else {
+                            ApiService.alert.error('Katılımcı silinirken bir hata oluştu.');
+                        }
+                    })();
+                }
+
+                if (event.target.closest('.kanal-sil')) {
+                    (async () => {
+                        const KANAL_ID = event.target.dataset.channelId;
+                        const URL =
+                            "{{ route('yonetim.mesaj.kanal.destroy', ['kanalId' => '___ID___']) }}"
+                            .replace('___ID___', KANAL_ID);
+
+                        const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
+
+                        if (RESPONSE.status === 200) {
+                            ApiService.alert.success('Kanal silindi.');
+                            event.target.closest('.custom-modal').remove();
+                            document.body.classList.remove('overflow-hidden');
+                            window.location.reload();
+                        } else {
+                            ApiService.alert.error('Katılımcı silinirken bir hata oluştu.');
+                        }
+                    })();
+                }
             })
-
-            const MESAJ_KANAL_KATILIMCI_SEARCH = document.querySelector('[name=mesaj-kanal-katilimci-search]');
-            const MESAJ_KANAL_KATILIMCI_SEARCH_RESULT = document.getElementById(
-                'mesaj-kanal-katilimci-search-result');
-
-            let debounceTimeout;
 
             MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('input', function(event) {
                 const SEARCH = event.target.value.toLowerCase();
@@ -518,7 +610,8 @@
                     return;
                 }
 
-                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(debounceTimeout, this);
+                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(this, MESAJ_KANAL_KATILIMCI_SEARCH_NOT,
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT, 0);
             });
 
             MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('focus', function(event) {
@@ -530,31 +623,51 @@
                     return;
                 }
 
-                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(0, this);
+                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(this, MESAJ_KANAL_KATILIMCI_SEARCH_NOT,
+                    MESAJ_KANAL_KATILIMCI_SEARCH_RESULT, 0);
             });
 
-            function MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(debounceTimeout, el) {
+            function MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(searchInput, searchNotList, searchResult, debounceTimeout) {
                 clearTimeout(debounceTimeout);
 
                 debounceTimeout = setTimeout(async () => {
-                    const SEARCH = el.value.toLowerCase();
+                    const SEARCH = searchInput.value.toLowerCase();
                     const URL = "{{ route('yonetim.mesaj.kanal.katilimci.list') }}";
                     const formData = new FormData();
 
                     formData.append('search', SEARCH);
-                    formData.append('searchNot', MESAJ_KANAL_KATILIMCI_SEARCH_NOT);
+                    formData.append('searchNot', searchNotList);
 
                     const RESPONSE = await ApiService.fetchData(URL, formData, 'POST');
 
                     if (RESPONSE.status === 200) {
-                        MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.remove('hidden');
-                        MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList.add('flex');
-                        MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.innerHTML = RESPONSE.data.html;
+                        if (!searchResult)
+                            return;
+
+                        searchResult.classList.remove('hidden');
+                        searchResult.classList.add('flex');
+                        searchResult.innerHTML = RESPONSE.data.html;
                     }
                 }, 300);
             }
 
             document.addEventListener('input', function(event) {
+                if (event.target.matches('#search-channel')) {
+                    const VALUE = event.target.value.toLowerCase();
+
+                    const CHANNELS = document.querySelectorAll('[data-channel-name]');
+
+                    CHANNELS.forEach((channel) => {
+                        const CHANNEL_NAME = channel.dataset.channelName.toLowerCase();
+
+                        if (CHANNEL_NAME.includes(VALUE)) {
+                            channel.classList.remove('hidden');
+                        } else {
+                            channel.classList.add('hidden');
+                        }
+                    });
+                }
+
                 if (!event.target.matches('textarea'))
                     return;
 

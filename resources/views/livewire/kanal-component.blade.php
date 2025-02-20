@@ -5,13 +5,15 @@
 
             <header class="flex items-center justify-between pr-6">
                 <div @class([
-                    'w-full border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button'
+                    'w-full border-l-4 border-l-transparent hover:border-l-blue-400 cursor-pointer aside-message-accordion-button',
                 ]) data-channel-id="{{ $kanal['mesaj_kanallari_id'] }}" wire:ignore.self>
 
                     <livewire:kanal-header-component :kanalId="$kanal['mesaj_kanallari_id']"
-                        wire:key="kanal-header-{{ $kanal['mesaj_kanallari_id'] }}" />
+                        wire:key="kanal-header-{{ encrypt($kanal['mesaj_kanallari_id']) }}" />
                 </div>
-                <x-button class="kanal-duzenle border-none shadow-none !bg-white !text-gray-300 hover:!text-gray-700"
+                <x-button
+                    class="kanal-duzenle
+                        border-none !shadow-none !bg-white !text-gray-300 hover:!text-gray-700"
                     data-channel-id="{{ $kanal['mesaj_kanallari_id'] }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-gear-fill size-4" viewBox="0 0 16 16">

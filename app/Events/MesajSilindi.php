@@ -4,7 +4,7 @@ namespace App\Events;
 
 use App\Models\Mesaj;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -29,6 +29,6 @@ class MesajSilindi implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("mesaj-kanal.{$this->mesaj['mesaj_kanallari_id']}");
+        return new Channel("mesaj-kanal.{$this->mesaj['mesaj_kanallari_id']}");
     }
 }

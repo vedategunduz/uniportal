@@ -28,12 +28,16 @@ Route::prefix('personel')->name('personel.')->group(function () {
     Route::get('/{kullanici_id}', [PersonelController::class, 'show'])->name('profil');
 });
 
+// Rollere göre menü yönlendirme yapılacak
+
 Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
     Route::middleware(AuthMiddleware::class)->group(function () {
         Route::get('/', [YonetimController::class, 'index'])->name('index');
 
         Route::prefix('mesaj')->name('mesaj.')->group(function () {
+            Route::get('/', [MesajController::class, 'index'])->name('index');
+
             Route::post('/', [MesajController::class, 'store'])->name('store');
 
             Route::delete('/{mesajId}', [MesajController::class, 'destroy'])->name('destroy');
@@ -46,11 +50,13 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::prefix('kanal')->name('kanal.')->group(function () {
                 Route::post('/', [KanalController::class, 'store'])->name('store');
                 Route::get('/{kanalId}', [KanalController::class, 'edit'])->name('edit');
+                Route::patch('/{kanalId}', [KanalController::class, 'update'])->name('update');
+                Route::delete('/{kanalId}', [KanalController::class, 'destroy'])->name('destroy');
 
                 Route::prefix('katilimci')->name('katilimci.')->group(function () {
                     Route::post('/', [KanalController::class, 'katilimciEkle'])->name('store');
                     Route::post('/ara', [KanalController::class, 'katilimciListesi'])->name('list');
-                    Route::delete('/{katilimciId}', [KanalController::class, 'katilimciSil'])->name('destroy');
+                    Route::delete('/{kanalId}/{katilimciId}', [KanalController::class, 'katilimciSil'])->name('destroy');
                     Route::post('/card', [KanalController::class, 'katilimciCardEkle'])->name('card.ekle');
                 });
             });

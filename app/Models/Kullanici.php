@@ -10,6 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @method bool aktifKanal(int $kanalId)
+ */
 class Kullanici extends Authenticatable
 {
     use HasFactory, Notifiable, IslemYapanTrait;
@@ -54,7 +57,8 @@ class Kullanici extends Authenticatable
             ->limit($limit);
     }
 
-    public function anaIsletme() {
+    public function anaIsletme()
+    {
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 
@@ -80,9 +84,35 @@ class Kullanici extends Authenticatable
         return MesajKanal::whereIn('mesaj_kanallari_id', $kanalIdleri)->get();
     }
 
+    public static function aktifMesajKanallari()
+    {
+        $kanalIdleri = MesajKanalKatilimci::where('kullanicilar_id', Auth::user()->kullanicilar_id)->where('aktiflik', 1)->pluck('mesaj_kanallari_id')->toArray();
+        return MesajKanal::whereIn('mesaj_kanallari_id', $kanalIdleri)->get();
+    }
+
     public function mesajlar()
     {
         return $this->hasMany(Mesaj::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
+    public function mesajKanalKatilimcilar()
+    {
+        return $this->hasMany(MesajKanalKatilimci::class, 'kullanicilar_id');
+    }
+
+    public function kanalKontrol($kanalId)
+    {
+        return $this->mesajKanalKatilimcilar()
+            ->where('mesaj_kanallari_id', $kanalId)
+            ->exists();
+    }
+
+    public function aktifKanal($kanalId)
+    {
+        return $this->mesajKanalKatilimcilar()
+            ->where('mesaj_kanallari_id', $kanalId)
+            ->where('aktiflik', 1)
+            ->exists();
     }
 
     // Bunu evente bağla

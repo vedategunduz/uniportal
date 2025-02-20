@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\Mesaj;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class MesajOlusturuldu implements ShouldBroadcast
@@ -24,6 +24,6 @@ class MesajOlusturuldu implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("mesaj-kanal.{$this->mesaj['mesaj_kanallari_id']}");
+        return new Channel("mesaj-kanal.{$this->mesaj['mesaj_kanallari_id']}");
     }
 }

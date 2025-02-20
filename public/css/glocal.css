@@ -339,8 +339,8 @@ label {
 
     background: linear-gradient(135deg,
             rgba(13, 94, 201, 0.9) 10%,
-            rgba(28, 182, 248, 0.9) 100%),
-        url('../image/bg-navbar.png') center/cover no-repeat;
+            rgba(28, 182, 248, 0.9) 100%);
+        /* url('../image/bg-navbar.png') center/cover no-repeat; */
 
     a,
     button {

@@ -2,24 +2,23 @@
 
 namespace App\Events;
 
-use App\Models\Mesaj;
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MesajGuncellendi implements ShouldBroadcast
+class KanalGuncellendi implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $mesaj;
+    public $kanal;
     /**
      * Create a new event instance.
      */
-    public function __construct(Mesaj $mesaj)
+    public function __construct($kanal)
     {
-        $this->mesaj = $mesaj->toArray();
+        $this->kanal = $kanal;
     }
 
     /**
@@ -27,8 +26,10 @@ class MesajGuncellendi implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        return new Channel("mesaj-kanal.{$this->mesaj['mesaj_kanallari_id']}");
+        return [
+            new Channel('mesaj-kanallari'),
+        ];
     }
 }

@@ -1,15 +1,22 @@
 <div class="flex gap-4 px-4 py-1.5">
-    <img src="{{ asset($kanal->resim) }}" class="rounded-full w-10 h-10" alt="">
+    <div class="relative">
+        <img src="{{ asset($kanal->resim) }}" class="rounded-full w-10 h-10" alt="">
+
+        @if ($count > 0)
+            <div class="count absolute bottom-0 right-0">
+                <span
+                    class="inline-flex items-center justify-center bg-rose-700 text-white rounded-full text-xs size-4">{{ $count }}</span>
+            </div>
+        @endif
+    </div>
 
     <div class="flex items-center justify-between w-full">
         <div class="flex flex-col">
-            <span class="flex items-center gap-1 text-sm">
-                {{ $kanal->baslik }}
-                @if ($count > 0)
-                    <span
-                        class="flex items-center justify-center bg-rose-500 text-white rounded-full px-1.5 py-1 text-xs count">{{ $count }}</span>
-                @endif
-            </span>
+            <div class="flex items-center gap-1 text-sm">
+                <span class="text-nowrap overflow-hidden whitespace-nowrap overflow-ellipsis w-60"
+                    title="{{ $kanal->baslik }}">{{ $kanal->baslik }}
+                </span>
+            </div>
             <span class="text-xs text-nowrap overflow-hidden whitespace-nowrap overflow-ellipsis w-48">
                 @if (!empty($sonMesaj))
                     @if ($sonMesaj['durum'] != 'silindi')

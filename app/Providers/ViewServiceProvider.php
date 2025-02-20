@@ -61,9 +61,10 @@ class ViewServiceProvider extends ServiceProvider
             }
         });
 
-        View::composer(['layouts.auth',], function ($view) {
+        View::composer(['layouts.auth'], function ($view) {
 
-            $kanallar = Kullanici::mesajKanallari();
+            // $kanallar = Kullanici::mesajKanallari();
+            $kanallar = Kullanici::aktifMesajKanallari();
 
             $view->with(compact('kanallar'));
         });

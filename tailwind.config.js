@@ -26,6 +26,9 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'gs-red': '#a90432'
+            }
         },
 
     },

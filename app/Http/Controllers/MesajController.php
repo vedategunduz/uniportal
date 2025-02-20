@@ -14,9 +14,25 @@ use Illuminate\Support\Facades\Auth;
 
 class MesajController extends Controller
 {
+    public function index() {
+        $html = view('components.mesaj.mesaj-wrapper')->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html,
+        ], 200);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->all();
+
+        if (!Auth::user()->aktifKanal($validated['mesaj_kanallari_id'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bu kanalda mesaj gönderme yetkiniz yok.',
+            ], 200);
+        }
 
         $pattern = '/(https?:\/\/\S+)/';
         $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';
@@ -32,7 +48,7 @@ class MesajController extends Controller
 
         $mesaj = Mesaj::create($validated);
 
-        $kanalKullanicilari = MesajKanalKatilimci::where('mesaj_kanallari_id', $mesaj->mesaj_kanallari_id)->pluck('kullanicilar_id');
+        $kanalKullanicilari = MesajKanalKatilimci::where('mesaj_kanallari_id', $mesaj->mesaj_kanallari_id)->where('aktiflik', 1)->pluck('kullanicilar_id');
 
         foreach ($kanalKullanicilari as $kullanici) {
             if ($kullanici != Auth::id()) {

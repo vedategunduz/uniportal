@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('mesaj_kanallari_id')->constrained('mesaj_kanallari', 'mesaj_kanallari_id')->restrictOnDelete();
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
             $table->boolean('yoneticilikDurumu')->default(false);
+            $table->timestamp('left_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();
             $table->timestamps();
         });
         Schema::enableForeignKeyConstraints();

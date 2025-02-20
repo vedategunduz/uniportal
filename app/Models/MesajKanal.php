@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class MesajKanal extends Model
 {
@@ -22,11 +23,19 @@ class MesajKanal extends Model
         'sadeceYonetici',
     ];
 
-    public function mesajlar() {
+    public function mesajlar()
+    {
         return $this->hasMany(Mesaj::class, 'mesaj_kanallari_id', 'mesaj_kanallari_id');
     }
 
-    public function katilimcilar() {
+    public function katilimcilar()
+    {
         return $this->hasMany(MesajKanalKatilimci::class, 'mesaj_kanallari_id', 'mesaj_kanallari_id');
+    }
+
+    public function aktifKatilimcilar()
+    {
+        return $this->hasMany(MesajKanalKatilimci::class, 'mesaj_kanallari_id', 'mesaj_kanallari_id')
+            ->where('aktiflik', 1);
     }
 }

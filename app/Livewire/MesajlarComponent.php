@@ -18,7 +18,7 @@ class MesajlarComponent extends Component
     public $count = 0;
     public $emojiler;
 
-    #[On('echo-private:mesaj-kanal.{kanalId},MesajGuncellendi')]
+    #[On('echo:mesaj-kanal.{kanalId},MesajGuncellendi')]
     public function mount($kanalId)
     {
         $this->emojiler = EmojiTip::where('grup_id', 1)->get();
@@ -40,7 +40,7 @@ class MesajlarComponent extends Component
                 // Her üyelik dönemi için "created_at" tarihinin, o döneme denk gelip gelmediğini kontrol ediyoruz.
                 foreach ($membershipPeriods as $period) {
                     // Eğer kullanıcı halen gruptaysa, left_at değeri null olacağından, şu anki zaman ile kıyaslayabilirsiniz.
-                    $leftTime = $period->updated_at ?? now();
+                    $leftTime = $period->left_at ?? now();
                     $query->orWhereBetween('created_at', [$period->created_at, $leftTime]);
                 }
             })
@@ -61,14 +61,17 @@ class MesajlarComponent extends Component
         $this->mount($this->kanalId);
     }
 
-    #[On('echo-private:mesaj-kanal.{kanalId},MesajOlusturuldu')]
+    #[On('echo:mesaj-kanal.{kanalId},MesajOlusturuldu')]
     public function messageCreated($message)
     {
+        if (!Auth::user()->aktifKanal($this->kanalId))
+            return;
+
         $yeniMesaj = $message['mesaj'];
         array_push($this->mesajlar, $yeniMesaj);
     }
 
-    #[On('echo-private:mesaj-kanal.{kanalId},MesajSilindi')]
+    #[On('echo:mesaj-kanal.{kanalId},MesajSilindi')]
     public function messageDeleted($message)
     {
         $silinenMesaj = $message['mesaj'];
@@ -81,7 +84,7 @@ class MesajlarComponent extends Component
         }, $this->mesajlar);
     }
 
-    #[On('echo-private:mesaj-kanal.{kanalId},MesajGuncellendi')]
+    #[On('echo:mesaj-kanal.{kanalId},MesajGuncellendi')]
     public function messageUpdated($message)
     {
         $guncellenenMesaj = $message['mesaj'];
