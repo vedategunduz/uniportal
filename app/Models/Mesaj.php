@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Mesaj extends Model
 {
@@ -21,7 +20,7 @@ class Mesaj extends Model
         'isletmeler_id',
         'unvanlar_id',
         'mesaj',
-        'dosya',
+        'durum',
         'aktiflik',
     ];
 

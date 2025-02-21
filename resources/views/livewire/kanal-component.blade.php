@@ -33,6 +33,7 @@
                     <form action="" class="p-4 mesaj-create-form">
                         <input type="hidden" name="mesaj_kanallari_id" value="{{ $kanal['mesaj_kanallari_id'] }}" />
                         <input type="hidden" name="alintilanan_mesajlar_id" value="" alintiId />
+                        <input type="hidden" name="yd" value="{{ encrypt($kanal['sadeceYonetici']) }}"/>
 
                         <div class="alinti-gosterim hidden mb-4">
                             <div class="flex gap-2">

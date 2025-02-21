@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Auth;
 
 class MesajController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $html = view('components.mesaj.mesaj-wrapper')->render();
 
         return response()->json([
@@ -26,12 +27,15 @@ class MesajController extends Controller
     public function store(Request $request)
     {
         $validated = $request->all();
+        $yd = decrypt($validated['yd']);
 
-        if (!Auth::user()->aktifKanal($validated['mesaj_kanallari_id'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bu kanalda mesaj gönderme yetkiniz yok.',
-            ], 200);
+        if ($yd) {
+            if (!Auth::user()->kanalYoneticisimi($validated['mesaj_kanallari_id'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bu kanalda mesaj gönderme yetkiniz yok.',
+                ], 200);
+            }
         }
 
         $pattern = '/(https?:\/\/\S+)/';
@@ -60,7 +64,7 @@ class MesajController extends Controller
             }
         }
 
-        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->find($mesaj->mesajlar_id);
+        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay.kullanici', 'detay.emoji'])->find($mesaj->mesajlar_id);
 
         broadcast(new MesajOlusturuldu($mesaj))->toOthers();
 
@@ -109,7 +113,7 @@ class MesajController extends Controller
 
         $mesajId = decrypt($mesajId);
 
-        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
+        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay.kullanici', 'detay.emoji'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
 
         $pattern = '/(https?:\/\/\S+)/';
         $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';
@@ -133,7 +137,7 @@ class MesajController extends Controller
     {
         $mesajId = decrypt($mesajId);
 
-        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'detay'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
+        $mesaj = Mesaj::with(['kullanici', 'isletme', 'unvan', 'detay.kullanici', 'detay.emoji'])->where('mesajlar_id', $mesajId)->where('kullanicilar_id', Auth::id())->first();
 
         $mesaj->alintilanan_mesajlar_id = null;
 
@@ -168,7 +172,7 @@ class MesajController extends Controller
             }
         }
 
-        $mesaj = Mesaj::where('mesajlar_id', $mesajId)->with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])->first();
+        $mesaj = Mesaj::where('mesajlar_id', $mesajId)->with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay.kullanici', 'detay.emoji'])->first();
 
         $emojiCount = MesajDetay::where('mesajlar_id', $mesajId)->where('emoji_tipleri_id', $emojiId)->count();
 

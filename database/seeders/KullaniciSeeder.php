@@ -62,5 +62,15 @@ class KullaniciSeeder extends Seeder
             'telefon'           => '0532 123 45 67',
             'profilFotoUrl'     => 'https://avatars.githubusercontent.com/u/94452068?v=4'
         ]);
+
+        Kullanici::create([
+            'unvanlar_id'       => 1,
+            'isletmeler_id'     => 156,
+            'ad'                => 'UniPortal',
+            'soyad'             => 'Sistem',
+            'email'             => 'sistem@uniportal.tr',
+            'email_verified_at' => now(),
+            'password'          => '12345600',
+        ]);
     }
 }

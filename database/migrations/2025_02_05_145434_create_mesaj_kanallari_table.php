@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('mesaj_kanallari', function (Blueprint $table) {
             $table->id('mesaj_kanallari_id');
             $table->unsignedBigInteger('etkinlikler_id')->nullable();
-            $table->string('baslik');
+            $table->string('baslik')->nullable();
             $table->string('resim')->default('image/default_mesaj.png');
             $table->enum('tur', ['genel', 'ozel', 'bireysel', 'ziyaret', 'toplanti'])->default('genel');
             $table->boolean('sadeceYonetici')->default(false);

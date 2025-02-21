@@ -47,15 +47,19 @@ class Etkinlik extends Model
         );
     }
 
-    public function sohbetKanaliOlustur($tur) {
-        return SohbetKanal::create([
+    public function mesajKanal()
+    {
+        return $this->belongsTo(MesajKanal::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
+    public function sohbetKanaliOlustur($tur)
+    {
+        return $this->mesajKanal()->create([
             'etkinlikler_id' => $this->etkinlikler_id,
             'baslik'         => $this->baslik,
             'tur'            => $tur,
         ]);
     }
-
-
 
     public static function ekle($validatedData)
     {

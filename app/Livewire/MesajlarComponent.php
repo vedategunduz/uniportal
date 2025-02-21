@@ -34,7 +34,7 @@ class MesajlarComponent extends Component
             ->where('mesaj_kanallari_id', $this->kanalId)
             ->get();
 
-        $this->mesajlar = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay'])
+        $this->mesajlar = Mesaj::with(['kullanici', 'isletme', 'unvan', 'alinti.kullanici', 'detay.kullanici', 'detay.emoji'])
             ->where('mesaj_kanallari_id', $this->kanalId)
             ->where(function ($query) use ($membershipPeriods) {
                 // Her üyelik dönemi için "created_at" tarihinin, o döneme denk gelip gelmediğini kontrol ediyoruz.

@@ -14,8 +14,11 @@ use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
 use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
+use App\Models\MesajKanal;
+use App\Models\MesajKanalKatilimci;
 use App\Models\SohbetKanal;
 use App\Models\SohbetKanalKatilimci;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class ZiyaretController extends Controller
@@ -238,7 +241,7 @@ class ZiyaretController extends Controller
 
         $etkinlik = Etkinlik::create($validated);
 
-        $sohbet_kanali = $etkinlik->sohbetKanaliOlustur('ziyaret');
+        $mesaj_kanali = $etkinlik->sohbetKanaliOlustur('ziyaret');
 
         $ids = array_map('decrypt', $validated['kullanicilar_id']);
         $gidenKullaniciIds = Kullanici::whereIn('kullanicilar_id', $ids)->get();
@@ -274,9 +277,16 @@ class ZiyaretController extends Controller
         }
 
         foreach ($gidenKullaniciIds as $kullanici) {
-            SohbetKanalKatilimci::create([
-                'sohbet_kanallari_id' => $sohbet_kanali->sohbet_kanallari_id,
-                'kullanicilar_id'     => $kullanici->kullanicilar_id
+            $yonetici = 0;
+
+            if (Auth::id() == $kullanici->kullanicilar_id) {
+                $yonetici = 1;
+            }
+
+            MesajKanalKatilimci::create([
+                'mesaj_kanallari_id' => $mesaj_kanali->mesaj_kanallari_id,
+                'kullanicilar_id'     => $kullanici->kullanicilar_id,
+                'yoneticilikDurumu' => $yonetici
             ]);
 
             try {

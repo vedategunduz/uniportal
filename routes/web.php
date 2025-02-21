@@ -56,8 +56,10 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
                 Route::prefix('katilimci')->name('katilimci.')->group(function () {
                     Route::post('/', [KanalController::class, 'katilimciEkle'])->name('store');
                     Route::post('/ara', [KanalController::class, 'katilimciListesi'])->name('list');
-                    Route::delete('/{kanalId}/{katilimciId}', [KanalController::class, 'katilimciSil'])->name('destroy');
                     Route::post('/card', [KanalController::class, 'katilimciCardEkle'])->name('card.ekle');
+                    
+                    Route::delete('/{kanalId}/{katilimciId}', [KanalController::class, 'katilimciSil'])->name('destroy');
+                    Route::patch('/yoneticilik/{kanalId}/{katilimciId}', [KanalController::class, 'yoneticilik'])->name('yoneticilik');
                 });
             });
         });

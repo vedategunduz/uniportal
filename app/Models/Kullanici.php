@@ -115,6 +115,15 @@ class Kullanici extends Authenticatable
             ->exists();
     }
 
+    public function kanalYoneticisimi($kanalId)
+    {
+        return $this->mesajKanalKatilimcilar()
+            ->where('mesaj_kanallari_id', $kanalId)
+            ->where('yoneticilikDurumu', 1)
+            ->where('aktiflik', 1)
+            ->exists();
+    }
+
     // Bunu evente bağla
     public function sendEmailVerificationNotification()
     {

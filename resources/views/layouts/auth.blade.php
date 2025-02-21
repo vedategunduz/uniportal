@@ -48,7 +48,7 @@
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
-    <div class="aside-modal active" id="aside-modal">
+    <div class="aside-modal" id="aside-modal">
         <div class="aside-modal-outside close-aside-modal" data-modal="aside-modal"></div>
 
         <div class="aside-modal-content overflow-auto hidden-scroll w-full md:w-1/2 lg:w-1/3">
@@ -98,7 +98,7 @@
         </div>
     </div>
 
-    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" visibility="flex" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm kanal-modal">
+    <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm kanal-modal">
 
         <form action="" class="space-y-2">
             <section id="mesaj-kanal-katilimcilar"
@@ -121,7 +121,8 @@
                 </x-switch>
             </div>
 
-            <x-button type="submit" class="!w-full !justify-center !bg-emerald-500 !text-white" id="kanal-olustur-submit-button">
+            <x-button type="submit" class="!w-full !justify-center !bg-emerald-500 !text-white"
+                id="kanal-olustur-submit-button">
                 Kanal Oluştur
             </x-button>
         </form>
@@ -424,7 +425,8 @@
 
                                 form.reset();
                             } else {
-                                ApiService.alert.error('Mesaj gönderilirken bir hata oluştu.');
+                                form.reset();
+                                ApiService.alert.error(RESPONSE.data.message);
                             }
                         } finally {
                             event.target.disabled = false;
@@ -498,7 +500,8 @@
                             if (!DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH)
                                 return;
 
-                            const SEARCH_NOT_LIST = RESPONSE.data.searchNot;
+                            // const SEARCH_NOT_LIST = RESPONSE.data.searchNot;
+                            MESAJ_KANAL_KATILIMCI_SEARCH_NOT = RESPONSE.data.searchNot;
 
                             DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT =
                                 DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH.parentElement
@@ -519,8 +522,39 @@
                                 }
 
                                 MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(this,
-                                    SEARCH_NOT_LIST,
+                                    MESAJ_KANAL_KATILIMCI_SEARCH_NOT,
                                     DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT, 0);
+                            });
+
+                            DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('focus', function(
+                                event) {
+                                const SEARCH = event.target.value.toLowerCase();
+
+                                if (SEARCH.length < 3) {
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList
+                                        .add(
+                                            'hidden');
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList
+                                        .remove(
+                                            'flex');
+                                    return;
+                                }
+
+                                MESAJ_KANAL_KATILIMCI_SEARCH_FETCH(this,
+                                    MESAJ_KANAL_KATILIMCI_SEARCH_NOT,
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT, 0);
+                            });
+
+                            EKLENEN_ICERIK.addEventListener('click', function(e) {
+                                if (!e.target.closest(
+                                        '#mesaj-kanal-katilimci-search-result')) {
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList
+                                        .add(
+                                            'hidden');
+                                    DUZENLE_MESAJ_KANAL_KATILIMCI_SEARCH_RESULT.classList
+                                        .remove(
+                                            'flex');
+                                }
                             });
 
                         } else {
@@ -568,14 +602,20 @@
 
                         if (RESPONSE.status === 200) {
                             if (RESPONSE.data.self) {
-                                ApiService.alert.success('Kanal çıkıldı.');
-                                event.target.closest('.custom-modal').remove();
-                                document.body.classList.remove('overflow-hidden');
+                                if (!RESPONSE.data.success) {
+                                    ApiService.alert.error(RESPONSE.data.message);
+                                } else {
+                                    ApiService.alert.success(RESPONSE.data.message);
+                                    event.target.closest('.custom-modal').remove();
+                                    document.body.classList.remove('overflow-hidden');
+                                }
                             } else {
+                                ApiService.alert.warning(RESPONSE.data.message);
+                                MESAJ_KANAL_KATILIMCI_SEARCH_NOT = RESPONSE.data.searchNot;
                                 event.target.closest('.mesaj-katilimci').remove();
                             }
                         } else {
-                            ApiService.alert.error('Katılımcı silinirken bir hata oluştu.');
+                            ApiService.alert.error(RESPONSE.message);
                         }
                     })();
                 }
@@ -599,7 +639,32 @@
                         }
                     })();
                 }
+
+
             })
+
+            document.addEventListener('change', function(event) {
+                console.log(event.target);
+                if (event.target.closest('.yoneticilik-degistir')) {
+                    (async () => {
+                        const KANAL_ID = event.target.dataset.channelId;
+                        const KATILIMCI_ID = event.target.dataset.id;
+
+                        const URL =
+                            "{{ route('yonetim.mesaj.kanal.katilimci.yoneticilik', ['kanalId' => '___ID___', 'katilimciId' => '___ID2___']) }}"
+                            .replace(
+                                '___ID___', KANAL_ID).replace('___ID2___', KATILIMCI_ID);
+
+                        const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+
+                        if (RESPONSE.status === 200) {
+                            ApiService.alert.success('Yöneticilik değiştirildi.');
+                        } else {
+                            ApiService.alert.error('Yöneticilik değiştirilirken bir hata oluştu.');
+                        }
+                    })();
+                }
+            });
 
             MESAJ_KANAL_KATILIMCI_SEARCH.addEventListener('input', function(event) {
                 const SEARCH = event.target.value.toLowerCase();
