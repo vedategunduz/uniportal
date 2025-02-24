@@ -78,7 +78,7 @@
                                 placeholder="Kanal ara" />
                         </div>
                         <x-button
-                            class="open-modal searchNotSifirla text-nowrap rounded-l-none !bg-emerald-50 text-emerald-900 z-10"
+                            class="open-modal searchNotSifirla text-nowrap rounded-l-none !bg-gray-50 text-gray-900 z-10"
                             data-modal="modal-yeni-kanal">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
@@ -182,7 +182,10 @@
                         })();
                     })
                     .listen('MesajSilindi', (event) => {})
-                    .listen('MesajGuncellendi', (event) => {});
+                    .listen('MesajGuncellendi', (event) => {})
+                    .listen('MesajOkundu', (event) => {
+                        Livewire.dispatch('refreshMessageCount');
+                    });
             }
 
             @foreach ($kanallar as $kanal)

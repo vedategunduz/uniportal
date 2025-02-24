@@ -197,7 +197,7 @@ class IsletmeSeeder extends Seeder
         $bizim = Isletme::find(143);
 
         $bizim->update([
-            'logoUrl' => asset('image/_TNKU_LOGO_TR.jpg')
+            'logoUrl' => 'image/_TNKU_LOGO_TR.png',
         ]);
     }
 

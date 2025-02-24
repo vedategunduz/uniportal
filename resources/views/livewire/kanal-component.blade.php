@@ -23,7 +23,6 @@
                 </x-button>
             </header>
 
-
             <section class="max-h-0 transition-all overflow-hidden" wire:ignore.self>
                 <div class="bg-gray-50 channel">
 

@@ -15,24 +15,22 @@
             </a>
         </div>
         <div class="flex items-center gap-2">
+            <livewire:open-message-panel-button-component />
+
             <div class="">
-                <button type="button" class="open-aside-modal" data-modal="aside-modal">Mesajlar</button>
-            </div>
-            <div class="">
-                <button id="" data-dropdown-toggle="bildirimNavbar"
-                    class="flex items-center justify-between text-gray-900 rounded hover:bg-gray-50 size-12">
-                    <div class="relative mx-auto">
+                <x-button id="" data-dropdown-toggle="bildirimNavbar" class="!shadow-none !border-0">
+                    <div class="relative">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-bell-fill size-6" viewBox="0 0 16 16">
+                            class="bi bi-bell-fill size-5" viewBox="0 0 16 16">
                             <path
                                 d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
                         </svg>
                         <span
-                            class="absolute top-0 right-0 -mt-1 -mr-1 px-1 text-xs text-white bg-blue-700 border-2 border-white scale-90 rounded-full">
+                            class="absolute -top-1 -right-0.5 scale-90 size-4 inline-flex items-center justify-center text-white bg-blue-700 rounded-full">
                             {{ $bildirimler['birimeYerlesmemisPersonelSayisi'] }}
                         </span>
                     </div>
-                </button>
+                </x-button>
                 <!-- Dropdown menu -->
                 <div id="bildirimNavbar"
                     class="z-20 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\MesajGuncellendi;
+use App\Events\MesajOkundu;
 use App\Events\MesajOlusturuldu;
 use App\Events\MesajSilindi;
 use App\Models\Mesaj;
@@ -11,6 +12,8 @@ use App\Models\MesajKanalKatilimci;
 use App\Models\MesajKullaniciGoruntuleme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mews\Purifier\Facades\Purifier;
+
 
 class MesajController extends Controller
 {
@@ -38,9 +41,13 @@ class MesajController extends Controller
             }
         }
 
+        // Purifier::clean($validated['mesaj']);
+
         $pattern = '/(https?:\/\/\S+)/';
         $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';
         $validated['mesaj'] = preg_replace($pattern, $replacement, $validated['mesaj']);
+        $validated['mesaj'] = Purifier::clean($validated['mesaj']);
+
 
         $validated['kullanicilar_id'] = Auth::id();
         $validated['isletmeler_id'] = Auth::user()->isletmeler_id;
@@ -83,6 +90,8 @@ class MesajController extends Controller
         MesajKullaniciGoruntuleme::where('kullanicilar_id', Auth::id())
             ->where('mesaj_kanallari_id', $kanalId)
             ->delete();
+
+        broadcast(new MesajOkundu($kanalId))->toOthers();
 
         return response()->json([
             'success' => true,

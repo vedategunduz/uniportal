@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamp('etkinlikBasvuruBitisTarihi')->nullable();
             $table->timestamp('etkinlikBaslamaTarihi')->nullable();
             $table->timestamp('etkinlikBitisTarihi')->nullable();
-            $table->string('kapakResmiYolu')->nullable();
+            $table->string('kapakResmiYolu')->nullable()->default('image/etkinlikresim.png');
             $table->string('baslik', 255)->nullable();
             $table->longText('aciklama')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);

@@ -18,7 +18,7 @@ class MesajlarComponent extends Component
     public $count = 0;
     public $emojiler;
 
-    #[On('echo:mesaj-kanal.{kanalId},MesajGuncellendi')]
+    // #[On('echo:mesaj-kanal.{kanalId},MesajGuncellendi')]
     public function mount($kanalId)
     {
         $this->emojiler = EmojiTip::where('grup_id', 1)->get();
@@ -69,6 +69,8 @@ class MesajlarComponent extends Component
 
         $yeniMesaj = $message['mesaj'];
         array_push($this->mesajlar, $yeniMesaj);
+
+        $this->dispatch('refreshMessageCount');
     }
 
     #[On('echo:mesaj-kanal.{kanalId},MesajSilindi')]

@@ -15,5 +15,6 @@ class EtkinlikTur extends Model
 
     protected $fillable = [
         'baslik',
+        'class',
     ];
 }

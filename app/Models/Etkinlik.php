@@ -32,6 +32,25 @@ class Etkinlik extends Model
         'aktiflik',
     ];
 
+    public function tur()
+    {
+        return $this->belongsTo(EtkinlikTur::class, 'etkinlik_turleri_id', 'etkinlik_turleri_id');
+    }
+
+    public function isletme()
+    {
+        return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
+    }
+
+    public function begeni() {
+        return $this->hasMany(EtkinlikBegeniDetay::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
+    public function yorum()
+    {
+        return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
     public function etkinlikKatilim()
     {
         return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');

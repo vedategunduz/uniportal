@@ -9,6 +9,7 @@ use App\Http\Controllers\AnasayfaController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
+use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\KanalController;
 use App\Http\Controllers\MesajController;
 use App\Http\Controllers\Personel\PersonelController;
@@ -26,6 +27,11 @@ Route::prefix('/')->name('main.')->group(function () {
 
 Route::prefix('personel')->name('personel.')->group(function () {
     Route::get('/{kullanici_id}', [PersonelController::class, 'show'])->name('profil');
+});
+
+Route::prefix('etkinlikler')->name('etkinlikler.')->group(function() {
+    // Route::get('etkinlikler', )
+    Route::resource('', EtkinlikController::class);
 });
 
 // Rollere göre menü yönlendirme yapılacak
@@ -57,7 +63,7 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
                     Route::post('/', [KanalController::class, 'katilimciEkle'])->name('store');
                     Route::post('/ara', [KanalController::class, 'katilimciListesi'])->name('list');
                     Route::post('/card', [KanalController::class, 'katilimciCardEkle'])->name('card.ekle');
-                    
+
                     Route::delete('/{kanalId}/{katilimciId}', [KanalController::class, 'katilimciSil'])->name('destroy');
                     Route::patch('/yoneticilik/{kanalId}/{katilimciId}', [KanalController::class, 'yoneticilik'])->name('yoneticilik');
                 });

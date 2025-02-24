@@ -15,17 +15,74 @@ class EtkinlikSeeder extends Seeder
     {
         $faker = Faker::create("tr_TR");
 
-        Etkinlik::insert([
-            'etkinlik_turleri_id'        => 1,
-            'isletmeler_id'              => 66,
-            'iller_id'                   => 34,
-            'baslik'                     => 'Kentte Özgür Adımlar – İstanbul ve Sokak Sanatı Festivali',
-            'aciklama'                   => $faker->realText(200),
-            'etkinlikBasvuruTarihi'      => $faker->dateTimeBetween('-1 day', '+1 day'),
-            'etkinlikBasvuruBitisTarihi' => $faker->dateTimeBetween('+1 day', '+2 day'),
-            'etkinlikBaslamaTarihi'      => $faker->dateTimeBetween('+2 day', '+3 day'),
-            'etkinlikBitisTarihi'        => $faker->dateTimeBetween('+3 day', '+4 day'),
-            'kontenjan'                  => 100,
-        ]);
+        Etkinlik::insert(
+            [
+                [
+                    'etkinlik_turleri_id'        => 1,
+                    'isletmeler_id'              => 66,
+                    'iller_id'                   => 34,
+                    'baslik'                     => 'Kentte Özgür Adımlar – İstanbul ve Sokak Sanatı Festivali',
+                    'aciklama'                   => $faker->realText(200),
+                    'etkinlikBasvuruTarihi'      => $faker->dateTimeBetween('-1 day', '+1 day'),
+                    'etkinlikBasvuruBitisTarihi' => $faker->dateTimeBetween('+1 day', '+2 day'),
+                    'etkinlikBaslamaTarihi'      => $faker->dateTimeBetween('+2 day', '+3 day'),
+                    'etkinlikBitisTarihi'        => $faker->dateTimeBetween('+3 day', '+4 day'),
+                    'kapakResmiYolu'             => 'image/etkinlikresim.png',
+                    'kontenjan'                  => 100,
+                ],
+                [
+                    'etkinlik_turleri_id'        => 2,
+                    'isletmeler_id'              => 143,
+                    'iller_id'                   => 34,
+                    'baslik'                     => 'Modülerlik Mezarlığı: Hangi Modülü Nereye Gömdüm?',
+                    'aciklama'                   => 'Bir zamanlar düzenliydi... ya da ben öyle sanıyordum!... 🧐',
+                    'etkinlikBasvuruTarihi'      => $faker->dateTimeBetween('-1 day', '+1 day'),
+                    'etkinlikBasvuruBitisTarihi' => $faker->dateTimeBetween('+1 day', '+2 day'),
+                    'etkinlikBaslamaTarihi'      => $faker->dateTimeBetween('+2 day', '+3 day'),
+                    'etkinlikBitisTarihi'        => $faker->dateTimeBetween('+3 day', '+4 day'),
+                    'kapakResmiYolu'             => 'image/404 Error with a cute animal-pana.png',
+                    'kontenjan'                  => 500,
+                ],
+                [
+                    'etkinlik_turleri_id'        => 2,
+                    'isletmeler_id'              => 143,
+                    'iller_id'                   => 34,
+                    'baslik'                     => 'Deneme Etkinlik 1',
+                    'aciklama'                   => 'Bir zamanlar düzenliydi... ya da ben öyle sanıyordum!... 🧐',
+                    'etkinlikBasvuruTarihi'      => $faker->dateTimeBetween('-3 day', '-2 day'),
+                    'etkinlikBasvuruBitisTarihi' => $faker->dateTimeBetween('+1 day', '+2 day'),
+                    'etkinlikBaslamaTarihi'      => $faker->dateTimeBetween('-2 day', '-1 day'),
+                    'etkinlikBitisTarihi'        => $faker->dateTimeBetween('+3 day', '+4 day'),
+                    'kapakResmiYolu'             => 'image/404 Error with a cute animal-pana.png',
+                    'kontenjan'                  => 500,
+                ],
+                [
+                    'etkinlik_turleri_id'        => 2,
+                    'isletmeler_id'              => 143,
+                    'iller_id'                   => 34,
+                    'baslik'                     => 'Deneme Etkinlik 2',
+                    'aciklama'                   => 'Bir zamanlar düzenliydi... ya da ben öyle sanıyordum!... 🧐',
+                    'etkinlikBasvuruTarihi'      => $faker->dateTimeBetween('-1 day', '+1 day'),
+                    'etkinlikBasvuruBitisTarihi' => $faker->dateTimeBetween('+1 day', '+2 day'),
+                    'etkinlikBaslamaTarihi'      => $faker->dateTimeBetween('-4 day', '-3 day'),
+                    'etkinlikBitisTarihi'        => $faker->dateTimeBetween('-2 day', '-1 day'),
+                    'kapakResmiYolu'             => 'image/404 Error with a cute animal-pana.png',
+                    'kontenjan'                  => 500,
+                ],
+                [
+                    'etkinlik_turleri_id'        => 2,
+                    'isletmeler_id'              => 143,
+                    'iller_id'                   => 34,
+                    'baslik'                     => 'Deneme Etkinlik 3',
+                    'aciklama'                   => 'Bir zamanlar düzenliydi... ya da ben öyle sanıyordum!... 🧐',
+                    'etkinlikBasvuruTarihi'      => $faker->dateTimeBetween('-1 day', '+1 day'),
+                    'etkinlikBasvuruBitisTarihi' => $faker->dateTimeBetween('+1 day', '+2 day'),
+                    'etkinlikBaslamaTarihi'      => $faker->dateTimeBetween('-4 day', '-3 day'),
+                    'etkinlikBitisTarihi'        => $faker->dateTimeBetween('-1 day', '0 day'),
+                    'kapakResmiYolu'             => 'image/404 Error with a cute animal-pana.png',
+                    'kontenjan'                  => 500,
+                ]
+            ]
+        );
     }
 }
