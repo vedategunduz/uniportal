@@ -1,7 +1,7 @@
 @php
     use Carbon\Carbon;
 @endphp
-<section class="grid grid-cols-4 gap-4">
+<section class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
     @foreach ($etkinlikler as $etkinlik)
         @php
             $tarih = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i');
@@ -24,7 +24,7 @@
                     {{ $etkinlik->tur->baslik }}</span>
             </section>
 
-            <section class="space-y-2 px-4 py-2 h-full group relative cursor-pointer">
+            <section class="space-y-2 px-4 py-2 h-full group relative cursor-pointer open-etkinlik-detay-modal" data-id="{{ encrypt($etkinlik->etkinlikler_id) }}">
                 <div class="group-hover:opacity-100 opacity-0 bg-black/20 absolute top-0 left-0 w-full h-full duration-300">
                     <div class="flex items-center justify-center h-full">
                         <x-button class="!shadow-none !border-0 !p-2 !bg-transparent text-white font-black !capitalize !text-xl">
@@ -48,8 +48,9 @@
                 </div>
             </section>
 
-            <section class="flex gap-2 mt-auto px-4 py-2 border-t">
-                <x-button class="!shadow-none !border-0 !p-2" wire:click="like">
+            {{-- Butonlar --}}
+            <section class="flex gap-1 mt-auto px-4 py-2 border-t">
+                <x-button class="!shadow-none !border-0 !p-2" :disabled="!auth()->check()">
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-heart-fill !text-rose-500" viewBox="0 0 16 16">
@@ -59,7 +60,7 @@
                         <span>{{ $etkinlik->begeni->count() }} </span>
                     </div>
                 </x-button>
-                <x-button class="!shadow-none !border-0 !p-2" wire:click="comment">
+                <x-button class="!shadow-none !border-0 !p-2 open-etkinlik-detay-modal" data-id="{{ encrypt($etkinlik->etkinlikler_id) }}" data-focus="true">
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-chat-left-text-fill !text-blue-500" viewBox="0 0 16 16">
@@ -80,7 +81,7 @@
                         <span class="text-xs ms-1 capitalize">Katıl</span>
                     </x-button>
                 @endauth
-                <x-button class="!shadow-none !border-0 !p-2 ml-auto shareBtn">
+                <x-button class="!shadow-none !border-0 !p-2 ml-auto share-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-share-fill" viewBox="0 0 16 16">
                         <path

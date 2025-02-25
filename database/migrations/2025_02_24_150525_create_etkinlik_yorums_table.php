@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('etkinlik_yorumlari', function (Blueprint $table) {
             $table->id('etkinlik_yorumlari_id');
             $table->foreignId('etkinlikler_id')->constrained('etkinlikler', 'etkinlikler_id')->onDeleteRestrict();
+            $table->foreignId('yanitlanan_etkinlik_yorumlari_id')->nullable()->constrained('etkinlik_yorumlari', 'etkinlik_yorumlari_id')->onDeleteRestrict();
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->onDeleteRestrict();
             $table->text('yorum');
             $table->timestamps();

@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\EtkinlikController;
+use App\Http\Controllers\EtkinlikYorumController;
 use App\Http\Controllers\KanalController;
 use App\Http\Controllers\MesajController;
 use App\Http\Controllers\Personel\PersonelController;
@@ -29,9 +30,21 @@ Route::prefix('personel')->name('personel.')->group(function () {
     Route::get('/{kullanici_id}', [PersonelController::class, 'show'])->name('profil');
 });
 
-Route::prefix('etkinlikler')->name('etkinlikler.')->group(function() {
-    // Route::get('etkinlikler', )
-    Route::resource('', EtkinlikController::class);
+Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
+    Route::get('/', [EtkinlikController::class, 'index'])->name('index');
+
+    Route::prefix('{etkinlik_id}')->group(function () {
+        Route::get('/', [EtkinlikController::class, 'show'])->name('show');
+
+        Route::prefix('yorum')->name('yorum.')->group(function () {
+            Route::post('/', [EtkinlikController::class, 'store'])->name('store');
+
+            Route::prefix('{yorum_id}')->group(function () {
+                Route::delete('/', [EtkinlikController::class, 'destroy'])->name('destroy');
+                Route::patch('begenToggle', [EtkinlikYorumController::class, 'begenToggle'])->name('begenToggle');
+            });
+        });
+    });
 });
 
 // Rollere göre menü yönlendirme yapılacak

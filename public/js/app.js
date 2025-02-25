@@ -100,24 +100,24 @@ function warningAlert(message) {
 }
 
 window.addEventListener('click', async function (event) {
-    if (event.target.matches('.open-modal')) {
-        const MODAL = document.getElementById(event.target.dataset.modal);
+    // if (event.target.matches('.open-modal')) {
+    //     const MODAL = document.getElementById(event.target.dataset.modal);
 
-        MODAL.classList.remove('hidden');
-        MODAL.classList.add('flex');
+    //     MODAL.classList.remove('hidden');
+    //     MODAL.classList.add('flex');
 
-        document.body.classList.add('overflow-hidden');
-    }
+    //     document.body.classList.add('overflow-hidden');
+    // }
 
-    if (event.target.matches('.close-modal')) {
-        const MODAL = document.getElementById(event.target.dataset.modal);
+    // if (event.target.matches('.close-modal')) {
+    //     const MODAL = document.getElementById(event.target.dataset.modal);
 
-        MODAL.classList.remove('flex');
-        MODAL.classList.add('hidden');
-        // MODAL.querySelector('.modal-content').innerHTML = '';
+    //     MODAL.classList.remove('flex');
+    //     MODAL.classList.add('hidden');
+    //     // MODAL.querySelector('.modal-content').innerHTML = '';
 
-        document.body.classList.remove('overflow-hidden');
-    }
+    //     document.body.classList.remove('overflow-hidden');
+    // }
 
     if (event.target.matches('.open-aside-modal')) {
         const MODAL = document.getElementById(event.target.dataset.modal);
@@ -217,6 +217,18 @@ function deneme() {
     } else {
         ACCORDION_BODY.style.maxHeight = 0;
     }
+}
+
+function modalShow(modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.classList.add('overflow-hidden');
+}
+
+function modalClose(modal) {
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
 }
 
 // Dinamik olarak eklenen Summernote çağırmak için

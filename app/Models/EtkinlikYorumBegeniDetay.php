@@ -15,7 +15,6 @@ class EtkinlikYorumBegeniDetay extends Model
 
     protected $fillable = [
         'etkinlik_yorumlari_id',
-        'etkinlikler_id',
         'kullanicilar_id',
     ];
 }

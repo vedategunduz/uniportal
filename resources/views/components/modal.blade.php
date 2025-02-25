@@ -3,13 +3,14 @@
     'title' => 'Modal Title',
     'zIndex' => '!z-10',
     'visibility' => 'hidden',
+    'slotClass' => 'px-6 py-2 mb-2',
 ])
 
 <section id="{{ $id }}" class="custom-modal {{ $visibility }} {{ $zIndex }}">
     <div class="modal-outside close-modal" data-modal="{{ $id }}"></div>
 
     <div {{ $attributes->merge(['class' => 'modal-content rounded max-h-screen hidden-scroll']) }}>
-        <header class="flex items-center bg-blue-700 text-white justify-between text-gray-9100 px-6 py-2">
+        <header class="flex items-center bg-blue-700 text-white justify-between px-6 py-2">
             <div>
                 <h2 class="font-semibold text-base text-white tracking-wider uppercase text-nowrap overflow-hidden whitespace-nowrap overflow-ellipsis w-72" title="{{ $title }}"> {{ $title }} </h2>
             </div>
@@ -22,12 +23,8 @@
             </x-button>
         </header>
 
-        <section class="px-6 py-2" data-slot>
+        <section class="{{ $slotClass }}" data-slot>
             {{ $slot }}
         </section>
-
-        <footer class="px-6 py-2">
-
-        </footer>
     </div>
 </section>

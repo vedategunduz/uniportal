@@ -23,6 +23,7 @@ return new class extends Migration
             $table->timestamp('etkinlikBitisTarihi')->nullable();
             $table->string('kapakResmiYolu')->nullable()->default('image/etkinlikresim.png');
             $table->string('baslik', 255)->nullable();
+            $table->enum('katilimTipi', ['genel', 'uniportal', 'özel'])->default('genel');
             $table->longText('aciklama')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
             $table->boolean('yorumDurumu')->nullable()->default(1);
@@ -47,6 +48,7 @@ return new class extends Migration
             $table->timestamp('etkinlikBitisTarihi')->nullable();
             $table->string('kapakResmiYolu')->nullable();
             $table->string('baslik', 255)->nullable();
+            $table->enum('katilimTipi', ['genel', 'uniportal', 'özel'])->default('genel');
             $table->longText('aciklama')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
             $table->boolean('yorumDurumu')->nullable()->default(1);
@@ -72,6 +74,7 @@ return new class extends Migration
                     etkinlikBitisTarihi,
                     kapakResmiYolu,
                     baslik,
+                    katilimTipi,
                     aciklama,
                     sosyalMedyadaPaylas,
                     yorumDurumu,
@@ -93,6 +96,7 @@ return new class extends Migration
                     NEW.etkinlikBitisTarihi,
                     NEW.kapakResmiYolu,
                     NEW.baslik,
+                    NEW.katilimTipi,
                     NEW.aciklama,
                     NEW.sosyalMedyadaPaylas,
                     NEW.yorumDurumu,
@@ -123,6 +127,7 @@ return new class extends Migration
                     etkinlikBitisTarihi,
                     kapakResmiYolu,
                     baslik,
+                    katilimTipi,
                     aciklama,
                     sosyalMedyadaPaylas,
                     yorumDurumu,
@@ -144,6 +149,7 @@ return new class extends Migration
                     NEW.etkinlikBitisTarihi,
                     NEW.kapakResmiYolu,
                     NEW.baslik,
+                    NEW.katilimTipi,
                     NEW.aciklama,
                     NEW.sosyalMedyadaPaylas,
                     NEW.yorumDurumu,
