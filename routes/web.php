@@ -37,9 +37,10 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
         Route::get('/', [EtkinlikController::class, 'show'])->name('show');
 
         Route::prefix('yorum')->name('yorum.')->group(function () {
-            Route::post('/', [EtkinlikController::class, 'store'])->name('store');
+            Route::post('/', [EtkinlikYorumController::class, 'store'])->name('store');
 
             Route::prefix('{yorum_id}')->group(function () {
+                Route::post('/', [EtkinlikYorumController::class, 'yanitStore'])->name('yanitStore');
                 Route::delete('/', [EtkinlikController::class, 'destroy'])->name('destroy');
                 Route::patch('begenToggle', [EtkinlikYorumController::class, 'begenToggle'])->name('begenToggle');
             });

@@ -6,23 +6,18 @@
         @php
             $tarih = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i');
             $tarih2 = Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d F Y H:i');
-            $aciklama = $etkinlik->aciklama;
-
-            if (strlen($aciklama) > 100) {
-                $aciklama = substr($aciklama, 0, 100) . '...';
-            }
         @endphp
         <div class="flex flex-col shadow border rounded text-gray-700">
-            <section class="border-b py-1.5 px-4 flex justify-between items-center rounded-t">
+            <header class="border-b py-1.5 px-4 flex justify-between items-center rounded-t">
                 <a href="#" class="flex items-center gap-2">
                     <img src="{{ $etkinlik->isletme->logoUrl }}" class="size-8 rounded-full object-contain" alt="">
 
                     <span class="text-xs font-medium ">{{ $etkinlik->isletme->kisaltma }}</span>
                 </a>
                 <span
-                    class="absolute1 top-2 right-2 font-medium px-1.5 py-0.5 text-xs bg-blue-7100 text-white rounded {{ $etkinlik->tur->class }}">
+                    class="font-medium px-1.5 py-0.5 text-xs bg-blue-7100 text-white rounded {{ $etkinlik->tur->class }}">
                     {{ $etkinlik->tur->baslik }}</span>
-            </section>
+            </header>
 
             <section class="space-y-2 px-4 py-2 h-full group relative cursor-pointer open-etkinlik-detay-modal" data-id="{{ encrypt($etkinlik->etkinlikler_id) }}">
                 <div class="group-hover:opacity-100 opacity-0 bg-black/20 absolute top-0 left-0 w-full h-full duration-300">
@@ -44,12 +39,12 @@
 
                     <p class="font-medium text-base">{{ $etkinlik->baslik }}</p>
 
-                    <p>{{ $aciklama }}</p>
+                    <p class="text-ellipsis line-clamp-3">{!! $etkinlik->aciklama !!}</p>
                 </div>
             </section>
 
             {{-- Butonlar --}}
-            <section class="flex gap-1 mt-auto px-4 py-2 border-t">
+            <footer class="flex gap-1 mt-auto px-4 py-2 border-t">
                 <x-button class="!shadow-none !border-0 !p-2" :disabled="!auth()->check()">
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -88,7 +83,7 @@
                             d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
                     </svg>
                 </x-button>
-            </section>
+            </footer>
         </div>
     @endforeach
 </section>

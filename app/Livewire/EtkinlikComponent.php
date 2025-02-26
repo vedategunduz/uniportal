@@ -56,7 +56,6 @@ class EtkinlikComponent extends Component
     public function showMore()
     {
         $this->count++;
-
         // Önce gelecek etkinlikleri al
         $yeniEtkinlikler = Etkinlik::with(['tur', 'isletme', 'begeni', 'yorum'])
             ->where('etkinlik_turleri_id', '<=', 2)

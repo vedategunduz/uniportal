@@ -219,6 +219,14 @@ function deneme() {
     }
 }
 
+function showMoreText(clamp = 3) {
+    document.querySelectorAll('.show-more-text').forEach((element) => {
+        element.addEventListener('click', function () {
+            element.classList.toggle(`line-clamp-${clamp}`);
+        });
+    });
+}
+
 function modalShow(modal) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');

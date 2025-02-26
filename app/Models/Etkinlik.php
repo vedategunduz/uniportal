@@ -48,7 +48,7 @@ class Etkinlik extends Model
 
     public function yorum()
     {
-        return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id')->whereNull('yanitlanan_etkinlik_yorumlari_id');
+        return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
     public function etkinlikKatilim()

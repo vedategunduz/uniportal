@@ -5,7 +5,7 @@
 
     $tarih2 = Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D, Y, h:i');
 @endphp
-<section class="grid lg:grid-cols-2 h-full">
+<section class="grid lg:grid-cols-2 h-full" data-modal>
     <!-- Sol Kolon: Etkinlik Kapak Resmi -->
     <div class="p-2">
         <img src="{{ $etkinlik->kapakResmiYolu }}" class="lg:h-[90vh] object-cover rounded" alt="Etkinlik Kapak Resmi">
@@ -27,7 +27,7 @@
         </header>
 
         <!-- Ana İçerik: Etkinlik Detayları & Yorumlar -->
-        <section class="overflow-y-auto custom-scroll lg:h-[calc(90vh-140px)]">
+        <section class="overflow-y-auto custom-scroll lg:h-[calc(90vh-140px)] scroll-smooth" data-modal-content>
             <!-- Etkinlik Detayları -->
             <article class="px-4 py-2 space-y-2 border-b">
                 <h4 class="font-medium text-xl mb-2">{{ $etkinlik->baslik }}</h4>
@@ -42,13 +42,13 @@
             </article>
 
             <!-- Yorumlar Bölümü -->
-            <livewire:etkinlik-yorum-component :yorumlar="$etkinlik->yorum" />
+            <livewire:etkinlik-yorum-component :key="encrypt($etkinlik->etkinlikler_id)" :etkinlikid="$etkinlik->etkinlikler_id" />
         </section>
 
         <!-- Alt Kısım: Etkileşim Butonları & Yorum Girişi -->
         <footer class="mt-auto">
             <!-- Etkileşim Butonları -->
-            <div class="flex gap-2 px-4 py-2 border-t">
+            <section class="flex gap-2 px-4 py-2 border-t">
                 <x-button class="!shadow-none !border-0 !p-2" :disabled="!auth()->check()">
                     <div class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -90,18 +90,20 @@
                             d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
                     </svg>
                 </x-button>
-            </div>
-
+            </section>
             <!-- Yorum Girişi -->
-            <div class="flex items-center justify-between gap-2 px-4 py-2 border-t">
-                <x-textarea rows="1" name="yorum" class="overflow-auto custom-scroll max-h-32"
-                    :disabled="!auth()->check()">
-                    @guest
-                        Yorum yapabilmek için giriş yapmalısınız.
-                    @endguest
-                </x-textarea>
-                <x-button class="shrink-0" :disabled="!auth()->check()">Yorum yap</x-button>
-            </div>
+            <form action="{{ route('etkinlikler.yorum.store', [encrypt($etkinlik->etkinlikler_id)]) }}"
+                class="border-t" method="POST" data-etkinlik-yorum-form>
+
+                <section class="flex items-center justify-between gap-2 px-4 py-2">
+                    <x-textarea rows="1" name="yorum" class="custom-scroll max-h-24" :disabled="!auth()->check()">
+                        @guest
+                            Yorum yapabilmek için giriş yapmalısınız.
+                        @endguest
+                    </x-textarea>
+                    <x-button class="shrink-0 etkinlik-yorum-submit-button" :disabled="!auth()->check()">Yorum yap</x-button>
+                </section>
+            </form>
         </footer>
     </div>
 </section>

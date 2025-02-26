@@ -10,7 +10,7 @@
 
 html,
 body {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth !important;
     font-size: 16px;
     font-family: 'Poppins', 'Inter', serif;
     font-optical-sizing: auto;
@@ -167,6 +167,7 @@ label {
     .modal-content {
         /* width: 100%; */
         /* overflow: auto; */
+        /* max-height: 90vh; */
         margin: 0 auto;
         background-color: #fff;
         animation: zoomIn 0.3s;

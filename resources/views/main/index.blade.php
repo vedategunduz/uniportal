@@ -13,6 +13,20 @@
 
     </x-modal>
 
+    <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
+
+    <div id="yorumYanitTemplate" class="hidden">
+        <div class="flex justify-between items-center bg-gray-100 px-4 py-2" data-yorum-yanit-template>
+            <p class="text-sm text-gray-500">
+                <span class="text-blue-400">@ornekKullanici</span>
+                adlı kişiye yanıt veriyorsunuz.
+            </p>
+            <x-button class="!shadow-none !border-0 !bg-transparent">
+                <i class="bi bi-x text-base"></i>
+            </x-button>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
@@ -40,11 +54,7 @@
 
                     focus && MODAL.querySelector('textarea[name=yorum]').focus();
 
-                    document.querySelectorAll('.show-more-text').forEach((element) => {
-                        element.addEventListener('click', function() {
-                            element.classList.toggle('line-clamp-3');
-                        });
-                    });
+                    showMoreText();
                 } else {
                     ApiService.alert.error(RESPONSE.message);
                 }
@@ -61,8 +71,9 @@
                 } else alert("Tarayıcınız paylaşım desteği sunmuyor.")
             })();
 
-            event.target.closest('.etkinlik-yorum-begen') && (async () => {
-                const BUTTON = event.target.closest('.etkinlik-yorum-begen');
+            event.target.matches('.etkinlik-yorum-begen') && (async () => {
+                const BUTTON = event.target;
+                console.log(BUTTON);
                 const YORUM_ID = BUTTON.dataset.yorumId;
                 const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
 
@@ -75,22 +86,177 @@
 
                 const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
 
-                // if (RESPONSE.data.success) {
-                //     event.target.closest('.etkinlik-yorum-begen').innerHTML = RESPONSE.data.html;
-                // } else {
-                //     ApiService.alert.error(RESPONSE.message);
-                // }
+                if (RESPONSE.data.success) {
+                    BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
+                    BUTTON.querySelector('i').classList.toggle('bi-heart');
+                    BUTTON.querySelector('i').classList.toggle('text-rose-500');
+
+                    const BEGENI_WRAPPER = BUTTON.closest('[data-yorum-wrapper]').querySelector(
+                        '[data-yorum-begeni-wrapper]');
+                    const BEGENI_COUNT = BEGENI_WRAPPER.querySelector('[data-yorum-begeni-count]');
+
+                    BEGENI_COUNT && (BEGENI_COUNT.textContent = RESPONSE.data.begeni);
+
+                    RESPONSE.data.begeni > 0 ? BEGENI_WRAPPER.classList.remove('hidden') :
+                        BEGENI_WRAPPER.classList.add('hidden');
+
+                } else {
+                    ApiService.alert.error(RESPONSE.message);
+                }
             })();
+
+            event.target.matches('.etkinlik-yorum-submit-button') && (async () => {
+                const FORM = event.target.closest('form');
+                const TEXTAREA = FORM.querySelector('textarea[name=yorum]');
+
+                if (TEXTAREA.value.length === 0) {
+                    ApiService.alert.error('Yorum alanı boş bırakılamaz.');
+                    return;
+                }
+
+                const URL = FORM.action;
+                const DATA = new FormData(FORM);
+
+                const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+
+                if (RESPONSE.data.success) {
+                    TEXTAREA.value = '';
+                    TEXTAREA.style.height = '38px';
+
+                    Livewire.dispatch('yorumEklendi', {
+                        eklenenYorum: RESPONSE.data.yorum,
+                        tip: RESPONSE.data.tip
+                    });
+
+                    ApiService.alert.success(RESPONSE.data.message);
+
+                    FORM.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
+                    FORM.querySelector('[data-yorum-yanit-template]')?.remove();
+                    FORM.dataset.heightAdjusted && delete FORM.dataset.heightAdjusted;
+
+                    showMoreText();
+                } else {
+                    ApiService.alert.error(RESPONSE.message);
+                }
+            })();
+
+            event.target.closest('.etkinlik-yorum-yanit-goster') && (async () => {
+                const BUTTON = event.target.closest('.etkinlik-yorum-yanit-goster');
+                const YORUM_WRAPPER = BUTTON.closest('[data-yorum-wrapper]');
+                const YANIT_WRAPPER = YORUM_WRAPPER.querySelector('[data-yorum-yanit-wrapper]');
+
+                YANIT_WRAPPER.classList.toggle('hidden');
+            })();
+
+            const replyButton = event.target.closest('.etkinlik-yorum-yanitla-button');
+            if (replyButton) {
+                const modal = replyButton.closest('[data-modal]');
+                const modalContent = modal.querySelector('[data-modal-content]');
+                const form = modal.querySelector('[data-etkinlik-yorum-form]');
+
+                // Butonun bulunduğu yorum wrapper'ının konumunu alıp, modal içerik içinde doğru konuma scroll ediyoruz.
+                yorumWrappers = modalContent.querySelectorAll('[data-yorum-wrapper]');
+                yorumWrappers.forEach(wrapper => wrapper.firstElementChild.classList.remove('bg-gray-100'));
+
+                const yorumWrapper = replyButton.closest('[data-yorum-wrapper]').firstElementChild;
+                yorumWrapper.classList.add('bg-gray-100');
+
+                const yorumRect = yorumWrapper.getBoundingClientRect();
+                const containerRect = modalContent.getBoundingClientRect();
+                modalContent.scrollTop = (yorumRect.top - containerRect.top) + modalContent.scrollTop;
+
+                // Yorum textarea'sına odaklanıyoruz.
+                form.querySelector('textarea[name=yorum]').focus();
+
+                // Önceden eklenmiş yanıt inputu veya şablon varsa temizliyoruz.
+                form.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
+                form.querySelector('[data-yorum-yanit-template]')?.remove();
+
+                // Gizli input oluşturup, butondan gelen yanıt ID'sini ekliyoruz.
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'etkinlik_yorumlari_id';
+                hiddenInput.value = replyButton.dataset.yorumId;
+
+                // Şablonu klonlayıp, kullanıcı adını güncelliyoruz.
+                const template = document.getElementById('yorumYanitTemplate');
+                const replyElement = template.querySelector('[data-yorum-yanit-template]').cloneNode(true);
+                const usernameSpan = replyElement.querySelector('span.text-blue-400');
+                if (usernameSpan) usernameSpan.textContent = `@${replyButton.dataset.sender}`;
+
+                // Modal content'in orijinal yüksekliğini saklıyoruz.
+                if (!modalContent.dataset.originalHeight) {
+                    modalContent.dataset.originalHeight = modalContent.clientHeight;
+                }
+                const originalHeight = parseInt(modalContent.dataset.originalHeight, 10);
+
+                // Klonlanmış elemanı forma ekleyip, modal yüksekliğini ayarlıyoruz.
+                const insertedReply = form.insertAdjacentElement('afterbegin', replyElement);
+                if (!form.dataset.heightAdjusted) {
+                    modalContent.style.height = (originalHeight - insertedReply.clientHeight) + 'px';
+                    form.dataset.heightAdjusted = 'true';
+                }
+
+                // Gizli inputu formun sonuna ekliyoruz.
+                form.appendChild(hiddenInput);
+
+                // Eklenen elementteki kapatma butonuna işlev kazandırıyoruz.
+                const closeBtn = insertedReply.querySelector('button');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        insertedReply.remove();
+                        hiddenInput.remove();
+                        yorumWrapper.classList.remove('bg-gray-100');
+                        modalContent.style.height = originalHeight + 'px';
+                        delete form.dataset.heightAdjusted;
+                    });
+                }
+            }
+
+            // event.target.closest('.etkinlik-yorum-yanit-submit-button') && (async (event) => {
+            //     event.preventDefault();
+
+            //     const FORM = event.target.closest('form');
+            //     const TEXTAREA = FORM.querySelector('textarea[name=yorum]');
+
+            //     if (TEXTAREA.value.length === 0) {
+            //         ApiService.alert.error('Yorum alanı boş bırakılamaz.');
+            //         return;
+            //     }
+
+            //     const URL = FORM.action;
+            //     const DATA = new FormData(FORM);
+
+            //     const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+
+            //     if (RESPONSE.data.success) {
+            //         TEXTAREA.value = '';
+            //         TEXTAREA.style.height = '38px';
+
+            //         // Livewire.emit('yorumEklendi', {
+            //         //     eklenenYorum: RESPONSE.data.yorum
+            //         // });
+
+            //         ApiService.alert.success(RESPONSE.data.message);
+
+            //         showMoreText();
+            //     } else {
+            //         ApiService.alert.error(RESPONSE.message);
+            //     }
+            // })(event);
         });
+
 
         document.addEventListener('input', function(event) {
             if (!event.target.matches('textarea'))
                 return;
 
-
             const textarea = event.target;
 
-            if (textarea.scrollHeight <= 100)
+            if (textarea.value.length === 0)
+                return textarea.style.height = '38px';
+
+            if (textarea.scrollHeight <= 40)
                 return;
 
             textarea.style.height = textarea.scrollHeight + 'px';
