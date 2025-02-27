@@ -3,15 +3,31 @@
 @section('title', 'Anasayfa')
 
 @section('content')
-    <livewire:etkinlik-component />
+    <section class="space-y-4">
+        <livewire:etkinlik-component />
+        <livewire:etkinlik-kampanya-component />
+    </section>
 
-    <div class="text-center py-2">
-        <x-button id="tikla" class="">Daha fazla</x-button>
-    </div>
+    <x-modal id="etkinlik-modal" title="Detay" slotClass="h-full" class="w-full sm:w-4/5 overflow-y-auto"></x-modal>
 
-    <x-modal id="etkinlik-modal" title="Detay" slotClass="h-full" class="w-full sm:w-4/5 overflow-y-auto">
-
+    <x-modal id="sikayet-modal" title="Şikayet et" visibility="hidden">
+        <x-textarea rows="3"></x-textarea>
     </x-modal>
+
+    <x-modal id="etkinlik-yorum-sil-confirm" title="Yorum Sil" headerClass="!bg-rose-500" data-yorum-sil-confirm-modal>
+
+        <div class="text-center space-y-2">
+            <i class="bi bi-exclamation-circle-fill text-4xl text-rose-500"></i>
+
+            <p class="text-sm text-gray-700">Yorumu silmek istediğinize emin misiniz?</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-4">
+            <x-button class="justify-center close-modal canceled" data-modal="etkinlik-yorum-sil-confirm">İptal</x-button>
+            <x-button class="!bg-rose-500 text-white justify-center confirmed">Onayla</x-button>
+        </div>
+    </x-modal>
+
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
@@ -26,15 +42,10 @@
             </x-button>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
     <script>
-        document.getElementById('tikla').addEventListener('click', function() {
-            Livewire.dispatch('showMore');
-        });
-
         document.addEventListener('click', function(event) {
             event.target.closest('.open-etkinlik-detay-modal') && (async () => {
                 const id = event.target.closest('.open-etkinlik-detay-modal').dataset.id;
@@ -51,6 +62,8 @@
                     MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
 
                     modalShow(MODAL);
+
+                    window.UniportalService.dropdown.refresh();
 
                     focus && MODAL.querySelector('textarea[name=yorum]').focus();
 
@@ -69,6 +82,27 @@
                 } catch (a) {
                     console.error("Paylaşım başarısız:", a)
                 } else alert("Tarayıcınız paylaşım desteği sunmuyor.")
+            })();
+
+            event.target.closest('.etkinlik-begen') && (async () => {
+                const BUTTON = event.target.closest('.etkinlik-begen');
+                const ETKINLIK_ID = BUTTON.dataset.id;
+
+                const URL =
+                    "{{ route('etkinlikler.begenToggle', '___ETKINLIK_ID___') }}"
+                    .replace('___ETKINLIK_ID___', ETKINLIK_ID);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+
+                if (RESPONSE.data.success) {
+                    BUTTON.querySelector('span').textContent = RESPONSE.data.begeni;
+                    BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
+                    BUTTON.querySelector('i').classList.toggle('bi-heart');
+                    // BUTTON.querySelector('i').classList.toggle('text-red-500');
+
+                } else {
+                    ApiService.alert.error(RESPONSE.message);
+                }
             })();
 
             event.target.matches('.etkinlik-yorum-begen') && (async () => {
@@ -128,6 +162,7 @@
                         tip: RESPONSE.data.tip
                     });
 
+
                     ApiService.alert.success(RESPONSE.data.message);
 
                     FORM.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
@@ -135,11 +170,13 @@
                     FORM.dataset.heightAdjusted && delete FORM.dataset.heightAdjusted;
 
                     showMoreText();
+
+
                 } else {
                     ApiService.alert.error(RESPONSE.message);
                 }
             })();
-
+            window.UniportalService.dropdown.refresh();
             event.target.closest('.etkinlik-yorum-yanit-goster') && (async () => {
                 const BUTTON = event.target.closest('.etkinlik-yorum-yanit-goster');
                 const YORUM_WRAPPER = BUTTON.closest('[data-yorum-wrapper]');
@@ -213,39 +250,52 @@
                 }
             }
 
-            // event.target.closest('.etkinlik-yorum-yanit-submit-button') && (async (event) => {
-            //     event.preventDefault();
+            event.target.closest('.etkinlik-yorum-sil') && (async () => {
+                const BUTTON = event.target.closest('.etkinlik-yorum-sil');
+                const YORUM_ID = BUTTON.dataset.yorumId;
+                const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
 
-            //     const FORM = event.target.closest('form');
-            //     const TEXTAREA = FORM.querySelector('textarea[name=yorum]');
+                const confirmResult = await modalConfirm();
 
-            //     if (TEXTAREA.value.length === 0) {
-            //         ApiService.alert.error('Yorum alanı boş bırakılamaz.');
-            //         return;
-            //     }
+                if (!confirmResult)
+                    return;
 
-            //     const URL = FORM.action;
-            //     const DATA = new FormData(FORM);
+                const URL =
+                    "{{ route('etkinlikler.yorum.destroy', ['___ETKINLIK_ID___', '___YORUM_ID___']) }}"
+                    .replace('___ETKINLIK_ID___', ETKINLIK_ID).replace('___YORUM_ID___', YORUM_ID);
 
-            //     const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
 
-            //     if (RESPONSE.data.success) {
-            //         TEXTAREA.value = '';
-            //         TEXTAREA.style.height = '38px';
+                if (RESPONSE.data.success) {
+                    Livewire.dispatch('yorumSilindi', {
+                        silinenYorumId: YORUM_ID,
+                    });
 
-            //         // Livewire.emit('yorumEklendi', {
-            //         //     eklenenYorum: RESPONSE.data.yorum
-            //         // });
-
-            //         ApiService.alert.success(RESPONSE.data.message);
-
-            //         showMoreText();
-            //     } else {
-            //         ApiService.alert.error(RESPONSE.message);
-            //     }
-            // })(event);
+                    ApiService.alert.success(RESPONSE.data.message);
+                } else {
+                    ApiService.alert.error(RESPONSE.message);
+                }
+            })();
         });
 
+        function modalConfirm() {
+            return new Promise((resolve, reject) => {
+                const MODAL = document.getElementById('etkinlik-yorum-sil-confirm');
+
+                modalShow(MODAL);
+
+                const CONFIRM_BUTTON = MODAL.querySelector('.confirmed');
+                const CANCEL_BUTTON = MODAL.querySelector('.canceled');
+
+                CONFIRM_BUTTON.addEventListener('click', () => {
+                    modalClose(MODAL);
+                    resolve(true);
+                });
+                CANCEL_BUTTON.addEventListener('click', () => {
+                    resolve(false);
+                });
+            });
+        }
 
         document.addEventListener('input', function(event) {
             if (!event.target.matches('textarea'))

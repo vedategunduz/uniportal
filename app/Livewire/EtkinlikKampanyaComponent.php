@@ -2,15 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Models\Etkinlik;
 use Carbon\Carbon;
 use Livewire\Component;
-use App\Models\Etkinlik;
 
-class EtkinlikComponent extends Component
+class EtkinlikKampanyaComponent extends Component
 {
     public $etkinlikler;
     public $count = 0;
-    public $loadSize = 4;
+    public $loadSize = 5;
     public $today;
     public $global = 0;
     public $totalEtkinlik;
@@ -19,10 +19,15 @@ class EtkinlikComponent extends Component
     {
         $this->today = Carbon::today();
 
-        $this->totalEtkinlik = Etkinlik::where('etkinlik_turleri_id', '<=', 2)->count();
+        $this->totalEtkinlik = Etkinlik::whereHas('tur', function ($query) {
+            $query->where('tip', 4);
+        })->count();
+
         // Önce gelecek etkinlikleri al
         $gelecekEtkinlikler = Etkinlik::with(['tur', 'isletme', 'begeni', 'yorum'])
-            ->where('etkinlik_turleri_id', '<=', 2)
+            ->whereHas('tur', function ($query) {
+                $query->where('tip', 4);
+            })
             ->where(function ($query) {
                 $query->where('etkinlikBaslamaTarihi', '>=', $this->today)
                     ->orWhere('etkinlikBitisTarihi', '>=', $this->today);
@@ -37,7 +42,9 @@ class EtkinlikComponent extends Component
 
         if ($eksikSayisi > 0) {
             $gecmisEtkinlikler = Etkinlik::with(['tur', 'isletme', 'begeni', 'yorum'])
-                ->where('etkinlik_turleri_id', '<=', 2)
+                ->whereHas('tur', function ($query) {
+                    $query->where('tip', 4);
+                })
                 ->where(function ($query) {
                     $query->where('etkinlikBaslamaTarihi', '<', $this->today)
                         ->where('etkinlikBitisTarihi', '<', $this->today);
@@ -58,7 +65,9 @@ class EtkinlikComponent extends Component
         $this->count++;
         // Önce gelecek etkinlikleri al
         $yeniEtkinlikler = Etkinlik::with(['tur', 'isletme', 'begeni', 'yorum'])
-            ->where('etkinlik_turleri_id', '<=', 2)
+            ->whereHas('tur', function ($query) {
+                $query->where('tip', 4);
+            })
             ->where(function ($query) {
                 $query->where('etkinlikBaslamaTarihi', '>=', $this->today)
                     ->orWhere('etkinlikBitisTarihi', '>=', $this->today);
@@ -73,7 +82,9 @@ class EtkinlikComponent extends Component
             $eksikSayisi = $this->loadSize - $yeniEtkinlikler->count();
 
             $gecmisEtkinlikler = Etkinlik::with(['tur', 'isletme', 'begeni', 'yorum'])
-                ->where('etkinlik_turleri_id', '<=', 2)
+                ->whereHas('tur', function ($query) {
+                    $query->where('tip', 4);
+                })
                 ->where(function ($query) {
                     $query->where('etkinlikBaslamaTarihi', '<', $this->today)
                         ->where('etkinlikBitisTarihi', '<', $this->today);
@@ -95,6 +106,6 @@ class EtkinlikComponent extends Component
 
     public function render()
     {
-        return view('livewire.etkinlik-component');
+        return view('livewire.etkinlik-kampanya-component');
     }
 }

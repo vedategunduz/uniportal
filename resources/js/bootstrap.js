@@ -5,6 +5,13 @@
 import fetchData from './fetch';
 import * as alert from './alert';
 import './echo';
+import UniportalDropdown from './dropdown';
+
+const dropdown = new UniportalDropdown();
+
+const UniportalService = {
+    dropdown
+}
 
 const ApiService = {
     fetchData,
@@ -12,3 +19,6 @@ const ApiService = {
 }
 
 window.ApiService = ApiService;
+window.UniportalService = UniportalService;
+
+// new window.ApiService.UniportalDropdown;

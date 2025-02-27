@@ -35,13 +35,14 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 
     Route::prefix('{etkinlik_id}')->group(function () {
         Route::get('/', [EtkinlikController::class, 'show'])->name('show');
+        Route::patch('begenToggle', [EtkinlikController::class, 'begenToggle'])->name('begenToggle');
 
         Route::prefix('yorum')->name('yorum.')->group(function () {
             Route::post('/', [EtkinlikYorumController::class, 'store'])->name('store');
 
             Route::prefix('{yorum_id}')->group(function () {
                 Route::post('/', [EtkinlikYorumController::class, 'yanitStore'])->name('yanitStore');
-                Route::delete('/', [EtkinlikController::class, 'destroy'])->name('destroy');
+                Route::delete('/', [EtkinlikYorumController::class, 'destroy'])->name('destroy');
                 Route::patch('begenToggle', [EtkinlikYorumController::class, 'begenToggle'])->name('begenToggle');
             });
         });

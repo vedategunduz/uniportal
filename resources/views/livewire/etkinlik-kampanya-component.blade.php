@@ -1,14 +1,14 @@
 @php
     use Carbon\Carbon;
 @endphp
-<section class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-    <div class="sm:col-span-2 lg:col-span-3 xl:col-span-4">
-        <h4 class="text-lg px-2 font-semibold text-gray-900 uppercase tracking-widest">Etkinlikler</h4>
+<section class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    <div class="sm:col-span-2 lg:col-span-3 xl:col-span-5">
+        <h4 class="text-lg px-2 font-semibold text-gray-900 uppercase tracking-widest">Kampanyalar</h4>
     </div>
     @foreach ($etkinlikler as $etkinlik)
         @php
-            $tarih = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F Y H:i');
-            $tarih2 = Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d F Y H:i');
+            $tarih = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d F');
+            $tarih2 = Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d F Y');
         @endphp
         <div class="flex flex-col shadow border rounded text-gray-700">
             <header class="border-b py-1.5 px-4 flex justify-between items-center rounded-t">
@@ -17,30 +17,9 @@
 
                     <span class="text-xs font-medium ">{{ $etkinlik->isletme->kisaltma }}</span>
                 </a>
-                <div class="space-x-1.5">
-                    <span
-                        class="font-medium px-1.5 py-0.5 text-xs bg-blue-7100 text-white rounded {{ $etkinlik->tur->class }}">
-                        {{ $etkinlik->tur->baslik }}
-                    </span>
-
-                    <x-uniportal-dropdown class="!shadow-none !border-none !p-1" alignment="right">
-                        <x-slot name="trigger">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </x-slot>
-
-                        <x-slot name="target">
-                            <x-uniportal-dropdown-item href="#">
-                                <i class="bi bi-calendar-range-fill text-base text-green-400"></i>
-                                <span class="ms-2">Takivime ekle</span>
-                            </x-uniportal-dropdown-item>
-                            <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-şikayet-et"
-                                data-id="{{ encrypt($etkinlik->etkinlikler_id) }}">
-                                <i class="bi bi-exclamation-diamond-fill text-base text-rose-500"></i>
-                                <span class="ms-2">Şikayet et</span>
-                            </x-uniportal-dropdown-item>
-                        </x-slot>
-                    </x-uniportal-dropdown>
-                </div>
+                <span
+                    class="font-medium px-1.5 py-0.5 text-xs bg-blue-7100 text-white rounded {{ $etkinlik->tur->class }}">
+                    {{ $etkinlik->tur->baslik }}</span>
             </header>
 
             <section class="space-y-2 px-4 py-2 h-full group relative cursor-pointer open-etkinlik-detay-modal"
@@ -54,23 +33,30 @@
                     </div>
                 </div>
 
-                <img src="{{ $etkinlik->kapakResmiYolu }}" class="w-full h-72 rounded object-cover" alt="">
+                <img src="{{ $etkinlik->kapakResmiYolu }}" class="w-full h-48 rounded object-cover mx-auto" alt="">
 
                 <div class="text-sm space-y-2">
-                    <p class="text-right">
-                        <span class="px-1.5 py-0.5 text-xs bg-green-400 text-white rounded">
-                            {{ $tarih }}
+                    <p class="text-right ">
+                        <span
+                            @class([
+                                'px-1.5 py-0.5 text-xs text-white rounded',
+                                'bg-green-400' => $today->between($etkinlik->etkinlikBaslamaTarihi, $etkinlik->etkinlikBitisTarihi),
+                                'bg-gs-red' => $today->gt($etkinlik->etkinlikBitisTarihi),
+                                'bg-yellow-400' => $today->lt($etkinlik->etkinlikBaslamaTarihi),
+                            ])
+                        >
+                            {{ $tarih }} - {{ $tarih2 }}
                         </span>
                     </p>
 
-                    <p class="font-medium text-base">{{ $etkinlik->baslik }}</p>
+                    <p class="font-medium text-base text-ellipsis line-clamp-2">{{ $etkinlik->baslik }}</p>
 
-                    <p class="text-ellipsis line-clamp-3">{!! $etkinlik->aciklama !!}</p>
+                    {{-- <p class="text-ellipsis line-clamp-1">{!! $etkinlik->aciklama !!}</p> --}}
                 </div>
             </section>
 
             {{-- Butonlar --}}
-            <footer class="flex gap-1 mt-auto px-4 py-2 border-t">
+            <footer class="flex gap-1 mt-auto px-4 py-1 border-t">
                 <x-button class="!shadow-none !border-0 !p-2 etkinlik-begen"
                     data-id="{{ encrypt($etkinlik->etkinlikler_id) }}" :disabled="!auth()->check()">
                     <div class="flex items-center gap-2">
@@ -91,6 +77,12 @@
                         <span>{{ $etkinlik->yorum->count() }}</span>
                     </div>
                 </x-button>
+                {{-- @auth
+                    <x-button class="!shadow-none !border-0 !px-2 text-green-400">
+                        <i class="bi bi-person-plus-fill text-base"></i>
+                        <span class="text-xs ms-1 capitalize">Katıl</span>
+                    </x-button>
+                @endauth --}}
                 <x-button class="!shadow-none !border-0 !p-2 ml-auto share-btn">
                     <i class="bi bi-share-fill text-base"></i>
                 </x-button>
@@ -98,7 +90,7 @@
         </div>
     @endforeach
     @if ($this->etkinlikler->count() < $totalEtkinlik)
-        <div class="text-center py-2 sm:col-span-2 lg:col-span-3 xl:col-span-4">
+        <div class="text-center py-2 sm:col-span-2 lg:col-span-3 xl:col-span-5">
             <x-button wire:click="loadMore">Daha fazla</x-button>
         </div>
     @endif

@@ -32,7 +32,7 @@ class EtkinlikYorum extends Model
     }
 
     public function yanit() {
-        return $this->hasMany(EtkinlikYorum::class, 'yanitlanan_etkinlik_yorumlari_id', 'etkinlik_yorumlari_id');
+        return $this->hasMany(EtkinlikYorum::class, 'yanitlanan_etkinlik_yorumlari_id', 'etkinlik_yorumlari_id')->where('aktiflik', 1);
     }
 
     public function begenToggle() {

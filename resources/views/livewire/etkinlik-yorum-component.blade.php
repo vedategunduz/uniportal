@@ -7,6 +7,8 @@
         <div class="text-center">
             <x-button class="" wire:click="loadMore">
                 Daha fazla
+                {{ $yorumlar->count() }}
+                {{ $totalYorum }}
             </x-button>
         </div>
     @endif
