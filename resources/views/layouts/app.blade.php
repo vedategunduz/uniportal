@@ -15,28 +15,34 @@
 
 <body class="text-gray-900 min-h-screen flex flex-col">
 
-    <nav class="bg-white border-gray-200 shadow-sm">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <header class="sticky top-0 left-0 z-10 shadow-md bg-white">
+        <nav class="flex flex-wrap items-center justify-between w-full max-w-screen-xl mx-auto">
             <a href="{{ route('main.index') }}" class="flex items-center space-x-3">
                 <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
                 <span class="text-2xl font-semibold whitespace-nowrap">{{ config('app.name') }}</span>
             </a>
-
-            <!-- Dropdown menu -->
-            <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Kamular</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Firmalar</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Sendikalar</a>
-                    </li>
-                </ul>
-            </div>
-
+            <ul class="flex flex-wrap items-center">
+                <li><a href="{{ route('main.index') }}" @class([
+                    'block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200',
+                    '!border-blue-700' => request()->is('/'),
+                ])>Anasayfa</a>
+                </li>
+                <li><a href="#"
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Etkinlikler</a>
+                </li>
+                <li><a href="#"
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Kampanyalar</a>
+                </li>
+                <li><a href="{{ route('main.hakkinda') }}" @class([
+                    'block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200',
+                    '!border-blue-700' => request()->is('hakkinda'),
+                ])>
+                        Hakkında</a>
+                </li>
+                <li><a href="#"
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">İletişim</a>
+                </li>
+            </ul>
             @if (Auth::check())
                 <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
                     class="flex items-center justify-between py-2 px-3 text-gray-900 rounded-lg hover:bg-gray-50">
@@ -74,16 +80,20 @@
                 </div>
             @else
                 <a href="{{ route('auth.giris.form') }}"
-                    class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150">
+                    class="inline-flex items-center px-4 py-2.5 bg-blue-700 border border-blue-300 rounded-full font-semibold text-xs text-white uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150">
                     <span>Oturum aç</span>
                 </a>
             @endif
-        </div>
-    </nav>
+        </nav>
+    </header>
+
+    @yield('banner')
 
     <main class="max-w-screen-xl mx-auto p-4 w-full">
         @yield('content')
     </main>
+
+    @yield('stats')
 
 
     <footer class="bg-white dark:bg-gray-900 mt-auto shadow-2xl">
@@ -209,7 +219,44 @@
         </div>
     </footer>
 
+    <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
+
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const counters = document.querySelectorAll(".stats-counter");
+
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute("data-counter-target");
+                        const count = +counter.innerText;
+                        const increment = target / 100; // Hızı belirleyen faktör
+
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + increment);
+                            setTimeout(updateCount, 20); // Animasyon süresi
+                        } else {
+                            counter.innerText = target; // Hedef sayıya ulaşınca düzelt
+                        }
+                    };
+                    updateCount();
+                });
+            };
+
+            // Intersection Observer ile sadece ekranda görünce başlat
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.disconnect(); // Bir kere çalıştır, tekrar etmesin
+                    }
+                });
+            });
+
+            counters.forEach(counter => observer.observe(counter));
+        });
+    </script>
     {{-- JS ve diğer betikler buraya --}}
     @yield('scripts')
 </body>

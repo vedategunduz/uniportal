@@ -2,6 +2,29 @@
 
 @section('title', 'Anasayfa')
 
+@section('banner')
+    <div class="relative h-[calc(100vh-60px)]">
+        <img src="https://placeholder.pagebee.io/api/random/1920/1080" class="w-full h-full object-cover">
+
+        <div class="absolute w-full h-full top-0 left-0 mx-auto">
+            <div class="max-w-screen-xl flex flex-col justify-center h-full mx-auto">
+                <div class="flex">
+                    <div class="bg-white/0 p-4 rounded shadow space-y-4">
+                        <h4 class="text-2xl w-96">Kamu ile İş Dünyası Tek Platformda Buluşuyor!</h4>
+                        <p class="w-96">
+                            Kamu ve özel sektör arasındaki köprüyü kuruyoruz! Doğru firmalar, doğru projeler ve güçlü
+                            işbirlikleri için tek adresiniz. Siz de {{ config('app.name') }} ailesine katılın!
+                        </p>
+                        <x-button>
+                            Bize katılın
+                        </x-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('content')
     <section class="space-y-4">
         <livewire:etkinlik-component />
@@ -14,17 +37,22 @@
         <x-textarea rows="3"></x-textarea>
     </x-modal>
 
-    <x-modal id="etkinlik-yorum-sil-confirm" title="Yorum Sil" headerClass="!bg-rose-500" data-yorum-sil-confirm-modal>
+    <x-modal id="etkinlik-yorum-sil-confirm" title="" headerClass="!bg-transparent !text-gray-900"
+        headerCloseButton="false" data-yorum-sil-confirm-modal>
 
-        <div class="text-center space-y-2">
-            <i class="bi bi-exclamation-circle-fill text-4xl text-rose-500"></i>
+        <div class="space-y-8 pt-4">
+            <div class="text-center space-y-2">
+                <i class="bi bi-exclamation-circle-fill text-6xl text-gs-red"></i>
 
-            <p class="text-sm text-gray-700">Yorumu silmek istediğinize emin misiniz?</p>
-        </div>
+                <p class="text-sm text-gray-700 w-52 mx-auto">İlgili yorum silinecektir. Yorumu silmek istediğinize emin
+                    misiniz?</p>
+            </div>
 
-        <div class="grid grid-cols-2 gap-2 mt-4">
-            <x-button class="justify-center close-modal canceled" data-modal="etkinlik-yorum-sil-confirm">İptal</x-button>
-            <x-button class="!bg-rose-500 text-white justify-center confirmed">Onayla</x-button>
+            <div class="grid grid-cols-2 gap-2">
+                <x-button class="justify-center close-modal canceled"
+                    data-modal="etkinlik-yorum-sil-confirm">İptal</x-button>
+                <x-button class="!bg-gs-red text-white !border-0 justify-center confirmed">Onayla</x-button>
+            </div>
         </div>
     </x-modal>
 
@@ -44,8 +72,36 @@
     </div>
 @endsection
 
+@section('stats')
+    <section class="bg-white/75 py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-screen-xl w-full mx-auto text-center">
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">Etkinlik</span>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">Üye</span>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">İşletme</span>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">Kampanya</span>
+            </div>
+        </div>
+    </section>
+@endsection
+
 @section('scripts')
     <script>
+        document.addEventListener("livewire:update", () => {
+            console.log('Livewire updated');
+            window.UniportalService.dropdown.refresh();
+        });
+
         document.addEventListener('click', function(event) {
             event.target.closest('.open-etkinlik-detay-modal') && (async () => {
                 const id = event.target.closest('.open-etkinlik-detay-modal').dataset.id;
@@ -161,7 +217,9 @@
                         eklenenYorum: RESPONSE.data.yorum,
                         tip: RESPONSE.data.tip
                     });
-
+                    // setTimeout(() => {
+                    //     window.UniportalService.dropdown.refresh();
+                    // }, 400);
 
                     ApiService.alert.success(RESPONSE.data.message);
 
@@ -176,7 +234,7 @@
                     ApiService.alert.error(RESPONSE.message);
                 }
             })();
-            window.UniportalService.dropdown.refresh();
+
             event.target.closest('.etkinlik-yorum-yanit-goster') && (async () => {
                 const BUTTON = event.target.closest('.etkinlik-yorum-yanit-goster');
                 const YORUM_WRAPPER = BUTTON.closest('[data-yorum-wrapper]');
@@ -281,11 +339,10 @@
         function modalConfirm() {
             return new Promise((resolve, reject) => {
                 const MODAL = document.getElementById('etkinlik-yorum-sil-confirm');
-
-                modalShow(MODAL);
-
                 const CONFIRM_BUTTON = MODAL.querySelector('.confirmed');
                 const CANCEL_BUTTON = MODAL.querySelector('.canceled');
+
+                modalShow(MODAL);
 
                 CONFIRM_BUTTON.addEventListener('click', () => {
                     modalClose(MODAL);

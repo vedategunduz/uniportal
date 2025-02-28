@@ -1,52 +1,56 @@
 function createAlert(message, type = 'success') {
-    const ALERT_CONTAINER = document.createElement('div');
-    const ALERT_HEAD = document.createElement('p');
-    const ALERT_MESSAGE = document.createElement('p');
+    const alertContainer = document.createElement('div');
+    alertContainer.classList.add(
+        'p-6',
+        'rounded',
+        'bg-white',
+        'text-gray-700',
+        'flex',
+        'gap-4',
+        'shadow',
+        'w-72',
+        'bottom-to-top-alert-animation'
+    );
 
-    ALERT_HEAD.classList.add('mb-0');
-
-    const CONTAINER_CLASS = [
-        'border',
-        'px-4',
-        'py-3',
-        'rounded-lg',
-        'bottom-to-top-alert-animation',
-    ];
+    const icon = document.createElement('i');
+    const textDiv = document.createElement('div');
+    const title = document.createElement('p');
+    const body = document.createElement('p');
+    body.classList.add('text-opacity-70');
 
     switch (type) {
         case 'success':
-            CONTAINER_CLASS.push('border-emerald-300', 'bg-emerald-100', 'text-emerald-600');
-            ALERT_HEAD.textContent = 'Başarılı!';
-            ALERT_HEAD.classList.add('text-emerald-700', 'font-bold', 'me-2');
+            icon.className = 'bi bi-check-square-fill text-green-400 text-xl';
+            title.textContent = 'Başarılı!';
+            title.classList.add('font-semibold', 'text-green-400');
             break;
         case 'error':
-            CONTAINER_CLASS.push('border-rose-300', 'bg-rose-100', 'text-rose-700');
-            ALERT_HEAD.textContent = 'Hata!';
-            ALERT_HEAD.classList.add('text-rose-700', 'font-bold', 'me-2');
-            break;
-        case 'info':
-            CONTAINER_CLASS.push('border-blue-300', 'bg-blue-100', 'text-blue-600');
-            ALERT_HEAD.textContent = 'Bilgi!';
-            ALERT_HEAD.classList.add('text-blue-700', 'font-bold', 'me-2');
+            icon.className = 'bi bi-x-square-fill text-red-600 text-xl';
+            title.textContent = 'Hata!';
+            title.classList.add('font-semibold', 'text-red-600');
             break;
         case 'warning':
-            CONTAINER_CLASS.push('border-yellow-300', 'bg-yellow-100', 'text-yellow-600');
-            ALERT_HEAD.textContent = 'Uyarı!';
-            ALERT_HEAD.classList.add('text-yellow-700', 'font-bold', 'me-2');
+            icon.className = 'bi bi-exclamation-triangle-fill text-orange-500 text-xl';
+            title.textContent = 'Uyarı';
+            title.classList.add('font-semibold', 'text-orange-500');
+            break;
+        case 'info':
+            icon.className = 'bi bi-info-circle-fill text-blue-500 text-xl';
+            title.textContent = 'Bilgi';
+            title.classList.add('font-semibold', 'text-blue-500');
             break;
     }
-    ALERT_CONTAINER.classList.add(...CONTAINER_CLASS);
 
-    ALERT_MESSAGE.appendChild(ALERT_HEAD);
-    ALERT_MESSAGE.innerHTML += message;
-    ALERT_MESSAGE.classList.add('text-sm', 'mb-0');
+    body.textContent = message;
+    textDiv.appendChild(title);
+    textDiv.appendChild(body);
+    alertContainer.appendChild(icon);
+    alertContainer.appendChild(textDiv);
 
-    ALERT_CONTAINER.appendChild(ALERT_MESSAGE);
+    document.getElementById('alerts').appendChild(alertContainer);
 
-    document.getElementById('alerts').appendChild(ALERT_CONTAINER);
-
-    setTimeout(function () {
-        document.getElementById('alerts').removeChild(ALERT_CONTAINER);
+    setTimeout(() => {
+        alertContainer.remove();
     }, 5000);
 }
 

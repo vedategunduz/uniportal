@@ -17,14 +17,14 @@
                     <x-slot name="target">
                         <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-yorum-şikayet-et"
                             data-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}">
-                            <i class="bi bi-exclamation-diamond-fill text-base text-rose-500"></i>
+                            <i class="bi bi-exclamation-triangle-fill text-base text-orange-500"></i>
                             <span class="ms-2">Şikayet et</span>
                         </x-uniportal-dropdown-item>
                         @if ($yorum->kullanicilar_id == auth()->id())
                             <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-yorum-sil"
                                 data-etkinlik-id="{{ encrypt($yorum->etkinlikler_id) }}"
                                 data-yorum-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}">
-                                <i class="bi bi-x-circle-fill text-base text-rose-500"></i>
+                                <i class="bi bi-x-circle-fill text-base text-gs-red-2"></i>
                                 <span class="ms-2">Sil</span>
                             </x-uniportal-dropdown-item>
                         @endif

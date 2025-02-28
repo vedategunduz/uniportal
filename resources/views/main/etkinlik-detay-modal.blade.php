@@ -49,7 +49,8 @@
         <footer class="mt-auto">
             <!-- Etkileşim Butonları -->
             <section class="flex gap-2 px-4 py-2 border-t">
-                <x-button class="!shadow-none !border-0 !p-2 etkinlik-begen" data-id="{{ encrypt($etkinlik->etkinlikler_id) }}"  :disabled="!auth()->check()">
+                <x-button class="!shadow-none !border-0 !p-2 etkinlik-begen"
+                    data-id="{{ encrypt($etkinlik->etkinlikler_id) }}" :disabled="!auth()->check()">
                     <div class="flex items-center gap-2">
                         <i @class([
                             'bi text-red-500 text-base',
@@ -70,23 +71,16 @@
                 </x-button>
 
                 @auth
-                    <x-button class="!shadow-none !border-0 !px-2 text-green-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-                            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                            <path fill-rule="evenodd"
-                                d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
-                        </svg>
-                        <span class="text-xs ms-1 capitalize">Katıl</span>
-                    </x-button>
+                    @if (!$etkinlik->katilimcilar->contains('kullanicilar_id', auth()->id()))
+                        <x-button class="!shadow-none !border-0 !px-2 text-green-400">
+                            <i class="bi bi-person-plus-fill text-base"></i>
+                            <span class="text-xs ms-1 capitalize">Katıl</span>
+                        </x-button>
+                    @endif
                 @endauth
 
                 <x-button class="!shadow-none !border-0 !p-2 ml-auto share-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-share-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5" />
-                    </svg>
+                    <i class="bi bi-share-fill text-base"></i>
                 </x-button>
             </section>
             <!-- Yorum Girişi -->

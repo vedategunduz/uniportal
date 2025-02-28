@@ -17,6 +17,7 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
@@ -643,11 +644,36 @@
                     })();
                 }
 
+                event.target.closest('.mesaj-dosya-yukleme-button') && (async () => {
+                    const button = event.target.closest('.mesaj-dosya-yukleme-button');
+                    const input = button.nextElementSibling;
 
+                    input.click();
+                })();
             })
 
             document.addEventListener('change', function(event) {
-                console.log(event.target);
+                event.target.closest('[data-mesaj-dosya-yukleme-input]') && (async () => {
+                    const input = event.target;
+                    const textarea = input.closest('[data-mesaj-dosya-yukleme-wrapper]')
+                        .querySelector(
+                            'textarea');
+
+                    const formData = new FormData();
+
+                    formData.append('file', input.files[0]);
+
+                    const RESPONSE = await ApiService.fetchData(
+                        "{{ route('yonetim.mesaj.dosya') }}",
+                        formData, 'POST');
+
+                    if (RESPONSE.status === 201) {
+                        console.log(RESPONSE.data);
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
+
                 if (event.target.closest('.yoneticilik-degistir')) {
                     (async () => {
                         const KANAL_ID = event.target.dataset.channelId;

@@ -24,6 +24,7 @@ class Kullanici extends Authenticatable
     protected $fillable = [
         'unvanlar_id',
         'isletmeler_id',
+        'kod',
         'ad',
         'soyad',
         'email',

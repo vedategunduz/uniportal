@@ -6,15 +6,18 @@
     'closeOnItemClick' => true,
 ])
 
-<x-button data-uniportal-dropdown-trigger="{{ $id }}" data-uniportal-dropdown-alignment="{{ $alignment }}"
-    aria-haspopup="true" aria-expanded="false" {{ $attributes->merge(['class' => '']) }}>
-    {{ $trigger ?? $triggerText }}
-</x-button>
+<div class="relative inline-block" data-uniportal-dropdown>
+    <x-button data-uniportal-dropdown-trigger="{{ $id }}"
+        data-uniportal-dropdown-alignment="{{ $alignment }}" aria-haspopup="true" aria-expanded="false"
+        {{ $attributes->merge(['class' => '']) }}>
+        {{ $trigger ?? $triggerText }}
+    </x-button>
 
-<div id="{{ $id }}" class="hidden bg-white shadow-md p-2 absolute z-20 rounded {{ $dropdownClass }}"
-    data-uniportal-dropdown-close-on-item-click="{{ $closeOnItemClick }}" role="menu" aria-hidden="true"
-    data-uniportal-dropdown-target>
-    {{ $target ?? '' }}
+    <div id="{{ $id }}" class="hidden bg-white shadow-md p-2 absolute z-20 rounded {{ $dropdownClass }}"
+        data-uniportal-dropdown-close-on-item-click="{{ $closeOnItemClick }}" role="menu" aria-hidden="true"
+        data-uniportal-dropdown-target>
+        {{ $target ?? '' }}
+    </div>
 </div>
 
 {{--

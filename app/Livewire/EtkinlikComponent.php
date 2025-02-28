@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Etkinlik;
+use Illuminate\Support\Facades\Auth;
 
 class EtkinlikComponent extends Component
 {
@@ -19,13 +20,21 @@ class EtkinlikComponent extends Component
     {
         $this->today = Carbon::today();
 
-        $this->totalEtkinlik = Etkinlik::where('etkinlik_turleri_id', '<=', 2)->count();
+        $this->totalEtkinlik = Etkinlik::where('etkinlik_turleri_id', '<=', 2)
+            ->when(!Auth::check(), function ($query) {
+                return $query->where('katilimTipi', 'genel');
+            })
+            ->count();
         // Önce gelecek etkinlikleri al
+
         $gelecekEtkinlikler = Etkinlik::with(['tur', 'isletme', 'begeni', 'yorum'])
             ->where('etkinlik_turleri_id', '<=', 2)
             ->where(function ($query) {
                 $query->where('etkinlikBaslamaTarihi', '>=', $this->today)
                     ->orWhere('etkinlikBitisTarihi', '>=', $this->today);
+            })
+            ->when(!Auth::check(), function ($query) {
+                return $query->where('katilimTipi', 'genel');
             })
             ->orderBy('etkinlikBaslamaTarihi', 'asc')
             ->skip(0)
@@ -42,6 +51,9 @@ class EtkinlikComponent extends Component
                     $query->where('etkinlikBaslamaTarihi', '<', $this->today)
                         ->where('etkinlikBitisTarihi', '<', $this->today);
                 }) // Sadece geçmiş etkinlikleri al
+                ->when(!Auth::check(), function ($query) {
+                    return $query->where('katilimTipi', 'genel');
+                })
                 ->orderBy('etkinlikBaslamaTarihi', 'desc') // En son olanlar önce gelsin
                 ->take($eksikSayisi)
                 ->get();
@@ -63,6 +75,9 @@ class EtkinlikComponent extends Component
                 $query->where('etkinlikBaslamaTarihi', '>=', $this->today)
                     ->orWhere('etkinlikBitisTarihi', '>=', $this->today);
             })
+            ->when(!Auth::check(), function ($query) {
+                return $query->where('katilimTipi', 'genel');
+            })
             ->orderBy('etkinlikBaslamaTarihi', 'asc')
             ->skip($this->count * $this->loadSize)
             ->take($this->loadSize)
@@ -78,6 +93,9 @@ class EtkinlikComponent extends Component
                     $query->where('etkinlikBaslamaTarihi', '<', $this->today)
                         ->where('etkinlikBitisTarihi', '<', $this->today);
                 }) // Sadece geçmiş etkinlikleri al
+                ->when(!Auth::check(), function ($query) {
+                    return $query->where('katilimTipi', 'genel');
+                })
                 ->orderBy('etkinlikBaslamaTarihi', 'desc') // En son olanlar önce gelsin
                 ->skip($this->global) // Daha önce yüklenenleri atla
                 // ->skip(3) // Daha önce yüklenenleri atla
