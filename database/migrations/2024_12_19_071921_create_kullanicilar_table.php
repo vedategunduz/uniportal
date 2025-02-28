@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('kullanicilar_id');
             $table->unsignedBigInteger('unvanlar_id')->default(46);
             $table->unsignedBigInteger('isletmeler_id')->nullable();
-            $table->string('kod')->nullable();
+            $table->string('kod')->nullable()->default(uniqid());
             $table->string('ad', 155);
             $table->string('soyad', 155);
             $table->string('email', 255)->unique();

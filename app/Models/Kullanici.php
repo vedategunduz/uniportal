@@ -31,6 +31,7 @@ class Kullanici extends Authenticatable
         'telefon',
         'adres',
         'profilFotoUrl',
+        'password',
     ];
 
     protected $hidden = [
