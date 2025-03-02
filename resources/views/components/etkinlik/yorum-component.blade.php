@@ -8,10 +8,33 @@
             <header class="font-medium text-gray-800">
                 {{ $yorum->kullanici->ad . ' ' . $yorum->kullanici->soyad }}
                 ({{ $yorum->kullanici->anaIsletme->kisaltma }})
+
+                <x-uniportal-dropdown class="!shadow-none !border-none !p-1" alignment="right">
+                    <x-slot name="trigger">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </x-slot>
+
+                    <x-slot name="target">
+                        <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-yorum-şikayet-et"
+                            data-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}">
+                            <i class="bi bi-exclamation-triangle-fill text-base text-orange-500"></i>
+                            <span class="ms-2">Şikayet et</span>
+                        </x-uniportal-dropdown-item>
+                        @if ($yorum->kullanicilar_id == auth()->id())
+                            <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-yorum-sil"
+                                data-etkinlik-id="{{ encrypt($yorum->etkinlikler_id) }}"
+                                data-yorum-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}">
+                                <i class="bi bi-x-circle-fill text-base text-gs-red-2"></i>
+                                <span class="ms-2">Sil</span>
+                            </x-uniportal-dropdown-item>
+                        @endif
+                    </x-slot>
+                </x-uniportal-dropdown>
             </header>
 
             <section class="flex items-center justify-between gap-2">
-                <div class="text-gray-600 show-more-text text-ellipsis line-clamp-3 w-full">{!! $yorum->yorum !!}</div>
+                <div class="text-gray-600 show-more-text text-ellipsis line-clamp-3 w-full">{!! $yorum->yorum !!}
+                </div>
 
                 <x-button class="!shadow-none !border-0 !p-0 !bg-transparent !text-base etkinlik-yorum-begen"
                     data-yorum-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}"
@@ -49,23 +72,12 @@
                 <x-button
                     class="!shadow-none !border-0 !p-0 !text-blue-500 hover:!underline !bg-transparent capitalize etkinlik-yorum-yanitla-button"
                     data-yorum-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}"
-                    data-sender="{{ $yorum->kullanici->ad . ' ' . $yorum->kullanici->soyad }}">
+                    data-sender="{{ $yorum->kullanici->ad . ' ' . $yorum->kullanici->soyad }}" :disabled="!auth()->check()">
                     Yanıtla
                 </x-button>
             </footer>
         </div>
     </div>
-    {{-- <form
-        action="{{ route('etkinlikler.yorum.yanitStore', [encrypt($yorum->etkinlikler_id), encrypt($yorum->etkinlik_yorumlari_id)]) }}"
-        method="POST" class="pl-12 py-2" data-yorum-yanit-form>
-        <div class="flex">
-            <x-textarea name="yorum" rows="1" class="rounded-r-none custom-scroll max-h-24"></x-textarea>
-            <x-button type="submit"
-                class="!text-blue-500 capitalize shrink-0 border-l-0 rounded-l-none etkinlik-yorum-yanit-submit-button">
-                <i class="bi bi-send-fill"></i>
-            </x-button>
-        </div>
-    </form> --}}
     @if ($yorum->yanit->count())
         <!-- Sadece depth 0 için girinti ekle -->
         <div data-yorum-yanit-wrapper wire:ignore.self @class(['pt-2 hidden', 'pl-12' => $depth < 3])>

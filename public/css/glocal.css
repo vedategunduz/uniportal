@@ -6,6 +6,8 @@
 *::after {
     margin: 0;
     padding: 0;
+    box-sizing: border-box !important;
+
 }
 
 html,
@@ -16,7 +18,17 @@ body {
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
+    background-color: #fcfcfc;
+    background-image: url('../image/motif.png');
+    background-repeat: repeat;
+    background-size: 48px;
 }
+
+/* .elibelinde {
+    background-image: url('../image/motif.png');
+    background-repeat: repeat;
+    background-size: 48px;
+} */
 
 h1,
 h2,
@@ -64,7 +76,7 @@ a {
 }
 
 a[href="javascript:void(0)"] {
-    > * {
+    >* {
         pointer-events: none;
     }
 }
@@ -195,7 +207,7 @@ label {
     transition: .3s ease-in-out;
 
     &:not(.active) {
-        top: -100% !important;
+        top: -100vh !important;
     }
 
     .aside-modal-outside {
@@ -275,9 +287,9 @@ label {
 
 .skeleton {
     display: block;
-    background-color: #e2e8f0;
+    /* background-color: #e2e8f0; */
+    background-color: rgb(229 231 235 / .7);
     /* Açık gri ton */
-    border-radius: 4px;
     position: relative;
     overflow: hidden;
 }
@@ -341,7 +353,7 @@ label {
     background: linear-gradient(135deg,
             rgba(13, 94, 201, 0.9) 10%,
             rgba(28, 182, 248, 0.9) 100%);
-        /* url('../image/bg-navbar.png') center/cover no-repeat; */
+    /* url('../image/bg-navbar.png') center/cover no-repeat; */
 
     a,
     button {

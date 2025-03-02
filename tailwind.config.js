@@ -27,7 +27,8 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                'gs-red': '#a90432'
+                'gs-red': '#a90432',
+                'gs-red-2': '#DB2424',
             }
         },
 
@@ -36,6 +37,7 @@ export default {
         require('flowbite/plugin')({
             datatables: true,
         }),
+        require('tailwindcss-pseudo-elements'),
     ],
     darkMode: 'false',
 };

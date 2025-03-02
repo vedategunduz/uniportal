@@ -19,3 +19,28 @@ if (!function_exists('cleanText')) {
         return $message;
     }
 }
+
+if (!function_exists('uploadFile')) {
+    /**
+     * Dosya yükler ve dosya linkini döndürür.
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $folder
+     * @return string
+     */
+    function uploadFile($file, $folder = 'image')
+    {
+        $destinationPath = public_path($folder);
+
+        // Eğer klasör yoksa oluştur.
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+
+        $filename = time() . '_' . $file->getClientOriginalName();
+
+        $file->move($destinationPath, $filename);
+
+        return asset($folder . '/' . $filename);
+    }
+}

@@ -14,17 +14,10 @@
                     <option value="{{ encrypt($rowIsletme->isletmeler_id) }}">{{ $rowIsletme->baslik }}</option>
                 @endforeach
             </select>
-            <button type="button"
-                class="bg-emerald-500 text-sm pl-2 py-1.5 pr-4 rounded flex items-center text-white open-modal"
+            <x-button class="bg-emerald-500 open-modal"
                 data-modal="modal" data-id="{{ encrypt(0) }}" data-event-type="insert">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="size-5 pointer-events-none">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                <span class="pointer-events-none">
-                    Ekle
-                </span>
-            </button>
+                Ekle
+            </x-button>
         </div>
     </div>
 
@@ -33,11 +26,8 @@
             <thead>
                 <tr>
                     <th>Başlık</th>
-                    <th data-dt-order="disable">Kontenjan</th>
-                    <th>Başvuru tarihi</th>
-                    <th>Başvuru bitiş tarihi</th>
-                    <th>Başlama tarihi</th>
-                    <th>Bitiş tarihi</th>
+                    <th>Başvuru tarihleri</th>
+                    <th>Başlama tarihleri</th>
                     <th data-dt-order="disable"></th>
                     <th data-dt-order="disable"></th>
                 </tr>

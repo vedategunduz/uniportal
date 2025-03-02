@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Etkinlik;
 use App\Models\EtkinlikYorum;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -20,6 +21,7 @@ class EtkinlikYorumComponent extends Component
 
         $this->totalYorum = EtkinlikYorum::where('etkinlikler_id', $etkinlikid)
             ->whereNull('yanitlanan_etkinlik_yorumlari_id')
+            ->where('aktiflik', 1)
             ->count();
 
         $yorumlar = EtkinlikYorum::withCount('begeni')
@@ -31,6 +33,7 @@ class EtkinlikYorumComponent extends Component
             // ->orderByDesc('begeni_count')
             // Son olarak, eklenme tarihine göre (en yeniler önce) sıralar.
             ->orderByDesc('created_at')
+            ->where('aktiflik', 1)
             ->take($this->perPage)
             ->get();
 
@@ -57,6 +60,21 @@ class EtkinlikYorumComponent extends Component
         }
     }
 
+    #[On('yorumSilindi')]
+    public function yorumSilindi($silinenYorumId)
+    {
+        $silinenYorumId = decrypt($silinenYorumId);
+
+        $this->yorumlar = $this->yorumlar->reject(function ($yorum) use ($silinenYorumId) {
+            return $yorum['etkinlik_yorumlari_id'] === $silinenYorumId;
+        });
+
+        $this->totalYorum = EtkinlikYorum::where('etkinlikler_id', $this->etkinlikid)
+        ->whereNull('yanitlanan_etkinlik_yorumlari_id')
+        ->where('aktiflik', 1)
+        ->count();
+    }
+
     public function loadMore()
     {
         // Görüntüleme sınırını 10 artırıyoruz.
@@ -72,6 +90,7 @@ class EtkinlikYorumComponent extends Component
             // ->orderByDesc('begeni_count')
             // Son olarak, eklenme tarihine göre (en yeniler önce) sıralar.
             ->orderByDesc('created_at')
+            ->where('aktiflik', 1)
             ->take($this->perPage)
             ->get();
     }

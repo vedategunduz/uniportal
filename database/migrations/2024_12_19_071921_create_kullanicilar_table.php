@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id('kullanicilar_id');
             $table->unsignedBigInteger('unvanlar_id')->default(46);
             $table->unsignedBigInteger('isletmeler_id')->nullable();
+            $table->string('kod')->nullable()->default(uniqid());
             $table->string('ad', 155);
             $table->string('soyad', 155);
             $table->string('email', 255)->unique();
@@ -45,6 +46,7 @@ return new class extends Migration
             $table->integer('kullanicilar_id');
             $table->unsignedBigInteger('unvanlar_id')->nullable();
             $table->unsignedBigInteger('isletmeler_id')->nullable();
+            $table->string('kod')->nullable();
             $table->string('ad', 155);
             $table->string('soyad', 155);
             $table->string('email', 255)->nullable();
@@ -67,6 +69,7 @@ return new class extends Migration
                     kullanicilar_id,
                     unvanlar_id,
                     isletmeler_id,
+                    kod,
                     ad,
                     soyad,
                     email,
@@ -86,6 +89,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.unvanlar_id,
                     NEW.isletmeler_id,
+                    NEW.kod,
                     NEW.ad,
                     NEW.soyad,
                     NEW.email,
@@ -113,6 +117,7 @@ return new class extends Migration
                     kullanicilar_id,
                     unvanlar_id,
                     isletmeler_id,
+                    kod,
                     ad,
                     soyad,
                     email,
@@ -132,6 +137,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.unvanlar_id,
                     NEW.isletmeler_id,
+                    NEW.kod,
                     NEW.ad,
                     NEW.soyad,
                     NEW.email,

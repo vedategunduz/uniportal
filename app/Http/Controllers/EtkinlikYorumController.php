@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
+use App\Models\EtkinlikYorum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -60,6 +61,20 @@ class EtkinlikYorumController extends Controller
         return response()->json([
             'success' => true,
             'begeni' => $yorum->begeni()->count()
+        ]);
+    }
+
+    public function destroy($etkinlik_id, $yorum_id) {
+        $yorum_id = decrypt($yorum_id);
+        $yorum = EtkinlikYorum::find($yorum_id);
+
+        $yorum->aktiflik = 0;
+        $yorum->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Yorum başarıyla silindi.',
+            'yorum' => $yorum
         ]);
     }
 }

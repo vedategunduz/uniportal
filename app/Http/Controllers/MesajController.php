@@ -193,4 +193,28 @@ class MesajController extends Controller
             'count' => $emojiCount,
         ], 201);
     }
+
+    public function dosya(Request $request) {
+        $request->validate([
+            'file' => 'required|file|mimes:jpg,png,jpeg,webp,doc,docx,ppt,pptx,pdf,xls,xlsx,odt,ods,odp|max:2048',
+        ]);
+
+        $file = $request->file('file');
+
+        if (!$request->hasFile('file')) {
+            return response()->json([
+                'success' => false,
+                'message' => $request->all(),
+            ], 400);
+        }
+
+        $folder = Auth::user()->anaIsletme->referans_kodu . '/' . Auth::user()->kod;
+
+        $url = uploadFile($file, "dosyalar/$folder");
+
+        return response()->json([
+            'success' => true,
+            'url' => $url,
+        ], 201);
+    }
 }

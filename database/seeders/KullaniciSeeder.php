@@ -12,6 +12,7 @@ class KullaniciSeeder extends Seeder
         Kullanici::create([
             'unvanlar_id'       => 1,
             'isletmeler_id'     => 156,
+            'kod'               => uniqid(),
             'ad'                => 'Hayati',
             'soyad'             => 'Tehlike',
             'email'             => 'admin@nku.edu.tr',
@@ -21,6 +22,7 @@ class KullaniciSeeder extends Seeder
         Kullanici::create([
             'unvanlar_id'       => 2,
             'isletmeler_id'     => 143,
+            'kod'               => uniqid(),
             'ad'                => 'Evren',
             'soyad'             => 'Köksal',
             'email'             => 'ekoksal@nku.edu.tr',
@@ -32,6 +34,7 @@ class KullaniciSeeder extends Seeder
         Kullanici::create([
             'unvanlar_id'       => 4,
             'isletmeler_id'     => 143,
+            'kod'               => uniqid(),
             'ad'                => 'Gökhan',
             'soyad'             => 'Şenlik',
             'email'             => 'gsenlik@nku.edu.tr',
@@ -43,6 +46,7 @@ class KullaniciSeeder extends Seeder
         Kullanici::create([
             'unvanlar_id'       => 3,
             'isletmeler_id'     => 143,
+            'kod'               => uniqid(),
             'ad'                => 'Vedat Emre',
             'soyad'             => 'Gündüz',
             'email'             => 'vgunduz@nku.edu.tr',
@@ -54,6 +58,7 @@ class KullaniciSeeder extends Seeder
         Kullanici::create([
             'unvanlar_id'       => 1,
             'isletmeler_id'     => 2,
+            'kod'               => uniqid(),
             'ad'                => 'Emre',
             'soyad'             => 'Gündüz',
             'email'             => 'vgunduz12@nku.edu.tr',
@@ -66,6 +71,7 @@ class KullaniciSeeder extends Seeder
         Kullanici::create([
             'unvanlar_id'       => 1,
             'isletmeler_id'     => 156,
+            'kod'               => uniqid(),
             'ad'                => 'UniPortal',
             'soyad'             => 'Sistem',
             'email'             => 'sistem@uniportal.tr',

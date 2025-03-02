@@ -180,7 +180,7 @@
             @if (!empty($kapakResmiYolu))
                 <div class="flex items-center justify-center border border-dashed mb-2 py-2">
                     <div class="relative oppo group">
-                        <img src="{{ asset('storage/' . $kapakResmiYolu) }}" class="h-36 object-cover rounded">
+                        <img src="{{ asset($kapakResmiYolu) }}" class="h-36 object-cover rounded">
                         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 oppo-hover hidden">
                             <label for="kapakResmiYolu"
                                 class="ml-auto text-sm hover:bg-gray-100 text-nowrap bg-gray-50 text-gray-900 font-normal px-1 py-0.5 rounded transition cursor-pointer shadow">

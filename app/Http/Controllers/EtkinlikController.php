@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
+use App\Models\EtkinlikYorum;
 
 class EtkinlikController extends Controller
 {
@@ -19,6 +20,18 @@ class EtkinlikController extends Controller
         return response()->json([
             'success' => true,
             'html' => $html
+        ]);
+    }
+
+    public function begenToggle($etkinlik_id) {
+        $etkinlik_id = decrypt($etkinlik_id);
+        $etkinlik = Etkinlik::find($etkinlik_id);
+
+        $etkinlik->begeniToggle();
+
+        return response()->json([
+            'success' => true,
+            'begeni' => $etkinlik->begeni->count()
         ]);
     }
 }

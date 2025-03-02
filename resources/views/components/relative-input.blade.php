@@ -1,7 +1,7 @@
 @props([
     'disabled' => false,
     'label' => 'Label',
-    'id' => '',
+    'id' => uniqid(),
 ])
 
 <div class="relative">

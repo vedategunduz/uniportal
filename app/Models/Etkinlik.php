@@ -5,6 +5,7 @@ namespace App\Models;
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Etkinlik extends Model
 {
@@ -42,13 +43,27 @@ class Etkinlik extends Model
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 
-    public function begeni() {
+    public function begeni()
+    {
         return $this->hasMany(EtkinlikBegeniDetay::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
     public function yorum()
     {
-        return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id');
+        return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id')->where('aktiflik', 1);
+    }
+
+    public function begeniToggle()
+    {
+        $begeni = $this->begeni()->where('kullanicilar_id', Auth::id())->first();
+
+        if ($begeni) {
+            $begeni->delete();
+        } else {
+            $this->begeni()->create([
+                'kullanicilar_id' => Auth::id(),
+            ]);
+        }
     }
 
     public function etkinlikKatilim()

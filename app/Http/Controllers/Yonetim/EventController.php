@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -199,11 +200,8 @@ class EventController extends Controller
         foreach ($etkinlikler as $etkinlik) {
             $row = [];
             $row[] = '<p class="w-48 text-wrap">' . $etkinlik->baslik . '</p>';
-            $row[] = $etkinlik->kontenjan;
-            $row[] = $etkinlik->etkinlikBasvuruTarihi;
-            $row[] = $etkinlik->etkinlikBasvuruBitisTarihi;
-            $row[] = $etkinlik->etkinlikBaslamaTarihi;
-            $row[] = $etkinlik->etkinlikBitisTarihi;
+            $row[] = Carbon::parse($etkinlik->etkinlikBasvuruTarihi)->translatedFormat('d M, D Y - H:i') . '<br>'. Carbon::parse($etkinlik->etkinlikBasvuruBitisTarihi)->translatedFormat('d M, D Y - H:i');
+            $row[] = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i');
             $row[] = view('components.buttons.events.duzenle-button', ['etkinlikler_id' => $etkinlik->etkinlikler_id])->render();
             $row[] = view('components.buttons.events.sil-button', ['etkinlikler_id' => $etkinlik->etkinlikler_id])->render();
             $data[] = $row;

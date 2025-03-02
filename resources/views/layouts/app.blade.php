@@ -15,60 +15,34 @@
 
 <body class="text-gray-900 min-h-screen flex flex-col">
 
-    <nav class="bg-white border-gray-200 shadow-sm">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <header class="sticky top-0 left-0 z-10 shadow-md bg-white">
+        <nav class="flex flex-wrap items-center justify-between w-full max-w-screen-xl mx-auto">
             <a href="{{ route('main.index') }}" class="flex items-center space-x-3">
                 <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
-                <span class="text-2xl font-semibold whitespace-nowrap">uniportal</span>
+                <span class="text-2xl font-semibold whitespace-nowrap">{{ config('app.name') }}</span>
             </a>
-
-            <ul class="flex items-center">
-                <li>
-                    <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                        class="flex py-2 px-3 hover:text-blue-700 items-center" type="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6 me-2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z" />
-                        </svg>
-
-                        <span>İşletmeler</span>
-
-                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 4 4 4-4" />
-                        </svg>
-                    </button>
+            <ul class="flex flex-wrap items-center">
+                <li><a href="{{ route('main.index') }}" @class([
+                    'block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200',
+                    '!border-blue-700' => request()->is('/'),
+                ])>Anasayfa</a>
                 </li>
-                <li>
-                    <a href="{{ route('etkinlikler.index') }}" class="flex items-center py-2 px-3 hover:text-blue-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-6 me-2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-                        </svg>
-
-                        <span>Etkinlikler</span>
-                    </a>
+                <li><a href="#"
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Etkinlikler</a>
+                </li>
+                <li><a href="#"
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Kampanyalar</a>
+                </li>
+                <li><a href="{{ route('main.hakkinda') }}" @class([
+                    'block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200',
+                    '!border-blue-700' => request()->is('hakkinda'),
+                ])>
+                        Hakkında</a>
+                </li>
+                <li><a href="#"
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">İletişim</a>
                 </li>
             </ul>
-
-            <!-- Dropdown menu -->
-            <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
-                <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Kamular</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Firmalar</a>
-                    </li>
-                    <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100">Sendikalar</a>
-                    </li>
-                </ul>
-            </div>
-
             @if (Auth::check())
                 <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
                     class="flex items-center justify-between py-2 px-3 text-gray-900 rounded-lg hover:bg-gray-50">
@@ -106,22 +80,20 @@
                 </div>
             @else
                 <a href="{{ route('auth.giris.form') }}"
-                    class="flex text-white bg-blue-700 hover:bg-blue-800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center">
+                    class="inline-flex items-center px-4 py-2.5 bg-blue-700 border border-blue-300 rounded-full font-semibold text-xs text-white uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150">
                     <span>Oturum aç</span>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-5 ms-2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
-                    </svg>
                 </a>
             @endif
-        </div>
-    </nav>
+        </nav>
+    </header>
+
+    @yield('banner')
 
     <main class="max-w-screen-xl mx-auto p-4 w-full">
         @yield('content')
     </main>
+
+    @yield('stats')
 
 
     <footer class="bg-white dark:bg-gray-900 mt-auto shadow-2xl">
@@ -247,7 +219,44 @@
         </div>
     </footer>
 
+    <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
+
     <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const counters = document.querySelectorAll(".stats-counter");
+
+            const animateCounters = () => {
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute("data-counter-target");
+                        const count = +counter.innerText;
+                        const increment = target / 100; // Hızı belirleyen faktör
+
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + increment);
+                            setTimeout(updateCount, 20); // Animasyon süresi
+                        } else {
+                            counter.innerText = target; // Hedef sayıya ulaşınca düzelt
+                        }
+                    };
+                    updateCount();
+                });
+            };
+
+            // Intersection Observer ile sadece ekranda görünce başlat
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounters();
+                        observer.disconnect(); // Bir kere çalıştır, tekrar etmesin
+                    }
+                });
+            });
+
+            counters.forEach(counter => observer.observe(counter));
+        });
+    </script>
     {{-- JS ve diğer betikler buraya --}}
     @yield('scripts')
 </body>

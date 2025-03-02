@@ -24,6 +24,14 @@ use App\Http\Controllers\Yonetim\YonetimController;
 
 Route::prefix('/')->name('main.')->group(function () {
     Route::get('/', [AnasayfaController::class, 'index'])->name('index');
+
+    Route::get('/hakkinda', function () {
+        return view('main.hakkinda');
+    })->name('hakkinda');
+
+    Route::get('/iletisim', function () {
+        return view('main.iletisim');
+    })->name('iletisim');
 });
 
 Route::prefix('personel')->name('personel.')->group(function () {
@@ -35,13 +43,14 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 
     Route::prefix('{etkinlik_id}')->group(function () {
         Route::get('/', [EtkinlikController::class, 'show'])->name('show');
+        Route::patch('begenToggle', [EtkinlikController::class, 'begenToggle'])->name('begenToggle');
 
         Route::prefix('yorum')->name('yorum.')->group(function () {
             Route::post('/', [EtkinlikYorumController::class, 'store'])->name('store');
 
             Route::prefix('{yorum_id}')->group(function () {
                 Route::post('/', [EtkinlikYorumController::class, 'yanitStore'])->name('yanitStore');
-                Route::delete('/', [EtkinlikController::class, 'destroy'])->name('destroy');
+                Route::delete('/', [EtkinlikYorumController::class, 'destroy'])->name('destroy');
                 Route::patch('begenToggle', [EtkinlikYorumController::class, 'begenToggle'])->name('begenToggle');
             });
         });
@@ -57,8 +66,8 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
         Route::prefix('mesaj')->name('mesaj.')->group(function () {
             Route::get('/', [MesajController::class, 'index'])->name('index');
-
             Route::post('/', [MesajController::class, 'store'])->name('store');
+            Route::post('/dosya', [MesajController::class, 'dosya'])->name('dosya');
 
             Route::delete('/{mesajId}', [MesajController::class, 'destroy'])->name('destroy');
             Route::patch('/{mesajId}', [MesajController::class, 'update'])->name('update');

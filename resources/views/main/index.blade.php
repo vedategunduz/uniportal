@@ -2,16 +2,60 @@
 
 @section('title', 'Anasayfa')
 
-@section('content')
-    <livewire:etkinlik-component />
+@section('banner')
+    <div class="relative h-[calc(100vh-60px)]">
+        <img src="https://placeholder.pagebee.io/api/random/1920/1080" class="w-full h-full object-cover">
 
-    <div class="text-center py-2">
-        <x-button id="tikla" class="">Daha fazla</x-button>
+        <div class="absolute w-full h-full top-0 left-0 mx-auto">
+            <div class="max-w-screen-xl flex flex-col justify-center h-full mx-auto">
+                <div class="flex">
+                    <div class="bg-white/0 p-4 rounded shadow space-y-4">
+                        <h4 class="text-2xl w-96">Kamu ile İş Dünyası Tek Platformda Buluşuyor!</h4>
+                        <p class="w-96">
+                            Kamu ve özel sektör arasındaki köprüyü kuruyoruz! Doğru firmalar, doğru projeler ve güçlü
+                            işbirlikleri için tek adresiniz. Siz de {{ config('app.name') }} ailesine katılın!
+                        </p>
+                        <x-button>
+                            Bize katılın
+                        </x-button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+@endsection
 
-    <x-modal id="etkinlik-modal" title="Detay" slotClass="h-full" class="w-full sm:w-4/5 overflow-y-auto">
+@section('content')
+    <section class="space-y-4">
+        <livewire:etkinlik-component />
+        <livewire:etkinlik-kampanya-component />
+    </section>
 
+    <x-modal id="etkinlik-modal" title="Detay" slotClass="h-full" class="w-full sm:w-4/5 overflow-y-auto"></x-modal>
+
+    <x-modal id="sikayet-modal" title="Şikayet et" visibility="hidden">
+        <x-textarea rows="3"></x-textarea>
     </x-modal>
+
+    <x-modal id="etkinlik-yorum-sil-confirm" title="" headerClass="!bg-transparent !text-gray-900"
+        headerCloseButton="false" data-yorum-sil-confirm-modal>
+
+        <div class="space-y-8 pt-4">
+            <div class="text-center space-y-2">
+                <i class="bi bi-exclamation-circle-fill text-6xl text-gs-red"></i>
+
+                <p class="text-sm text-gray-700 w-52 mx-auto">İlgili yorum silinecektir. Yorumu silmek istediğinize emin
+                    misiniz?</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <x-button class="justify-center close-modal canceled"
+                    data-modal="etkinlik-yorum-sil-confirm">İptal</x-button>
+                <x-button class="!bg-gs-red text-white !border-0 justify-center confirmed">Onayla</x-button>
+            </div>
+        </div>
+    </x-modal>
+
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
@@ -26,13 +70,36 @@
             </x-button>
         </div>
     </div>
+@endsection
 
+@section('stats')
+    <section class="bg-white/75 py-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-screen-xl w-full mx-auto text-center">
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">Etkinlik</span>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">Üye</span>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">İşletme</span>
+            </div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <span class="text-3xl font-bold text-gray-700 stats-counter" data-counter-target="1234">0</span>
+                <span class="text-gray-600 text-sm">Kampanya</span>
+            </div>
+        </div>
+    </section>
 @endsection
 
 @section('scripts')
     <script>
-        document.getElementById('tikla').addEventListener('click', function() {
-            Livewire.dispatch('showMore');
+        document.addEventListener("livewire:update", () => {
+            console.log('Livewire updated');
+            window.UniportalService.dropdown.refresh();
         });
 
         document.addEventListener('click', function(event) {
@@ -52,6 +119,8 @@
 
                     modalShow(MODAL);
 
+                    window.UniportalService.dropdown.refresh();
+
                     focus && MODAL.querySelector('textarea[name=yorum]').focus();
 
                     showMoreText();
@@ -69,6 +138,27 @@
                 } catch (a) {
                     console.error("Paylaşım başarısız:", a)
                 } else alert("Tarayıcınız paylaşım desteği sunmuyor.")
+            })();
+
+            event.target.closest('.etkinlik-begen') && (async () => {
+                const BUTTON = event.target.closest('.etkinlik-begen');
+                const ETKINLIK_ID = BUTTON.dataset.id;
+
+                const URL =
+                    "{{ route('etkinlikler.begenToggle', '___ETKINLIK_ID___') }}"
+                    .replace('___ETKINLIK_ID___', ETKINLIK_ID);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+
+                if (RESPONSE.data.success) {
+                    BUTTON.querySelector('span').textContent = RESPONSE.data.begeni;
+                    BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
+                    BUTTON.querySelector('i').classList.toggle('bi-heart');
+                    // BUTTON.querySelector('i').classList.toggle('text-red-500');
+
+                } else {
+                    ApiService.alert.error(RESPONSE.message);
+                }
             })();
 
             event.target.matches('.etkinlik-yorum-begen') && (async () => {
@@ -127,6 +217,9 @@
                         eklenenYorum: RESPONSE.data.yorum,
                         tip: RESPONSE.data.tip
                     });
+                    // setTimeout(() => {
+                    //     window.UniportalService.dropdown.refresh();
+                    // }, 400);
 
                     ApiService.alert.success(RESPONSE.data.message);
 
@@ -135,6 +228,8 @@
                     FORM.dataset.heightAdjusted && delete FORM.dataset.heightAdjusted;
 
                     showMoreText();
+
+
                 } else {
                     ApiService.alert.error(RESPONSE.message);
                 }
@@ -213,39 +308,51 @@
                 }
             }
 
-            // event.target.closest('.etkinlik-yorum-yanit-submit-button') && (async (event) => {
-            //     event.preventDefault();
+            event.target.closest('.etkinlik-yorum-sil') && (async () => {
+                const BUTTON = event.target.closest('.etkinlik-yorum-sil');
+                const YORUM_ID = BUTTON.dataset.yorumId;
+                const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
 
-            //     const FORM = event.target.closest('form');
-            //     const TEXTAREA = FORM.querySelector('textarea[name=yorum]');
+                const confirmResult = await modalConfirm();
 
-            //     if (TEXTAREA.value.length === 0) {
-            //         ApiService.alert.error('Yorum alanı boş bırakılamaz.');
-            //         return;
-            //     }
+                if (!confirmResult)
+                    return;
 
-            //     const URL = FORM.action;
-            //     const DATA = new FormData(FORM);
+                const URL =
+                    "{{ route('etkinlikler.yorum.destroy', ['___ETKINLIK_ID___', '___YORUM_ID___']) }}"
+                    .replace('___ETKINLIK_ID___', ETKINLIK_ID).replace('___YORUM_ID___', YORUM_ID);
 
-            //     const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
 
-            //     if (RESPONSE.data.success) {
-            //         TEXTAREA.value = '';
-            //         TEXTAREA.style.height = '38px';
+                if (RESPONSE.data.success) {
+                    Livewire.dispatch('yorumSilindi', {
+                        silinenYorumId: YORUM_ID,
+                    });
 
-            //         // Livewire.emit('yorumEklendi', {
-            //         //     eklenenYorum: RESPONSE.data.yorum
-            //         // });
-
-            //         ApiService.alert.success(RESPONSE.data.message);
-
-            //         showMoreText();
-            //     } else {
-            //         ApiService.alert.error(RESPONSE.message);
-            //     }
-            // })(event);
+                    ApiService.alert.success(RESPONSE.data.message);
+                } else {
+                    ApiService.alert.error(RESPONSE.message);
+                }
+            })();
         });
 
+        function modalConfirm() {
+            return new Promise((resolve, reject) => {
+                const MODAL = document.getElementById('etkinlik-yorum-sil-confirm');
+                const CONFIRM_BUTTON = MODAL.querySelector('.confirmed');
+                const CANCEL_BUTTON = MODAL.querySelector('.canceled');
+
+                modalShow(MODAL);
+
+                CONFIRM_BUTTON.addEventListener('click', () => {
+                    modalClose(MODAL);
+                    resolve(true);
+                });
+                CANCEL_BUTTON.addEventListener('click', () => {
+                    resolve(false);
+                });
+            });
+        }
 
         document.addEventListener('input', function(event) {
             if (!event.target.matches('textarea'))

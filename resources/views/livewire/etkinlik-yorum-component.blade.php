@@ -4,7 +4,7 @@
         <x-etkinlik.yorumlar-component :yorumlar="$yorumlar->whereNull('yanitlanan_etkinlik_yorumlari_id')" />
     </div>
     @if ($yorumlar->count() < $totalYorum)
-        <div class="text-center">
+        <div class="text-center mb-2">
             <x-button class="" wire:click="loadMore">
                 Daha fazla
             </x-button>
