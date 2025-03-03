@@ -9,9 +9,10 @@
                         d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                 </svg>
             </button>
-            <a href="{{ route('main.index') }}" class="flex items-center space-x-3">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
-                <span class="text-2xl font-semibold whitespace-nowrap">uniportal</span>
+            <a href="{{ route('main.index') }}" class="flex items-center space-x-3 text-2xl font-semibold">
+                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo"
+                    loading="lazy" />
+                <span>{{ config('app.name') }}</span>
             </a>
         </div>
         <div class="flex items-center gap-2">

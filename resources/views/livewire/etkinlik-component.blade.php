@@ -65,7 +65,7 @@
 
                     <p class="font-medium text-base">{{ $etkinlik->baslik }}</p>
 
-                    <p class="text-ellipsis line-clamp-3">{!! $etkinlik->aciklama !!}</p>
+                    <div class="text-ellipsis line-clamp-3">{!! cleanText($etkinlik->aciklama) !!}</div>
                 </div>
             </section>
 

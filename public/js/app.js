@@ -100,25 +100,6 @@ function warningAlert(message) {
 }
 
 window.addEventListener('click', async function (event) {
-    // if (event.target.matches('.open-modal')) {
-    //     const MODAL = document.getElementById(event.target.dataset.modal);
-
-    //     MODAL.classList.remove('hidden');
-    //     MODAL.classList.add('flex');
-
-    //     document.body.classList.add('overflow-hidden');
-    // }
-
-    // if (event.target.matches('.close-modal')) {
-    //     const MODAL = document.getElementById(event.target.dataset.modal);
-
-    //     MODAL.classList.remove('flex');
-    //     MODAL.classList.add('hidden');
-    //     // MODAL.querySelector('.modal-content').innerHTML = '';
-
-    //     document.body.classList.remove('overflow-hidden');
-    // }
-
     if (event.target.matches('.open-aside-modal')) {
         const MODAL = document.getElementById(event.target.dataset.modal);
 

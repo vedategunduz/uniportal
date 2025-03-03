@@ -38,6 +38,7 @@ export default {
             datatables: true,
         }),
         require('tailwindcss-pseudo-elements'),
+        require('flowbite-typography'),
     ],
     darkMode: 'false',
 };

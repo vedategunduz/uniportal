@@ -15,11 +15,11 @@
 
 <body class="text-gray-900 min-h-screen flex flex-col">
 
-    <header class="sticky top-0 left-0 z-10 shadow-md bg-white">
+    <header class="sticky top-0 left-0 z-[15] shadow-md !bg-white">
         <nav class="flex flex-wrap items-center justify-between w-full max-w-screen-xl mx-auto">
-            <a href="{{ route('main.index') }}" class="flex items-center space-x-3">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
-                <span class="text-2xl font-semibold whitespace-nowrap">{{ config('app.name') }}</span>
+            <a href="{{ route('main.index') }}" class="flex items-center space-x-3 text-2xl font-semibold">
+                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" loading="lazy" />
+                <span>{{ config('app.name') }}</span>
             </a>
             <ul class="flex flex-wrap items-center">
                 <li><a href="{{ route('main.index') }}" @class([
@@ -28,7 +28,7 @@
                 ])>Anasayfa</a>
                 </li>
                 <li><a href="#"
-                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Etkinlikler</a>
+                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Ürünler</a>
                 </li>
                 <li><a href="#"
                         class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">Kampanyalar</a>
@@ -39,8 +39,10 @@
                 ])>
                         Hakkında</a>
                 </li>
-                <li><a href="#"
-                        class="block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200">İletişim</a>
+                <li><a href="{{ route('main.iletisim.index') }}"@class([
+                    'block font-medium text-base py-4 px-6 border-b-4 border-transparent hover:border-blue-700 duration-200',
+                    '!border-blue-700' => request()->is('iletisim'),
+                ])>İletişim</a>
                 </li>
             </ul>
             @if (Auth::check())
@@ -89,7 +91,7 @@
 
     @yield('banner')
 
-    <main class="max-w-screen-xl mx-auto p-4 w-full">
+    <main class="max-w-screen-xl mx-auto p-4 w-full bg-white">
         @yield('content')
     </main>
 

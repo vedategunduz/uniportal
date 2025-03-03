@@ -6,9 +6,11 @@ function createAlert(message, type = 'success') {
         'bg-white',
         'text-gray-700',
         'flex',
+        'flex-wrap',
         'gap-4',
         'shadow',
-        'w-72',
+        'min-w-72',
+        'max-w-screen-sm',
         'bottom-to-top-alert-animation'
     );
 

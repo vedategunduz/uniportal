@@ -178,7 +178,7 @@ label {
 
     .modal-content {
         /* width: 100%; */
-        /* overflow: auto; */
+        overflow-y: auto;
         /* max-height: 90vh; */
         margin: 0 auto;
         background-color: #fff;
@@ -286,9 +286,8 @@ label {
 }
 
 .skeleton {
-    display: block;
     /* background-color: #e2e8f0; */
-    background-color: rgb(229 231 235 / .7);
+    background-color: white;
     /* Açık gri ton */
     position: relative;
     overflow: hidden;
@@ -302,9 +301,10 @@ label {
     left: -150%;
     height: 100%;
     width: 150%;
+    z-index: 20;
     background: linear-gradient(90deg,
             transparent,
-            rgba(255, 255, 255, 0.4),
+            #f0f0f0,
             transparent);
     animation: loading 1.5s infinite;
 }

@@ -15,7 +15,7 @@ class Il extends Model
 
     protected $primaryKey = "iller_id";
 
-    protected $fillabel = [
+    protected $fillable = [
         'baslik',
     ];
 }

@@ -68,6 +68,11 @@ class Kullanici extends Authenticatable
     {
         $isletmeler_id = $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id')->pluck('isletmeler_id')->toArray();
         return Isletme::whereIn('isletmeler_id', $isletmeler_id)->get();
+        // return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id')->isletme();
+    }
+
+    public function isletmeler() {
+        return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
     public function anaUnvan()

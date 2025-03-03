@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class EtkinlikRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class EtkinlikRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -21,7 +22,6 @@ class EtkinlikRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'etkinlik_turleri_id'        => 'required',
             'isletmeler_id'              => 'required',

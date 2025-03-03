@@ -1,7 +1,7 @@
 @props([
     'id' => 'modal',
     'title' => 'Modal Title',
-    'zIndex' => '!z-10',
+    'zIndex' => '!z-20',
     'visibility' => 'hidden',
     'slotClass' => 'px-6 py-2 mb-2',
     'headerClass' => '',

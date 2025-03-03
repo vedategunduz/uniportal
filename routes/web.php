@@ -11,6 +11,7 @@ use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\EtkinlikController;
 use App\Http\Controllers\EtkinlikYorumController;
+use App\Http\Controllers\IletisimController;
 use App\Http\Controllers\KanalController;
 use App\Http\Controllers\MesajController;
 use App\Http\Controllers\Personel\PersonelController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\ResimController;
 use App\Http\Controllers\Toplanti\ToplantiController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretKatilimController;
+use App\Http\Controllers\Yonetim\KampanyaController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
 
@@ -29,9 +31,10 @@ Route::prefix('/')->name('main.')->group(function () {
         return view('main.hakkinda');
     })->name('hakkinda');
 
-    Route::get('/iletisim', function () {
-        return view('main.iletisim');
-    })->name('iletisim');
+    Route::prefix('iletisim')->name('iletisim.')->group(function() {
+        Route::get('/', [IletisimController::class, 'index'])->name('index');
+        Route::post('/', [IletisimController::class, 'store'])->name('store');
+    });
 });
 
 Route::prefix('personel')->name('personel.')->group(function () {
@@ -168,6 +171,11 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('davetGonderModalGetir', [KullaniciController::class, 'davetGonderModalGetir']);
 
             Route::post('mailKontrol', [KullaniciController::class, 'mailKontrol']);
+        });
+
+        Route::prefix('kampanyalar')->name('kampanyalar.')->group(function () {
+            Route::get('/', [KampanyaController::class, 'index'])->name('index');
+            Route::post('/', [KampanyaController::class, 'store'])->name('store');
         });
     });
 });
