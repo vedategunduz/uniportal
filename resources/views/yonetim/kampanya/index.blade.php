@@ -67,7 +67,8 @@
                 if (RESPONSE.status === 201) {
                     ApiService.alert.success(RESPONSE.data.message);
                 } else {
-                    ApiService.alert.error(RESPONSE.message);
+                    console.log(RESPONSE);
+                    ApiService.alert.error(RESPONSE);
                 }
             })();
         });

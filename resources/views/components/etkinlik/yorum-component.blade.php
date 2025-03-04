@@ -2,7 +2,7 @@
 
 <section data-yorum-wrapper>
     <div class="flex items-start gap-2 px-4 py-2">
-        <img src="{{ $yorum->kullanici->profilFotoUrl }}" class="size-10 rounded-full shrink-0" alt="Yorum Yapan">
+        <img src="{{ $yorum->kullanici->profilFotoUrl }}" class="size-10 rounded-full shrink-0" loading="lazy" alt="Yorum Yapan">
 
         <div class="text-sm w-full">
             <header class="font-medium text-gray-800">
@@ -17,14 +17,15 @@
                     <x-slot name="target">
                         <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-yorum-şikayet-et"
                             data-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}">
-                            <i class="bi bi-exclamation-triangle-fill text-base text-orange-500"></i>
+                            <i class="bi bi-flag-fill text-base text-orange-500"></i>
                             <span class="ms-2">Şikayet et</span>
                         </x-uniportal-dropdown-item>
                         @if ($yorum->kullanicilar_id == auth()->id())
                             <x-uniportal-dropdown-item href="javascript:void(0)" class="etkinlik-yorum-sil"
                                 data-etkinlik-id="{{ encrypt($yorum->etkinlikler_id) }}"
                                 data-yorum-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}">
-                                <i class="bi bi-x-circle-fill text-base text-gs-red-2"></i>
+                                <i class="bi bi-x-circle-fill"></i>
+                                <i class="bi bi-trash3-fill bg-gs-red-2"></i>
                                 <span class="ms-2">Sil</span>
                             </x-uniportal-dropdown-item>
                         @endif

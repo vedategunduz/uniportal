@@ -40,6 +40,7 @@ class KampanyaRequest extends FormRequest
     {
         return [
             'isletmeler_id.required' => 'Kampanya işletmesi zorunludur.',
+            
             'baslik.required'        => 'Kampanya başlığı zorunludur.',
             'baslik.string'          => 'Kampanya başlığı geçerli bir metin olmalıdır.',
 

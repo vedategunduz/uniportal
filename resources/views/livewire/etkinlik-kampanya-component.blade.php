@@ -13,7 +13,7 @@
         <div class="flex flex-col shadow border rounded text-gray-700 bg-white">
             <header class="border-b py-1.5 px-4 flex justify-between items-center rounded-t">
                 <a href="#" class="flex items-center gap-2">
-                    <img src="{{ $etkinlik->isletme->logoUrl }}" class="size-8 rounded-full object-contain" alt="">
+                    <img src="{{ $etkinlik->isletme->logoUrl }}" class="size-8 rounded-full object-contain" loading="lazy" alt="">
 
                     <span class="text-xs font-medium ">{{ $etkinlik->isletme->kisaltma }}</span>
                 </a>

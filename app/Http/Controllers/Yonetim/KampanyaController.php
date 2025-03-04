@@ -20,11 +20,14 @@ class KampanyaController extends Controller
         $validated['etkinlik_turleri_id'] = decrypt($validated['etkinlik_turleri_id']);
         $validated['isletmeler_id'] = decrypt($validated['isletmeler_id']);
 
+        $validated['yorumDurumu']         = $request->has('yorumDurumu');
+        $validated['sosyalMedyadaPaylas'] = $request->has('sosyalMedyadaPaylas');
+
         $kampanya = Etkinlik::create($validated);
 
         return response()->json([
             'success' => 1,
             'message' => 'Kampanya başarıyla eklendi.'
-        ]);
+        ], 201);
     }
 }

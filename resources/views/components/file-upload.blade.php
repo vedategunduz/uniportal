@@ -15,5 +15,5 @@
     </div>
 
     <!-- Seçilen dosyaların gösterileceği alan -->
-    <div data-file-list-container class="max-h-60 p-4 space-y-4 custom-scroll overflow-y-auto"></div>
+    <div data-file-list-container class="p-4 space-y-4 custom-scroll overflow-y-auto"></div>
 </div>

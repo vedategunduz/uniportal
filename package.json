@@ -52,6 +52,7 @@
         "flowbite": "^2.5.2",
         "flowbite-typography": "^1.0.5",
         "simple-datatables": "^9.2.1",
-        "socket.io": "^4.8.1"
+        "socket.io": "^4.8.1",
+        "tiptap-extension-resize-image": "^1.2.1"
     }
 }
