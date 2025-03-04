@@ -28,7 +28,7 @@ if (!function_exists('uploadFile')) {
      * @param string $folder
      * @return string
      */
-    function uploadFile($file, $folder = 'image')
+    function uploadFile($file, $folder = 'image', $unique = true)
     {
         $destinationPath = public_path($folder);
 
@@ -37,7 +37,7 @@ if (!function_exists('uploadFile')) {
             mkdir($destinationPath, 0777, true);
         }
 
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $filename =  $unique ? time() . '_' . $file->getClientOriginalName() : $file->getClientOriginalName();
 
         $file->move($destinationPath, $filename);
 

@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DosyaRequest;
+use App\Models\Dosya;
+use App\Models\EtkinlikDosya;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -200,7 +204,7 @@ class EventController extends Controller
         foreach ($etkinlikler as $etkinlik) {
             $row = [];
             $row[] = '<p class="w-48 text-wrap">' . $etkinlik->baslik . '</p>';
-            $row[] = Carbon::parse($etkinlik->etkinlikBasvuruTarihi)->translatedFormat('d M, D Y - H:i') . '<br>'. Carbon::parse($etkinlik->etkinlikBasvuruBitisTarihi)->translatedFormat('d M, D Y - H:i');
+            $row[] = Carbon::parse($etkinlik->etkinlikBasvuruTarihi)->translatedFormat('d M, D Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBasvuruBitisTarihi)->translatedFormat('d M, D Y - H:i');
             $row[] = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i');
             $row[] = view('components.buttons.events.duzenle-button', ['etkinlikler_id' => $etkinlik->etkinlikler_id])->render();
             $row[] = view('components.buttons.events.sil-button', ['etkinlikler_id' => $etkinlik->etkinlikler_id])->render();
@@ -263,5 +267,24 @@ class EventController extends Controller
                 'message' => 'Etkinlik silinirken bir hata oluştu.'
             ], 500);
         }
+    }
+
+    public function dosyaYukle(DosyaRequest $request)
+    {
+        $dosya = $request->file('dosya');
+
+        $dosyaAdi = $dosya->getClientOriginalName();
+
+        $dosyaYolu = uploadFile($dosya, "dosyalar/etkinlik_dosyalari/" . Auth::user()->kod);
+
+        Dosya::create([
+            'dosya_adi' => $dosyaAdi,
+            'dosya_yolu' => $dosyaYolu
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'url' => $dosyaYolu
+        ], 201);
     }
 }

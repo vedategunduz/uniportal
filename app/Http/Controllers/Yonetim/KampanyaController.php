@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Yonetim;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\KampanyaRequest;
 use App\Models\Etkinlik;
+use Illuminate\Support\Facades\Auth;
 
 class KampanyaController extends Controller
 {
@@ -22,6 +23,12 @@ class KampanyaController extends Controller
 
         $validated['yorumDurumu']         = $request->has('yorumDurumu');
         $validated['sosyalMedyadaPaylas'] = $request->has('sosyalMedyadaPaylas');
+
+        if ($request->file('kapakResmiYolu')) {
+            $resim = $request->file('kapakResmiYolu');
+            $folder = 'dosyalar/' . Auth::user()->anaIsletme->referans_kodu . '/' . Auth::user()->kod . '/etkinlik_dosyalari';
+            $validated['kapakResmiYolu'] = uploadFile($resim, $folder);
+        }
 
         $kampanya = Etkinlik::create($validated);
 

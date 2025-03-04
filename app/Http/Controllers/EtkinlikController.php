@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Etkinlik;
-use App\Models\EtkinlikYorum;
 
 class EtkinlikController extends Controller
 {

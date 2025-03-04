@@ -36,9 +36,9 @@
                     <span>-</span>
                     <p class="px-1.5 py-0.5 bg-blue-400 text-white rounded">{{ $tarih2 }}</p>
                 </div>
-                <p class="text-gray-800 leading-relaxed text-sm show-more-text text-ellipsis line-clamp-3">
+                <div class="text-gray-800 leading-relaxed text-sm show-more-text text-ellipsis line-clamp-3 default">
                     {!! $etkinlik->aciklama !!}
-                </p>
+                </div>
             </article>
 
             <!-- Yorumlar Bölümü -->

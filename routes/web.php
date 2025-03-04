@@ -125,6 +125,8 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('sil', [EventController::class, 'etkinlikSil']);
             Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
 
+            Route::post('dosya-yukle', [EventController::class, 'dosyaYukle'])->name('dosya-yukle');
+
             Route::prefix('katilim')->name('katilim.')->group(function () {
                 Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
                 Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');

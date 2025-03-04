@@ -36,10 +36,12 @@
         "@editorjs/table": "^2.4.3",
         "@editorjs/underline": "^1.2.1",
         "@editorjs/warning": "^1.4.1",
+        "@glidejs/glide": "^3.7.1",
         "@sotaproject/strikethrough": "^1.0.1",
         "@tiptap/core": "^2.11.5",
         "@tiptap/pm": "^2.11.5",
         "@tiptap/starter-kit": "^2.11.5",
+        "cropperjs": "^2.0.0-rc.2",
         "datatables.net-dt": "^2.1.8",
         "editor-js-alignment-tune": "^1.0.1",
         "editorjs-color-picker": "^1.0.6",
@@ -53,6 +55,7 @@
         "flowbite-typography": "^1.0.5",
         "simple-datatables": "^9.2.1",
         "socket.io": "^4.8.1",
+        "swiper": "^11.2.5",
         "tiptap-extension-resize-image": "^1.2.1"
     }
 }

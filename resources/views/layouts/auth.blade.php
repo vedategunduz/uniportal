@@ -29,7 +29,7 @@
     <div class="items-start lg:flex">
         <x-menu />
 
-        <main class="p-4 w-full">
+        <main class="p-4 w-full bg-white">
             @yield('content')
         </main>
     </div>
@@ -100,7 +100,6 @@
     </div>
 
     <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm kanal-modal">
-
         <form action="" class="space-y-2">
             <section id="mesaj-kanal-katilimcilar"
                 class="flex flex-nowrap items-center gap-2 w-full overflow-x-auto pb-2 custom-scroll"></section>
@@ -127,7 +126,6 @@
                 Kanal Oluştur
             </x-button>
         </form>
-
     </x-modal>
 
     <script src="{{ asset('js/data-table.js') }}"></script>

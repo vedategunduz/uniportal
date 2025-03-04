@@ -4,11 +4,13 @@ import './echo';
 import UniportalDropdown from './dropdown';
 import './editor';
 import FileUpload from './fileUpload.js';
+import Cropper from 'cropperjs';
 
 const dropdown = new UniportalDropdown();
 
 const UniportalService = {
     dropdown,
+    Cropper,
 }
 
 const ApiService = {
