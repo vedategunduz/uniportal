@@ -33,6 +33,11 @@
 
     <x-modal id="etkinlik-modal" title="Detay" slotClass="h-full" class="w-full sm:w-4/5 overflow-y-auto"></x-modal>
 
+    <x-modal id="etkinlik-katil-modal" title="Etkinlik Katılımı" headerClass="!bg-gray-50 !text-gray-700"
+        slotClass="h-full text-gray-700" class="w-full sm:max-w-screen-sm overflow-y-auto">
+
+    </x-modal>
+
     <x-modal id="sikayet-modal" title="Şikayet et" visibility="hidden">
         <x-textarea rows="3"></x-textarea>
     </x-modal>
@@ -55,7 +60,6 @@
             </div>
         </div>
     </x-modal>
-
 
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
@@ -102,238 +106,319 @@
             window.UniportalService.dropdown.refresh();
         });
 
-        document.addEventListener('click', function(event) {
-            event.target.closest('.open-etkinlik-detay-modal') && (async () => {
-                const id = event.target.closest('.open-etkinlik-detay-modal').dataset.id;
-                const focus = event.target.closest('.open-etkinlik-detay-modal').dataset.focus;
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(event) {
+                event.target.closest('.open-etkinlik-detay-modal') && (async () => {
+                    const id = event.target.closest('.open-etkinlik-detay-modal').dataset.id;
+                    const focus = event.target.closest('.open-etkinlik-detay-modal').dataset
+                        .focus;
 
-                const URL = "{{ route('etkinlikler.show', '___ID___') }}".replace(
-                    '___ID___', id);
+                    const URL = "{{ route('etkinlikler.show', '___ID___') }}".replace(
+                        '___ID___', id);
 
-                const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+                    const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
 
-                const MODAL = document.getElementById('etkinlik-modal');
+                    const MODAL = document.getElementById('etkinlik-modal');
 
-                if (RESPONSE.data.success) {
-                    MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
+                    if (RESPONSE.data.success) {
+                        MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
 
-                    modalShow(MODAL);
+                        modalShow(MODAL);
 
-                    window.UniportalService.dropdown.refresh();
+                        window.UniportalService.dropdown.refresh();
 
-                    focus && MODAL.querySelector('textarea[name=yorum]').focus();
+                        focus && MODAL.querySelector('textarea[name=yorum]').focus();
 
-                    showMoreText();
-                } else {
-                    ApiService.alert.error(RESPONSE.message);
+                        if (event.target.getAttribute(
+                                'data-kamu-yorum-button')) {
+                            const kamuSwitch = document.querySelector('.kamu-yorumlari-switch');
+
+                            setTimeout(() => {
+                                kamuSwitch.click();
+                            }, 500);
+                        }
+
+                        showMoreText();
+
+                        const swiper = new Swiper('.swiper', {
+                            loop: true,
+                            slidesPerView: 3,
+                            autoplay: {
+                                delay: 5000,
+                            },
+                        });
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
+
+                event.target.closest(".share-btn") && (async () => {
+                    if (navigator.share) try {
+                        await navigator.share({
+                            title: document.title,
+                            url: window.location.href
+                        }), console.log("Paylaşım başarılı!")
+                    } catch (a) {
+                        console.error("Paylaşım başarısız:", a)
+                    } else alert("Tarayıcınız paylaşım desteği sunmuyor.")
+                })();
+
+                event.target.closest('.etkinlik-begen') && (async () => {
+                    const BUTTON = event.target.closest('.etkinlik-begen');
+                    const ETKINLIK_ID = BUTTON.dataset.id;
+
+                    const URL =
+                        "{{ route('etkinlikler.begenToggle', '___ETKINLIK_ID___') }}"
+                        .replace('___ETKINLIK_ID___', ETKINLIK_ID);
+
+                    const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+
+                    if (RESPONSE.data.success) {
+                        BUTTON.querySelector('span').textContent = RESPONSE.data.begeni;
+                        BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
+                        BUTTON.querySelector('i').classList.toggle('bi-heart');
+                        // BUTTON.querySelector('i').classList.toggle('text-red-500');
+
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
+
+                event.target.matches('.etkinlik-yorum-begen') && (async () => {
+                    const BUTTON = event.target;
+                    console.log(BUTTON);
+                    const YORUM_ID = BUTTON.dataset.yorumId;
+                    const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
+
+                    console.log(YORUM_ID, ETKINLIK_ID);
+
+                    const URL =
+                        "{{ route('etkinlikler.yorum.begenToggle', ['___ETKINLIK_ID___', '___YORUM_ID___']) }}"
+                        .replace(
+                            '___ETKINLIK_ID___', ETKINLIK_ID).replace('___YORUM_ID___',
+                            YORUM_ID);
+
+                    const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+
+                    if (RESPONSE.data.success) {
+                        BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
+                        BUTTON.querySelector('i').classList.toggle('bi-heart');
+                        BUTTON.querySelector('i').classList.toggle('text-rose-500');
+
+                        const BEGENI_WRAPPER = BUTTON.closest('[data-yorum-wrapper]')
+                            .querySelector(
+                                '[data-yorum-begeni-wrapper]');
+                        const BEGENI_COUNT = BEGENI_WRAPPER.querySelector(
+                            '[data-yorum-begeni-count]');
+
+                        BEGENI_COUNT && (BEGENI_COUNT.textContent = RESPONSE.data.begeni);
+
+                        RESPONSE.data.begeni > 0 ? BEGENI_WRAPPER.classList.remove('hidden') :
+                            BEGENI_WRAPPER.classList.add('hidden');
+
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
+
+                event.target.matches('.etkinlik-yorum-submit-button') && (async () => {
+                    const FORM = event.target.closest('form');
+                    const TEXTAREA = FORM.querySelector('textarea[name=yorum]');
+
+                    if (TEXTAREA.value.length === 0) {
+                        ApiService.alert.error('Yorum alanı boş bırakılamaz.');
+                        return;
+                    }
+
+                    const URL = FORM.action;
+                    const DATA = new FormData(FORM);
+
+                    const kamuYorumuSwitch = document.querySelector('.kamu-yorumlari-switch');
+                    DATA.append('yorum_tipi', kamuYorumuSwitch?.checked ? 1 : 0);
+
+                    const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+
+                    if (RESPONSE.data.success) {
+                        TEXTAREA.value = '';
+                        TEXTAREA.style.height = '38px';
+
+                        Livewire.dispatch('yorumEklendi', {
+                            eklenenYorum: RESPONSE.data.yorum,
+                            tip: RESPONSE.data.tip
+                        });
+                        // setTimeout(() => {
+                        //     window.UniportalService.dropdown.refresh();
+                        // }, 400);
+
+                        ApiService.alert.success(RESPONSE.data.message);
+
+                        FORM.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
+                        FORM.querySelector('[data-yorum-yanit-template]')?.remove();
+                        FORM.dataset.heightAdjusted && delete FORM.dataset.heightAdjusted;
+
+                        showMoreText();
+
+
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
+
+                event.target.closest('.etkinlik-yorum-yanit-goster') && (async () => {
+                    const BUTTON = event.target.closest('.etkinlik-yorum-yanit-goster');
+                    const YORUM_WRAPPER = BUTTON.closest('[data-yorum-wrapper]');
+                    const YANIT_WRAPPER = YORUM_WRAPPER.querySelector(
+                        '[data-yorum-yanit-wrapper]');
+
+                    YANIT_WRAPPER.classList.toggle('hidden');
+                })();
+
+                const replyButton = event.target.closest('.etkinlik-yorum-yanitla-button');
+                if (replyButton) {
+                    const modal = replyButton.closest('[data-modal]');
+                    const modalContent = modal.querySelector('[data-modal-content]');
+                    const form = modal.querySelector('[data-etkinlik-yorum-form]');
+
+                    // Butonun bulunduğu yorum wrapper'ının konumunu alıp, modal içerik içinde doğru konuma scroll ediyoruz.
+                    yorumWrappers = modalContent.querySelectorAll('[data-yorum-wrapper]');
+                    yorumWrappers.forEach(wrapper => wrapper.firstElementChild.classList.remove(
+                        'bg-gray-100'));
+
+                    const yorumWrapper = replyButton.closest('[data-yorum-wrapper]').firstElementChild;
+                    yorumWrapper.classList.add('bg-gray-100');
+
+                    const yorumRect = yorumWrapper.getBoundingClientRect();
+                    const containerRect = modalContent.getBoundingClientRect();
+                    modalContent.scrollTop = (yorumRect.top - containerRect.top) + modalContent.scrollTop;
+
+                    // Yorum textarea'sına odaklanıyoruz.
+                    form.querySelector('textarea[name=yorum]').focus();
+
+                    // Önceden eklenmiş yanıt inputu veya şablon varsa temizliyoruz.
+                    form.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
+                    form.querySelector('[data-yorum-yanit-template]')?.remove();
+
+                    // Gizli input oluşturup, butondan gelen yanıt ID'sini ekliyoruz.
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'etkinlik_yorumlari_id';
+                    hiddenInput.value = replyButton.dataset.yorumId;
+
+                    // Şablonu klonlayıp, kullanıcı adını güncelliyoruz.
+                    const template = document.getElementById('yorumYanitTemplate');
+                    const replyElement = template.querySelector('[data-yorum-yanit-template]').cloneNode(
+                        true);
+                    const usernameSpan = replyElement.querySelector('span.text-blue-400');
+                    if (usernameSpan) usernameSpan.textContent = `@${replyButton.dataset.sender}`;
+
+                    // Modal content'in orijinal yüksekliğini saklıyoruz.
+                    if (!modalContent.dataset.originalHeight) {
+                        modalContent.dataset.originalHeight = modalContent.clientHeight;
+                    }
+                    const originalHeight = parseInt(modalContent.dataset.originalHeight, 10);
+
+                    // Klonlanmış elemanı forma ekleyip, modal yüksekliğini ayarlıyoruz.
+                    const insertedReply = form.insertAdjacentElement('afterbegin', replyElement);
+                    if (!form.dataset.heightAdjusted) {
+                        modalContent.style.height = (originalHeight - insertedReply.clientHeight) + 'px';
+                        form.dataset.heightAdjusted = 'true';
+                    }
+
+                    // Gizli inputu formun sonuna ekliyoruz.
+                    form.appendChild(hiddenInput);
+
+                    // Eklenen elementteki kapatma butonuna işlev kazandırıyoruz.
+                    const closeBtn = insertedReply.querySelector('button');
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', () => {
+                            insertedReply.remove();
+                            hiddenInput.remove();
+                            yorumWrapper.classList.remove('bg-gray-100');
+                            modalContent.style.height = originalHeight + 'px';
+                            delete form.dataset.heightAdjusted;
+                        });
+                    }
                 }
-            })();
 
-            event.target.closest(".share-btn") && (async () => {
-                if (navigator.share) try {
-                    await navigator.share({
-                        title: document.title,
-                        url: window.location.href
-                    }), console.log("Paylaşım başarılı!")
-                } catch (a) {
-                    console.error("Paylaşım başarısız:", a)
-                } else alert("Tarayıcınız paylaşım desteği sunmuyor.")
-            })();
+                event.target.closest('.etkinlik-yorum-sil') && (async () => {
+                    const BUTTON = event.target.closest('.etkinlik-yorum-sil');
+                    const YORUM_ID = BUTTON.dataset.yorumId;
+                    const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
 
-            event.target.closest('.etkinlik-begen') && (async () => {
-                const BUTTON = event.target.closest('.etkinlik-begen');
-                const ETKINLIK_ID = BUTTON.dataset.id;
+                    const confirmResult = await modalConfirm();
 
-                const URL =
-                    "{{ route('etkinlikler.begenToggle', '___ETKINLIK_ID___') }}"
-                    .replace('___ETKINLIK_ID___', ETKINLIK_ID);
+                    if (!confirmResult)
+                        return;
 
-                const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+                    const URL =
+                        "{{ route('etkinlikler.yorum.destroy', ['___ETKINLIK_ID___', '___YORUM_ID___']) }}"
+                        .replace('___ETKINLIK_ID___', ETKINLIK_ID).replace('___YORUM_ID___',
+                            YORUM_ID);
 
-                if (RESPONSE.data.success) {
-                    BUTTON.querySelector('span').textContent = RESPONSE.data.begeni;
-                    BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
-                    BUTTON.querySelector('i').classList.toggle('bi-heart');
-                    // BUTTON.querySelector('i').classList.toggle('text-red-500');
+                    const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
 
-                } else {
-                    ApiService.alert.error(RESPONSE.message);
-                }
-            })();
+                    if (RESPONSE.data.success) {
+                        Livewire.dispatch('yorumSilindi', {
+                            silinenYorumId: YORUM_ID,
+                        });
 
-            event.target.matches('.etkinlik-yorum-begen') && (async () => {
-                const BUTTON = event.target;
-                console.log(BUTTON);
-                const YORUM_ID = BUTTON.dataset.yorumId;
-                const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
+                        ApiService.alert.success(RESPONSE.data.message);
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
 
-                console.log(YORUM_ID, ETKINLIK_ID);
+                event.target.closest('.etkinlik-katil-modal') && (async () => {
+                    const BUTTON = event.target.closest('.etkinlik-katil-modal');
+                    const ETKINLIK_ID = BUTTON.dataset.id;
 
-                const URL =
-                    "{{ route('etkinlikler.yorum.begenToggle', ['___ETKINLIK_ID___', '___YORUM_ID___']) }}"
-                    .replace(
-                        '___ETKINLIK_ID___', ETKINLIK_ID).replace('___YORUM_ID___', YORUM_ID);
+                    const URL =
+                        "{{ route('etkinlikler.katil.show', '___ETKINLIK_ID___') }}".replace(
+                            '___ETKINLIK_ID___', ETKINLIK_ID);
 
-                const RESPONSE = await ApiService.fetchData(URL, {}, 'PATCH');
+                    const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
 
-                if (RESPONSE.data.success) {
-                    BUTTON.querySelector('i').classList.toggle('bi-heart-fill');
-                    BUTTON.querySelector('i').classList.toggle('bi-heart');
-                    BUTTON.querySelector('i').classList.toggle('text-rose-500');
+                    if (RESPONSE.data.success) {
+                        const MODAL = document.getElementById('etkinlik-katil-modal');
 
-                    const BEGENI_WRAPPER = BUTTON.closest('[data-yorum-wrapper]').querySelector(
-                        '[data-yorum-begeni-wrapper]');
-                    const BEGENI_COUNT = BEGENI_WRAPPER.querySelector('[data-yorum-begeni-count]');
+                        MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
 
-                    BEGENI_COUNT && (BEGENI_COUNT.textContent = RESPONSE.data.begeni);
+                        modalShow(MODAL);
 
-                    RESPONSE.data.begeni > 0 ? BEGENI_WRAPPER.classList.remove('hidden') :
-                        BEGENI_WRAPPER.classList.add('hidden');
+                        window.UniportalService.dropdown.refresh();
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
 
-                } else {
-                    ApiService.alert.error(RESPONSE.message);
-                }
-            })();
+                event.target.closest('.etkinlik-katil-submit-button') && (async () => {
+                    event.preventDefault();
 
-            event.target.matches('.etkinlik-yorum-submit-button') && (async () => {
-                const FORM = event.target.closest('form');
-                const TEXTAREA = FORM.querySelector('textarea[name=yorum]');
+                    const FORM = event.target.closest('form');
+                    const CHECKBOX = FORM.querySelector('input[name=katilimSartlari]');
 
-                if (TEXTAREA.value.length === 0) {
-                    ApiService.alert.error('Yorum alanı boş bırakılamaz.');
-                    return;
-                }
+                    if (!CHECKBOX.checked) {
+                        ApiService.alert.error('Katılım şartlarını kabul etmelisiniz.');
+                        return;
+                    }
 
-                const URL = FORM.action;
-                const DATA = new FormData(FORM);
+                    const URL = FORM.action;
+                    const DATA = new FormData(FORM);
 
-                const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+                    const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
 
-                if (RESPONSE.data.success) {
-                    TEXTAREA.value = '';
-                    TEXTAREA.style.height = '38px';
+                    if (RESPONSE.data.success) {
+                        ApiService.alert.success(RESPONSE.data.message);
 
-                    Livewire.dispatch('yorumEklendi', {
-                        eklenenYorum: RESPONSE.data.yorum,
-                        tip: RESPONSE.data.tip
-                    });
-                    // setTimeout(() => {
-                    //     window.UniportalService.dropdown.refresh();
-                    // }, 400);
+                        const modal = document.getElementById('etkinlik-katil-modal');
 
-                    ApiService.alert.success(RESPONSE.data.message);
-
-                    FORM.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
-                    FORM.querySelector('[data-yorum-yanit-template]')?.remove();
-                    FORM.dataset.heightAdjusted && delete FORM.dataset.heightAdjusted;
-
-                    showMoreText();
-
-
-                } else {
-                    ApiService.alert.error(RESPONSE.message);
-                }
-            })();
-
-            event.target.closest('.etkinlik-yorum-yanit-goster') && (async () => {
-                const BUTTON = event.target.closest('.etkinlik-yorum-yanit-goster');
-                const YORUM_WRAPPER = BUTTON.closest('[data-yorum-wrapper]');
-                const YANIT_WRAPPER = YORUM_WRAPPER.querySelector('[data-yorum-yanit-wrapper]');
-
-                YANIT_WRAPPER.classList.toggle('hidden');
-            })();
-
-            const replyButton = event.target.closest('.etkinlik-yorum-yanitla-button');
-            if (replyButton) {
-                const modal = replyButton.closest('[data-modal]');
-                const modalContent = modal.querySelector('[data-modal-content]');
-                const form = modal.querySelector('[data-etkinlik-yorum-form]');
-
-                // Butonun bulunduğu yorum wrapper'ının konumunu alıp, modal içerik içinde doğru konuma scroll ediyoruz.
-                yorumWrappers = modalContent.querySelectorAll('[data-yorum-wrapper]');
-                yorumWrappers.forEach(wrapper => wrapper.firstElementChild.classList.remove('bg-gray-100'));
-
-                const yorumWrapper = replyButton.closest('[data-yorum-wrapper]').firstElementChild;
-                yorumWrapper.classList.add('bg-gray-100');
-
-                const yorumRect = yorumWrapper.getBoundingClientRect();
-                const containerRect = modalContent.getBoundingClientRect();
-                modalContent.scrollTop = (yorumRect.top - containerRect.top) + modalContent.scrollTop;
-
-                // Yorum textarea'sına odaklanıyoruz.
-                form.querySelector('textarea[name=yorum]').focus();
-
-                // Önceden eklenmiş yanıt inputu veya şablon varsa temizliyoruz.
-                form.querySelector('input[name=etkinlik_yorumlari_id]')?.remove();
-                form.querySelector('[data-yorum-yanit-template]')?.remove();
-
-                // Gizli input oluşturup, butondan gelen yanıt ID'sini ekliyoruz.
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'etkinlik_yorumlari_id';
-                hiddenInput.value = replyButton.dataset.yorumId;
-
-                // Şablonu klonlayıp, kullanıcı adını güncelliyoruz.
-                const template = document.getElementById('yorumYanitTemplate');
-                const replyElement = template.querySelector('[data-yorum-yanit-template]').cloneNode(true);
-                const usernameSpan = replyElement.querySelector('span.text-blue-400');
-                if (usernameSpan) usernameSpan.textContent = `@${replyButton.dataset.sender}`;
-
-                // Modal content'in orijinal yüksekliğini saklıyoruz.
-                if (!modalContent.dataset.originalHeight) {
-                    modalContent.dataset.originalHeight = modalContent.clientHeight;
-                }
-                const originalHeight = parseInt(modalContent.dataset.originalHeight, 10);
-
-                // Klonlanmış elemanı forma ekleyip, modal yüksekliğini ayarlıyoruz.
-                const insertedReply = form.insertAdjacentElement('afterbegin', replyElement);
-                if (!form.dataset.heightAdjusted) {
-                    modalContent.style.height = (originalHeight - insertedReply.clientHeight) + 'px';
-                    form.dataset.heightAdjusted = 'true';
-                }
-
-                // Gizli inputu formun sonuna ekliyoruz.
-                form.appendChild(hiddenInput);
-
-                // Eklenen elementteki kapatma butonuna işlev kazandırıyoruz.
-                const closeBtn = insertedReply.querySelector('button');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => {
-                        insertedReply.remove();
-                        hiddenInput.remove();
-                        yorumWrapper.classList.remove('bg-gray-100');
-                        modalContent.style.height = originalHeight + 'px';
-                        delete form.dataset.heightAdjusted;
-                    });
-                }
-            }
-
-            event.target.closest('.etkinlik-yorum-sil') && (async () => {
-                const BUTTON = event.target.closest('.etkinlik-yorum-sil');
-                const YORUM_ID = BUTTON.dataset.yorumId;
-                const ETKINLIK_ID = BUTTON.dataset.etkinlikId;
-
-                const confirmResult = await modalConfirm();
-
-                if (!confirmResult)
-                    return;
-
-                const URL =
-                    "{{ route('etkinlikler.yorum.destroy', ['___ETKINLIK_ID___', '___YORUM_ID___']) }}"
-                    .replace('___ETKINLIK_ID___', ETKINLIK_ID).replace('___YORUM_ID___', YORUM_ID);
-
-                const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
-
-                if (RESPONSE.data.success) {
-                    Livewire.dispatch('yorumSilindi', {
-                        silinenYorumId: YORUM_ID,
-                    });
-
-                    ApiService.alert.success(RESPONSE.data.message);
-                } else {
-                    ApiService.alert.error(RESPONSE.message);
-                }
-            })();
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    } else {
+                        ApiService.alert.error(RESPONSE.message);
+                    }
+                })();
+            });
         });
 
         function modalConfirm() {
@@ -354,19 +439,25 @@
             });
         }
 
-        document.addEventListener('input', function(event) {
-            if (!event.target.matches('textarea'))
-                return;
+        document.addEventListener('change', function(event) {
+            event.target.closest('.kamu-yorumlari-switch') && (() => {
+                Livewire.dispatch('toggleKamuYorumlari');
+            })();
+        });
 
-            const textarea = event.target;
+        // document.addEventListener('input', function(event) {
+        //     if (!event.target.matches('textarea'))
+        //         return;
 
-            if (textarea.value.length === 0)
-                return textarea.style.height = '38px';
+        //     const textarea = event.target;
 
-            if (textarea.scrollHeight <= 40)
-                return;
+        //     if (textarea.value.length === 0)
+        //         return textarea.style.height = '38px';
 
-            textarea.style.height = textarea.scrollHeight + 'px';
-        })
+        //     if (textarea.scrollHeight <= 40)
+        //         return;
+
+        //     textarea.style.height = textarea.scrollHeight + 'px';
+        // })
     </script>
 @endsection

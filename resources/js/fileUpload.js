@@ -5,7 +5,7 @@ export default class FileUpload {
         this.fileUploadUrl = this.fileInput.dataset.url;
         this.dropArea = container.querySelector('[data-drop-area]');
         this.fileListContainer = container.querySelector('[data-file-list-container]');
-        // Seçilen dosyaları { file, link } nesnesi şeklinde saklıyoruz.
+        // Seçilen dosyaları { file, link, isUploading } nesnesi şeklinde saklıyoruz.
         this.selectedFiles = [];
         this.init();
     }
@@ -69,7 +69,7 @@ export default class FileUpload {
             infoDiv.appendChild(nameSpan);
             infoDiv.appendChild(sizeSpan);
 
-            // Eğer dosya yüklenmişse, linki göster; henüz yüklenmediyse upload işlemini başlatıyoruz.
+            // Eğer dosya yüklenmişse, linki göster; henüz yüklenmemişse ve yükleme başlamadıysa upload işlemini başlatıyoruz.
             if (entry.link) {
                 const linkEl = document.createElement('a');
                 linkEl.href = entry.link;
@@ -81,8 +81,8 @@ export default class FileUpload {
                     ApiService.alert.success('Dosya linki kopyalandı.');
                 });
                 infoDiv.appendChild(linkEl);
-            } else {
-                // Henüz yüklenmemişse yükleme işlemini başlat
+            } else if (!entry.isUploading) {
+                entry.isUploading = true;
                 this.uploadFile(entry);
             }
             fileDiv.appendChild(infoDiv);
@@ -139,9 +139,9 @@ export default class FileUpload {
     }
 
     init() {
-        // Dosya input değişiminde; seçilen her dosyayı { file, link } nesnesi olarak saklıyoruz.
+        // Dosya input değişiminde; seçilen her dosyayı { file, link, isUploading } nesnesi olarak saklıyoruz.
         this.fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files).map(file => ({ file, link: null }));
+            const files = Array.from(e.target.files).map(file => ({ file, link: null, isUploading: false }));
             this.selectedFiles = this.selectedFiles.concat(files);
             this.updateFileList();
             this.updateFileInput();
@@ -157,7 +157,7 @@ export default class FileUpload {
 
         // Dosya bırakma işlemi gerçekleştiğinde
         this.dropArea.addEventListener('drop', (e) => {
-            const files = Array.from(e.dataTransfer.files).map(file => ({ file, link: null }));
+            const files = Array.from(e.dataTransfer.files).map(file => ({ file, link: null, isUploading: false }));
             this.selectedFiles = this.selectedFiles.concat(files);
             this.updateFileList();
             this.updateFileInput();

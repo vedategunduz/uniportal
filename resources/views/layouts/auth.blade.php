@@ -760,17 +760,17 @@
                     });
                 }
 
-                if (!event.target.matches('textarea'))
-                    return;
+                // if (!event.target.matches('textarea'))
+                //     return;
 
-                const textarea = event.target;
+                // const textarea = event.target;
 
-                textarea.style.height = 'auto';
-                textarea.style.height = textarea.scrollHeight + 'px';
+                // textarea.style.height = 'auto';
+                // textarea.style.height = textarea.scrollHeight + 'px';
 
 
-                textarea.closest('section').style.maxHeight = textarea.closest('section').scrollHeight +
-                    'px';
+                // textarea.closest('section').style.maxHeight = textarea.closest('section').scrollHeight +
+                //     'px';
             })
 
             document.getElementById('kanal-olustur-submit-button').addEventListener('click', function(e) {

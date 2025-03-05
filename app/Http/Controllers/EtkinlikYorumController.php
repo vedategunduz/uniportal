@@ -18,13 +18,13 @@ class EtkinlikYorumController extends Controller
 
         $etkinlik = Etkinlik::find($etkinlik_id);
 
-        if (!empty($validated['etkinlik_yorumlari_id']))
-        {
+        if (!empty($validated['etkinlik_yorumlari_id'])) {
             $yorum = $etkinlik->yorum()->find(decrypt($validated['etkinlik_yorumlari_id']));
             $yorum->yanit()->create([
                 'kullanicilar_id' => Auth::id(),
                 'etkinlikler_id' => $etkinlik_id,
-                'yorum' => $validated['yorum']
+                'yorum' => $validated['yorum'],
+                'yorum_tipi' => $validated['yorum_tipi']
             ]);
 
             return response()->json([
@@ -37,7 +37,8 @@ class EtkinlikYorumController extends Controller
 
         $yorum = $etkinlik->yorum()->create([
             'kullanicilar_id' => Auth::id(),
-            'yorum' => $validated['yorum']
+            'yorum' => $validated['yorum'],
+            'yorum_tipi' => $validated['yorum_tipi']
         ]);
 
         return response()->json([
@@ -64,7 +65,8 @@ class EtkinlikYorumController extends Controller
         ]);
     }
 
-    public function destroy($etkinlik_id, $yorum_id) {
+    public function destroy($etkinlik_id, $yorum_id)
+    {
         $yorum_id = decrypt($yorum_id);
         $yorum = EtkinlikYorum::find($yorum_id);
 

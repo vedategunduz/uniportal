@@ -48,9 +48,12 @@
             <x-datetime name="etkinlikBitisTarihi" label="Kampanya bitiş tarihi" />
         </div>
 
+        <x-file-upload url="yonetim/etkinlikler/dosya-yukle" />
+
         @include('yonetim.kampanya.partials.editor')
 
-        <x-file-upload url="yonetim/etkinlikler/dosya-yukle" />
+        <x-textarea rows="3" name="katilimSartlari" placeholder="Katılım şartları"></x-textarea>
+
 
         <x-checkbox name="yorumDurumu">
             <span class="">Yorumlara kapat</span>
@@ -61,6 +64,15 @@
             <span class="">Sosyal medyamızda paylaş</span>
             <span class="text-gray-500 font-normal">
                 Kampanyanın sosyal medya hesabımızda paylaşılması için seçiniz.</span>
+        </x-checkbox>
+
+        <x-checkbox name="mailDurumu">
+            <span class="">
+                Mail bildirimleri almak istiyorum
+            </span>
+            <span class="text-gray-500 font-normal">
+                Katılım isteklerini mail ile almak için seçiniz.
+            </span>
         </x-checkbox>
 
         <x-button type="submit" class="kampanya-submit-button">
@@ -107,19 +119,6 @@
             }
         });
 
-        // // "Kırp" butonuna tıklandığında çalışır
-        // cropButton.addEventListener('click', function() {
-        //     if (cropper) {
-        //         // Kırpılmış bölgeyi bir HTML5 canvas elementine al
-        //         const canvas = cropper.getCroppedCanvas();
-        //         // Canvas içeriğini bir resim URL'sine (base64) dönüştür
-        //         const croppedImageDataURL = canvas.toDataURL('image/jpeg', 0.1);
-        //         // Sonucu göster (önceki içeriği temizleyip yeni <img> ekleyerek)
-        //         const bannerImage = document.getElementById('banner-image');
-        //         bannerImage.src = croppedImageDataURL;
-        //         modalClose(document.getElementById('imageCropModal'));
-        //     }
-        // });
         cropButton.addEventListener('click', function() {
             if (!cropper) return;
 

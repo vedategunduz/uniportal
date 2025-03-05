@@ -27,6 +27,7 @@ class Etkinlik extends Model
         'kapakResmiYolu',
         'baslik',
         'aciklama',
+        'katilimSarti',
         'kontenjan',
         'yorumDurumu',
         'sosyalMedyadaPaylas',
@@ -51,6 +52,15 @@ class Etkinlik extends Model
     public function yorum()
     {
         return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id')->where('aktiflik', 1);
+    }
+
+    public function resimler() {
+        return $this->hasMany(EtkinlikDosya::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
+    public function il ()
+    {
+        return $this->belongsTo(Il::class, 'iller_id', 'iller_id');
     }
 
     public function begeniToggle()

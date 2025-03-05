@@ -14,7 +14,7 @@
     <div {{ $attributes->merge(['class' => 'modal-content rounded max-h-screen hidden-scroll']) }}>
         <header class="flex items-center rounded-t bg-blue-500 text-white justify-between px-6 py-2 {{ $headerClass }}">
             <div>
-                <h2 class="font-semibold text-base tracking-wider uppercase text-nowrap overflow-hidden whitespace-nowrap overflow-ellipsis w-72"
+                <h2 class="font-semibold text-base tracking-wider uppercase text-nowrap text-inherit overflow-hidden whitespace-nowrap overflow-ellipsis w-72"
                     title="{{ $title }}"> {{ $title }} </h2>
             </div>
             @if ($headerCloseButton === true)

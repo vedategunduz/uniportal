@@ -4,11 +4,30 @@
     $tarih = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D, Y, h:i');
 
     $tarih2 = Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D, Y, h:i');
+
+    $tarih3 = Carbon::parse($etkinlik->etkinlikBasvuruTarihi)->translatedFormat('d M, D, Y, h:i');
+
+    $tarih4 = Carbon::parse($etkinlik->etkinlikBasvuruBitisTarihi)->translatedFormat('d M, D, Y, h:i');
+
 @endphp
-<section class="grid lg:grid-cols-2 h-full" data-modal>
+<section class="grid grid-cols-1 lg:grid-cols-2 h-full" data-modal>
     <!-- Sol Kolon: Etkinlik Kapak Resmi -->
     <div class="p-2">
-        <img src="{{ $etkinlik->kapakResmiYolu }}" class="lg:h-[90vh] object-cover rounded" alt="Etkinlik Kapak Resmi">
+        <img src="{{ $etkinlik->kapakResmiYolu }}" class="lg:h-[72vh] object-contain rounded mx-auto" alt="Etkinlik Kapak Resmi">
+        @if ($etkinlik->resimler->count())
+
+            <!-- Slider main container -->
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    @foreach ($etkinlik->resimler as $resim)
+                        <div class="swiper-slide">
+                            <img src="{{ $resim->dosya_yolu }}" class="h-32 object-cover" alt="">
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 
     <!-- Sağ Kolon: Etkinlik Detayları & Yorumlar -->
@@ -31,14 +50,32 @@
             <!-- Etkinlik Detayları -->
             <article class="px-4 py-2 space-y-2 border-b">
                 <h4 class="font-medium text-xl mb-2">{{ $etkinlik->baslik }}</h4>
-                <div class="font-light text-sm flex flex-wrap items-center gap-1">
-                    <p class="px-1.5 py-0.5 bg-green-400 text-white rounded">{{ $tarih }}</p>
-                    <span>-</span>
-                    <p class="px-1.5 py-0.5 bg-blue-400 text-white rounded">{{ $tarih2 }}</p>
+                <div class="font-light text-sm flex flex-wrap items-center justify-between gap-1">
+                    <p class="px-1.5 py-0.5 border font-medium rounded">
+                        Başlama Tarihi&nbsp;&nbsp;:
+                        <span class="text-green-400">{{ $tarih }}</span> -
+                        <span class="text-red-400">{{ $tarih2 }}</span>
+                    </p>
+                    @if (!empty($etkinlik->il))
+                        <p class="px-1.5 py-0.5 bg-violet-400 text-white rounded">{{ $etkinlik->il->baslik }}</p>
+                    @endif
                 </div>
-                <div class="text-gray-800 leading-relaxed text-sm show-more-text text-ellipsis line-clamp-3 default">
+                @if (!empty($etkinlik->etkinlikBasvuruTarihi) && !empty($etkinlik->etkinlikBasvuruBitisTarihi))
+                    <div class="font-light text-sm flex flex-wrap items-center gap-1">
+                        <p class="px-1.5 py-0.5 border font-medium rounded">
+                            Başvuru Tarihi:
+                            <span class="text-green-400">{{ $tarih3 }}</span> -
+                            <span class="text-red-400">{{ $tarih4 }}</span>
+                        </p>
+                    </div>
+                @endif
+                <div
+                    class="text-gray-800 leading-relaxed text-sm text-ellipsis line-clamp-3 default text-wrap break-words">
                     {!! $etkinlik->aciklama !!}
                 </div>
+                <button class="show-more-text">
+                    <i class="bi bi-arrow-down-circle-fill"></i>
+                </button>
             </article>
 
             <!-- Yorumlar Bölümü -->
@@ -49,7 +86,7 @@
         <footer class="mt-auto">
             <!-- Etkileşim Butonları -->
             <section class="flex gap-2 px-4 py-2 border-t">
-                <x-button class="!shadow-none !border-0 !p-2 etkinlik-begen"
+                <x-button class="!shadow-none !border-0 !px-2 !py-1 etkinlik-begen"
                     data-id="{{ encrypt($etkinlik->etkinlikler_id) }}" :disabled="!auth()->check()">
                     <div class="flex items-center gap-2">
                         <i @class([
@@ -63,30 +100,30 @@
                     </div>
                 </x-button>
 
-                <x-button class="!shadow-none !border-0 !p-2" :disabled="true">
-                    <div class="flex items-center gap-2">
-                        <i class="bi bi-chat-left-text !text-blue-500 text-base"></i>
-                        <span>{{ $etkinlik->yorum->count() }}</span>
-                    </div>
-                </x-button>
-
                 @auth
                     @if (!$etkinlik->katilimcilar->contains('kullanicilar_id', auth()->id()))
-                        <x-button class="!shadow-none !border-0 !px-2 text-green-400">
+                        <x-button class="!shadow-none !border-0 !px-2 !py-1 text-green-400 etkinlik-katil-modal"
+                            data-id="{{ encrypt($etkinlik->etkinlikler_id) }}">
                             <i class="bi bi-person-plus-fill text-base"></i>
                             <span class="text-xs ms-1 capitalize">Katıl</span>
                         </x-button>
                     @endif
+
+                    @if (auth()->user()->anaIsletme->tur->isletme_turleri_id == 1)
+                        <x-switch class="kamu-yorumlari-switch">
+                            Kamu yorumları ({{ $etkinlik->yorum->where('yorum_tipi', 1)->count() }})
+                            {{-- {{ $kamuYorumu }} --}}
+                        </x-switch>
+                    @endif
                 @endauth
 
-                <x-button class="!shadow-none !border-0 !p-2 ml-auto share-btn">
+                <x-button class="!shadow-none !border-0 !px-2 !py-1 ml-auto share-btn">
                     <i class="bi bi-share-fill text-base"></i>
                 </x-button>
             </section>
             <!-- Yorum Girişi -->
             <form action="{{ route('etkinlikler.yorum.store', [encrypt($etkinlik->etkinlikler_id)]) }}"
                 class="border-t" method="POST" data-etkinlik-yorum-form>
-
                 <section class="flex items-center justify-between gap-2 px-4 py-2">
                     <x-textarea rows="1" name="yorum" class="custom-scroll max-h-24" :disabled="!auth()->check()">
                         @guest

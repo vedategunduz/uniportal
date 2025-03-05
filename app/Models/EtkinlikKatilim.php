@@ -20,6 +20,7 @@ class EtkinlikKatilim extends Model
         'kullanicilar_id',
         'giden_isletmeler_id',
         'gidilen_isletmeler_id',
+        'aciklama',
         'durum',
         'katilimciTipi'
     ];

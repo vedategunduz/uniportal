@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Etkinlik;
 use App\Models\EtkinlikYorum;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -14,6 +13,8 @@ class EtkinlikYorumComponent extends Component
     public $perPage = 8;
     public $threshold = 10;
     public $totalYorum;
+    public $yorumSayisi;
+    public $kamuYorumu = 0;
 
     public function mount($etkinlikid)
     {
@@ -21,6 +22,14 @@ class EtkinlikYorumComponent extends Component
 
         $this->totalYorum = EtkinlikYorum::where('etkinlikler_id', $etkinlikid)
             ->whereNull('yanitlanan_etkinlik_yorumlari_id')
+            ->where('yorum_tipi', $this->kamuYorumu)
+
+            ->where('aktiflik', 1)
+            ->count();
+
+        $this->yorumSayisi = EtkinlikYorum::where('etkinlikler_id', $etkinlikid)
+            ->where('yorum_tipi', $this->kamuYorumu)
+
             ->where('aktiflik', 1)
             ->count();
 
@@ -33,6 +42,7 @@ class EtkinlikYorumComponent extends Component
             // ->orderByDesc('begeni_count')
             // Son olarak, eklenme tarihine göre (en yeniler önce) sıralar.
             ->orderByDesc('created_at')
+            ->where('yorum_tipi', $this->kamuYorumu)
             ->where('aktiflik', 1)
             ->take($this->perPage)
             ->get();
@@ -70,9 +80,16 @@ class EtkinlikYorumComponent extends Component
         });
 
         $this->totalYorum = EtkinlikYorum::where('etkinlikler_id', $this->etkinlikid)
-        ->whereNull('yanitlanan_etkinlik_yorumlari_id')
-        ->where('aktiflik', 1)
-        ->count();
+            ->whereNull('yanitlanan_etkinlik_yorumlari_id')
+            ->where('aktiflik', 1)
+            ->where('yorum_tipi', $this->kamuYorumu)
+            ->count();
+    }
+    #[On('toggleKamuYorumlari')]
+    public function toggleKamuYorumlari() {
+        $this->kamuYorumu = !$this->kamuYorumu;
+
+        $this->mount($this->etkinlikid);
     }
 
     public function loadMore()
@@ -91,6 +108,7 @@ class EtkinlikYorumComponent extends Component
             // Son olarak, eklenme tarihine göre (en yeniler önce) sıralar.
             ->orderByDesc('created_at')
             ->where('aktiflik', 1)
+            ->where('yorum_tipi', $this->kamuYorumu)
             ->take($this->perPage)
             ->get();
     }

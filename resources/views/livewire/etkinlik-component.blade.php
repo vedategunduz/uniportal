@@ -13,7 +13,8 @@
         <div class="flex flex-col shadow border rounded text-gray-700 bg-white">
             <header class="border-b py-1.5 px-4 flex justify-between items-center rounded-t">
                 <a href="#" class="flex items-center gap-2">
-                    <img src="{{ $etkinlik->isletme->logoUrl }}" class="size-8 rounded-full object-contain" loading="lazy" alt="">
+                    <img src="{{ $etkinlik->isletme->logoUrl }}" class="size-8 rounded-full object-contain" loading="lazy"
+                        alt="">
 
                     <span class="text-xs font-medium ">{{ $etkinlik->isletme->kisaltma }}</span>
                 </a>
@@ -57,7 +58,10 @@
                 <img src="{{ $etkinlik->kapakResmiYolu }}" class="w-full h-72 rounded object-cover" alt="">
 
                 <div class="text-sm space-y-2">
-                    <p class="text-right">
+                    <p class="flex items-center justify-between">
+                        <span class="px-1.5 py-0.5 text-xs bg-violet-400 text-white rounded">
+                            {{ $etkinlik->il->baslik }}
+                        </span>
                         <span class="px-1.5 py-0.5 text-xs bg-green-400 text-white rounded">
                             {{ $tarih }}
                         </span>
@@ -88,9 +92,20 @@
                     data-id="{{ encrypt($etkinlik->etkinlikler_id) }}" data-focus="true">
                     <div class="flex items-center gap-2">
                         <i class="bi bi-chat-left-text !text-blue-500 text-base"></i>
-                        <span>{{ $etkinlik->yorum->count() }}</span>
+                        <span>{{ $etkinlik->yorum->where('yorum_tipi', 0)->count() }}</span>
                     </div>
                 </x-button>
+                @auth
+                    @if (auth()->user()->anaIsletme->isletme_turleri_id == 1)
+                        <x-button class="!shadow-none !border-0 !p-2 open-etkinlik-detay-modal"
+                            data-id="{{ encrypt($etkinlik->etkinlikler_id) }}" data-focus="true" data-kamu-yorum-button>
+                            <div class="flex items-center gap-2">
+                                <i class="bi bi-chat-left-text !text-green-500 text-base"></i>
+                                <span>{{ $etkinlik->yorum->where('yorum_tipi', 1)->count() }}</span>
+                            </div>
+                        </x-button>
+                    @endif
+                @endauth
                 <x-button class="!shadow-none !border-0 !p-2 ml-auto share-btn">
                     <i class="bi bi-share-fill text-base"></i>
                 </x-button>

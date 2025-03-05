@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('kullanicilar_id')->nullable();
             $table->unsignedBigInteger('giden_isletmeler_id')->nullable();
             $table->unsignedBigInteger('gidilen_isletmeler_id')->nullable();
+            $table->text('aciklama')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
             $table->enum('katilimciTipi', ['davetli', 'giden', 'katilimci']);
             $table->timestamps();
@@ -38,6 +39,7 @@ return new class extends Migration
             $table->integer('kullanicilar_id')->nullable();
             $table->unsignedBigInteger('giden_isletmeler_id')->nullable();
             $table->unsignedBigInteger('gidilen_isletmeler_id')->nullable();
+            $table->text('aciklama')->nullable();
             $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
             $table->enum('katilimciTipi', ['davetli', 'giden', 'katilimci']);
             $table->char('yapilanIslem', 1);
@@ -55,6 +57,7 @@ return new class extends Migration
                     kullanicilar_id,
                     giden_isletmeler_id,
                     gidilen_isletmeler_id,
+                    aciklama,
                     durum,
                     katilimciTipi,
                     yapilanIslem,
@@ -69,6 +72,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.giden_isletmeler_id,
                     NEW.gidilen_isletmeler_id,
+                    NEW.aciklama,
                     NEW.durum,
                     NEW.katilimciTipi,
                     'E',
@@ -91,6 +95,7 @@ return new class extends Migration
                     kullanicilar_id,
                     giden_isletmeler_id,
                     gidilen_isletmeler_id,
+                    aciklama,
                     durum,
                     katilimciTipi,
                     yapilanIslem,
@@ -105,6 +110,7 @@ return new class extends Migration
                     NEW.kullanicilar_id,
                     NEW.giden_isletmeler_id,
                     NEW.gidilen_isletmeler_id,
+                    NEW.aciklama,
                     NEW.durum,
                     NEW.katilimciTipi,
                     'G',

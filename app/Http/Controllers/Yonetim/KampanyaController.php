@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Yonetim;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\KampanyaRequest;
+use App\Models\Dosya;
 use App\Models\Etkinlik;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +32,11 @@ class KampanyaController extends Controller
         }
 
         $kampanya = Etkinlik::create($validated);
+
+        $dosyalar = Dosya::where('islem_yapan_id', Auth::id())->get();
+        $dosyalar->each->delete();
+
+        $kampanya->resimler()->createMany($dosyalar->toArray());
 
         return response()->json([
             'success' => 1,

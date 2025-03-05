@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Yonetim\BirimlerController;
 use App\Http\Controllers\EditorController;
 use App\Http\Controllers\EtkinlikController;
+use App\Http\Controllers\EtkinlikKatilimController;
 use App\Http\Controllers\EtkinlikYorumController;
 use App\Http\Controllers\IletisimController;
 use App\Http\Controllers\KanalController;
@@ -47,6 +48,11 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
     Route::prefix('{etkinlik_id}')->group(function () {
         Route::get('/', [EtkinlikController::class, 'show'])->name('show');
         Route::patch('begenToggle', [EtkinlikController::class, 'begenToggle'])->name('begenToggle');
+
+        Route::prefix('katil')->name('katil.')->group(function() {
+            Route::get('/', [EtkinlikKatilimController::class, 'show'])->name('show');
+            Route::post('/', [EtkinlikKatilimController::class, 'store'])->name('store');
+        });
 
         Route::prefix('yorum')->name('yorum.')->group(function () {
             Route::post('/', [EtkinlikYorumController::class, 'store'])->name('store');

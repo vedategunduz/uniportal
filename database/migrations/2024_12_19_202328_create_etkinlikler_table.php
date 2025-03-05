@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('kapakResmiYolu')->nullable()->default('image/etkinlikresim.png');
             $table->string('baslik', 255)->nullable();
             $table->enum('katilimTipi', ['genel', 'uniportal', 'özel'])->default('genel');
-            $table->longText('aciklama')->nullable();
+            $table->text('aciklama')->nullable();
+            $table->text('katilimSarti')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
             $table->boolean('yorumDurumu')->nullable()->default(1);
             $table->timestamps();
@@ -49,7 +50,8 @@ return new class extends Migration
             $table->string('kapakResmiYolu')->nullable();
             $table->string('baslik', 255)->nullable();
             $table->enum('katilimTipi', ['genel', 'uniportal', 'özel'])->default('genel');
-            $table->longText('aciklama')->nullable();
+            $table->text('aciklama')->nullable();
+            $table->text('katilimSarti')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
             $table->boolean('yorumDurumu')->nullable()->default(1);
             $table->char('yapilanIslem', 1);
@@ -76,6 +78,7 @@ return new class extends Migration
                     baslik,
                     katilimTipi,
                     aciklama,
+                    katilimSarti,
                     sosyalMedyadaPaylas,
                     yorumDurumu,
                     yapilanIslem,
@@ -98,6 +101,7 @@ return new class extends Migration
                     NEW.baslik,
                     NEW.katilimTipi,
                     NEW.aciklama,
+                    NEW.katilimSarti,
                     NEW.sosyalMedyadaPaylas,
                     NEW.yorumDurumu,
                     'E',
@@ -129,6 +133,7 @@ return new class extends Migration
                     baslik,
                     katilimTipi,
                     aciklama,
+                    katilimSarti,
                     sosyalMedyadaPaylas,
                     yorumDurumu,
                     yapilanIslem,
@@ -151,6 +156,7 @@ return new class extends Migration
                     NEW.baslik,
                     NEW.katilimTipi,
                     NEW.aciklama,
+                    NEW.katilimSarti,
                     NEW.sosyalMedyadaPaylas,
                     NEW.yorumDurumu,
                     'G',

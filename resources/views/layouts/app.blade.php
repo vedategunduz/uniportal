@@ -10,6 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/glocal.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
@@ -224,6 +225,7 @@
     <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
 
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const counters = document.querySelectorAll(".stats-counter");

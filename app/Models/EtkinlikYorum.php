@@ -19,6 +19,7 @@ class EtkinlikYorum extends Model
         'kullanicilar_id',
         'yanitlanan_etkinlik_yorumlari_id',
         'yorum',
+        'yorum_tipi',
         'aktiflik'
     ];
 

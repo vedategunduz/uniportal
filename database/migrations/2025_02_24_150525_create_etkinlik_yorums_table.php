@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('yanitlanan_etkinlik_yorumlari_id')->nullable()->constrained('etkinlik_yorumlari', 'etkinlik_yorumlari_id')->onDeleteRestrict();
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->onDeleteRestrict();
             $table->text('yorum');
+            $table->tinyInteger('yorum_tipi')->default(0);
             $table->timestamps();
         });
         Schema::enableForeignKeyConstraints();

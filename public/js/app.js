@@ -203,7 +203,9 @@ function deneme() {
 function showMoreText(clamp = 3) {
     document.querySelectorAll('.show-more-text').forEach((element) => {
         element.addEventListener('click', function () {
-            element.classList.toggle(`line-clamp-${clamp}`);
+            element.previousElementSibling.classList.toggle(`line-clamp-${clamp}`);
+            element.querySelector('i').classList.toggle('bi-arrow-down-circle-fill');
+            element.querySelector('i').classList.toggle('bi-arrow-up-circle-fill');
         });
     });
 }

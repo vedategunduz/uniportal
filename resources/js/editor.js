@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                 }),
                 ImageResize,
-                // Include the custom Bold extension
                 CustomBold,
                 TextStyle,
                 Color,

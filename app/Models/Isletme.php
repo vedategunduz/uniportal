@@ -41,4 +41,8 @@ class Isletme extends Model
         $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
         return Isletme::whereIn('isletmeler_id', $isletmeler)->orderBy('baslik', 'asc')->get();
     }
+
+    public function tur() {
+        return $this->belongsTo(IsletmeTur::class, 'isletme_turleri_id', 'isletme_turleri_id');
+    }
 }
