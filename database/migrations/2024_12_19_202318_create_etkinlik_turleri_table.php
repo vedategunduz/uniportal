@@ -22,7 +22,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::enableForeignKeyConstraints();
 
         Schema::create('etkinlik_turleri_log', function (Blueprint $table) {
             $table->integer('etkinlik_turleri_id');
@@ -32,6 +31,7 @@ return new class extends Migration
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
 
         DB::unprepared("
             CREATE TRIGGER etkinlik_turleri_insert

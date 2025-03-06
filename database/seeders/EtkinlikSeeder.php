@@ -30,6 +30,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'image/etkinlikresim.png',
                     'kontenjan'                  => 100,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 2,
@@ -44,6 +45,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'image/404 Error with a cute animal-pana.png',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'özel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 2,
@@ -58,6 +60,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'https://placeholder.pagebee.io/api/random/2000/2000',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'uniportal',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 2,
@@ -72,7 +75,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'https://placeholder.pagebee.io/api/random/1000/1000',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
-
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 2,
@@ -87,6 +90,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'https://placeholder.pagebee.io/api/random/1920/1080',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 14,
@@ -101,6 +105,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'image/k1.jpg',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 14,
@@ -115,6 +120,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'image/k2.webp',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 14,
@@ -129,6 +135,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'https://placeholder.pagebee.io/api/random/300/200',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 14,
@@ -143,6 +150,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'https://placeholder.pagebee.io/api/random/300/300',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ],
                 [
                     'etkinlik_turleri_id'        => 14,
@@ -157,6 +165,7 @@ class EtkinlikSeeder extends Seeder
                     'kapakResmiYolu'             => 'https://placeholder.pagebee.io/api/random/400/300',
                     'kontenjan'                  => 500,
                     'katilimTipi'                => 'genel',
+                    'islem_yapan_id'             => 1,
                 ]
             ]
         );

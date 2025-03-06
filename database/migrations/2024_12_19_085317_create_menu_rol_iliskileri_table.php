@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreign('menuler_id')->references('menuler_id')->on('menuler')->onDelete('restrict');
         });
 
-        Schema::enableForeignKeyConstraints();
 
         Schema::create('menu_rol_iliskileri_log', function (Blueprint $table) {
             $table->integer('menu_rol_iliskileri_id');
@@ -31,6 +30,7 @@ return new class extends Migration
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
 
         // AFTER INSERT Trigger
         DB::unprepared("

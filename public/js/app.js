@@ -203,7 +203,9 @@ function deneme() {
 function showMoreText(clamp = 3) {
     document.querySelectorAll('.show-more-text').forEach((element) => {
         element.addEventListener('click', function () {
-            element.previousElementSibling.classList.toggle(`line-clamp-${clamp}`);
+            const wrapper = element.previousElementSibling;
+            wrapper.classList.toggle(`line-clamp-${clamp}`);
+            wrapper.querySelector('[data-iframe]').classList.toggle('hidden');
             element.querySelector('i').classList.toggle('bi-arrow-down-circle-fill');
             element.querySelector('i').classList.toggle('bi-arrow-up-circle-fill');
         });

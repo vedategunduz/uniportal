@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Etkinlik\EtkinlikKatilimMail;
+use App\Mail\Etkinlik\EtkinlikKatilimTalebiMail;
 use App\Models\Etkinlik;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class EtkinlikKatilimController extends Controller
 {
@@ -45,6 +48,12 @@ class EtkinlikKatilimController extends Controller
         $etkinlik->katilimcilar()->attach(Auth::id(), [
             'aciklama' => $validated['aciklama']
         ]);
+
+        Mail::to(Auth::user()->email)->send(new EtkinlikKatilimMail($etkinlik, Auth::user()));
+
+        if (!empty($etkinlik->mailDurumu)) {
+            Mail::to($etkinlik->whoIsCreator->email)->send(new EtkinlikKatilimTalebiMail($etkinlik, Auth::user(), $validated['aciklama']));
+        }
 
         return response()->json([
             'success' => true,

@@ -34,7 +34,6 @@ return new class extends Migration
             $table->foreign('unvanlar_id')->references('unvanlar_id')->on('unvanlar')->onDelete('restrict');
             $table->foreign('isletmeler_id')->references('isletmeler_id')->on('isletmeler')->onDelete('restrict');
         });
-        Schema::enableForeignKeyConstraints();
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
@@ -59,6 +58,7 @@ return new class extends Migration
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
 
         DB::unprepared("
             CREATE TRIGGER kullanicilar_insert

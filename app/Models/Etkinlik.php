@@ -27,9 +27,12 @@ class Etkinlik extends Model
         'kapakResmiYolu',
         'baslik',
         'aciklama',
+        'harita',
+        'goruntulenmeSayisi',
         'katilimSarti',
         'kontenjan',
         'yorumDurumu',
+        'mailDurumu',
         'sosyalMedyadaPaylas',
         'aktiflik',
     ];
@@ -58,7 +61,7 @@ class Etkinlik extends Model
         return $this->hasMany(EtkinlikDosya::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
-    public function il ()
+    public function il()
     {
         return $this->belongsTo(Il::class, 'iller_id', 'iller_id');
     }
@@ -89,6 +92,16 @@ class Etkinlik extends Model
             'etkinlikler_id',
             'kullanicilar_id'
         );
+    }
+
+    public function whoIsCreator()
+    {
+        return $this->belongsTo(Kullanici::class, 'islem_yapan_id', 'kullanicilar_id');
+    }
+
+    public function incrementView()
+    {
+        $this->increment('goruntulenmeSayisi');
     }
 
     public function mesajKanal()

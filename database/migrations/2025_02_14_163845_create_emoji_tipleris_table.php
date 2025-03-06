@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('emoji_tipleri', function (Blueprint $table) {
             $table->id('emoji_tipleri_id');
             $table->string('baslik')->nullable();
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('grup_id')->nullable();
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

@@ -1,12 +1,4 @@
-@extends('layouts.empty')
-
-@section('title', '404')
-
-@section('links')
-
-@endsection
-
-@section('content')
+<x-empty-layout>
     <div class="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-zinc-900 to-blue-900">
         <div class="max-h-96 text-center">
             <img src="{{ asset('image/404 Error-rafiki.png') }}" class="h-full mx-auto" alt="">
@@ -21,7 +13,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-@endsection
+</x-empty-layout>

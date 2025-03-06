@@ -88,26 +88,28 @@
     <!-- Katılım Şartları -->
     <div class="p-4 bg-gray-100 rounded-md">
         <h3 class="text-lg font-bold mb-2 text-gray-800">Katılım Şartları</h3>
-        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+        {{-- <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
             <li>18 yaşından büyük olmak</li>
             <li>Ön kayıt formunu doldurmak</li>
             <li>Katılım ücreti (varsa) ödenmiş olmak</li>
             <li>Etkinlik kurallarına uyum sağlamak</li>
-        </ul>
+        </ul> --}}
+        <p class="text-sm text-gray-700">
+            {{ $etkinlik->katilimSarti }}
+        </p>
     </div>
 
     <!-- Butonlar -->
-    <form action="{{ route('etkinlikler.katil.store', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id
-
-    )]) }}"
+    <form action="{{ route('etkinlikler.katil.store', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) }}"
         class="space-y-4">
         <x-textarea rows="3" name="aciklama" placeholder="Açıklama (opsiyonel)"></x-textarea>
 
         <x-checkbox name="katilimSartlari" id="katilimSartlari" class="text-sm">
-            Katılım şartlarını kabul ediyorum
+            Katılım şartlarını ve iletişim bilgilerimin düzenleyen kurum/işletme yetkilisiyle paylaşılmasını kabul
+            ediyorum.
         </x-checkbox>
 
-        <x-button type="submit" class="etkinlik-katil-submit-button">
+        <x-button type="submit" class="etkinlik-katil-submit-button w-full justify-center !bg-green-400 !text-white">
             Katıl
         </x-button>
     </form>

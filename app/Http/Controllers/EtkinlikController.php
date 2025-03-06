@@ -6,11 +6,13 @@ use App\Models\Etkinlik;
 
 class EtkinlikController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return view('main.etkinlik');
     }
 
-    public function show($etkinlik_id) {
+    public function show($etkinlik_id)
+    {
         $etkinlik_id = decrypt($etkinlik_id);
         $etkinlik = Etkinlik::find($etkinlik_id);
 
@@ -22,7 +24,8 @@ class EtkinlikController extends Controller
         ]);
     }
 
-    public function begenToggle($etkinlik_id) {
+    public function begenToggle($etkinlik_id)
+    {
         $etkinlik_id = decrypt($etkinlik_id);
         $etkinlik = Etkinlik::find($etkinlik_id);
 
@@ -31,6 +34,29 @@ class EtkinlikController extends Controller
         return response()->json([
             'success' => true,
             'begeni' => $etkinlik->begeni->count()
+        ]);
+    }
+
+    public function incrementView($etkinlik_id)
+    {
+        $etkinlik_id = decrypt($etkinlik_id);
+        $etkinlik = Etkinlik::find($etkinlik_id);
+
+        $etkinlik->incrementView();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function getViews($etkinlik)
+    {
+        $etkinlik = decrypt($etkinlik);
+        $etkinlik = Etkinlik::find($etkinlik);
+
+        return response()->json([
+            'success' => true,
+            'views' => $etkinlik->goruntulenmeSayisi
         ]);
     }
 }

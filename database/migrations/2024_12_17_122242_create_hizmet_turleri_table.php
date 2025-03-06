@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('hizmet_turleri', function (Blueprint $table) {
             $table->id('hizmet_turleri_id');
             $table->unsignedBigInteger('bagli_hizmet_turleri_id')->nullable();
@@ -28,7 +29,7 @@ return new class extends Migration
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
-
+        Schema::enableForeignKeyConstraints();
         DB::unprepared("
             CREATE TRIGGER hizmet_turleri_insert
             AFTER INSERT ON hizmet_turleri

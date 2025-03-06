@@ -15,6 +15,17 @@ class KampanyaController extends Controller
         return view('yonetim.kampanya.index');
     }
 
+    public function show($etkinlik_id) {
+        // $etkinlik_id = decrypt($etkinlik_id);
+        $etkinlik = Etkinlik::find($etkinlik_id);
+
+        return view('yonetim.kampanya.detay', compact('etkinlik'));
+    }
+
+    public function create() {
+        return view('yonetim.kampanya.ekle');
+    }
+
     public function store(KampanyaRequest $request)
     {
         $validated = $request->validated();
@@ -24,6 +35,7 @@ class KampanyaController extends Controller
 
         $validated['yorumDurumu']         = $request->has('yorumDurumu');
         $validated['sosyalMedyadaPaylas'] = $request->has('sosyalMedyadaPaylas');
+        $validated['mailDurumu']          = $request->has('mailDurumu');
 
         if ($request->file('kapakResmiYolu')) {
             $resim = $request->file('kapakResmiYolu');

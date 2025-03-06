@@ -12,6 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('roller', function (Blueprint $table) {
             $table->id('roller_id');
             $table->string('baslik');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
 
         DB::unprepared("
             CREATE TRIGGER roller_insert

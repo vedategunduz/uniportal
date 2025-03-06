@@ -118,6 +118,11 @@
 
                     const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
 
+                    const viewUrl = "{{ route('etkinlikler.views', '___ID___') }}".replace(
+                        '___ID___', id);
+
+                    const viewResponse = await ApiService.fetchData(viewUrl, {}, 'POST');
+
                     const MODAL = document.getElementById('etkinlik-modal');
 
                     if (RESPONSE.data.success) {
@@ -142,9 +147,12 @@
 
                         const swiper = new Swiper('.swiper', {
                             loop: true,
-                            slidesPerView: 3,
-                            autoplay: {
-                                delay: 5000,
+                            pagination: {
+                                el: ".swiper-pagination",
+                            },
+                            navigation: {
+                                nextEl: ".swiper-button-next",
+                                prevEl: ".swiper-button-prev",
                             },
                         });
                     } else {

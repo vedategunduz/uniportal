@@ -19,8 +19,7 @@ async function fetchData(URL, DATA = null, METHOD = 'GET') {
             if (DATA)
                 config.params = DATA;
         }
-        else
-        {
+        else {
             config.data = DATA;
 
             if (DATA instanceof FormData) {
@@ -32,9 +31,22 @@ async function fetchData(URL, DATA = null, METHOD = 'GET') {
 
         return await axios(config);
     } catch (error) {
+        // Eğer sunucu bir HTTP yanıtı döndürdüyse:
+        if (error.response && error.response.data) {
+            const { data, status } = error.response;
+            return {
+                success: false,
+                status: status,
+                message: data.message || 'Bir hata oluştu!',
+                errors: data.errors || {},    // Validasyon hataları varsa
+            };
+        }
+
+        // Sunucu hiç yanıt veremediyse (örneğin bağlantı hatası)
         return {
             success: false,
-            message: error.response.data.message
+            message: error.message || 'Sunucuya ulaşılamadı.',
+            errors: {}
         };
     }
 }

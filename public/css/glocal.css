@@ -117,6 +117,7 @@ p {
     margin-bottom: 0;
 }
 
+
 label {
     font-weight: normal;
     margin: 0;
@@ -529,4 +530,95 @@ label {
         left: 100%;
         bottom: 100%;
     }
+}
+
+.iframe iframe {
+    width: 100%;
+    height: 450px;
+}
+
+/* Editor Gösterim İçin Varsayılan Stil Ayarları */
+.editor-gosterim {
+    /* Genel yazı tipi, boyut, renk gibi temel ayarlar */
+    font-size: 16px;
+    line-height: 1.5;
+    color: #000;
+    /* Eğer tüm framework ayarlarını iptal etmek isterseniz, aşağıdaki satırı deneyebilirsiniz:
+    all: revert;
+    */
+}
+
+/* Başlıklar */
+.editor-gosterim h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+.editor-gosterim h2 {
+    font-size: 1.5em;
+    margin: 0.75em 0;
+}
+
+.editor-gosterim h3 {
+    font-size: 1.17em;
+    margin: 0.83em 0;
+}
+
+.editor-gosterim h4 {
+    font-size: 1em;
+    margin: 1.12em 0;
+}
+
+.editor-gosterim h5 {
+    font-size: 0.83em;
+    margin: 1.5em 0;
+}
+
+.editor-gosterim h6 {
+    font-size: 0.67em;
+    margin: 1.67em 0;
+}
+
+/* Paragraflar */
+.editor-gosterim p {
+    margin: 0 0 1em;
+}
+
+/* Listeler */
+.editor-gosterim ul,
+.editor-gosterim ol {
+    margin: 0 0 1em 1.5em;
+    padding-left: 1.5em;
+}
+
+.editor-gosterim ul {
+    list-style-type: disc;
+}
+
+.editor-gosterim ol {
+    list-style-type: decimal;
+}
+
+/* Liste Elemanları */
+.editor-gosterim li {
+    margin-bottom: 0.25em;
+}
+
+/* Blok Alıntılar */
+.editor-gosterim blockquote {
+    margin: 0 0 1em;
+    padding-left: 1em;
+    border-left: 4px solid #ccc;
+}
+
+/* Resimler */
+.editor-gosterim img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Bağlantılar */
+.editor-gosterim a {
+    color: blue;
+    text-decoration: underline;
 }

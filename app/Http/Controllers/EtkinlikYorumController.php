@@ -18,6 +18,13 @@ class EtkinlikYorumController extends Controller
 
         $etkinlik = Etkinlik::find($etkinlik_id);
 
+        if (!$etkinlik->yorumDurumu) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bu etkinlik için yorum yapılamaz.'
+            ]);
+        }
+
         if (!empty($validated['etkinlik_yorumlari_id'])) {
             $yorum = $etkinlik->yorum()->find(decrypt($validated['etkinlik_yorumlari_id']));
             $yorum->yanit()->create([

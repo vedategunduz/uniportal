@@ -14,7 +14,6 @@ use App\Models\Isletme;
 use App\Models\IsletmeYetkili;
 use App\Models\Kullanici;
 use App\Models\KullaniciBirimUnvan;
-use App\Models\MesajKanal;
 use App\Models\MesajKanalKatilimci;
 use App\Models\SohbetKanal;
 use App\Models\SohbetKanalKatilimci;
@@ -23,7 +22,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ZiyaretController extends Controller
 {
-    public function ziyaretTalepModalGetir(string $etkinlik_id = null)
+    public function ziyaretTalepModalGetir(string $etkinlik_id)
     {
         $isletmeler = Isletme::isletmelerimiGetir();
 

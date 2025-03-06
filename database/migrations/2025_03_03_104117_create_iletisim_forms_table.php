@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::create('iletisim_form', function (Blueprint $table) {
             $table->id('iletisim_form_id');
             $table->string('konu', 100)->nullable();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->string('platform', 50)->nullable();
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

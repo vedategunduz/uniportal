@@ -47,7 +47,11 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
 
     Route::prefix('{etkinlik_id}')->group(function () {
         Route::get('/', [EtkinlikController::class, 'show'])->name('show');
+        Route::get('detay', [EtkinlikController::class, 'detay'])->name('detay');
         Route::patch('begenToggle', [EtkinlikController::class, 'begenToggle'])->name('begenToggle');
+
+        Route::get('/views', [EtkinlikController::class, 'getViews'])->name('views');
+        Route::post('/views', [EtkinlikController::class, 'incrementView'])->name('incrementView');
 
         Route::prefix('katil')->name('katil.')->group(function() {
             Route::get('/', [EtkinlikKatilimController::class, 'show'])->name('show');
@@ -184,6 +188,11 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
         Route::prefix('kampanyalar')->name('kampanyalar.')->group(function () {
             Route::get('/', [KampanyaController::class, 'index'])->name('index');
             Route::post('/', [KampanyaController::class, 'store'])->name('store');
+            Route::get('/ekle', [KampanyaController::class, 'create'])->name('create');
+
+            Route::prefix('{etkinlik_id}')->group(function () {
+                Route::get('/', [KampanyaController::class, 'show'])->name('show');
+            });
         });
     });
 });

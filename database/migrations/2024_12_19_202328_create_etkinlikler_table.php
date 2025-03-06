@@ -25,9 +25,12 @@ return new class extends Migration
             $table->string('baslik', 255)->nullable();
             $table->enum('katilimTipi', ['genel', 'uniportal', 'özel'])->default('genel');
             $table->text('aciklama')->nullable();
+            $table->string('harita', 1000)->nullable();
+            $table->integer('goruntulenmeSayisi')->nullable()->default(0);
             $table->text('katilimSarti')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
             $table->boolean('yorumDurumu')->nullable()->default(1);
+            $table->boolean('mailDurumu')->nullable()->default(1);
             $table->timestamps();
 
             $table->foreign('etkinlik_turleri_id')->references('etkinlik_turleri_id')->on('etkinlik_turleri');
@@ -35,7 +38,6 @@ return new class extends Migration
             $table->foreign('iller_id')->references('iller_id')->on('iller');
         });
 
-        Schema::enableForeignKeyConstraints();
 
         Schema::create('etkinlikler_log', function (Blueprint $table) {
             $table->integer('etkinlikler_id');
@@ -51,12 +53,16 @@ return new class extends Migration
             $table->string('baslik', 255)->nullable();
             $table->enum('katilimTipi', ['genel', 'uniportal', 'özel'])->default('genel');
             $table->text('aciklama')->nullable();
+            $table->string('harita', 1000)->nullable();
+            $table->integer('goruntulenmeSayisi')->nullable()->default(0);
             $table->text('katilimSarti')->nullable();
             $table->boolean('sosyalMedyadaPaylas', 1)->nullable()->default(1);
             $table->boolean('yorumDurumu')->nullable()->default(1);
+            $table->boolean('mailDurumu')->nullable()->default(1);
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
+        Schema::enableForeignKeyConstraints();
 
         // AFTER INSERT Trigger
         DB::unprepared("
@@ -78,6 +84,8 @@ return new class extends Migration
                     baslik,
                     katilimTipi,
                     aciklama,
+                    harita,
+                    goruntulenmeSayisi,
                     katilimSarti,
                     sosyalMedyadaPaylas,
                     yorumDurumu,
@@ -101,6 +109,8 @@ return new class extends Migration
                     NEW.baslik,
                     NEW.katilimTipi,
                     NEW.aciklama,
+                    NEW.harita,
+                    NEW.goruntulenmeSayisi,
                     NEW.katilimSarti,
                     NEW.sosyalMedyadaPaylas,
                     NEW.yorumDurumu,
@@ -133,6 +143,8 @@ return new class extends Migration
                     baslik,
                     katilimTipi,
                     aciklama,
+                    harita,
+                    goruntulenmeSayisi,
                     katilimSarti,
                     sosyalMedyadaPaylas,
                     yorumDurumu,
@@ -156,6 +168,8 @@ return new class extends Migration
                     NEW.baslik,
                     NEW.katilimTipi,
                     NEW.aciklama,
+                    NEW.harita,
+                    NEW.goruntulenmeSayisi,
                     NEW.katilimSarti,
                     NEW.sosyalMedyadaPaylas,
                     NEW.yorumDurumu,

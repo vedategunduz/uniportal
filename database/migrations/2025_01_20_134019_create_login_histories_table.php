@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        Schema::disableForeignKeyConstraints();
         Schema::create('login_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('kullanicilar_id')->nullable();
@@ -30,6 +32,7 @@ return new class extends Migration
 
             $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');
         });
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
