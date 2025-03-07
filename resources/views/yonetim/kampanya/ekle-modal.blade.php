@@ -1,15 +1,4 @@
-@extends('layouts.auth')
-
-@section('title', 'Kampanya Ekle')
-@section('links')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
-@endsection
-
-@section('content')
-    <a href="" class="hidden">
-        http://127.0.0.1:8000/yonetim/kampanyalar/eyJpdiI6ImsrU0hsVkpkKzZsK0wzcDJTaEJhekE9PSIsInZhbHVlIjoiRFRTOEpQaVU5Vk9MWWJyTjdHcElpdz09IiwibWFjIjoiZTA5YTZjNzkyZGQwYmUzZWIzODFiOWMyODBmZTNkOTEyNGYxMTg2ZTFiMTg2MDIyOTcwOWQyNzRhMGEyMmNmNSIsInRhZyI6IiJ9/edit
-    </a>
-
+<section>
     <x-modal id="imageCropModal" class="sm:w-2/4" title="Kırp">
         <div class="relative h-96">
             <img id="image" class="max-w-full" alt="Yüklenecek görüntü">
@@ -28,8 +17,6 @@
             @method('PATCH')
         @endif
 
-
-
         @csrf
         <div class="flex flex-col gap-4 shadow p-4 rounded">
             <div class="mb-4 relative group">
@@ -39,7 +26,7 @@
                 <div class="absolute top-4 left-4 hidden group-hover:!block">
                     <label for="inputImage"
                         class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded font-semibold text-xs uppercase tracking-widest shadow-sm hover:bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150 cursor-pointer">
-                        Kapak resmi değiştir
+                        Kapak resmi değiştir123
                     </label>
                 </div>
             </div>
@@ -82,7 +69,8 @@
 
             <select name="katilimTipi" class="w-full border border-gray-300 rounded py-1.5">
                 <option value="">Katılım tipi seçiniz</option>
-                <option value="genel" {{ optional($etkinlik)->katilimTipi === 'genel' ? 'selected' : '' }}>Genel</option>
+                <option value="genel" {{ optional($etkinlik)->katilimTipi === 'genel' ? 'selected' : '' }}>Genel
+                </option>
                 <option value="uniportal" {{ optional($etkinlik)->katilimTipi === 'uniportal' ? 'selected' : '' }}>
                     Uniportal</option>
             </select>
@@ -144,46 +132,11 @@
 
             <div class="text-right">
                 <x-button type="submit"
-                    class="justify-center w-full !bg-blue-600 !border-none !text-white !tracking-wider">
+                    class="kampanya-submit-button justify-center w-full !bg-blue-600 !border-none !text-white !tracking-wider">
                     {{ optional($etkinlik) ? 'Kampanyayı güncelle' : 'Kampanyayı yayınla' }}
                 </x-button>
             </div>
         </div>
 
     </form>
-@endsection
-
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
-    <script>
-        // document.addEventListener('click', function(event) {
-        //     event.target.closest('.kampanya-submit-button') && (async () => {
-        //         event.preventDefault();
-
-        //         const FORM = event.target.closest('form');
-        //         const DATA = new FormData(FORM);
-
-        //         DATA.append('aciklama', window.textEditor.getHTML());
-
-        //         const URL = "{{ route('yonetim.kampanyalar.store') }}";
-        //         const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
-
-        //         if (RESPONSE.status === 201) {
-        //             ApiService.alert.success(RESPONSE.data.message);
-        //         } else {
-        //             // Hata varsa:
-        //             if (RESPONSE.errors) {
-        //                 // Tüm validasyon hatalarını dönelim
-        //                 for (const [field, messages] of Object.entries(RESPONSE.errors)) {
-        //                     // messages bir dizi ise tek tek gezebilirsiniz
-        //                     messages.forEach(msg => ApiService.alert.error(msg));
-        //                 }
-        //             } else {
-        //                 ApiService.alert.error(RESPONSE.message);
-        //             }
-        //         }
-
-        //     })();
-        // });
-    </script>
-@endsection
+</section>

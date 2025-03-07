@@ -117,7 +117,9 @@
             </footer>
         </article>
         <aside class="col-span-1 md:border-l p-4 space-y-4">
-            <h2>Tarafından düzenlendi</h2>
+            <img src="{{ $etkinlik->kapakResmiYolu }}" class="w-full rounded" alt="{{ $etkinlik->baslik }}">
+
+            <h2 class="border-t border-b py-2">Tarafından düzenlendi</h2>
             <div class="flex items-center gap-2">
                 <img src="{{ $etkinlik->isletme->logoUrl }}" class="rounded size-12"
                     alt="{{ $etkinlik->isletme->baslik }} logosu">

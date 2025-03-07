@@ -187,11 +187,14 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
         Route::prefix('kampanyalar')->name('kampanyalar.')->group(function () {
             Route::get('/', [KampanyaController::class, 'index'])->name('index');
+            Route::get('dataTable/{isletme_id}', [KampanyaController::class, 'dataTable'])->name('dataTable');
             Route::post('/', [KampanyaController::class, 'store'])->name('store');
-            Route::get('/ekle', [KampanyaController::class, 'create'])->name('create');
+            Route::get('ekle', [KampanyaController::class, 'create'])->name('create');
 
             Route::prefix('{etkinlik_id}')->group(function () {
                 Route::get('/', [KampanyaController::class, 'show'])->name('show');
+                Route::get('edit', [KampanyaController::class, 'edit'])->name('edit');
+                Route::patch('/', [KampanyaController::class, 'update'])->name('update');
             });
         });
     });
