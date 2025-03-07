@@ -4,7 +4,7 @@
     'url' => '',
 ])
 
-<div data-file-upload>
+<div data-file-upload title="image/*,.pdf,.doc,.docx,.xls,.xlsx desteklenen formatlar">
     <!-- Dosya ekleme alanı -->
     <div data-file-drop-area>
         <input type="file" name="dosyalar[]" id="dosyalar" class="hidden" accept="{{ $accept }}" multiple

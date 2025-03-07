@@ -273,7 +273,7 @@
                         class="py-1.5 text-sm font-medium text-gray-500 focus:outline-none bg-white rounded-lg hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:text-white w-full dark:hover:bg-gray-600">Rengi
                         sıfırla</button>
                 </div>
-                <button id="toggleFontFamilyButton" data-dropdown-toggle="fontFamilyDropdown" type="button"
+                {{-- <button id="toggleFontFamilyButton" data-dropdown-toggle="fontFamilyDropdown" type="button"
                     data-tooltip-target="tooltip-font-family"
                     class="p-1.5 text-gray-500 rounded-sm cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -345,7 +345,7 @@
                             </button>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
                 <div class="px-1">
                     <span class="block w-px h-4 bg-gray-300 dark:bg-gray-600"></span>
                 </div>

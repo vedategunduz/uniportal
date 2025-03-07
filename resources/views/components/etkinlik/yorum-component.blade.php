@@ -49,17 +49,17 @@
             </section>
 
             <footer class="flex items-center gap-2 mt-1">
-                <p class="font-semibold text-xs text-gray-500">
+                <span class="font-semibold text-xs text-gray-500">
                     {{ $yorum->created_at->diffForHumans() }}
-                </p>
+                </span>
                 {{-- @if ($yorum->begeni->count()) --}}
-                <p data-yorum-begeni-wrapper @class([
+                <span data-yorum-begeni-wrapper @class([
                     'font-semibold text-xs text-gray-500 flex items-center gap-2',
                     'hidden' => !$yorum->begeni->count(),
                 ])>
                     <i class="bi bi-heart-fill"></i>
                     <span data-yorum-begeni-count>{{ $yorum->begeni->count() }}</span>
-                </p>
+                </span>
                 {{-- @endif --}}
                 @if ($yorum->yanit->count())
                     <x-button

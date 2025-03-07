@@ -15,22 +15,23 @@
         </x-button>
     </x-modal>
 
-    <div class="mb-4 relative group">
-        <img id="banner-image" src="{{ asset('image/resim-yok.png') }}" class="max-h-96 w-full object-contain rounded"
-            loading="lazy" alt="">
-        <div class="absolute top-4 left-4 hidden group-hover:!block">
-            <label for="inputImage"
-                class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded font-semibold text-xs uppercase tracking-widest shadow-sm hover:bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150 cursor-pointer">
-                Kapak resmi değiştir
-            </label>
-        </div>
-    </div>
+    <form action="" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-    <form action="" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-4 shadow p-4 rounded">
+            <div class="mb-4 relative group">
+                <img id="banner-image" src="{{ asset('image/resim-yok.png') }}"
+                    class="max-h-96 w-full object-contain rounded" loading="lazy" alt="">
+                <div class="absolute top-4 left-4 hidden group-hover:!block">
+                    <label for="inputImage"
+                        class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded font-semibold text-xs uppercase tracking-widest shadow-sm hover:bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150 cursor-pointer">
+                        Kapak resmi değiştir
+                    </label>
+                </div>
+            </div>
+
             <input type="file" id="inputImage" name="kapakResmiYolu" class="hidden" accept="image/*">
 
-            <p class="text-sm/6 font-medium text-gray-900">Kampanya Detayları</p>
+            {{-- <p class="text-sm/6 font-medium text-gray-900">Kampanya Detayları</p> --}}
             <select name="isletmeler_id" @class(['w-full border border-gray-300 rounded py-1.5'])>
                 @if (auth()->user()->isletmeler->count() > 1)
                     <option value="">İşletme seçiniz</option>
@@ -50,23 +51,32 @@
                 <x-datetime name="etkinlikBitisTarihi" label="Kampanya bitiş tarihi" />
             </div>
 
-            <p class="text-sm/6 font-medium text-gray-900">Dosya ve Resimler</p>
-            <x-file-upload url="yonetim/etkinlikler/dosya-yukle" />
+            <x-relative-input type="text" name="harita" label="Google Harita (iframe kodu)" required />
 
-            @include('yonetim.kampanya.partials.editor')
+            <select name="isletmeler_id" @class(['w-full border border-gray-300 rounded py-1.5'])>
+                <option value="">Katılım tipi seçiniz</option>
+                <option value="genel">Genel</option>
+                <option value="uniportal">Uniportal</option>
+            </select>
+
+            {{-- <p class="text-sm/6 font-medium text-gray-900">Dosya ve Resimler</p> --}}
 
             <x-textarea rows="3" name="katilimSarti" placeholder="Katılım şartları"></x-textarea>
 
         </div>
 
-        <div class="flex flex-col gap-8">
-            <label for="harita" class="text-sm/6 font-medium text-gray-900">Google Harita</label>
+        <div class="flex flex-col gap-4 shadow p-4 rounded">
+            {{-- <label for="harita" class="text-sm/6 font-medium text-gray-900">Google Harita (iframe kodu)</label>
 
-            <x-textarea rows="3" name="harita" id="harita" placeholder=""></x-textarea>
+            <x-textarea rows="1" name="harita" id="harita" placeholder=""></x-textarea> --}}
+            <x-file-upload text="/Resim veya Dosya seç ya da buraya bırak" url="yonetim/etkinlikler/dosya-yukle" />
 
-            <p class="text-sm/6 font-medium text-gray-900">Katılım tipi</p>
-            <div class="flex flex-col">
-                <x-radio name="katilimTipi" value="genel" checked>
+            <p class="text-lg font-medium text-gray-900 mb-0">Kampanya Açıklaması</p>
+            @include('yonetim.kampanya.partials.editor')
+
+            {{-- <p class="text-sm/4 font-medium text-gray-900">Katılım tipi</p> --}}
+            {{-- <div class="flex flex-col"> --}}
+            {{-- <x-radio name="katilimTipi" value="genel" checked>
                     <span>Genel</span>
                     <span class="text-gray-500 font-normal">Kampanyaya herkes katılabilir.</span>
                 </x-radio>
@@ -77,34 +87,35 @@
                 <x-radio name="katilimTipi" value="özel">
                     <span>Özel</span>
                     <span class="text-gray-500 font-normal">Sadece davet edilenler katılabilir.</span>
-                </x-radio>
-            </div>
+                </x-radio> --}}
 
-            <p class="border-b"></p>
+            {{-- </div> --}}
 
-            <p class="text-sm/6 font-medium text-gray-900">Kampanya İzinleri</p>
+            <p class="text-lg font-medium text-gray-900 border-b border-t py-2">Kampanya İzinleri</p>
+
+            {{-- <p class="border-b"></p> --}}
 
             <x-checkbox name="yorumDurumu">
                 <span>Yorumlara kapat</span>
-                <span class="text-gray-500 font-normal">Kampanyayı yoruma kapatmak için seçiniz.</span>
+                <span class="text-gray-500 font-normal text-xs">Kampanyayı yoruma kapatmak için seçiniz.</span>
             </x-checkbox>
 
             <x-checkbox name="sosyalMedyadaPaylas">
                 <span>Sosyal medyamızda paylaş</span>
-                <span class="text-gray-500 font-normal">
+                <span class="text-gray-500 font-normal text-xs">
                     Kampanyanın sosyal medya hesabımızda paylaşılması için seçiniz.</span>
             </x-checkbox>
 
             <x-checkbox name="mailDurumu">
                 <span>Mail bildirimleri almak istiyorum</span>
-                <span class="text-gray-500 font-normal">
+                <span class="text-gray-500 font-normal text-xs">
                     Katılım isteklerini mail ile almak için seçiniz.
                 </span>
             </x-checkbox>
 
             <div class="text-right">
                 <x-button type="submit"
-                    class="kampanya-submit-button !bg-blue-600 !border-none !text-white !normal-case !tracking-wider">Kampanyayı
+                    class="kampanya-submit-button justify-center w-full !bg-blue-600 !border-none !text-white !tracking-wider">Kampanyayı
                     yayınla</x-button>
             </div>
         </div>

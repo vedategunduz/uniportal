@@ -8,7 +8,7 @@ import TextAlign from 'https://esm.sh/@tiptap/extension-text-align@2.6.6';
 import Image from 'https://esm.sh/@tiptap/extension-image@2.6.6';
 import YouTube from 'https://esm.sh/@tiptap/extension-youtube@2.6.6';
 import TextStyle from 'https://esm.sh/@tiptap/extension-text-style@2.6.6';
-import FontFamily from 'https://esm.sh/@tiptap/extension-font-family@2.6.6';
+// import FontFamily from 'https://esm.sh/@tiptap/extension-font-family@2.6.6';
 import { Color } from 'https://esm.sh/@tiptap/extension-color@2.6.6';
 import Bold from 'https://esm.sh/@tiptap/extension-bold@2.6.6'; // Import the Bold extension
 import ImageResize from 'tiptap-extension-resize-image';
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 TextStyle,
                 Color,
                 FontSizeTextStyle,
-                FontFamily,
+                // FontFamily,
                 Highlight,
                 Underline,
                 Link.configure({
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             content: '',
             editorProps: {
                 attributes: {
-                    class: 'format lg:format-lg dark:format-invert focus:outline-none format-blue max-w-none min-h-32',
+                    class: 'format lg:format-lg dark:format-invert focus:outline-none format-blue max-w-none min-h-48',
                 },
             }
         });
@@ -158,6 +158,13 @@ document.addEventListener('DOMContentLoaded', function () {
             typographyDropdown.hide();
         });
 
+        if (!typographyDropdown) {
+            console.error('Dropdown instance bulunamadı!');
+        } else {
+            console.log('Dropdown instance bulundu!');
+        }
+
+
         document.querySelectorAll('[data-heading-level]').forEach((button) => {
             button.addEventListener('click', () => {
                 const level = button.getAttribute('data-heading-level');
@@ -203,19 +210,19 @@ document.addEventListener('DOMContentLoaded', function () {
             window.textEditor.commands.unsetColor();
         })
 
-        const fontFamilyDropdown = FlowbiteInstances.getInstance('Dropdown', 'fontFamilyDropdown');
+        // const fontFamilyDropdown = FlowbiteInstances.getInstance('Dropdown', 'fontFamilyDropdown');
 
-        // Loop through all elements with the data-font-family attribute
-        document.querySelectorAll('[data-font-family]').forEach((button) => {
-            button.addEventListener('click', () => {
-                const fontFamily = button.getAttribute('data-font-family');
+        // // Loop through all elements with the data-font-family attribute
+        // document.querySelectorAll('[data-font-family]').forEach((button) => {
+        //     button.addEventListener('click', () => {
+        //         const fontFamily = button.getAttribute('data-font-family');
 
-                // Apply the selected font size via pixels using the TipTap editor chain
-                window.textEditor.chain().focus().setFontFamily(fontFamily).run();
+        //         // Apply the selected font size via pixels using the TipTap editor chain
+        //         window.textEditor.chain().focus().setFontFamily(fontFamily).run();
 
-                // Hide the dropdown after selection
-                fontFamilyDropdown.hide();
-            });
-        });
+        //         // Hide the dropdown after selection
+        //         fontFamilyDropdown.hide();
+        //     });
+        // });
     }
 })

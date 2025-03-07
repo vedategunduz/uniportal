@@ -381,6 +381,14 @@ class MenuSeeder extends Seeder
                     'menuSira'         => 560,
                     'menuIcon'         => '',
                     'bagli_menuler_id' => 10,
+                ],
+                // 47
+                [
+                    'menuAd'           => 'Ürünler',
+                    'menuLink'         => '/yonetim/urunler',
+                    'menuSira'         => 510,
+                    'menuIcon'         => '',
+                    'bagli_menuler_id' => 10,
                 ]
             ]
         );

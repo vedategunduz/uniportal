@@ -15,14 +15,16 @@ class KampanyaController extends Controller
         return view('yonetim.kampanya.index');
     }
 
-    public function show($etkinlik_id) {
-        // $etkinlik_id = decrypt($etkinlik_id);
+    public function show($etkinlik_id)
+    {
+        $etkinlik_id = decrypt($etkinlik_id);
         $etkinlik = Etkinlik::find($etkinlik_id);
 
         return view('yonetim.kampanya.detay', compact('etkinlik'));
     }
 
-    public function create() {
+    public function create()
+    {
         return view('yonetim.kampanya.ekle');
     }
 
@@ -43,16 +45,13 @@ class KampanyaController extends Controller
             $validated['kapakResmiYolu'] = uploadFile($resim, $folder);
         }
 
-        $kampanya = Etkinlik::create($validated);
+        $etkinlik = Etkinlik::create($validated);
 
         $dosyalar = Dosya::where('islem_yapan_id', Auth::id())->get();
         $dosyalar->each->delete();
 
-        $kampanya->resimler()->createMany($dosyalar->toArray());
+        $etkinlik->resimler()->createMany($dosyalar->toArray());
 
-        return response()->json([
-            'success' => 1,
-            'message' => 'Kampanya başarıyla eklendi.'
-        ], 201);
+        return redirect()->route('yonetim.kampanya.detay', compact('etkinlik'))->with('success', 'Kampanya başarıyla eklendi.');
     }
 }

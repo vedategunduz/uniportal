@@ -1,12 +1,12 @@
 <section>
     <div class="flex items-center justify-between px-4 py-2 bg-gray-50/50 border-b">
-        <h4 class="font-medium text-lg text-gray-900">
+        <p class="font-medium text-lg text-gray-900 mb-0">
             @if ($kamuYorumu)
                 Kamu Yorumları
             @else
                 Yorumlar
             @endif
-        </h4>
+        </p>
 
         <x-button class="!shadow-none !border-0 !p-2 hover:!bg-inherit" :disabled="true">
             <div class="flex items-center gap-2">

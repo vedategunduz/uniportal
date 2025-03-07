@@ -143,8 +143,10 @@
                 <section class="flex items-center justify-between gap-2 px-4 py-2">
                     <!-- Yorum textarea -->
                     <x-textarea rows="1" name="yorum" class="custom-scroll max-h-24" :disabled="!auth()->check() || !$etkinlik->yorumDurumu">
-                        @if (auth()->check() && !$etkinlik->yorumDurumu)
-                            Yoruma kapalıdır.
+                        @if (auth()->check())
+                            @if (!$etkinlik->yorumDurumu)
+                                Yoruma kapalıdır.
+                            @endif
                         @else
                             Yorum yapabilmek için giriş yapmalısınız.
                         @endif
