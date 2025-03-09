@@ -75,8 +75,8 @@
                 </div>
             </header>
 
-            <section>
-                <p class="text-sm">{!! $etkinlik->aciklama !!}</p>
+            <section class="p-4">
+                {!! $etkinlik->aciklama !!}
             </section>
 
             <footer data-modal>

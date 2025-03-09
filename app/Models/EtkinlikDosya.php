@@ -15,8 +15,8 @@ class EtkinlikDosya extends Model
 
     protected $fillable = [
         'etkinlikler_id',
-        'dosya_adi',
-        'dosya_yolu',
+        'dosyaAdi',
+        'dosyaYolu',
     ];
 
     public function etkinlik()

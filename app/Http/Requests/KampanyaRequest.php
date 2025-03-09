@@ -31,6 +31,8 @@ class KampanyaRequest extends FormRequest
             'aciklama'              => 'nullable|string',
             'sosyalMedyadaPaylas'   => 'nullable',
             'yorumDurumu'           => 'nullable',
+            'mailDurumu'            => 'nullable',
+            'kapakResmiYolu'        => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',
             'dosyalar'              => 'nullable',
             'dosyalar.*'            => 'file|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx|max:4096',
         ];
@@ -40,7 +42,7 @@ class KampanyaRequest extends FormRequest
     {
         return [
             'isletmeler_id.required' => 'Kampanya işletmesi zorunludur.',
-            
+
             'baslik.required'        => 'Kampanya başlığı zorunludur.',
             'baslik.string'          => 'Kampanya başlığı geçerli bir metin olmalıdır.',
 
@@ -53,6 +55,9 @@ class KampanyaRequest extends FormRequest
             'baslik.max'                         => 'Kampanya başlığı en fazla 255 karakter olabilir.',
 
             'aciklama.string'                    => 'Kampanya açıklaması geçerli bir metin olmalıdır.',
+
+            'kapakResmiYolu.mimes'               => 'Kapak resmi alanı sadece jpg, jpeg, png, webp dosya türlerini kabul eder.',
+            'kapakResmiYolu.max'                 => 'Kapak resmi alanı en fazla 4096 KB olabilir.',
 
             'dosyalar.*.mimes'                   => 'Dosya alanı sadece jpg, jpeg, png, webp, pdf, doc, docx, xls, xlsx dosya türlerini kabul eder.',
             'dosyalar.*.max'                     => 'Dosya alanı en fazla 4096 KB olabilir.',

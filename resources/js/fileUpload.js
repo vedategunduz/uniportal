@@ -1,17 +1,89 @@
 export default class FileUpload {
-    constructor(container) {
-        this.container = container;
-        this.fileInput = container.querySelector('input[type="file"]');
-        this.fileUploadUrl = this.fileInput.dataset.url;
-        this.dropArea = container.querySelector('[data-drop-area]');
-        this.fileListContainer = container.querySelector('[data-file-list-container]');
-        // Seçilen dosyaları { file, link, isUploading } nesnesi şeklinde saklıyoruz.
-        this.selectedFiles = [];
+    constructor() {
         this.init();
     }
 
-    // File input'un değerini güncellemek için DataTransfer kullanıyoruz
+    init() {
+        // Container'ı seçiyoruz; sayfada yoksa çıkıyoruz.
+        this.container = document.querySelector('[data-file-upload]');
+        if (!this.container) {
+            console.warn('FileUpload: Container bulunamadı.');
+            return;
+        }
+
+        // Alt öğeleri seçiyoruz
+        this.fileInput = this.container.querySelector('input[type="file"]');
+        if (!this.fileInput) {
+            console.warn('FileUpload: File input bulunamadı.');
+            return;
+        }
+        this.fileUploadUrl = this.fileInput.dataset.url || '';
+
+        // Birden fazla data-drop-area olsa da, <div> olanı tercih ediyoruz.
+        this.dropArea = this.container.querySelector('div[data-file-drop-area]');
+        if (!this.dropArea) {
+            // Eğer <div> yoksa herhangi bir öğe seçiliyor.
+            this.dropArea = this.container.querySelector('[data-file-drop-area]');
+        }
+
+        this.fileListContainer = this.container.querySelector('[data-file-list-container]');
+        if (!this.fileListContainer) {
+            console.warn('FileUpload: File list container bulunamadı.');
+            return;
+        }
+
+        // Eğer daha önce dosya seçimi yapılmadıysa dizi oluşturuyoruz.
+        if (!this.selectedFiles) {
+            this.selectedFiles = [];
+        }
+
+        // File input'a listener ekliyoruz, eklenmişse tekrar eklemiyoruz.
+        if (!this.fileInput.__fileUploadInitialized) {
+            this.fileInput.addEventListener('change', this.handleFileInputChange.bind(this));
+            this.fileInput.__fileUploadInitialized = true;
+        }
+
+        // Eğer dropArea mevcutsa, onun için de event listener ekliyoruz.
+        if (this.dropArea && !this.dropArea.__fileUploadInitialized) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                this.dropArea.addEventListener(eventName, (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+            this.dropArea.addEventListener('drop', this.handleDrop.bind(this));
+            this.dropArea.__fileUploadInitialized = true;
+        }
+
+        console.log('FileUpload initialized');
+        // Mevcut dosyalar varsa güncel listeyi çiziyoruz.
+        this.updateFileList();
+    }
+
+    handleFileInputChange(e) {
+        const files = Array.from(e.target.files).map(file => ({
+            file,
+            link: null,
+            isUploading: false
+        }));
+        this.selectedFiles = this.selectedFiles.concat(files);
+        this.updateFileList();
+        this.updateFileInput();
+    }
+
+    handleDrop(e) {
+        const files = Array.from(e.dataTransfer.files).map(file => ({
+            file,
+            link: null,
+            isUploading: false
+        }));
+        this.selectedFiles = this.selectedFiles.concat(files);
+        this.updateFileList();
+        this.updateFileInput();
+    }
+
     updateFileInput() {
+        if (!this.fileInput) return;
         const dataTransfer = new DataTransfer();
         this.selectedFiles.forEach(entry => {
             dataTransfer.items.add(entry.file);
@@ -19,20 +91,18 @@ export default class FileUpload {
         this.fileInput.files = dataTransfer.files;
     }
 
-    // Dosya listesini günceller
     updateFileList() {
+        if (!this.fileListContainer) return;
         this.fileListContainer.innerHTML = ''; // Önceki listeyi temizle
 
         this.selectedFiles.forEach((entry, index) => {
             const file = entry.file;
-
-            // Ana kapsayıcı div
             const fileDiv = document.createElement('div');
             fileDiv.className = 'flex items-center gap-2 text-gray-500 mb-2';
-
             let previewElement;
+
             if (file.type.startsWith('image/')) {
-                // Resim önizlemesi için kapsayıcı oluşturuyoruz
+                // Resim için önizleme alanı oluşturuyoruz
                 const containerDiv = document.createElement('div');
                 containerDiv.className = 'w-16 h-16 rounded object-cover skeleton shrink-0';
 
@@ -40,26 +110,26 @@ export default class FileUpload {
                 previewElement.className = 'w-full h-full object-cover rounded';
                 containerDiv.appendChild(previewElement);
 
-                // FileReader ile resmi oku
+                // Önce load event listener'ı ekliyoruz, sonra src'yi atıyoruz
+                previewElement.addEventListener('load', () => {
+                    containerDiv.classList.remove('skeleton');
+                });
+
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     previewElement.src = e.target.result;
                 };
-                // Resim yüklendiğinde skeleton efektini kaldır
-                previewElement.addEventListener('load', () => {
-                    containerDiv.classList.remove('skeleton');
-                });
                 reader.readAsDataURL(file);
 
                 fileDiv.appendChild(containerDiv);
             } else {
-                // Resim değilse simge kullan
+                // Resim değilse simge gösteriyoruz
                 previewElement = document.createElement('i');
                 previewElement.className = 'bi bi-file-earmark text-3xl';
                 fileDiv.appendChild(previewElement);
             }
 
-            // Dosya bilgilerini gösteren alan
+            // Dosya bilgilerini içeren alan
             const infoDiv = document.createElement('div');
             infoDiv.className = 'flex flex-col';
             const nameSpan = document.createElement('span');
@@ -69,22 +139,6 @@ export default class FileUpload {
             infoDiv.appendChild(nameSpan);
             infoDiv.appendChild(sizeSpan);
 
-            // Eğer dosya yüklenmişse, linki göster; henüz yüklenmemişse ve yükleme başlamadıysa upload işlemini başlatıyoruz.
-            if (entry.link) {
-                const linkEl = document.createElement('a');
-                linkEl.href = entry.link;
-                linkEl.textContent = entry.link;
-                linkEl.className = 'text-xs text-blue-500 cursor-pointer mt-1 text-wrap';
-                linkEl.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    navigator.clipboard.writeText(entry.link);
-                    ApiService.alert.success('Dosya linki kopyalandı.');
-                });
-                infoDiv.appendChild(linkEl);
-            } else if (!entry.isUploading) {
-                entry.isUploading = true;
-                this.uploadFile(entry);
-            }
             fileDiv.appendChild(infoDiv);
 
             // Kaldırma butonu (x)
@@ -102,33 +156,6 @@ export default class FileUpload {
         });
     }
 
-    // Dosya yükleme işlemi: Her dosya için formData oluşturulur ve sunucuya fetch ile gönderilir.
-    // Yükleme başarılı olursa, dönen link entry.link olarak kaydedilir ve updateFileList() çağrılarak UI güncellenir.
-    uploadFile(entry) {
-        let formData = new FormData();
-        formData.append('dosya', entry.file);
-
-        (async () => {
-            try {
-                const response = await ApiService.fetchData(this.fileUploadUrl, formData, 'POST');
-
-                if (response.status !== 201) {
-                    return ApiService.alert.error(`Dosya yükleme hatası: ${response.message}`);
-                }
-
-                if (response.data.success) {
-                    entry.link = response.data.url; // Sunucudan dönen linki kaydediyoruz
-                    // Dosya yüklendikten sonra listeyi yeniden render ediyoruz ki link görünsün.
-                    this.updateFileList();
-                }
-            } catch (err) {
-                console.log(err, 123);
-                // ApiService.alert.error('Dosya yükleme hatası.', err.message);
-            }
-        })();
-    }
-
-    // Dosya boyutunu okunabilir formata çevirir
     formatBytes(bytes, decimals = 2) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -138,29 +165,8 @@ export default class FileUpload {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
     }
 
-    init() {
-        // Dosya input değişiminde; seçilen her dosyayı { file, link, isUploading } nesnesi olarak saklıyoruz.
-        this.fileInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files).map(file => ({ file, link: null, isUploading: false }));
-            this.selectedFiles = this.selectedFiles.concat(files);
-            this.updateFileList();
-            this.updateFileInput();
-        });
-
-        // Drag & Drop için varsayılan davranışı engelle
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            this.dropArea.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-        });
-
-        // Dosya bırakma işlemi gerçekleştiğinde
-        this.dropArea.addEventListener('drop', (e) => {
-            const files = Array.from(e.dataTransfer.files).map(file => ({ file, link: null, isUploading: false }));
-            this.selectedFiles = this.selectedFiles.concat(files);
-            this.updateFileList();
-            this.updateFileInput();
-        });
+    // Refresh, eğer container/alt öğeler sonradan eklendiyse init()'i yeniden çağırır.
+    refresh() {
+        this.init();
     }
 }

@@ -1,103 +1,5 @@
 const BASE_URL = window.location.origin;
 const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-const ASIDE_MODAL = document.getElementById('aside-modal');
-
-async function fetchData(url, data = {}, isFormData = false, method = 'POST') {
-    try {
-        const headers = {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': CSRF_TOKEN,
-        }
-
-        let body;
-
-        if (isFormData)
-            body = data;
-        else {
-            headers['Content-Type'] = 'application/json';
-            body = JSON.stringify(data);
-        }
-
-        const RESPONSE = await fetch(`${BASE_URL}/${url}`, {
-            method: method,
-            headers: headers,
-            body: body
-        });
-
-        return await RESPONSE.json();
-    } catch (error) {
-        console.error(`public app.js ==> ${error}`);
-    }
-}
-
-function createAlert(message, type = 'success') {
-    const ALERT_CONTAINER = document.createElement('div');
-    const ALERT_HEAD = document.createElement('p');
-    const ALERT_MESSAGE = document.createElement('p');
-
-    ALERT_HEAD.classList.add('mb-0');
-
-    const CONTAINER_CLASS = [
-        'border',
-        'px-4',
-        'py-3',
-        'rounded-lg',
-        'bottom-to-top-alert-animation',
-    ];
-
-    switch (type) {
-        case 'success':
-            CONTAINER_CLASS.push('border-emerald-300', 'bg-emerald-100', 'text-emerald-600');
-            ALERT_HEAD.textContent = 'Başarılı!';
-            ALERT_HEAD.classList.add('text-emerald-700', 'font-bold', 'me-2');
-            break;
-        case 'error':
-            CONTAINER_CLASS.push('border-rose-300', 'bg-rose-100', 'text-rose-700');
-            ALERT_HEAD.textContent = 'Hata!';
-            ALERT_HEAD.classList.add('text-rose-700', 'font-bold', 'me-2');
-            break;
-        case 'info':
-            CONTAINER_CLASS.push('border-blue-300', 'bg-blue-100', 'text-blue-600');
-            ALERT_HEAD.textContent = 'Bilgi!';
-            ALERT_HEAD.classList.add('text-blue-700', 'font-bold', 'me-2');
-            break;
-        case 'warning':
-            CONTAINER_CLASS.push('border-yellow-300', 'bg-yellow-100', 'text-yellow-600');
-            ALERT_HEAD.textContent = 'Uyarı!';
-            ALERT_HEAD.classList.add('text-yellow-700', 'font-bold', 'me-2');
-            break;
-    }
-    ALERT_CONTAINER.classList.add(...CONTAINER_CLASS);
-
-    ALERT_MESSAGE.appendChild(ALERT_HEAD);
-    ALERT_MESSAGE.innerHTML += message;
-    ALERT_MESSAGE.classList.add('text-sm', 'mb-0');
-
-    ALERT_CONTAINER.appendChild(ALERT_MESSAGE);
-
-    document.getElementById('alerts').appendChild(ALERT_CONTAINER);
-
-    setTimeout(function () {
-        document.getElementById('alerts').removeChild(ALERT_CONTAINER);
-    }, 5000);
-}
-
-function successAlert(message) {
-    createAlert(message, 'success');
-}
-
-function errorAlert(message) {
-    createAlert(message, 'error');
-}
-
-function infoAlert(message) {
-    createAlert(message, 'info');
-}
-
-function warningAlert(message) {
-    createAlert(message, 'warning');
-}
 
 window.addEventListener('click', async function (event) {
     if (event.target.matches('.open-aside-modal')) {
@@ -173,32 +75,32 @@ window.addEventListener('click', async function (event) {
     }
 });
 
-function deneme() {
-    const accordionButtons = document.querySelectorAll('.aside-message-accordion-button.active');
-    const ACCORDION_HEADERS = Array.from(accordionButtons, button => button.parentElement);
-    // const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active').parentElement;
+// function deneme() {
+//     const accordionButtons = document.querySelectorAll('.aside-message-accordion-button.active');
+//     const ACCORDION_HEADERS = Array.from(accordionButtons, button => button.parentElement);
+//     // const ACCORDION_HEADERS = document.querySelectorAll('.aside-message-accordion-button.active').parentElement;
 
-    ACCORDION_HEADERS.forEach((header) => {
-        if (header !== event.target.closest('.aside-message-accordion-button').parentElement) {
-            header.querySelector('.aside-message-accordion-button').classList.remove('active');
-            header.querySelector('.aside-message-accordion-button').classList.remove('!border-l-blue-400');
-            header.nextElementSibling.style.maxHeight = 0;
-        }
-    });
+//     ACCORDION_HEADERS.forEach((header) => {
+//         if (header !== event.target.closest('.aside-message-accordion-button').parentElement) {
+//             header.querySelector('.aside-message-accordion-button').classList.remove('active');
+//             header.querySelector('.aside-message-accordion-button').classList.remove('!border-l-blue-400');
+//             header.nextElementSibling.style.maxHeight = 0;
+//         }
+//     });
 
-    const ACCORDION_HEADER = event.target.closest('.aside-message-accordion-button');
-    const ACCORDION_BODY = ACCORDION_HEADER.parentElement.nextElementSibling;
+//     const ACCORDION_HEADER = event.target.closest('.aside-message-accordion-button');
+//     const ACCORDION_BODY = ACCORDION_HEADER.parentElement.nextElementSibling;
 
-    ACCORDION_HEADER.classList.toggle('active');
-    ACCORDION_HEADER.classList.toggle('!border-l-blue-400');
+//     ACCORDION_HEADER.classList.toggle('active');
+//     ACCORDION_HEADER.classList.toggle('!border-l-blue-400');
 
-    if (ACCORDION_HEADER.classList.contains('active')) {
-        ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
-        ACCORDION_BODY.querySelector('.mesaj-container').scrollTo(0, ACCORDION_BODY.querySelector('.mesaj-container').scrollHeight);
-    } else {
-        ACCORDION_BODY.style.maxHeight = 0;
-    }
-}
+//     if (ACCORDION_HEADER.classList.contains('active')) {
+//         ACCORDION_BODY.style.maxHeight = ACCORDION_BODY.scrollHeight + 'px';
+//         ACCORDION_BODY.querySelector('.mesaj-container').scrollTo(0, ACCORDION_BODY.querySelector('.mesaj-container').scrollHeight);
+//     } else {
+//         ACCORDION_BODY.style.maxHeight = 0;
+//     }
+// }
 
 function showMoreText(clamp = 3) {
     document.querySelectorAll('.show-more-text').forEach((element) => {
@@ -224,12 +126,11 @@ function modalClose(modal) {
     document.body.classList.remove('overflow-hidden');
 }
 
-// Dinamik olarak eklenen Summernote çağırmak için
-// @params id: Summernote çağrılacak elementin id'si
-function callSummernote(id) {
+function initSummernote(selector) {
+    console.log('Summernote initialized');
     $(document).ready(function () {
-        $(id).summernote({
-            height: 200,
+        $(`#${selector}`).summernote({
+            height: 100,
             lang: 'tr-TR',
             toolbar: [
                 ['style', ['style']],
@@ -302,109 +203,50 @@ function callSummernote(id) {
     });
 }
 
-function callResimler() {
-    function handleFileLoad(file, container, index, input) {
-        // Skeleton oluştur
-        const skeletonWrapper = document.createElement('div');
-        skeletonWrapper.className = 'flex items-center gap-4 border-b pb-2 mb-2';
+function datatable_verileri_getir(selector, URL) {
+    $(`#${selector}`).DataTable().destroy();
 
-        // Data attribute ile index’i saklıyoruz
-        skeletonWrapper.setAttribute('data-file-index', index);
-
-        skeletonWrapper.innerHTML = `
-        <div class="skeleton skeleton-img"></div>
-        <div class="flex flex-col justify-between mb-0 w-full">
-            <div class="skeleton skeleton-text"></div>
-            <div class="skeleton skeleton-text-small mb-1"></div>
-            <div class="skeleton skeleton-text-small"></div>
-        </div>
-      `;
-        container.appendChild(skeletonWrapper);
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            // Skeletonun yerine gerçek içeriği yaz
-            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
-            skeletonWrapper.innerHTML = `
-          <img src="${e.target.result}" alt="Resim Önizleme" class="size-14 rounded">
-          <p class="flex flex-col justify-between mb-0">
-              <span class="text-sm">${file.name}</span>
-              <span class="text-xs">Galeri resmi</span>
-              <span class="text-xs text-gray-500">${fileSizeMB}</span>
-          </p>
-          <button type="button" class="ml-auto text-sm hover:underline remove-btn">
-              Resmi kaldır
-          </button>
-        `;
-
-            // Silme butonu
-            const removeBtn = skeletonWrapper.querySelector('.remove-btn');
-            removeBtn.addEventListener('click', function () {
-                // 1) Hangi index'e sahip elemanın silineceğini tespit et
-                const fileIndex = skeletonWrapper.getAttribute('data-file-index');
-
-                // 2) DataTransfer nesnesi oluştur
-                const dt = new DataTransfer();
-
-                // 3) input.files dizisini dönerek bu index’e sahip olanı hariç tut
-                for (let i = 0; i < input.files.length; i++) {
-                    if (String(i) !== fileIndex) {
-                        dt.items.add(input.files[i]);
-                    }
-                }
-
-                // 4) Input’un yeni dosya listesini atayalım
-                input.files = dt.files;
-
-                // 5) Önizlemeyi DOM'dan kaldıralım
-                skeletonWrapper.remove();
-            });
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // Çoklu resimler
-    document.getElementById('resimYolu')?.addEventListener('change', function (event) {
-        const container = document.getElementById('resimYoluContainer');
-        const input = document.getElementById('resimYolu');
-
-        const files = event.target.files;
-        if (!files.length) return;
-
-        // Her bir dosyaya index atayıp handleFileLoad fonksiyonuna gönderiyoruz
-        Array.from(files).forEach((file, index) => {
-            if (file && file.type.startsWith('image/')) {
-                handleFileLoad(file, container, index, input);
-            }
-        });
-    });
-
-    // Tek resim (örnek kapak resmi)
-    document.getElementById('kapakResmiYolu')?.addEventListener('change', function (event) {
-        const container = document.getElementById('kapakResmiContainer');
-        const input = document.getElementById('kapakResmiYolu');
-
-        container.innerHTML = '';
-
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Tek resim seçtiğimiz için index = 0 atıyoruz
-        handleFileLoad(file, container, 0, input);
-    });
-}
-
-// DataTables için veri çekme
-function getDataTableDatas(datatable_id, url) {
-    $(`${datatable_id}`).DataTable({
-        responsive: true,
-        ordering: false,
+    $(`#${selector} `).DataTable({
+        // responsive: true,
         lengthMenu: [20, 40, 100, {
             'label': 'Hepsi',
             'value': -1
         }],
+        language: {
+            "decimal": ",",
+            "emptyTable": "Tabloda veri yok",
+            "info": " _START_ - _END_ arasında _TOTAL_ kayıt gösteriliyor",
+            "infoEmpty": "0 kayıttan 0'ı gösteriliyor",
+            "infoFiltered": " (Toplam _MAX_ kayıttan filtrelendi)",
+            "infoPostFix": "",
+            "thousands": ".",
+            "lengthMenu": "_MENU_ adet kayıt göster",
+            "loadingRecords": "Yükleniyor...",
+            "processing": "İşleniyor...",
+            "search": '<i class="bi bi-search"></i>',
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "paginate": {
+                "first": '<i class="bi bi-chevron-double-left"></i>',
+                "last": '<i class="bi bi-chevron-double-right"></i>',
+                "next": '<i class="bi bi-chevron-right"></i>',
+                "previous": '<i class="bi bi-chevron-left"></i>'
+            },
+            "aria": {
+                "orderable": "Bu sütunu sırala",
+                "orderableReverse": "Bu sütunun ters sırayla sıralanmasını sağla"
+            }
+        },
+        layout: {
+            topStart: {
+                pageLength: {
+                    className: 'hidden'
+                },
+            },
+            bottomStart: 'info',
+            bottomEnd: 'paging'
+        },
         ajax: {
-            url: `${BASE_URL}/${url}`,
+            url: URL,
             type: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',

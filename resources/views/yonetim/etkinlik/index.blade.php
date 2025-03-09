@@ -1,200 +1,274 @@
 @extends('layouts.auth')
 
-@section('title', 'Etkinlik Yönetimi')
+@section('title', 'etkinlik Yönetimi')
+
+@section('links')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
+
+    <style>
+        .dt-length select.input-sm {
+            line-height: 15px !important;
+            color: #000;
+        }
+
+        div.dt-container div.dt-layout-row {
+            margin: 0 0 1rem !important;
+        }
+
+        table#etkinlikler th,
+        table#etkinlikler td {
+            white-space: nowrap;
+        }
+
+        div.dt-container div.dt-search input {
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #4a5568;
+            background-color: #fff;
+            background-clip: padding-box;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        div.dt-container div.dt-layout-row div.dt-layout-cell {
+            padding: 0 !important;
+        }
+    </style>
+@endsection
 
 @section('content')
-    <div class="flex justify-between items-center bg-blue-700 text-white mb-8 p-2 rounded">
-        <h4>Etkinlik Yönetimi</h4>
-        <div class="flex items-center gap-4">
-            <select name="isletmeler_id" id="isletmeChange" @class([
-                'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-72 px-2.5 py-1',
-                'hidden' => count($isletmeler) <= 1,
-            ])>
-                @foreach ($isletmeler as $rowIsletme)
-                    <option value="{{ encrypt($rowIsletme->isletmeler_id) }}">{{ $rowIsletme->baslik }}</option>
-                @endforeach
-            </select>
-            <x-button class="bg-emerald-500 open-modal"
-                data-modal="modal" data-id="{{ encrypt(0) }}" data-event-type="insert">
-                Ekle
-            </x-button>
-        </div>
+    <h1 class="px-4">Etkinlik Yönetimi</h1>
+    <div class="flex flex-wrap gap-4 mb-4 px-4">
+        <select name="isletmeler_id" @class([
+            'border border-gray-300 text-gray-700 rounded py-1.5',
+            'hidden' => auth()->user()->isletmeler->count() == 1,
+        ])>
+            @foreach (auth()->user()->isletmeler as $detay)
+                <option value="{{ encrypt($detay->isletme->isletmeler_id) }}">{{ $detay->isletme->baslik }}</option>
+            @endforeach
+        </select>
+
+        <x-button class="etkinlik-ekle-modal ml-auto !bg-green-400 text-white border-none">Yeni Etkinlik Ekle</x-button>
     </div>
 
-    <div class="w-full overflow-x-auto">
-        <table id="etkinlikler" class="display nowrap stripe">
+    <div class="overflow-x-auto px-4 w-full">
+        <table id="etkinlikler" class="table table-striped table-bordered table-hover max-w-full">
             <thead>
                 <tr>
+                    <th data-dt-order="disable">#</th>
                     <th>Başlık</th>
-                    <th>Başvuru tarihleri</th>
                     <th>Başlama tarihleri</th>
-                    <th data-dt-order="disable"></th>
-                    <th data-dt-order="disable"></th>
+                    <th data-dt-order="disable">#</th>
+                    <th data-dt-order="disable">#</th>
                 </tr>
             </thead>
             <tbody id="table-body"></tbody>
         </table>
     </div>
 
-    {{-- <div id="modal" class="custom-modal hidden">
-        <section class="modal-outside close-modal" data-modal="modal"></section>
+    <x-modal id="etkinlik-modal" title="" class="w-full sm:w-4/5 overflow-y-auto">
+        <div class="h-96 flex items-center justify-center">
+            <div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div>
+        </div>
+    </x-modal>
 
-        <section id="modal-content" class="modal-content max-w-screen-md rounded max-h-screen overflow-auto hidden-scroll">
-        </section>
-    </div> --}}
+    <x-modal id="confirm-modal" title="" headerClass="!bg-transparent !text-gray-900" headerCloseButton="false">
+        <div class="space-y-8 pt-4">
+            <div class="text-center space-y-2">
+                <i class="bi bi-exclamation-circle-fill text-6xl text-gs-red"></i>
+
+                <p class="text-sm text-gray-700 w-52 mx-auto">
+                    İlgili etkinlik silenecektir. Etkinliği silmek istediğinize emin misiniz?
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <x-button class="justify-center close-modal canceled" data-modal="confirm-modal">İptal</x-button>
+                <x-button class="!bg-gs-red text-white !border-0 justify-center confirmed">Onayla</x-button>
+            </div>
+        </div>
+    </x-modal>
 @endsection
 
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+
     <script>
-        function verileriGetir(isletmeler_id) {
-            $('#etkinlikler').DataTable({
-                responsive: true,
-                ordering: false,
-                lengthMenu: [20, 40, 100, {
-                    'label': 'Hepsi',
-                    'value': -1
-                }],
-                ajax: {
-                    url: `etkinlikler/show/${isletmeler_id}`,
-                    type: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    },
-                    dataSrc: 'data',
-                },
+        function initCropper() {
+            let cropper;
+            let originalName = null;
+            const image = document.getElementById('image');
+            const input = document.getElementById('inputImage');
+            const cropButton = document.getElementById('cropButton');
+
+            // Dosya input değiştiğinde çalışır
+            input.addEventListener('change', function(event) {
+                if (event.target.files && event.target.files.length > 0) {
+                    const file = event.target.files[0];
+                    originalName = file.name;
+                    if (/^image\/\w+/.test(file.type)) { // dosyanın bir görsel olduğunu doğrula
+                        // Seçilen dosyayı nesne URL'sine çevirerek <img> etikete yükle
+                        const imageURL = URL.createObjectURL(file);
+                        image.src = imageURL;
+                        image.style.display = 'block';
+                        // Önceki bir cropper örneği varsa yok et (yeni resim yüklendi)
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        // Cropper.js örneğini oluştur ve oranı sabitle (burada 1:1 oran)
+                        cropper = new Cropper(image, {
+                            aspectRatio: 4 / 3, // 1:1 oran (16/9 gibi başka bir oranla değiştirilebilir)
+                            viewMode: 1 // Görüntü sınırları içinde kırpmayı kısıtla
+                        });
+
+                        const modal = document.getElementById('imageCropModal');
+                        modalShow(modal);
+                    } else {
+                        alert("Lütfen bir resim dosyası seçin.");
+                    }
+                }
+            });
+
+            cropButton.addEventListener('click', function() {
+                if (!cropper) return;
+
+                // Kırpılmış canvas elde ediyoruz
+                const canvas = cropper.getCroppedCanvas({
+                    fillColor: '#fff', // Transparan alanları beyazla doldur
+                });
+
+                // toBlob ile JPEG formatında (0.8 kalite) blob oluşturuyoruz
+                canvas.toBlob(function(blob) {
+                    if (!blob) return;
+
+                    // Blob'u bir File nesnesine çeviriyoruz
+                    const fileName = originalName;
+                    const fileOptions = {
+                        type: "image/jpeg"
+                    };
+                    const croppedFile = new File([blob], fileName, fileOptions);
+
+                    // İsteğe bağlı: Kırpılan resmi sayfada önizlemek için (base64 veya URL)
+                    const croppedImageURL = URL.createObjectURL(croppedFile);
+                    const bannerImage = document.getElementById('banner-image');
+                    bannerImage.src = croppedImageURL;
+
+                    // Şimdi bu File nesnesini <input type="file"> içine koyalım
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+                    input.files = dataTransfer.files;
+
+                    // Modal kapatma vs.
+                    modalClose(document.getElementById('imageCropModal'));
+                }, 'image/jpeg', 0.8);
             });
         }
 
-        // Ortak fonksiyon
-        async function handleEtkinlikForm(eventType, formData, button) {
-            try {
-                let url = '';
-                // İşlem tipine göre url belirliyoruz
-                switch (eventType) {
-                    case 'insert':
-                        url = 'yonetim/etkinlikler/ekle';
-                        break;
-                    case 'update':
-                        url = 'yonetim/etkinlikler/guncelle';
-                        break;
-                    case 'delete':
-                        url = 'yonetim/etkinlikler/sil';
-                        break;
-                    default:
-                        errorAlert('Bir hata oluştu.');
-                        return;
-                }
-
-                const RESPONSE_DATA = await fetchData(url, formData, true);
-
-                if (RESPONSE_DATA.success) {
-                    successAlert(RESPONSE_DATA.message);
-                    $('#etkinlikler').DataTable().ajax.reload(null, false);
-                    document.getElementById('modal').classList.add('hidden');
-                    document.body.classList.remove('overflow-hidden');
-                } else {
-                    if (RESPONSE_DATA.errors) {
-                        for (const [key, value] of Object.entries(RESPONSE_DATA.errors)) {
-                            errorAlert(value);
-                        }
-                    } else {
-                        errorAlert(RESPONSE_DATA.message);
-                    }
-                }
-            } catch (error) {
-                errorAlert(error.message);
-            } finally {
-                // İster başarılı ister hatalı olsun, buton kilidini açıyoruz
-                button.disabled = false;
-                if (eventType == 'insert')
-                    button.textContent = 'Oluştur';
-                else
-                    button.textContent = 'Güncelle';
-            }
+        function confirmModal() {
+            return new Promise((resolve, reject) => {
+                const MODAL = document.getElementById('confirm-modal');
+                MODAL.querySelector('.confirmed').addEventListener('click', () => {
+                    resolve(true);
+                    UniportalService.modal.hide('confirm-modal');
+                });
+                MODAL.querySelector('.canceled').addEventListener('click', () => resolve(false));
+                UniportalService.modal.show('confirm-modal');
+            });
         }
 
-        window.addEventListener('click', function(event) {
-            if (event.target.matches('.open-modal')) {
-                const modal = document.getElementById(event.target.dataset.modal);
-                const modalContent = modal.querySelector('#modal-content');
-
-                if (event.target.dataset.eventType == 'insert' || event.target.dataset.eventType == 'update') {
-                    (async () => {
-                        try {
-                            const RESPONSE_DATA = await fetchData(
-                                `yonetim/etkinlikler/modalGetir/${event.target.dataset.id}`);
-
-                            if (RESPONSE_DATA.success) {
-                                modalContent.innerHTML = RESPONSE_DATA.html;
-                                // Summernote çalışması için
-                                callSummernote('#summernote');
-                                // Input file ile seçilen resimlerin önizlemesi
-                                callResimler();
-                            } else
-                                errorAlert('Bir hata oluştu.');
-                        } catch (error) {
-                            errorAlert(error.message);
-                        }
-                    })();
-                }
-
-                if (event.target.dataset.eventType == 'delete') {
-                    (async () => {
-                        try {
-                            const RESPONSE_DATA = await fetchData(
-                                `yonetim/etkinlikler/silmeModalGetir/${event.target.dataset.id}`);
-
-                            if (RESPONSE_DATA.success) {
-                                modalContent.innerHTML = RESPONSE_DATA.html;
-                            } else
-                                errorAlert('Bir hata oluştu.');
-                        } catch (error) {
-                            errorAlert(error.message);
-                        }
-                    })();
-                }
-            }
-
-            if (event.target.matches('.etkinlik-submit')) {
-                event.preventDefault();
-
-                const button = event.target;
-                const eventType = button.dataset.eventType;
-                const form = event.target.closest('form');
-                const formData = new FormData(form);
-
-                button.disabled = true;
-                button.textContent = 'Bekleyiniz...';
-                handleEtkinlikForm(eventType, formData, event.target);
-            }
-
-            if (event.target.matches('.galeri-resmi-kaldir')) {
-                console.log(event.target.dataset.id);
-                (async () => {
-                    try {
-                        const RESPONSE_DATA = await fetchData(
-                            `yonetim/etkinlikler/resmi-kaldir/${event.target.dataset.id}`);
-
-                        if (RESPONSE_DATA.success) {
-                            event.target.closest('.galeri-resmi').remove();
-                        } else
-                            errorAlert('Resim kaldırılamadı.');
-                    } catch (error) {
-                        errorAlert(error.message);
-                    }
-                })();
-            }
-        });
-
-
         document.addEventListener('DOMContentLoaded', function() {
-            verileriGetir(document.getElementById('isletmeChange').value);
+            const isletme_select = document.querySelector('select[name="isletmeler_id"]');
+            const URL = `{{ route('yonetim.etkinlikler.dataTable', ['isletme_id' => '___ID___']) }}`;
+
+            if (isletme_select.value) {
+                datatable_verileri_getir('etkinlikler', URL.replace('___ID___', isletme_select.value));
+            }
+
+            isletme_select.addEventListener('change', function() {
+                if (this.value) {
+                    datatable_verileri_getir('etkinlikler', URL.replace('___ID___', isletme_select.value));
+                }
+            });
         });
 
-        document.getElementById('isletmeChange').addEventListener('change', function() {
-            $('#etkinlikler').DataTable().destroy();
-            verileriGetir(this.value);
+        const MODAL = document.getElementById('etkinlik-modal');
+
+        document.addEventListener('click', function(event) {
+
+            event.target.closest('.etkinlik-duzenle-modal') && (async () => {
+                const ID = event.target.closest('.etkinlik-duzenle-modal').dataset.id;
+                const URL =
+                    `{{ route('yonetim.etkinlikler.edit', ['etkinlik_id' => '___ID___']) }}`
+                    .replace('___ID___', ID);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                if (RESPONSE.data.success) {
+                    initSummernote('katilisimSartiSummernote');
+                    initSummernote('aciklamaSummernote');
+                    UniportalService.modal.show('etkinlik-modal');
+                    MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
+                    UniportalService.fileUpload.refresh();
+                    initCropper();
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+            })();
+
+            event.target.closest('.etkinlik-ekle-modal') && (async () => {
+                const URL = `{{ route('yonetim.etkinlikler.create') }}`;
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                if (RESPONSE.data.success) {
+                    UniportalService.modal.show('etkinlik-modal');
+                    MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
+                    UniportalService.fileUpload.refresh();
+                    initSummernote('katilisimSartiSummernote');
+                    initSummernote('aciklamaSummernote');
+                    initCropper();
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+            })();
+
+            event.target.closest('.etkinlik-submit-button') && (async () => {
+                event.preventDefault();
+                const FORM = event.target.closest('.etkinlik-submit-button').closest('form');
+                const URL = FORM.action;
+                const DATA = new FormData(FORM);
+
+                const RESPONSE = await ApiService.fetchData(URL, DATA, 'POST');
+
+                if (RESPONSE.data.success) {
+                    ApiService.alert.success(RESPONSE.data.message);
+                    UniportalService.modal.hide('etkinlik-modal');
+                    $('#etkinlikler').DataTable().ajax.reload(null, false);
+                } else
+                    ApiService.alert.error(RESPONSE.data.message);
+            })();
+
+            event.target.closest('.etkinlik-sil') && (async () => {
+                if (!await confirmModal()) return;
+                const ID = event.target.closest('.etkinlik-sil').dataset.id;
+                const URL = `{{ route('yonetim.etkinlikler.destroy', ['etkinlik_id' => '___ID___']) }}`
+                    .replace('___ID___', ID);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
+
+                if (RESPONSE.data.success) {
+                    ApiService.alert.success(RESPONSE.data.message);
+                    $('#etkinlikler').DataTable().ajax.reload(null, false);
+                } else
+                    ApiService.alert.error(RESPONSE.data.message);
+            })();
+
+            event.target.closest('.close-modal') && function() {
+                if (event.target.closest('.close-modal').closest('#imageCropModal'))
+                    return
+
+                MODAL.querySelector('[data-slot]').innerHTML =
+                    `<div class="h-96 flex items-center justify-center"><div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div></div>`;
+            }();
         });
     </script>
 @endsection

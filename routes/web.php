@@ -21,6 +21,7 @@ use App\Http\Controllers\ResimController;
 use App\Http\Controllers\Toplanti\ToplantiController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
 use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretKatilimController;
+use App\Http\Controllers\Yonetim\EtkinlikController as YonetimEtkinlikController;
 use App\Http\Controllers\Yonetim\KampanyaController;
 use App\Http\Controllers\Yonetim\KullaniciController;
 use App\Http\Controllers\Yonetim\YonetimController;
@@ -32,7 +33,7 @@ Route::prefix('/')->name('main.')->group(function () {
         return view('main.hakkinda');
     })->name('hakkinda');
 
-    Route::prefix('iletisim')->name('iletisim.')->group(function() {
+    Route::prefix('iletisim')->name('iletisim.')->group(function () {
         Route::get('/', [IletisimController::class, 'index'])->name('index');
         Route::post('/', [IletisimController::class, 'store'])->name('store');
     });
@@ -53,7 +54,7 @@ Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
         Route::get('/views', [EtkinlikController::class, 'getViews'])->name('views');
         Route::post('/views', [EtkinlikController::class, 'incrementView'])->name('incrementView');
 
-        Route::prefix('katil')->name('katil.')->group(function() {
+        Route::prefix('katil')->name('katil.')->group(function () {
             Route::get('/', [EtkinlikKatilimController::class, 'show'])->name('show');
             Route::post('/', [EtkinlikKatilimController::class, 'store'])->name('store');
         });
@@ -125,22 +126,36 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::post('/personelBirimAta', [BirimlerController::class, 'personelBirimAta']);
         });
 
+        // Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
+        //     Route::get('/', [EventController::class, 'index'])->name('index');
+        //     Route::get('/show/{isletmeler_id}', [EventController::class, 'getDataTableDatas'])->name('show');
+        //     Route::post('modalGetir/{id}', [EventController::class, 'modalGetir']);
+        //     Route::post('silmeModalGetir/{id}', [EventController::class, 'silmeModalGetir']);
+        //     Route::post('ekle', [EventController::class, 'store']);
+        //     Route::post('guncelle', [EventController::class, 'update']);
+        //     Route::post('sil', [EventController::class, 'etkinlikSil']);
+        //     Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
+
+        //     Route::post('dosya-yukle', [EventController::class, 'dosyaYukle'])->name('dosya-yukle');
+
+        //     Route::prefix('katilim')->name('katilim.')->group(function () {
+        //         Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
+        //         Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');
+        //         Route::get('download-ics/{id}', [ZiyaretKatilimController::class, 'downloadIcs'])->name('download-ics');
+        //     });
+        // });
+
         Route::prefix('etkinlikler')->name('etkinlikler.')->group(function () {
-            Route::get('/', [EventController::class, 'index'])->name('index');
-            Route::get('/show/{isletmeler_id}', [EventController::class, 'getDataTableDatas'])->name('show');
-            Route::post('modalGetir/{id}', [EventController::class, 'modalGetir']);
-            Route::post('silmeModalGetir/{id}', [EventController::class, 'silmeModalGetir']);
-            Route::post('ekle', [EventController::class, 'store']);
-            Route::post('guncelle', [EventController::class, 'update']);
-            Route::post('sil', [EventController::class, 'etkinlikSil']);
-            Route::post('resmi-kaldir/{id}', [ResimController::class, 'destroy']);
+            Route::get('/', [YonetimEtkinlikController::class, 'index'])->name('index');
+            Route::post('/', [YonetimEtkinlikController::class, 'store'])->name('store');
+            Route::get('ekle', [YonetimEtkinlikController::class, 'create'])->name('create');
+            Route::get('dataTable/{isletme_id}', [YonetimEtkinlikController::class, 'dataTable'])->name('dataTable');
 
-            Route::post('dosya-yukle', [EventController::class, 'dosyaYukle'])->name('dosya-yukle');
-
-            Route::prefix('katilim')->name('katilim.')->group(function () {
-                Route::get('onayla/{parametre}', [ZiyaretKatilimController::class, 'onay'])->name('onayla');
-                Route::get('red/{parametre}', [ZiyaretKatilimController::class, 'red'])->name('red');
-                Route::get('download-ics/{id}', [ZiyaretKatilimController::class, 'downloadIcs'])->name('download-ics');
+            Route::prefix('{etkinlik_id}')->group(function () {
+                Route::get('/', [YonetimEtkinlikController::class, 'show'])->name('show');
+                Route::get('edit', [YonetimEtkinlikController::class, 'edit'])->name('edit');
+                Route::patch('/', [YonetimEtkinlikController::class, 'update'])->name('update');
+                Route::delete('/', [YonetimEtkinlikController::class, 'destroy'])->name('destroy');
             });
         });
 
@@ -187,14 +202,15 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
 
         Route::prefix('kampanyalar')->name('kampanyalar.')->group(function () {
             Route::get('/', [KampanyaController::class, 'index'])->name('index');
-            Route::get('dataTable/{isletme_id}', [KampanyaController::class, 'dataTable'])->name('dataTable');
             Route::post('/', [KampanyaController::class, 'store'])->name('store');
             Route::get('ekle', [KampanyaController::class, 'create'])->name('create');
+            Route::get('dataTable/{isletme_id}', [KampanyaController::class, 'dataTable'])->name('dataTable');
 
             Route::prefix('{etkinlik_id}')->group(function () {
                 Route::get('/', [KampanyaController::class, 'show'])->name('show');
                 Route::get('edit', [KampanyaController::class, 'edit'])->name('edit');
                 Route::patch('/', [KampanyaController::class, 'update'])->name('update');
+                Route::delete('/', [KampanyaController::class, 'destroy'])->name('destroy');
             });
         });
     });
@@ -231,16 +247,16 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::get('/cikis', [AuthController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
 });
 
-Route::get('/onizle', function () {
-    return view('mail.hesap-onaylama-mail');
-});
+// Route::get('/onizle', function () {
+//     return view('mail.hesap-onaylama-mail');
+// });
 
-Route::post('/gitgetir', function () {
-    return response()->json([
-        'success' => true,
-        'html' => view('components.mesaj.mesaj')->render(),
-    ]);
-});
+// Route::post('/gitgetir', function () {
+//     return response()->json([
+//         'success' => true,
+//         'html' => view('components.mesaj.mesaj')->render(),
+//     ]);
+// });
 
 Route::prefix('errors')->name('errors.')->group(function () {
     Route::get('/404', function () {

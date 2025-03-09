@@ -33,16 +33,12 @@ class EtkinlikRequest extends FormRequest
             'etkinlikBitisTarihi'        => 'required|date|after_or_equal:etkinlikBaslamaTarihi',
             'baslik'                     => 'required|string|max:255',
             'aciklama'                   => 'nullable|string',
-
-            'sosyalMedyadaPaylas' => 'nullable',
-            'yorumDurumu'         => 'nullable',
-
-            // Kapak resmi
-            'kapakResmiYolu' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',
-
-            // Diğer resimler (array)
-            'resimYolu'   => 'nullable|array',
-            'resimYolu.*' => 'file|mimes:jpg,jpeg,png,webp|max:4096',
+            'sosyalMedyadaPaylas'        => 'nullable',
+            'yorumDurumu'                => 'nullable',
+            'mailDurumu'                 => 'nullable',
+            'kapakResmiYolu'             => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',
+            'dosyalar'                   => 'nullable',
+            'dosyalar.*'                 => 'file|mimes:jpg,jpeg,png,webp,pdf,doc,docx,xls,xlsx|max:4096',
         ];
     }
 
@@ -85,10 +81,9 @@ class EtkinlikRequest extends FormRequest
             'kapakResmiYolu.mimes' => 'Etkinlik kapak resmi jpg, jpeg, png veya webp formatında olmalıdır.',
             'kapakResmiYolu.max'   => 'Etkinlik kapak resmi en fazla 4096 kilobyte olabilir.',
 
-            'resimYolu.array'   => 'Diğer resimler geçerli bir dizi olmalıdır.',
-            'resimYolu.*.file'  => 'Diğer resimler geçerli bir dosya olmalıdır.',
-            'resimYolu.*.mimes' => 'Diğer resimler jpg, jpeg, png veya webp formatında olmalıdır.',
-            'resimYolu.*.max'   => 'Diğer resimler en fazla 4096 kilobyte olabilir.',
+            'dosyalar.*.file'  => 'Etkinlik dosyası geçerli bir dosya olmalıdır.',
+            'dosyalar.*.mimes' => 'Etkinlik dosyası jpg, jpeg, png, webp, pdf, doc, docx, xls veya xlsx formatında olmalıdır.',
+            'dosyalar.*.max'   => 'Etkinlik dosyası en fazla 4096 kilobyte olabilir.',
         ];
     }
 }

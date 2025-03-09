@@ -13,8 +13,7 @@
 <section class="grid grid-cols-1 lg:grid-cols-2 h-full" data-modal>
     <!-- Sol Kolon: Etkinlik Kapak Resmi -->
     <div class="p-2">
-
-        <div class="swiper">
+        <div class="swiper relative">
             <!-- Additional required wrapper -->
             <div class="swiper-wrapper">
                 <!-- Slider main container -->
@@ -26,16 +25,16 @@
                     @foreach ($etkinlik->resimler as $resim)
                         <!-- Slider main container -->
                         <div class="swiper-slide">
-                            <img src="{{ $resim->dosya_yolu }}" class="lg:h-[72vh] object-contain rounded mx-auto"
+                            <img src="{{ $resim->dosyaYolu }}" class="lg:h-[72vh] object-contain rounded mx-auto"
                                 alt="">
                         </div>
                     @endforeach
                 @endif
             </div>
+            <div class="sm:hidden swiper-button-next"></div>
+            <div class="sm:hidden swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
         </div>
-        <div class="sm:hidden swiper-button-next"></div>
-        <div class="sm:hidden swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
     </div>
 
     <!-- Sağ Kolon: Etkinlik Detayları & Yorumlar -->

@@ -4,69 +4,98 @@
 
 @section('links')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
+
+    <style>
+        .dt-length select.input-sm {
+            line-height: 15px !important;
+            color: #000;
+        }
+
+        div.dt-container div.dt-layout-row {
+            margin: 0 0 1rem !important;
+        }
+
+        table#kampanyalar th,
+        table#kampanyalar td {
+            white-space: nowrap;
+        }
+
+        div.dt-container div.dt-search input {
+            border: 1px solid #ccc;
+            border-radius: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #4a5568;
+            background-color: #fff;
+            background-clip: padding-box;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        div.dt-container div.dt-layout-row div.dt-layout-cell {
+            padding: 0 !important;
+        }
+    </style>
 @endsection
 
 @section('content')
-    <div class="flex justify-between items-center bg-blue-700 text-gray-50 mb-8 p-2 rounded">
-        <h4>Kampanya Yönetimi</h4>
-        <div class="flex items-center gap-4">
-            <select name="isletmeler_id" @class(['w-full border border-gray-300 text-gray-700 rounded py-1.5'])>
-                {{-- @if (auth()->user()->isletmeler->count() > 1)
-                    <option value="">İşletme seçiniz</option>
-                @endif --}}
-                @foreach (auth()->user()->isletmeler as $detay)
-                    <option value="{{ encrypt($detay->isletme->isletmeler_id) }}">{{ $detay->isletme->baslik }}</option>
-                @endforeach
-            </select>
+    <h1 class="px-4">Kampanya Yönetimi</h1>
+    <div class="flex flex-wrap gap-4 mb-4 px-4">
+        <select name="isletmeler_id" @class([
+            'border border-gray-300 text-gray-700 rounded py-1.5',
+            'hidden' => auth()->user()->isletmeler->count() == 1,
+        ])>
+            @foreach (auth()->user()->isletmeler as $detay)
+                <option value="{{ encrypt($detay->isletme->isletmeler_id) }}">{{ $detay->isletme->baslik }}</option>
+            @endforeach
+        </select>
 
-            <a href="{{ route('yonetim.kampanyalar.create') }}"
-                class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded font-semibold text-xs !text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150">Ekle</a>
-        </div>
+        <x-button class="kampanya-ekle-modal ml-auto !bg-green-400 text-white border-none">Yeni Kampanya Ekle</x-button>
     </div>
 
-    <div class="w-full overflow-x-auto">
-        <table id="kampanyalar" class="display nowrap stripe">
+    <div class="overflow-x-auto px-4 w-full">
+        <table id="kampanyalar" class="table table-striped table-bordered table-hover max-w-full">
             <thead>
                 <tr>
-                    <th></th>
+                    <th data-dt-order="disable">#</th>
                     <th>Başlık</th>
                     <th>Başlama tarihleri</th>
-                    <th data-dt-order="disable"></th>
-                    <th data-dt-order="disable"></th>
+                    <th data-dt-order="disable">#</th>
+                    <th data-dt-order="disable">#</th>
                 </tr>
             </thead>
             <tbody id="table-body"></tbody>
         </table>
     </div>
 
-    <x-modal id="etkinlik-modal" title="Detay" slotClass="h-full" class="w-full sm:w-4/5 overflow-y-auto"></x-modal>
+    <x-modal id="etkinlik-modal" title="" class="w-full sm:w-4/5 overflow-y-auto">
+        <div class="h-96 flex items-center justify-center">
+            <div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div>
+        </div>
+    </x-modal>
+
+    <x-modal id="confirm-modal" title="" headerClass="!bg-transparent !text-gray-900" headerCloseButton="false">
+        <div class="space-y-8 pt-4">
+            <div class="text-center space-y-2">
+                <i class="bi bi-exclamation-circle-fill text-6xl text-gs-red"></i>
+
+                <p class="text-sm text-gray-700 w-52 mx-auto">
+                    İlgili etkinlik silenecektir. Etkinliği silmek istediğinize emin misiniz?
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <x-button class="justify-center close-modal canceled" data-modal="confirm-modal">İptal</x-button>
+                <x-button class="!bg-gs-red text-white !border-0 justify-center confirmed">Onayla</x-button>
+            </div>
+        </div>
+    </x-modal>
 @endsection
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 
     <script>
-        function verileriGetir(isletmeler_id) {
-            $('#kampanyalar').DataTable({
-                responsive: true,
-                ordering: false,
-                lengthMenu: [20, 40, 100, {
-                    'label': 'Hepsi',
-                    'value': -1
-                }],
-                ajax: {
-                    url: `{{ route('yonetim.kampanyalar.dataTable', ['isletme_id' => '___ID___']) }}`.replace(
-                        '___ID___', isletmeler_id),
-                    type: 'GET',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    },
-                    dataSrc: 'data',
-                },
-            });
-        }
-
         function initCropper() {
             let cropper;
             let originalName = null;
@@ -137,26 +166,38 @@
             });
         }
 
+        function confirmModal() {
+            return new Promise((resolve, reject) => {
+                const MODAL = document.getElementById('confirm-modal');
+                MODAL.querySelector('.confirmed').addEventListener('click', () => {
+                    resolve(true);
+                    UniportalService.modal.hide('confirm-modal');
+                });
+                MODAL.querySelector('.canceled').addEventListener('click', () => resolve(false));
+                UniportalService.modal.show('confirm-modal');
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const isletme_select = document.querySelector('select[name="isletmeler_id"]');
+            const URL = `{{ route('yonetim.kampanyalar.dataTable', ['isletme_id' => '___ID___']) }}`;
 
             if (isletme_select.value) {
-                verileriGetir(isletme_select.value);
+                datatable_verileri_getir('kampanyalar', URL.replace('___ID___', isletme_select.value));
             }
 
             isletme_select.addEventListener('change', function() {
                 if (this.value) {
-                    $('#kampanyalar').DataTable().destroy();
-                    verileriGetir(this.value);
+                    datatable_verileri_getir('kampanyalar', URL.replace('___ID___', isletme_select.value));
                 }
             });
-
-
         });
+
+        const MODAL = document.getElementById('etkinlik-modal');
+
         document.addEventListener('click', function(event) {
 
             event.target.closest('.kampanya-duzenle-modal') && (async () => {
-
                 const ID = event.target.closest('.kampanya-duzenle-modal').dataset.id;
                 const URL =
                     `{{ route('yonetim.kampanyalar.edit', ['etkinlik_id' => '___ID___']) }}`
@@ -165,14 +206,29 @@
                 const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
 
                 if (RESPONSE.data.success) {
-                    const MODAL = document.getElementById('etkinlik-modal');
-
+                    UniportalService.modal.show('etkinlik-modal');
                     MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
-                    modalShow(MODAL);
+                    initSummernote('aciklamaSummernote');
+                    initSummernote('katilimSartiSummernote');
+                    UniportalService.fileUpload.refresh();
                     initCropper();
-                } else {
+                } else
                     ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
-                }
+            })();
+
+            event.target.closest('.kampanya-ekle-modal') && (async () => {
+                const URL = `{{ route('yonetim.kampanyalar.create') }}`;
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                if (RESPONSE.data.success) {
+                    UniportalService.modal.show('etkinlik-modal');
+                    MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
+                    UniportalService.fileUpload.refresh();
+                    initSummernote('aciklamaSummernote');
+                    initSummernote('katilimSartiSummernote');
+                    initCropper();
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
             })();
 
             event.target.closest('.kampanya-submit-button') && (async () => {
@@ -185,12 +241,31 @@
 
                 if (RESPONSE.data.success) {
                     ApiService.alert.success(RESPONSE.data.message);
-                    modalClose(document.getElementById('etkinlik-modal'));
-                    $('#kampanyalar').DataTable().ajax.reload();
-                } else {
+                    UniportalService.modal.hide('etkinlik-modal');
+                    $('#kampanyalar').DataTable().ajax.reload(null, false);
+                } else
                     ApiService.alert.error(RESPONSE.data.message);
-                }
             })();
+
+            event.target.closest('.kampanya-sil') && (async () => {
+                if (!await confirmModal()) return;
+                const ID = event.target.closest('.kampanya-sil').dataset.id;
+                const URL = `{{ route('yonetim.kampanyalar.destroy', ['etkinlik_id' => '___ID___']) }}`
+                    .replace('___ID___', ID);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'DELETE');
+
+                if (RESPONSE.data.success) {
+                    ApiService.alert.success(RESPONSE.data.message);
+                    $('#kampanyalar').DataTable().ajax.reload(null, false);
+                } else
+                    ApiService.alert.error(RESPONSE.data.message);
+            })();
+
+            event.target.closest('.close-modal') && function() {
+                MODAL.querySelector('[data-slot]').innerHTML =
+                    `<div class="h-96 flex items-center justify-center"><div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div></div>`;
+            }();
         });
     </script>
 @endsection

@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('etkinlik_dosyalar', function (Blueprint $table) {
             $table->id('etkinlik_dosyalar_id');
             $table->foreignId('etkinlikler_id')->constrained('etkinlikler', 'etkinlikler_id')->restrictOnDelete();
-            $table->string('dosya_adi');
-            $table->string('dosya_yolu');
+            $table->string('dosyaAdi')->nullable();
+            $table->string('dosyaYolu');
             $table->timestamps();
         });
         Schema::enableForeignKeyConstraints();

@@ -1,5 +1,6 @@
 function show(modal) {
     const MODAL = document.getElementById(modal);
+
     MODAL.classList.add('flex');
     MODAL.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');

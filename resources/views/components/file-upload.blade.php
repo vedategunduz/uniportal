@@ -1,14 +1,12 @@
 @props([
     'text' => '/Dosya seç veya dosyaları buraya bırak',
     'accept' => 'image/*,.pdf,.doc,.docx,.xls,.xlsx',
-    'url' => '',
 ])
 
 <div data-file-upload title="image/*,.pdf,.doc,.docx,.xls,.xlsx desteklenen formatlar">
     <!-- Dosya ekleme alanı -->
     <div data-file-drop-area>
-        <input type="file" name="dosyalar[]" id="dosyalar" class="hidden" accept="{{ $accept }}" multiple
-            data-url="{{ $url }}">
+        <input type="file" name="dosyalar[]" id="dosyalar" class="hidden" accept="{{ $accept }}" multiple>
 
         <label for="dosyalar" data-drop-area
             {{ $attributes->merge(['class' => 'border border-dashed rounded border-gray-300 w-full py-6 justify-center flex items-center cursor-pointer']) }}>

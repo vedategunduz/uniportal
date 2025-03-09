@@ -1,6 +1,4 @@
 import './echo';
-import './editor';
-import './editor2';
 import * as modal from './modal';
 import * as alert from './alert';
 import fetchData from './fetch';
@@ -9,9 +7,12 @@ import UniportalDropdown from './dropdown';
 
 const dropdown = new UniportalDropdown();
 
+const fileUpload = new FileUpload();
+
 const UniportalService = {
     dropdown,
     modal,
+    fileUpload,
 }
 
 const ApiService = {
@@ -21,7 +22,3 @@ const ApiService = {
 
 window.ApiService = ApiService;
 window.UniportalService = UniportalService;
-
-document.querySelectorAll('[data-file-upload]').forEach(container => {
-    new FileUpload(container);
-});

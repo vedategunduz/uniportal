@@ -19,7 +19,8 @@ function createAlert(message, type = 'success') {
     const textDiv = document.createElement('div');
     const title = document.createElement('p');
     const body = document.createElement('p');
-    body.classList.add('text-opacity-70');
+    title.classList.add('mb-0');
+    body.classList.add('text-opacity-70', 'mb-0');
 
     switch (type) {
         case 'success':

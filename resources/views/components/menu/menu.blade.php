@@ -1,6 +1,6 @@
-<aside class="sticky z-10 w-full lg:w-80 collapsible-menu top-[56px]">
+<aside class="sticky z-10 w-full lg:w-80 collapsible-menu top-[64px] shrink-0">
     <nav class="flex flex-col p-4" id="aside-nav">
-        <div class="gradient-aside rounded p-2 space-y-1" style="font-size: 16px">
+        <div class="gradient-aside rounded p-2 space-y-1">
             @php
                 $sayac = 0;
             @endphp
