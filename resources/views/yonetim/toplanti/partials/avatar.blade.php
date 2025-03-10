@@ -1,7 +1,3 @@
-@php
-
-@endphp
-
 <section class="flex justify-center -space-x-4">
     @foreach ($kullanicilar as $kullanici)
         <div @class(['rounded-full border-2 border-gray-50'])>

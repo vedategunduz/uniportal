@@ -51,12 +51,12 @@
 
                     <div class="relative">
                         <div id="kendiKurumPersonelListesi"
-                            class="max-h-80 space-y-4 overflow-y-auto px-4 absolute top-0 left-0 bg-gray-50 z-20 w-full shadow rounded">
+                            class="max-h-80 space-y-4 overflow-y-auto px-4 absolute1 top-0 left-0 bg-gray-50 z-20 w-full shadow rounded">
                         </div>
                     </div>
 
-                    <div id="kendiKurumSeciliPersoneller" class="space-y-2 pb-12 max-h-80 overflow-y-auto">
-
+                    <div id="kendiKurumSeciliPersoneller" class="space-y-2 max-h-80 overflow-y-auto">
+                        <x-yonetim.toplanti.kullanici :kullanici="auth()->user()" />
                     </div>
                 </section>
 

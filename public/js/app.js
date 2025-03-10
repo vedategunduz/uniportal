@@ -139,14 +139,14 @@ function initSummernote(selector, height = 100) {
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
                 ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview']],
+                ['view', ['fullscreen']],
                 ['mybutton', ['uploadDoc']]
             ],
             buttons: {
                 uploadDoc: function (context) {
                     var ui = $.summernote.ui;
                     var button = ui.button({
-                        contents: '<i class="note-icon-plus"/> Dosya Yükle',
+                        contents: '<i class="bi bi-cloud-arrow-up-fill"></i> Dosya Yükle',
                         tooltip: 'Doküman Yükle (pdf, docx vs)',
                         click: function () {
                             let fileInput = $(
