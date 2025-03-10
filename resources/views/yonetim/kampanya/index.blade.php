@@ -3,8 +3,6 @@
 @section('title', 'Kampanya Yönetimi')
 
 @section('links')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
-
     <style>
         .dt-length select.input-sm {
             line-height: 15px !important;
@@ -39,10 +37,11 @@
 @endsection
 
 @section('content')
-    <h1 class="px-4">Kampanya Yönetimi</h1>
-    <div class="flex flex-wrap gap-4 mb-4 px-4">
+    <div class="flex flex-wrap items-center px-4">
+        <h1 class="me-4">Kampanya Yönetimi</h1>
+
         <select name="isletmeler_id" @class([
-            'border border-gray-300 text-gray-700 rounded py-1.5',
+            'border border-gray-300 text-gray-700 rounded py-1.5 ml-auto w-full lg:w-auto',
             'hidden' => auth()->user()->isletmeler->count() == 1,
         ])>
             @foreach (auth()->user()->isletmeler as $detay)
@@ -50,7 +49,12 @@
             @endforeach
         </select>
 
-        <x-button class="kampanya-ekle-modal ml-auto !bg-green-400 text-white border-none">Yeni Kampanya Ekle</x-button>
+        <x-button class="kampanya-ekle-modal !bg-green-400 text-white border-none gap-2 w-full lg:w-auto justify-center">
+            <i class="bi bi-plus-lg"></i>
+            <span>Kampanya Ekle</span>
+        </x-button>
+
+        <p class="border-b w-full mt-0"></p>
     </div>
 
     <div class="overflow-x-auto px-4 w-full">
@@ -60,6 +64,9 @@
                     <th data-dt-order="disable">#</th>
                     <th>Başlık</th>
                     <th>Başlama tarihleri</th>
+                    <th>Yrm</th>
+                    <th>Bgn</th>
+                    <th>Sohbetler</th>
                     <th data-dt-order="disable">#</th>
                     <th data-dt-order="disable">#</th>
                 </tr>
@@ -93,8 +100,6 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
-
     <script>
         function initCropper() {
             let cropper;
@@ -208,7 +213,7 @@
                 if (RESPONSE.data.success) {
                     UniportalService.modal.show('etkinlik-modal');
                     MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
-                    initSummernote('aciklamaSummernote');
+                    initSummernote('aciklamaSummernote', 200);
                     initSummernote('katilimSartiSummernote');
                     UniportalService.fileUpload.refresh();
                     initCropper();
@@ -224,7 +229,7 @@
                     UniportalService.modal.show('etkinlik-modal');
                     MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
                     UniportalService.fileUpload.refresh();
-                    initSummernote('aciklamaSummernote');
+                    initSummernote('aciklamaSummernote', 200);
                     initSummernote('katilimSartiSummernote');
                     initCropper();
                 } else
@@ -260,6 +265,33 @@
                     $('#kampanyalar').DataTable().ajax.reload(null, false);
                 } else
                     ApiService.alert.error(RESPONSE.data.message);
+            })();
+
+            event.target.closest('.kampanya-sohbet-baslat') && (() => {
+                const button = event.target.closest('.kampanya-sohbet-baslat');
+                const ID = button.dataset.id;
+                const name = button.dataset.name;
+
+                document.querySelector('.open-aside-modal').click();
+                document.querySelector('.searchNotSifirla ').click();
+                document.querySelector('#modal-yeni-kanal').querySelector('input[name="baslik"]').value =
+                    name;
+                document.getElementById('search-channel').value = name;
+
+                document.querySelector('#modal-yeni-kanal').querySelector('input[name="etkinlikler_id"]')
+                    .value = ID;
+                searchChannel(name);
+            })();
+
+            event.target.closest('.kampanya-kanallar') && (() => {
+                const button = event.target.closest('.kampanya-kanallar');
+                const name = button.dataset.name;
+
+                document.querySelector('.open-aside-modal').click();
+                document.querySelector('#modal-yeni-kanal').querySelector('input[name="baslik"]').value =
+                    name;
+                document.getElementById('search-channel').value = name;
+                searchChannel(name);
             })();
 
             event.target.closest('.close-modal') && function() {

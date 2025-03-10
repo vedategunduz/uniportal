@@ -20,6 +20,9 @@ class Etkinlik extends Model
         'etkinlik_turleri_id',
         'isletmeler_id',
         'iller_id',
+        'giden_isletmeler_id',
+        'gidilen_isletmeler_id',
+        'kod',
         'etkinlikBasvuruTarihi',
         'etkinlikBasvuruBitisTarihi',
         'etkinlikBaslamaTarihi',
@@ -47,6 +50,16 @@ class Etkinlik extends Model
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
 
+    public function gidenIsletme()
+    {
+        return $this->belongsTo(Isletme::class, 'giden_isletmeler_id', 'isletmeler_id');
+    }
+
+    public function gidilenIsletme()
+    {
+        return $this->belongsTo(Isletme::class, 'gidilen_isletmeler_id', 'isletmeler_id');
+    }
+
     public function begeni()
     {
         return $this->hasMany(EtkinlikBegeniDetay::class, 'etkinlikler_id', 'etkinlikler_id');
@@ -57,7 +70,8 @@ class Etkinlik extends Model
         return $this->hasMany(EtkinlikYorum::class, 'etkinlikler_id', 'etkinlikler_id')->where('aktiflik', 1);
     }
 
-    public function resimler() {
+    public function resimler()
+    {
         return $this->hasMany(EtkinlikDosya::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
@@ -79,20 +93,25 @@ class Etkinlik extends Model
         }
     }
 
-    public function etkinlikKatilim()
+    public function katilimcilar()
     {
         return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
-    public function katilimcilar()
-    {
-        return $this->belongsToMany(
-            Kullanici::class,
-            'etkinlik_katilimlari',
-            'etkinlikler_id',
-            'kullanicilar_id'
-        );
-    }
+    // public function etkinlikKatilim()
+    // {
+    //     return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
+    // }
+
+    // public function katilimcilar()
+    // {
+    //     return $this->belongsToMany(
+    //         Kullanici::class,
+    //         'etkinlik_katilimlari',
+    //         'etkinlikler_id',
+    //         'kullanicilar_id'
+    //     );
+    // }
 
     public function whoIsCreator()
     {
@@ -118,14 +137,18 @@ class Etkinlik extends Model
         ]);
     }
 
-    public static function ekle($validatedData)
-    {
-        $validatedData['iller_id']            = decrypt($validatedData['iller_id']);
-        $validatedData['isletmeler_id']       = decrypt($validatedData['isletmeler_id']);
-        $validatedData['etkinlik_turleri_id'] = decrypt($validatedData['etkinlik_turleri_id']);
-
-        return self::create($validatedData);
+    public function mesajKanallari() {
+        return $this->hasMany(MesajKanal::class, 'etkinlikler_id', 'etkinlikler_id');
     }
+
+    // public static function ekle($validatedData)
+    // {
+    //     $validatedData['iller_id']            = decrypt($validatedData['iller_id']);
+    //     $validatedData['isletmeler_id']       = decrypt($validatedData['isletmeler_id']);
+    //     $validatedData['etkinlik_turleri_id'] = decrypt($validatedData['etkinlik_turleri_id']);
+
+    //     return self::create($validatedData);
+    // }
 
     // public function galeri()
     // {

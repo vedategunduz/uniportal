@@ -21,7 +21,18 @@ class KanalController extends Controller
         $validated['sadeceYonetici'] = $request->sadeceYonetici ? 1 : 0;
         $tarih = Carbon::now()->translatedFormat('d.M.Y H:i');
 
-        $kanal = MesajKanal::create($validated);
+        if ($request->file('resim')) {
+            $resim = $request->file('resim');
+            $folder = 'dosyalar/' . Auth::user()->anaIsletme->referans_kodu . '/' . Auth::user()->kod . '/kanal_dosyalari';
+            $validated['resim'] = uploadFile($resim, $folder);
+        }
+
+        if (!empty($validated['etkinlikler_id'])) {
+            $etkinlikler_id = $validated['etkinlikler_id'];
+            $validated['etkinlikler_id'] = decrypt($etkinlikler_id);
+        }
+
+        $kanal = MesajKanal::with('etkinlik')->create($validated);
 
         if (!empty($validated['kullanicilar_id'])) {
             array_map(function ($kullanici) use ($kanal, $tarih) {

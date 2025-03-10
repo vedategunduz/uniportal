@@ -39,10 +39,11 @@
 @endsection
 
 @section('content')
-    <h1 class="px-4">Etkinlik Yönetimi</h1>
-    <div class="flex flex-wrap gap-4 mb-4 px-4">
+    <div class="flex flex-wrap items-center px-4">
+        <h1 class="me-4">Etkinlik Yönetimi</h1>
+
         <select name="isletmeler_id" @class([
-            'border border-gray-300 text-gray-700 rounded py-1.5',
+            'border border-gray-300 text-gray-700 rounded py-1.5 ml-auto w-full lg:w-auto',
             'hidden' => auth()->user()->isletmeler->count() == 1,
         ])>
             @foreach (auth()->user()->isletmeler as $detay)
@@ -50,7 +51,12 @@
             @endforeach
         </select>
 
-        <x-button class="etkinlik-ekle-modal ml-auto !bg-green-400 text-white border-none">Yeni Etkinlik Ekle</x-button>
+        <x-button class="etkinlik-ekle-modal !bg-green-400 text-white border-none gap-2 w-full lg:w-auto justify-center">
+            <i class="bi bi-plus-lg"></i>
+            <span>Etkinlik Ekle</span>
+        </x-button>
+
+        <p class="border-b w-full mt-0"></p>
     </div>
 
     <div class="overflow-x-auto px-4 w-full">

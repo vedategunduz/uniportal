@@ -18,35 +18,55 @@ class EtkinlikKatilim extends Model
     protected $fillable = [
         'etkinlikler_id',
         'kullanicilar_id',
-        'giden_isletmeler_id',
-        'gidilen_isletmeler_id',
         'aciklama',
         'durum',
         'katilimciTipi'
     ];
 
-    public function bilgi()
+    public function kullanici()
     {
         return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
-    public function gidilenIsletme()
+    public function etkinlik()
     {
-        return $this->belongsTo(Isletme::class, 'gidilen_isletmeler_id', 'isletmeler_id');
+        return $this->belongsTo(Etkinlik::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
-    public function gidenIsletme()
-    {
-        return $this->belongsTo(Isletme::class, 'giden_isletmeler_id', 'isletmeler_id');
+    public function giden() {
+        return $this->where('katilimciTipi', 'giden');
     }
 
-    public static function katilimcilar($etkinlik_id, $type)
-    {
-        return self::with('bilgi')->where('etkinlikler_id', $etkinlik_id)->where('katilimciTipi', $type)->get();
+    public function davetli() {
+        return $this->where('katilimciTipi', 'davetli');
     }
 
-    public static function ziyaretIsletmeler($etkinlik_id)
-    {
-        return self::select('giden_isletmeler_id', 'gidilen_isletmeler_id')->where('etkinlikler_id', $etkinlik_id)->first();
+    public function katilimci() {
+        return $this->where('katilimciTipi', 'katilimci');
     }
+
+    // public function bilgi()
+    // {
+    //     return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
+    // }
+
+    // public function gidilenIsletme()
+    // {
+    //     return $this->belongsTo(Isletme::class, 'gidilen_isletmeler_id', 'isletmeler_id');
+    // }
+
+    // public function gidenIsletme()
+    // {
+    //     return $this->belongsTo(Isletme::class, 'giden_isletmeler_id', 'isletmeler_id');
+    // }
+
+    // public static function katilimcilar($etkinlik_id, $type)
+    // {
+    //     return self::with('bilgi')->where('etkinlikler_id', $etkinlik_id)->where('katilimciTipi', $type)->get();
+    // }
+
+    // public static function ziyaretIsletmeler($etkinlik_id)
+    // {
+    //     return self::select('giden_isletmeler_id', 'gidilen_isletmeler_id')->where('etkinlikler_id', $etkinlik_id)->first();
+    // }
 }

@@ -38,12 +38,13 @@ class EtkinlikController extends Controller
         $validated = $request->validated();
 
         $validated['etkinlik_turleri_id'] = decrypt($validated['etkinlik_turleri_id']);
-        $validated['isletmeler_id'] = decrypt($validated['isletmeler_id']);
-        $validated['iller_id'] = decrypt($validated['iller_id']);
+        $validated['isletmeler_id']       = decrypt($validated['isletmeler_id']);
+        $validated['iller_id']            = decrypt($validated['iller_id']);
 
         $validated['yorumDurumu']         = $request->has('yorumDurumu');
         $validated['sosyalMedyadaPaylas'] = $request->has('sosyalMedyadaPaylas');
         $validated['mailDurumu']          = $request->has('mailDurumu');
+        $validated['kod']                 = uniqid();
 
         if ($request->file('kapakResmiYolu')) {
             $resim = $request->file('kapakResmiYolu');
@@ -144,10 +145,10 @@ class EtkinlikController extends Controller
         $isletme_id = decrypt($isletme_id);
 
         $etkinlikler = Etkinlik::where('isletmeler_id', $isletme_id)
-        ->where('aktiflik', 1)
-        // ->where('etkinlik_turleri_id', '<=', 8)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where('aktiflik', 1)
+            // ->where('etkinlik_turleri_id', '<=', 8)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $data = [];
         // Etkinlik verilerini satır haline getiriyoruz.
@@ -157,8 +158,8 @@ class EtkinlikController extends Controller
             $row[]  = "<div class='min-w-12'><img src='$etkinlik->kapakResmiYolu' class='size-12 object-cover mx-auto rounded'></div>";
             $row[]  = '<a class="!text-blue-500 underline" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('yonetim.kampanyalar.show', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
             $row[]  = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '-' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i');
-            $row[]  = '<a href="javascript:void(0)" class="etkinlik-duzenle-modal open-modal" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-modal="etkinlik-modal">Düzenle</a>';
-            $row[]  = '<a href="javascript:void(0)" class="etkinlik-sil" data-id="' . encrypt($etkinlik->etkinlikler_id) . '">Sil</a>';
+            $row[]  = '<a href="javascript:void(0)" class="inline-flex p-2 bg-orange-400 text-xs !text-white rounded etkinlik-duzenle-modal open-modal" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-modal="etkinlik-modal"><i class="bi bi-pencil-square"></i></a>';
+            $row[]  = '<a href="javascript:void(0)" class="inline-flex p-2 bg-gs-red text-xs !text-white rounded etkinlik-sil" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-trash3"></i></a>';
             $data[] = $row;
         }
         // Tablo gövdesini gönderiyoruz.

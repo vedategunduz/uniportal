@@ -9,7 +9,6 @@
     @yield('links')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap.js"></script>
@@ -21,6 +20,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css" />
 
     {{-- <link rel="stylesheet" href="{{ asset('css/customDataTable.css') }}"> --}}
     {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
@@ -108,10 +109,35 @@
         </div>
     </div>
 
+    <x-modal id="modal-yeni-kanal-image-cropper" class="sm:w-2/4" zIndex="!z-30" title="Kırp">
+        <div class="relative h-96">
+            <img class="max-w-full image" alt="Yüklenecek görüntü">
+        </div>
+        <x-button id="modal-yeni-kanal-image-cropper-cropButton" class="mt-4">
+            Kırp
+        </x-button>
+    </x-modal>
+
     <x-modal id="modal-yeni-kanal" title="Yeni Kanal" class="w-full sm:w-3/5 md:max-w-md lg:max-w-sm kanal-modal">
+        <div class="mb-4 relative">
+            <img class="banner-image" src="{{ asset('image/resim-yok.png') }}"
+                class="max-h-96 w-full object-contain rounded" loading="lazy" alt="">
+
+            <div class="absolute top-4 left-4">
+                <label for="kanalKapakResmiYolu"
+                    class="inline-flex items-center px-4 py-2.5 bg-white border border-gray-300 rounded font-semibold text-xs uppercase tracking-widest shadow-sm hover:bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:text-gray-500 disabled:hover:!bg-inherit transition ease-in-out duration-150 cursor-pointer">
+                    Kapak resmi değiştir
+                </label>
+            </div>
+        </div>
+
         <form action="" class="space-y-2">
+            <input type="file" id="kanalKapakResmiYolu" name="resim" class="hidden" accept="image/*">
+
             <section id="mesaj-kanal-katilimcilar"
                 class="flex flex-nowrap items-center gap-2 w-full overflow-x-auto pb-2 custom-scroll"></section>
+
+            <input type="hidden" name="etkinlikler_id">
 
             <x-relative-input label="Kanal adı" type="text" name="baslik" class="py-2" placeholder=" " />
 
@@ -138,12 +164,42 @@
     </x-modal>
 
     {{-- <script src="{{ asset('js/data-table.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
+        initCropper({
+            cropperContainerSelector: '#modal-yeni-kanal-image-cropper', // Modal kapsayıcısının seçicisi
+            imageSelector: '.image', // Modal içerisindeki görüntü elemanı
+            inputSelector: '#kanalKapakResmiYolu', // Dosya input elemanı
+            cropButtonSelector: '#modal-yeni-kanal-image-cropper-cropButton', // Crop butonunun seçicisi
+            bannerImageSelector: '#modal-yeni-kanal .banner-image', // (Opsiyonel) Önizleme resmi
+            modalId: 'modal-yeni-kanal-image-cropper', // Modal ID'si
+            aspectRatio: 4 / 3, // Örnek olarak 4:3 oranı
+            viewMode: 1,
+            fillColor: '#fff',
+            fileType: 'image/jpeg',
+            quality: 0.5
+        });
+
         function dropdownTrigger(triggerEl) {
             const targetEl = document.getElementById(triggerEl.getAttribute(
                 'data-dropdown-toggle'));
             new Dropdown(targetEl, triggerEl);
+        }
+
+        function searchChannel(value) {
+            const CHANNELS = document.querySelectorAll('[data-channel-name]');
+            const SEARCH = value.toLowerCase();
+
+            CHANNELS.forEach((channel) => {
+                const CHANNEL_NAME = channel.dataset.channelName.toLowerCase();
+
+                if (CHANNEL_NAME.includes(SEARCH)) {
+                    channel.classList.remove('hidden');
+                } else {
+                    channel.classList.add('hidden');
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -151,6 +207,10 @@
             window.Echo.channel(`mesaj-kanallari`)
                 .listen('KanalOlusturuldu', (event) => {
                     subscribeToKanal(event.kanal.mesaj_kanallari_id);
+
+                    setTimeout(() => {
+                        searchChannel(document.getElementById('search-channel').value);
+                    }, 500);
                 })
                 .listen('KanalGuncellendi', (event) => {
                     subscribeToKanal(event.kanal.mesaj_kanallari_id);
@@ -756,17 +816,7 @@
                 if (event.target.matches('#search-channel')) {
                     const VALUE = event.target.value.toLowerCase();
 
-                    const CHANNELS = document.querySelectorAll('[data-channel-name]');
-
-                    CHANNELS.forEach((channel) => {
-                        const CHANNEL_NAME = channel.dataset.channelName.toLowerCase();
-
-                        if (CHANNEL_NAME.includes(VALUE)) {
-                            channel.classList.remove('hidden');
-                        } else {
-                            channel.classList.add('hidden');
-                        }
-                    });
+                    searchChannel(VALUE);
                 }
 
                 // if (!event.target.matches('textarea'))

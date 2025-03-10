@@ -41,8 +41,6 @@ class MesajController extends Controller
             }
         }
 
-        // Purifier::clean($validated['mesaj']);
-
         $pattern = '/(https?:\/\/\S+)/';
         $replacement = '<a href="$1" class="text-blue-700 hover:underline hover:text-blue-700" target="_blank">$1</a>';
         $validated['mesaj'] = preg_replace($pattern, $replacement, $validated['mesaj']);

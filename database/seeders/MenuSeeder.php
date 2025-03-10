@@ -313,7 +313,7 @@ class MenuSeeder extends Seeder
                 // 38
                 [
                     'menuAd'           => 'Ziyaret talep',
-                    'menuLink'         => '/yonetim/toplantilar/ziyaret/talep',
+                    'menuLink'         => '/yonetim/toplantilar/ziyaretler',
                     'menuSira'         => 605,
                     'menuIcon'         => '',
                     'bagli_menuler_id' => 14,

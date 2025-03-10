@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Yonetim;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\KampanyaRequest;
+use App\Http\Requests\ZiyaretRequest;
 use App\Models\Etkinlik;
-use App\Models\MesajKanal;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Isletme;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
-class KampanyaController extends Controller
+class ToplantiController extends Controller
 {
     public function index()
     {
-        return view('yonetim.kampanya.index');
+        return view('yonetim.toplanti.index');
     }
 
     public function show($etkinlik_id)
@@ -28,7 +28,9 @@ class KampanyaController extends Controller
     {
         $etkinlik = null;
 
-        $html = view('yonetim.kampanya.ekle-modal', compact('etkinlik'))->render();
+        $tum_isletmeler = Isletme::where('aktiflik', 1)->get();
+
+        $html = view('yonetim.toplanti.ekle-modal', compact('etkinlik', 'tum_isletmeler'))->render();
 
         return response()->json([
             'success' => true,
@@ -36,7 +38,7 @@ class KampanyaController extends Controller
         ], 200);
     }
 
-    public function store(KampanyaRequest $request)
+    public function store(ZiyaretRequest $request)
     {
         $validated = $request->validated();
 
@@ -87,7 +89,7 @@ class KampanyaController extends Controller
         // return view('yonetim.kampanya.ekle', compact('etkinlik'));
     }
 
-    public function update(string $etkinlik_id, KampanyaRequest $request)
+    public function update(string $etkinlik_id, ZiyaretRequest $request)
     {
         $etkinlik_id = decrypt($etkinlik_id);
         $etkinlik = Etkinlik::find($etkinlik_id);
@@ -146,28 +148,28 @@ class KampanyaController extends Controller
     {
         $isletme_id = decrypt($isletme_id);
 
-        $kampanyalar = Etkinlik::where('isletmeler_id', $isletme_id)->where('aktiflik', 1)->orderBy('etkinlikBaslamaTarihi', 'desc')->get();
+        $toplantilar = Etkinlik::where('isletmeler_id', $isletme_id)
+            ->where('aktiflik', 1)
+            ->where('etkinlik_turleri_id', 13)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $data = [];
         // Etkinlik verilerini satır haline getiriyoruz.
         // Tablo satırlarını birleştiriyoruz.
-        foreach ($kampanyalar as $etkinlik) {
+        foreach ($toplantilar as $etkinlik) {
+            $gidenler = $etkinlik->katilimcilar->where('katilimciTipi', 'giden');
+            $gidilenler = $etkinlik->katilimcilar->where('katilimciTipi', 'gidilen');
             $row    = [];
-            $row[]  = "<div class='min-w-12'><img src='$etkinlik->kapakResmiYolu' class='size-12 object-cover mx-auto rounded'></div>";
-            $row[]  = '<a class="!text-blue-500" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('yonetim.kampanyalar.show', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
-            $row[]  = '<span class="text-xs">' . Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i') . '</span>';
-            $row[]  = '<a href="javascript:void(0)" class="inline-flex items-center gap-2 p-2 bg-blue-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-chat-left-text"></i>
-                        <span>' . $etkinlik->yorum->where('yorum_tipi', 0)->count() . '</span></a>';
-            $row[]  = '<a href="javascript:void(0)" class="inline-flex items-center gap-2 p-2 bg-rose-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-heart"></i>
-                        <span>' . $etkinlik->begeni->count() . '</span></a>';
-            $row[]  = '
-                <div class="flex items-stretch">
-                <a href="javascript:void(0)" class="kampanya-sohbet-baslat inline-flex items-center gap-2 p-2 bg-green-400 text-xs !text-white rounded rounded-r-none" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-name="' . $etkinlik->baslik . '"><span>Sohbet başlat</span></a>
-                <a href="javascript:void(0)" class="kampanya-kanallar inline-flex items-center gap-2 p-2 bg-green-300 text-xs !text-white rounded rounded-l-none" data-name="' . $etkinlik->kod . '"><span>'. $etkinlik->mesajKanallari->count() .'</span><i class="bi bi-chat-dots-fill"></i></a>
-                </div>
-            ';
-            $row[]  = '<a href="javascript:void(0)" class="kampanya-duzenle-modal open-modal inline-flex p-2 bg-orange-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-modal="etkinlik-modal"><i class="bi bi-pencil-square"></i></a>';
-            $row[]  = '<a href="javascript:void(0)" class="kampanya-sil inline-flex p-2 bg-gs-red text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-trash3"></i></a>';
+
+            $row[]  = '<a class="!text-blue-500" target="_blank" href="#">' . $etkinlik->gidilenIsletme->baslik . '</a>';
+            $row[]  = '<a title="' . $etkinlik->baslik . '" href="#">' . $etkinlik->baslik . '</a>';
+            $row[]  = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '-' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i');
+            $row[] = view('yonetim.toplanti.partials.avatar', ['kullanicilar' => $gidenler])->render();
+            $row[] = view('yonetim.toplanti.partials.avatar', ['kullanicilar' => $gidilenler])->render();
+            $row[]  = '<a href="javascript:void(0)" class="inline-flex p-2 bg-orange-400 text-xs !text-white rounded kampanya-duzenle-modal open-modal" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-modal="etkinlik-modal"><i class="bi bi-pencil-square"></i></a>';
+            $row[]  = '<a href="javascript:void(0)" class="inline-flex p-2 bg-gs-red text-xs !text-white rounded kampanya-sil" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-trash3"></i></a>';
+
             $data[] = $row;
         }
         // Tablo gövdesini gönderiyoruz.

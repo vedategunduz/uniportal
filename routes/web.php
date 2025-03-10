@@ -16,11 +16,7 @@ use App\Http\Controllers\IletisimController;
 use App\Http\Controllers\KanalController;
 use App\Http\Controllers\MesajController;
 use App\Http\Controllers\Personel\PersonelController;
-use App\Http\Controllers\Yonetim\EventController;
-use App\Http\Controllers\ResimController;
-use App\Http\Controllers\Toplanti\ToplantiController;
-use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretController;
-use App\Http\Controllers\Toplanti\Ziyaret\ZiyaretKatilimController;
+use App\Http\Controllers\Yonetim\ToplantiController;
 use App\Http\Controllers\Yonetim\EtkinlikController as YonetimEtkinlikController;
 use App\Http\Controllers\Yonetim\KampanyaController;
 use App\Http\Controllers\Yonetim\KullaniciController;
@@ -159,25 +155,44 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             });
         });
 
+        // Route::prefix('toplantilar')->name('toplantilar.')->group(function () {
+        //     Route::get('/{isletmeler_id}', [ToplantiController::class, 'getDataTableDatas']);
+
+        //     Route::prefix('ziyaret')->group(function () {
+        //         Route::prefix('talep')->group(function () {
+        //             Route::get('/', [ToplantiController::class, 'index']);
+        //             Route::post('/ziyaretTalepModalGetir/{etkinlikler_id?}', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
+        //             Route::post('/olustur', [ZiyaretController::class, 'store']);
+        //             Route::post('/duzenle', [ZiyaretController::class, 'duzenle']);
+
+        //             Route::prefix('personeller')->group(function () {
+        //                 Route::post('/', [ZiyaretController::class, 'personeller']);
+        //                 Route::post('/yonetici', [ZiyaretController::class, 'kurumPersoneller']);
+        //             });
+
+        //             Route::prefix('personel-card')->group(function () {
+        //                 Route::post('/', [ZiyaretController::class, 'personelCard']);
+        //                 Route::post('davetci', [ZiyaretController::class, 'kurumPersonelCard']);
+        //             });
+        //         });
+        //     });
+        // });
         Route::prefix('toplantilar')->name('toplantilar.')->group(function () {
-            Route::get('/{isletmeler_id}', [ToplantiController::class, 'getDataTableDatas']);
+            Route::prefix('ziyaretler')->name('ziyaretler.')->group(function () {
+                Route::get('/', [ToplantiController::class, 'index'])->name('index');
+                Route::post('/', [ToplantiController::class, 'store'])->name('store');
+                Route::get('ekle', [ToplantiController::class, 'create'])->name('create');
+                Route::get('dataTable/{isletme_id}', [ToplantiController::class, 'dataTable'])->name('dataTable');
 
-            Route::prefix('ziyaret')->group(function () {
-                Route::prefix('talep')->group(function () {
-                    Route::get('/', [ToplantiController::class, 'index']);
-                    Route::post('/ziyaretTalepModalGetir/{etkinlikler_id?}', [ZiyaretController::class, 'ziyaretTalepModalGetir']);
-                    Route::post('/olustur', [ZiyaretController::class, 'store']);
-                    Route::post('/duzenle', [ZiyaretController::class, 'duzenle']);
+                Route::prefix('personeller')->name('personeller.')->group(function () {
+                    Route::post('/', [ToplantiController::class, 'personeller'])->name('personeller');
+                });
 
-                    Route::prefix('personeller')->group(function () {
-                        Route::post('/', [ZiyaretController::class, 'personeller']);
-                        Route::post('/yonetici', [ZiyaretController::class, 'kurumPersoneller']);
-                    });
-
-                    Route::prefix('personel-card')->group(function () {
-                        Route::post('/', [ZiyaretController::class, 'personelCard']);
-                        Route::post('davetci', [ZiyaretController::class, 'kurumPersonelCard']);
-                    });
+                Route::prefix('{etkinlik_id}')->group(function () {
+                    Route::get('/', [ToplantiController::class, 'show'])->name('show');
+                    Route::get('edit', [ToplantiController::class, 'edit'])->name('edit');
+                    Route::patch('/', [ToplantiController::class, 'update'])->name('update');
+                    Route::delete('/', [ToplantiController::class, 'destroy'])->name('destroy');
                 });
             });
         });
@@ -207,6 +222,7 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::get('dataTable/{isletme_id}', [KampanyaController::class, 'dataTable'])->name('dataTable');
 
             Route::prefix('{etkinlik_id}')->group(function () {
+                Route::get('chat', [KampanyaController::class, 'chat'])->name('chat');
                 Route::get('/', [KampanyaController::class, 'show'])->name('show');
                 Route::get('edit', [KampanyaController::class, 'edit'])->name('edit');
                 Route::patch('/', [KampanyaController::class, 'update'])->name('update');

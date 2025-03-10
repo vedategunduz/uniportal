@@ -88,11 +88,13 @@
         </div>
 
         <div class="flex flex-col gap-4 shadow p-4 rounded">
-            <p class="text-lg font-medium text-gray-900 mb-0">Katılım Şartları</p>
-            <textarea name="katilimSarti" id="katilisimSartiSummernote">{{ optional($etkinlik)->katilimSarti }}</textarea>
+            <div class="editor-gosterim">
+                <p class="text-lg font-medium text-gray-900 mb-0">Katılım Şartları</p>
+                <textarea name="katilimSarti" id="katilisimSartiSummernote">{{ optional($etkinlik)->katilimSarti }}</textarea>
 
-            <p class="text-lg font-medium text-gray-900 mb-0">Etkinlik Açıklaması</p>
-            <textarea name="aciklama" id="aciklamaSummernote">{{ optional($etkinlik)->aciklama }}</textarea>
+                <p class="text-lg font-medium text-gray-900 mb-0">Etkinlik Açıklaması</p>
+                <textarea name="aciklama" id="aciklamaSummernote">{{ optional($etkinlik)->aciklama }}</textarea>
+            </div>
 
             <p class="text-lg font-medium text-gray-900 border-b border-t py-2">Etkinlik İzinleri</p>
 

@@ -126,16 +126,15 @@ function modalClose(modal) {
     document.body.classList.remove('overflow-hidden');
 }
 
-function initSummernote(selector) {
+function initSummernote(selector, height = 100) {
     console.log('Summernote initialized');
     $(document).ready(function () {
         $(`#${selector}`).summernote({
-            height: 100,
+            height: height,
             lang: 'tr-TR',
             toolbar: [
                 ['style', ['style']],
                 ['font', ['bold', 'underline', 'clear']],
-                ['fontname', ['fontname']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['table', ['table']],
@@ -274,3 +273,75 @@ overflowXContainer.forEach(function (container) {
         }
     });
 });
+
+function initCropper(options) {
+    const cropperContainer = document.querySelector(options.cropperContainerSelector);
+    const image = cropperContainer.querySelector(options.imageSelector);
+    const input = document.querySelector(options.inputSelector);
+    const cropButton = document.querySelector(options.cropButtonSelector);
+    // Eğer varsa kırpılmış resmin önizlemesinin yapılacağı eleman
+    const bannerImage = options.bannerImageSelector ? document.querySelector(options.bannerImageSelector) : null;
+
+    let cropper;
+    let originalName = null;
+
+    // Dosya input değiştiğinde çalışacak olay
+    input.addEventListener('change', function (event) {
+        if (event.target.files && event.target.files.length > 0) {
+            const file = event.target.files[0];
+            originalName = file.name;
+            if (/^image\/\w+/.test(file.type)) { // Dosyanın resim olduğundan emin ol
+                const imageURL = URL.createObjectURL(file);
+                image.src = imageURL;
+                image.style.display = 'block';
+
+                // Önceki cropper varsa yok et
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                // Cropper.js örneğini oluştur (opsiyonel ayarlar kullanılabilir)
+                cropper = new Cropper(image, {
+                    aspectRatio: options.aspectRatio || 1,
+                    viewMode: options.viewMode || 1
+                });
+
+                // Modal'ı göster
+                UniportalService.modal.show(options.modalId);
+            } else {
+                alert("Lütfen bir resim dosyası seçin.");
+            }
+        }
+    });
+
+    // Crop butonuna tıklandığında
+    cropButton.addEventListener('click', function () {
+        if (!cropper) return;
+
+        // Kırpılmış canvas'ı elde et (fillColor ile boş alan doldurulur)
+        const canvas = cropper.getCroppedCanvas({
+            fillColor: options.fillColor || '#fff'
+        });
+
+        canvas.toBlob(function (blob) {
+            if (!blob) return;
+
+            const fileOptions = { type: options.fileType || "image/jpeg" };
+            const croppedFile = new File([blob], originalName, fileOptions);
+
+            // İsteğe bağlı: Kırpılmış resmi önizleme (bannerImage mevcutsa)
+            if (bannerImage) {
+                const croppedImageURL = URL.createObjectURL(croppedFile);
+                bannerImage.src = croppedImageURL;
+            }
+
+            // Dosyayı <input type="file"> içine yerleştir
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(croppedFile);
+            input.files = dataTransfer.files;
+
+            // Modal'ı kapat
+            UniportalService.modal.hide(options.modalId);
+        }, options.fileType || 'image/jpeg', options.quality || 0.5);
+    });
+}

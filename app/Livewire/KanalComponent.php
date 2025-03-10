@@ -17,7 +17,7 @@ class KanalComponent extends Component
     #[On('echo:mesaj-kanallari,KanalSilindi')]
     public function mount()
     {
-        $this->kanallar = MesajKanal::whereHas('katilimcilar', function ($query) {
+        $this->kanallar = MesajKanal::with('etkinlik')->whereHas('katilimcilar', function ($query) {
             $query->where('kullanicilar_id', Auth::id())->whereNull('deleted_at');
         })
             ->orderByDesc(

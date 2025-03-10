@@ -23,6 +23,11 @@ class MesajKanal extends Model
         'sadeceYonetici',
     ];
 
+    public function etkinlik()
+    {
+        return $this->belongsTo(Etkinlik::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
     public function mesajlar()
     {
         return $this->hasMany(Mesaj::class, 'mesaj_kanallari_id', 'mesaj_kanallari_id');

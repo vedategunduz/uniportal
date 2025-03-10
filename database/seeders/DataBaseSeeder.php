@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             IsletmeYetkiliSeeder::class,
             EtkinlikTurSeeder::class,
             EtkinlikSeeder::class,
+            EtkinlikKatilimSeeder::class,
             BirimTipleriSeeder::class,
             IsletmeBirimSeeder::class,
             KullaniciBirimUnvanSeeder::class,

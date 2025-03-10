@@ -1,6 +1,6 @@
 <div class="">
     @foreach ($kanallar as $kanal)
-        <div class="border-b" data-channel-name="{{ $kanal['baslik'] }}"
+        <div class="border-b" data-channel-name="{{ $kanal['baslik'] . ($kanal['etkinlik']['kod'] ?? '') }}"
             wire:key="kanal-{{ $kanal['mesaj_kanallari_id'] }}">
 
             <header class="flex items-center justify-between pr-6">
@@ -56,7 +56,7 @@
                                 <x-button class="rounded-r-none border-r-0 mesaj-dosya-yukleme-button">
                                     <i class="bi bi-paperclip text-base"></i>
                                 </x-button>
-                                <input type="file" name="file" class="hidden" data-mesaj-dosya-yukleme-input/>
+                                <input type="file" name="file" class="hidden" data-mesaj-dosya-yukleme-input />
                             </div>
 
                             <x-textarea name="mesaj" rows="1" data-mesaj-textarea
