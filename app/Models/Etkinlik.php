@@ -40,6 +40,21 @@ class Etkinlik extends Model
         'aktiflik',
     ];
 
+    public function katilimcilar()
+    {
+        return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
+    }
+
+    public function gidenKatilimcilar()
+    {
+        return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id')->where('katilimciTipi', 'giden');
+    }
+
+    public function gidilenKatilimcilar()
+    {
+        return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id')->where('katilimciTipi', 'gidilen');
+    }
+
     public function tur()
     {
         return $this->belongsTo(EtkinlikTur::class, 'etkinlik_turleri_id', 'etkinlik_turleri_id');
@@ -93,26 +108,6 @@ class Etkinlik extends Model
         }
     }
 
-    public function katilimcilar()
-    {
-        return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
-    }
-
-    // public function etkinlikKatilim()
-    // {
-    //     return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id');
-    // }
-
-    // public function katilimcilar()
-    // {
-    //     return $this->belongsToMany(
-    //         Kullanici::class,
-    //         'etkinlik_katilimlari',
-    //         'etkinlikler_id',
-    //         'kullanicilar_id'
-    //     );
-    // }
-
     public function whoIsCreator()
     {
         return $this->belongsTo(Kullanici::class, 'islem_yapan_id', 'kullanicilar_id');
@@ -140,18 +135,4 @@ class Etkinlik extends Model
     public function mesajKanallari() {
         return $this->hasMany(MesajKanal::class, 'etkinlikler_id', 'etkinlikler_id');
     }
-
-    // public static function ekle($validatedData)
-    // {
-    //     $validatedData['iller_id']            = decrypt($validatedData['iller_id']);
-    //     $validatedData['isletmeler_id']       = decrypt($validatedData['isletmeler_id']);
-    //     $validatedData['etkinlik_turleri_id'] = decrypt($validatedData['etkinlik_turleri_id']);
-
-    //     return self::create($validatedData);
-    // }
-
-    // public function galeri()
-    // {
-    //     return $this->hasMany(Resim::class, 'etkinlikler_id', 'etkinlikler_id');
-    // }
 }

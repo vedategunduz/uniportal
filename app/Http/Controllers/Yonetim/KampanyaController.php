@@ -154,7 +154,7 @@ class KampanyaController extends Controller
         foreach ($kampanyalar as $etkinlik) {
             $row    = [];
             $row[]  = "<div class='min-w-12'><img src='$etkinlik->kapakResmiYolu' class='size-12 object-cover mx-auto rounded'></div>";
-            $row[]  = '<a class="!text-blue-500" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('yonetim.kampanyalar.show', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
+            $row[]  = '<a class="!text-blue-500" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('etkinlikler.detay', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
             $row[]  = '<span class="text-xs">' . Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i') . '</span>';
             $row[]  = '<a href="javascript:void(0)" class="inline-flex items-center gap-2 p-2 bg-blue-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-chat-left-text"></i>
                         <span>' . $etkinlik->yorum->where('yorum_tipi', 0)->count() . '</span></a>';

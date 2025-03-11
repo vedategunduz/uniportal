@@ -184,15 +184,14 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
                 Route::get('ekle', [ToplantiController::class, 'create'])->name('create');
                 Route::get('dataTable/{isletme_id}', [ToplantiController::class, 'dataTable'])->name('dataTable');
 
-                Route::prefix('personeller')->name('personeller.')->group(function () {
-                    Route::post('/', [ToplantiController::class, 'personeller'])->name('personeller');
-                });
+                Route::get('search/{isletme_id}/{q}/{qNot?}', [ToplantiController::class, 'search'])->name('search');
 
                 Route::prefix('{etkinlik_id}')->group(function () {
                     Route::get('/', [ToplantiController::class, 'show'])->name('show');
                     Route::get('edit', [ToplantiController::class, 'edit'])->name('edit');
                     Route::patch('/', [ToplantiController::class, 'update'])->name('update');
                     Route::delete('/', [ToplantiController::class, 'destroy'])->name('destroy');
+                    Route::get('katilimciListesi/{type}', [ToplantiController::class, 'katilimciListesi'])->name('katilimciListesi');
                 });
             });
         });

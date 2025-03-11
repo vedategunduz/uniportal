@@ -29,6 +29,7 @@ class Kullanici extends Authenticatable
         'soyad',
         'email',
         'telefon',
+        'dahiliTelefon',
         'adres',
         'profilFotoUrl',
         'password',
@@ -43,6 +44,16 @@ class Kullanici extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function anaIsletme()
+    {
+        return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
+    }
+
+    public function anaUnvan()
+    {
+        return $this->belongsTo(Unvan::class, 'unvanlar_id');
+    }
 
     public static function kullanicilariGetir(array $kullanicilar_id)
     {
@@ -59,11 +70,6 @@ class Kullanici extends Authenticatable
             ->limit($limit);
     }
 
-    public function anaIsletme()
-    {
-        return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
-    }
-
     public function isletme()
     {
         $isletmeler_id = $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id')->pluck('isletmeler_id')->toArray();
@@ -71,13 +77,9 @@ class Kullanici extends Authenticatable
         // return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id')->isletme();
     }
 
-    public function isletmeler() {
-        return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id');
-    }
-
-    public function anaUnvan()
+    public function isletmeler()
     {
-        return $this->belongsTo(Unvan::class, 'unvanlar_id');
+        return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
     public function roller()

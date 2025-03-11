@@ -271,7 +271,7 @@ class ZiyaretController extends Controller
                 'giden_isletmeler_id'   => $validated['giden_isletmeler_id'],
                 'gidilen_isletmeler_id' => $validated['gidilen_isletmeler_id'],
                 'durum'                 => 'beklemede',
-                'katilimciTipi'         => 'davetli'
+                'katilimciTipi'         => 'gidilen'
             ]);
         }
 

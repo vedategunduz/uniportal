@@ -20,12 +20,15 @@ class IsletmeYetkili extends Model
         'aktiflik'
     ];
 
+    public function kullanici()
+    {
+        return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
     public function isletme()
     {
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
     }
-
-    public function kullanici() {}
 
     public static function birimPersoneller(string $birimler_id,  int $id)
     {

@@ -15,14 +15,11 @@ return new class extends Migration
 
         Schema::create('kullanici_birim_unvan_iliskileri', function (Blueprint $table) {
             $table->id('kullanici_birim_unvan_iliskileri_id');
-            $table->unsignedBigInteger('kullanicilar_id');
-            $table->unsignedBigInteger('isletme_birimleri_id');
-            $table->unsignedBigInteger('unvanlar_id')->default(46);
+            $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
+            $table->foreignId('isletmeler_id')->constrained('isletmeler', 'isletmeler_id')->restrictOnDelete();
+            $table->foreignId('isletme_birimleri_id')->constrained('isletme_birimleri', 'isletme_birimleri_id')->restrictOnDelete();
+            $table->foreignId('unvanlar_id')->default(46)->constrained('unvanlar', 'unvanlar_id')->restrictOnDelete();
             $table->timestamps();
-
-            $table->foreign('kullanicilar_id')->references('kullanicilar_id')->on('kullanicilar')->onDelete('restrict');
-            $table->foreign('isletme_birimleri_id')->references('isletme_birimleri_id')->on('isletme_birimleri')->onDelete('restrict');
-            $table->foreign('unvanlar_id')->references('unvanlar_id')->on('unvanlar')->onDelete('restrict');
         });
 
         Schema::enableForeignKeyConstraints();

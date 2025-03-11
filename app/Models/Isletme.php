@@ -33,16 +33,24 @@ class Isletme extends Model
         'aktiflik',
     ];
 
-    public static function referans_kodu($isletmeler_id) {
+    public function personeller()
+    {
+        return $this->hasMany(KullaniciBirimUnvan::class, 'isletmeler_id', 'isletmeler_id');
+    }
+
+    public static function referans_kodu($isletmeler_id)
+    {
         return self::where('isletmeler_id', $isletmeler_id)->value('referans_kodu');
     }
 
-    public static function isletmelerimiGetir() {
+    public static function isletmelerimiGetir()
+    {
         $isletmeler = IsletmeYetkili::aitOldugumIsletmeleriGetir();
         return Isletme::whereIn('isletmeler_id', $isletmeler)->orderBy('baslik', 'asc')->get();
     }
 
-    public function tur() {
+    public function tur()
+    {
         return $this->belongsTo(IsletmeTur::class, 'isletme_turleri_id', 'isletme_turleri_id');
     }
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('telefon', 155)->nullable();
+            $table->string('dahiliTelefon', 155)->nullable();
             $table->string('adres', 155)->nullable();
             $table->string('profilFotoUrl', 155)->default('https://placehold.co/128');
             $table->string('password');
@@ -51,6 +52,7 @@ return new class extends Migration
             $table->string('email', 255)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('telefon', 155)->nullable();
+            $table->string('dahiliTelefon', 155)->nullable();
             $table->string('adres', 155)->nullable();
             $table->string('profileFotoUrl', 155)->nullable();
             $table->boolean('aramaIzni');
@@ -75,6 +77,7 @@ return new class extends Migration
                     email,
                     email_verified_at,
                     telefon,
+                    dahiliTelefon,
                     adres,
                     profileFotoUrl,
                     aramaIzni,
@@ -95,6 +98,7 @@ return new class extends Migration
                     NEW.email,
                     NEW.email_verified_at,
                     NEW.telefon,
+                    NEW.dahiliTelefon,
                     NEW.adres,
                     NEW.profilFotoUrl,
                     NEW.aramaIzni,
@@ -123,6 +127,7 @@ return new class extends Migration
                     email,
                     email_verified_at,
                     telefon,
+                    dahiliTelefon,
                     adres,
                     profileFotoUrl,
                     aramaIzni,
@@ -143,6 +148,7 @@ return new class extends Migration
                     NEW.email,
                     NEW.email_verified_at,
                     NEW.telefon,
+                    NEW.dahiliTelefon,
                     NEW.adres,
                     NEW.profilFotoUrl,
                     NEW.aramaIzni,

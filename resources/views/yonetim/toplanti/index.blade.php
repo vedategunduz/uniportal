@@ -61,11 +61,12 @@
         <table id="ziyaretler" class="table table-striped table-bordered table-hover max-w-full">
             <thead>
                 <tr>
-                    <th>Ziyaret Edilen Kurum</th>
-                    <th>Ziyaret Başlık</th>
-                    <th>Tarih</th>
-                    <th>Ziyaret Eden Kişiler</th>
-                    <th>Ziyaret Edilen Kişiler</th>
+                    <th class="text-nowrap">Ziyaret Edilen Kurum</th>
+                    <th class="text-nowrap">Ziyaret Başlık</th>
+                    <th class="text-nowrap">Tarih</th>
+                    <th class="text-nowrap">Ziyaret Eden Kişiler</th>
+                    <th class="text-nowrap">Ziyaret Edilen Kişiler</th>
+                    <th class="text-nowrap">Sohbetler</th>
                     <th data-dt-order="disable">#</th>
                     <th data-dt-order="disable">#</th>
                 </tr>
@@ -74,7 +75,14 @@
         </table>
     </div>
 
-    <x-modal id="etkinlik-modal" title="" class="w-full sm:w-4/5 overflow-y-auto">
+    <x-modal id="etkinlik-modal" title="Ziyaret işlemleri" class="w-full sm:w-4/5 overflow-y-auto">
+        <div class="h-96 flex items-center justify-center">
+            <div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div>
+        </div>
+    </x-modal>
+
+    <x-modal id="katilimci-listesi-modal" title="" headerClass="bg-transparent !text-gray-900"
+        class="w-full max-w-md overflow-y-auto">
         <div class="h-96 flex items-center justify-center">
             <div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div>
         </div>
@@ -133,7 +141,6 @@
             });
 
             document.addEventListener('click', function(event) {
-
                 event.target.closest('.ziyaret-duzenle-modal') && (async () => {
                     const ID = event.target.closest('.ziyaret-duzenle-modal').dataset.id;
                     const URL =
@@ -146,7 +153,7 @@
                         initSummernote('aciklama', 300);
                         UniportalService.modal.show('etkinlik-modal');
                         MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
-                        initCropper();
+
                     } else
                         ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
                 })();
@@ -159,7 +166,7 @@
                         UniportalService.modal.show('etkinlik-modal');
                         MODAL.querySelector('[data-slot]').innerHTML = RESPONSE.data.html;
                         initSummernote('aciklama', 300);
-                        initCropper();
+
                     } else
                         ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
                 })();
@@ -204,7 +211,130 @@
                     MODAL.querySelector('[data-slot]').innerHTML =
                         `<div class="h-96 flex items-center justify-center"><div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div></div>`;
                 }();
+
+                event.target.closest('.ziyaret-sohbet-baslat') && (() => {
+                    const button = event.target.closest('.ziyaret-sohbet-baslat');
+                    const ID = button.dataset.id;
+                    const name = button.dataset.name;
+
+                    document.querySelector('.open-aside-modal').click();
+                    document.querySelector('.searchNotSifirla ').click();
+                    document.querySelector('#modal-yeni-kanal').querySelector(
+                            'input[name="baslik"]').value =
+                        name;
+                    document.getElementById('search-channel').value = name;
+
+                    document.querySelector('#modal-yeni-kanal').querySelector(
+                            'input[name="etkinlikler_id"]')
+                        .value = ID;
+                    searchChannel(name);
+                })();
+
+                event.target.closest('.ziyaret-kanallar') && (() => {
+                    const button = event.target.closest('.ziyaret-kanallar');
+                    const name = button.dataset.name;
+
+                    document.querySelector('.open-aside-modal').click();
+                    document.querySelector('#modal-yeni-kanal').querySelector(
+                            'input[name="baslik"]').value =
+                        name;
+                    document.getElementById('search-channel').value = name;
+                    searchChannel(name);
+                })();
+
+                event.target.closest('.katilimci-listesi') && (async () => {
+                    const ID = event.target.closest('.katilimci-listesi').dataset.id;
+                    const TYPE = event.target.closest('.katilimci-listesi').dataset.type;
+                    const URL =
+                        `{{ route('yonetim.toplantilar.ziyaretler.katilimciListesi', ['etkinlik_id' => '___ID___', 'type' => '___TYPE___']) }}`
+                        .replace('___ID___', ID).replace('___TYPE___', TYPE);
+
+                    const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                    if (RESPONSE.data.success) {
+                        document.getElementById('katilimci-listesi-modal').querySelector(
+                            '[data-slot]').innerHTML = RESPONSE.data.html;
+                    } else
+                        ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+                })();
+
+                if (!event.target.closest('#kendiKurumPersonelListesi')) {
+                    document.getElementById('kendiKurumPersonelListesi')?.classList.add('!hidden');
+                }
+                if (!event.target.closest('#ziyaretEdilenKurumPersonelListesi')) {
+                    document.getElementById('ziyaretEdilenKurumPersonelListesi')?.classList.add(
+                        '!hidden');
+                }
+
+                event.target.closest('[name=kendi_kurum_personeli_ara]') && (() => {
+                    if (document.querySelector('[name=kendi_kurum_personeli_ara]').value
+                        .length < 3) {
+                        return;
+                    }
+
+                    document.getElementById('kendiKurumPersonelListesi').classList
+                        .remove('!hidden');
+                })();
+
+                event.target.closest('[name=ziyaret_edilen_kurum_personeli_ara]') && (() => {
+                    if (document.querySelector('[name=ziyaret_edilen_kurum_personeli_ara]')
+                        .value
+                        .length < 3) {
+                        return;
+                    }
+
+                    document.getElementById('ziyaretEdilenKurumPersonelListesi').classList
+                        .remove('!hidden');
+                })();
             });
+
+            document.addEventListener('input', function(event) {
+                event.target.closest('[name=kendi_kurum_personeli_ara]') && (async () => {
+                    const giden_isletme_id = document.querySelector(
+                        'select[name=giden_isletme_id]').value;
+                    const q = document.querySelector('[name=kendi_kurum_personeli_ara]')
+                        .value;
+
+                    const resultContainer = document.getElementById(
+                        'kendiKurumPersonelListesi');
+
+                    await search(giden_isletme_id, q, [], resultContainer);
+                })();
+
+                event.target.closest('[name=ziyaret_edilen_kurum_personeli_ara]') && (async () => {
+                    const giden_isletme_id = document.querySelector(
+                        'select[name=gidilen_isletme_id]').value;
+                    const q = document.querySelector(
+                            '[name=ziyaret_edilen_kurum_personeli_ara]')
+                        .value;
+
+                    const resultContainer = document.getElementById(
+                        'ziyaretEdilenKurumPersonelListesi');
+
+                    await search(giden_isletme_id, q, [], resultContainer);
+                })();
+            });
+
+            async function search(isletme_id, q, qNot = [], resultContainer) {
+                if (q.length < 3) {
+                    resultContainer.classList.add('!hidden');
+                    resultContainer.innerHTML = '';
+                    return;
+                }
+
+                const url =
+                    `{{ route('yonetim.toplantilar.ziyaretler.search', ['isletme_id' => '___ID___', 'q' => '___q___']) }}`
+                    .replace('___ID___', isletme_id)
+                    .replace('___q___', q);
+
+                const RESPONSE = await ApiService.fetchData(url, {}, 'GET');
+
+                if (RESPONSE.data.success) {
+                    resultContainer.classList.remove('!hidden');
+                    resultContainer.innerHTML = RESPONSE.data.html;
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+            }
         });
     </script>
 @endsection

@@ -33,16 +33,8 @@ class EtkinlikKatilim extends Model
         return $this->belongsTo(Etkinlik::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 
-    public function giden() {
-        return $this->where('katilimciTipi', 'giden');
-    }
-
-    public function davetli() {
-        return $this->where('katilimciTipi', 'davetli');
-    }
-
-    public function katilimci() {
-        return $this->where('katilimciTipi', 'katilimci');
+    public function beklemede() {
+        return $this->where('durum', 'beklemede');
     }
 
     // public function bilgi()

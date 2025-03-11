@@ -8,7 +8,6 @@ use App\Models\Etkinlik;
 use App\Models\EtkinlikTur;
 use App\Models\Il;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EtkinlikController extends Controller
@@ -156,8 +155,26 @@ class EtkinlikController extends Controller
         foreach ($etkinlikler as $etkinlik) {
             $row    = [];
             $row[]  = "<div class='min-w-12'><img src='$etkinlik->kapakResmiYolu' class='size-12 object-cover mx-auto rounded'></div>";
-            $row[]  = '<a class="!text-blue-500 underline" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('yonetim.kampanyalar.show', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
-            $row[]  = Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, D Y - H:i') . '-' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, D Y - H:i');
+            $row[]  = '<a class="!text-blue-500" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('etkinlikler.detay', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
+            $row[]  = '<span class="text-xs">' . Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, Y - H:i') . '</span>';
+            $row[]  = '<a target="_blank" href="' . route('etkinlikler.detay', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '" class="inline-flex items-center gap-2 p-2 bg-blue-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-chat-left-text"></i>
+            <span>' . $etkinlik->yorum->where('yorum_tipi', 0)->count() . '</span></a>';
+            $row[]  = '<a href="javascript:void(0)" class="inline-flex items-center gap-2 p-2 bg-rose-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-heart"></i>
+            <span>' . $etkinlik->begeni->count() . '</span></a>';
+            $row[]  = '
+            <div class="flex items-stretch">
+            <a href="javascript:void(0)" class="ziyaret-sohbet-baslat inline-flex items-center gap-2 p-2 bg-green-400 text-xs !text-white rounded rounded-r-none text-nowrap" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-name="' . $etkinlik->baslik . '"><span>Sohbet başlat</span></a>
+            <a href="javascript:void(0)" class="ziyaret-kanallar inline-flex items-center gap-2 p-2 bg-green-300 text-xs !text-white rounded rounded-l-none" data-name="' . $etkinlik->kod . '"><span>' . $etkinlik->mesajKanallari->count() . '</span><i class="bi bi-chat-dots-fill"></i></a>
+            </div>';
+
+            $str = $etkinlik->katilimcilar->where('durum', 'beklemede')->count() ? '<span style="font-size:9px" class="absolute -top-2 -left-2 size-5 flex items-center justify-center bg-rose-400 rounded-full border border-white">' . $etkinlik->katilimcilar->where('durum', 'beklemede')->count() . '</span>' : '';
+
+            $row[]  = '
+            <a href="javascript:void(0)" class="relative inline-flex items-center gap-2 p-2 bg-purple-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '">
+                <i class="bi bi-people-fill"></i>
+                <span>' . $etkinlik->katilimcilar->count() . '</span>
+                ' . $str . '
+            </a>';
             $row[]  = '<a href="javascript:void(0)" class="inline-flex p-2 bg-orange-400 text-xs !text-white rounded etkinlik-duzenle-modal open-modal" data-id="' . encrypt($etkinlik->etkinlikler_id) . '" data-modal="etkinlik-modal"><i class="bi bi-pencil-square"></i></a>';
             $row[]  = '<a href="javascript:void(0)" class="inline-flex p-2 bg-gs-red text-xs !text-white rounded etkinlik-sil" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-trash3"></i></a>';
             $data[] = $row;

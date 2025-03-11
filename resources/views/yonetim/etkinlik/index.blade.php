@@ -56,7 +56,7 @@
             <span>Etkinlik Ekle</span>
         </x-button>
 
-        <p class="border-b w-full mt-0"></p>
+        <p class="border-b  w-full mt-0"></p>
     </div>
 
     <div class="overflow-x-auto px-4 w-full">
@@ -66,6 +66,10 @@
                     <th data-dt-order="disable">#</th>
                     <th>Başlık</th>
                     <th>Başlama tarihleri</th>
+                    <th>Yrm</th>
+                    <th>Bgn</th>
+                    <th>Sohbetler</th>
+                    <th>#</th>
                     <th data-dt-order="disable">#</th>
                     <th data-dt-order="disable">#</th>
                 </tr>
@@ -73,6 +77,89 @@
             <tbody id="table-body"></tbody>
         </table>
     </div>
+
+    <x-modal id="etkinlik-katilim-modal" visibility="flex" title="Etkinlik Katılımcılar"
+        class="w-full max-w-6xl overflow-y-auto">
+        <h4>Onay bekleyenler (12)</h4>
+        <x-checkbox>
+            Tümünü seç
+        </x-checkbox>
+        <p></p>
+        <div class="grid grid-cols-4 gap-2">
+            @for ($i = 0; $i < 12; $i++)
+                <x-checkbox>
+                    <div class="flex items-center gap-2">
+                        <img src="https://picsum.photos/{{ 100 * $i }}" class="size-10 rounded-full" alt="">
+
+                        <div>
+                            <p class="text-sm font-bold text-gray-900 tracking-wide mb-0">
+                                {{ auth()->user()->anaUnvan->baslik }} <span
+                                    class="text-xs">({{ auth()->user()->anaIsletme->kisaltma }})</span>
+                            </p>
+                            <p class="text-sm font-medium text-gray-900 mb-0">
+                                <span>{{ auth()->user()->ad . ' ' . auth()->user()->soyad }} </span>
+                                <br>
+                                <span>
+                                    <a href="mailto:{{ auth()->user()->email }}"
+                                        class="text-blue-500">{{ auth()->user()->email }}</a>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </x-checkbox>
+            @endfor
+        </div>
+        <div class="my-4">
+            <x-button class="!bg-rose-600 hover:!bg-rose-700 focus:ring-rose-500 text-white">Reddet</x-button>
+            <x-button class="!bg-green-400 hover:!bg-green-500 focus:ring-green-400 text-white">Onayla</x-button>
+        </div>
+        <h4>Onaylananlar (9)</h4>
+        <div class="grid grid-cols-4 gap-2">
+            @for ($i = 0; $i < 9; $i++)
+                <div class="flex items-center gap-2">
+                    <img src="https://picsum.photos/{{ 100 * $i }}" class="size-10 rounded-full" alt="">
+
+                    <div>
+                        <p class="text-sm font-bold text-gray-900 tracking-wide mb-0">
+                            {{ auth()->user()->anaUnvan->baslik }} <span
+                                class="text-xs">({{ auth()->user()->anaIsletme->kisaltma }})</span>
+                        </p>
+                        <p class="text-sm font-medium text-gray-900 mb-0">
+                            <span>{{ auth()->user()->ad . ' ' . auth()->user()->soyad }} </span>
+                            <br>
+                            <span>
+                                <a href="mailto:{{ auth()->user()->email }}"
+                                    class="text-blue-500">{{ auth()->user()->email }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            @endfor
+        </div>
+        <h4>Reddedilenler (3)</h4>
+        <div class="grid grid-cols-4 gap-2">
+            @for ($i = 0; $i < 3; $i++)
+                <div class="flex items-center gap-2">
+                    <img src="https://picsum.photos/{{ 50 * $i }}" class="size-10 rounded-full" alt="">
+
+                    <div>
+                        <p class="text-sm font-bold text-gray-900 tracking-wide mb-0">
+                            {{ auth()->user()->anaUnvan->baslik }} <span
+                                class="text-xs">({{ auth()->user()->anaIsletme->kisaltma }})</span>
+                        </p>
+                        <p class="text-sm font-medium text-gray-900 mb-0">
+                            <span>{{ auth()->user()->ad . ' ' . auth()->user()->soyad }} </span>
+                            <br>
+                            <span>
+                                <a href="mailto:{{ auth()->user()->email }}"
+                                    class="text-blue-500">{{ auth()->user()->email }}</a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            @endfor
+        </div>
+    </x-modal>
 
     <x-modal id="etkinlik-modal" title="" class="w-full sm:w-4/5 overflow-y-auto">
         <div class="h-96 flex items-center justify-center">
@@ -266,6 +353,36 @@
                     $('#etkinlikler').DataTable().ajax.reload(null, false);
                 } else
                     ApiService.alert.error(RESPONSE.data.message);
+            })();
+
+            event.target.closest('.ziyaret-sohbet-baslat') && (() => {
+                const button = event.target.closest('.ziyaret-sohbet-baslat');
+                const ID = button.dataset.id;
+                const name = button.dataset.name;
+
+                document.querySelector('.open-aside-modal').click();
+                document.querySelector('.searchNotSifirla ').click();
+                document.querySelector('#modal-yeni-kanal').querySelector(
+                        'input[name="baslik"]').value =
+                    name;
+                document.getElementById('search-channel').value = name;
+
+                document.querySelector('#modal-yeni-kanal').querySelector(
+                        'input[name="etkinlikler_id"]')
+                    .value = ID;
+                searchChannel(name);
+            })();
+
+            event.target.closest('.ziyaret-kanallar') && (() => {
+                const button = event.target.closest('.ziyaret-kanallar');
+                const name = button.dataset.name;
+
+                document.querySelector('.open-aside-modal').click();
+                document.querySelector('#modal-yeni-kanal').querySelector(
+                        'input[name="baslik"]').value =
+                    name;
+                document.getElementById('search-channel').value = name;
+                searchChannel(name);
             })();
 
             event.target.closest('.close-modal') && function() {

@@ -29,8 +29,8 @@
                 <!-- Ziyaret Eden Kurum (Kendi Kurumunuz) -->
                 <section class="space-y-4">
                     <p class="text-lg font-medium text-gray-900 mb-0">Ziyaret Eden Kurum</p>
-                    <label for="ziyaretEdenIsletme" class="sr-only">İşletme Seçimi</label>
-                    <select id="ziyaretEdenIsletme" name="isletmeler_id"
+                    <label for="giden_isletme" class="sr-only">İşletme Seçimi</label>
+                    <select id="giden_isletme" name="giden_isletme_id" {{ $etkinlik ? 'disabled' : '' }}
                         class="w-full border border-gray-300 rounded py-1.5">
                         @if (auth()->user()->isletmeler->count() > 1)
                             <option value="">İşletme seçiniz</option>
@@ -45,26 +45,32 @@
                     <!-- Kendi kurum personelinde arama -->
                     <x-relative-input name="kendi_kurum_personeli_ara" label="Kendi kurum personelinde ara" />
 
-                    <p class="text-lg font-medium text-gray-900 mb-0 border-b">Ziyaret Ekibi
+                    <p class="text-lg font-medium text-gray-900 mb-0 border-b pb-2">Ziyaret Ekibi
                         <span class="text-sm font-normal">(İletişim bilgileriniz paylaşılacaktır.)</span>
                     </p>
 
                     <div class="relative">
                         <div id="kendiKurumPersonelListesi"
-                            class="max-h-80 space-y-4 overflow-y-auto px-4 absolute1 top-0 left-0 bg-gray-50 z-20 w-full shadow rounded">
+                            class="max-h-80 overflow-y-auto absolute top-0 left-0 bg-white z-20 w-full shadow border rounded !hidden">
                         </div>
                     </div>
 
                     <div id="kendiKurumSeciliPersoneller" class="space-y-2 max-h-80 overflow-y-auto">
-                        <x-yonetim.toplanti.kullanici :kullanici="auth()->user()" />
+                        @if ($etkinlik)
+                            @foreach ($etkinlik->gidenKatilimcilar as $giden)
+                                <x-yonetim.toplanti.kullanici :kullanici="$giden->kullanici" :durum="$giden->durum" />
+                            @endforeach
+                        @else
+                            <x-yonetim.toplanti.kullanici :kullanici="auth()->user()" durum="beklemede" type="giden" />
+                        @endif
                     </div>
                 </section>
 
                 <!-- Ziyaret Edilen Kurum -->
                 <section class="space-y-4">
                     <p class="text-lg font-medium text-gray-900 mb-0">Ziyaret Edilen Kurum</p>
-                    <label for="ziyaretEdilenIsletme" class="sr-only">Kurum Seçimi</label>
-                    <select id="ziyaretEdilenIsletme" name="isletmeler_id"
+                    <label for="gidilen_isletme" class="sr-only">Kurum Seçimi</label>
+                    <select id="gidilen_isletme" name="gidilen_isletme_id" {{ $etkinlik ? 'disabled' : '' }}
                         class="w-full border border-gray-300 rounded py-1.5">
                         <option value="">Kurum seçiniz...</option>
                         @foreach ($tum_isletmeler as $isletme)
@@ -79,16 +85,21 @@
                     <x-relative-input name="ziyaret_edilen_kurum_personeli_ara"
                         label="Ziyaret edilen kurum personelinde ara" />
 
-                    <p class="text-lg font-medium text-gray-900 mb-0 border-b">Kurum Ekibi</p>
+                    <p class="text-lg font-medium text-gray-900 mb-0 border-b pb-2">Kurum Ekibi</p>
 
                     <div class="relative">
                         <div id="ziyaretEdilenKurumPersonelListesi"
-                            class="max-h-80 space-y-4 overflow-y-auto px-4 absolute top-0 left-0 bg-gray-50 z-20 w-full shadow rounded">
+                            class="max-h-80 overflow-y-auto absolute top-0 left-0 bg-white z-20 w-full shadow border rounded !hidden">
+
                         </div>
                     </div>
 
                     <div id="ziyaretEdilenKurumSeciliPersoneller" class="space-y-2 pb-12 max-h-80 overflow-y-auto">
-
+                        @if ($etkinlik)
+                            @foreach ($etkinlik->gidilenKatilimcilar as $giden)
+                                <x-yonetim.toplanti.kullanici :kullanici="$giden->kullanici" :durum="$giden->durum" />
+                            @endforeach
+                        @endif
                     </div>
                 </section>
             </div>

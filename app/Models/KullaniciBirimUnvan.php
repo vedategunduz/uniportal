@@ -15,6 +15,7 @@ class KullaniciBirimUnvan extends Model
 
     protected $fillable = [
         'kullanicilar_id',
+        'isletmeler_id',
         'isletme_birimleri_id',
         'unvanlar_id',
         'aktiflik'
@@ -25,13 +26,9 @@ class KullaniciBirimUnvan extends Model
         return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id')->where('aktiflik', 1);
     }
 
-    public function IzinliKullanici()
+    public function birim()
     {
-        return $this
-            ->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id')
-            ->where('veriGosterimIzni', 1)
-            ->where('aktiflik', 1)
-            ->orderBy('ad', 'asc');
+        return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id')->where('aktiflik', 1);
     }
 
     public function unvan()
@@ -39,9 +36,13 @@ class KullaniciBirimUnvan extends Model
         return $this->belongsTo(Unvan::class, 'unvanlar_id', 'unvanlar_id')->where('aktiflik', 1);
     }
 
-    public function birim()
+    public function IzinliKullanici()
     {
-        return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id')->where('aktiflik', 1);
+        return $this
+            ->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id')
+            ->where('veriGosterimIzni', 1)
+            ->where('aktiflik', 1)
+            ->orderBy('ad', 'asc');
     }
 
     public static function personelinBirimleri($kullanicilar_id)
@@ -70,7 +71,7 @@ class KullaniciBirimUnvan extends Model
             ->get();
     }
     // =================== Düzenle bu fonksiyonu ===================
-    public static function birimeYerlesmemisPersonelSayisi($isletmeler_id) : int
+    public static function birimeYerlesmemisPersonelSayisi($isletmeler_id): int
     {
         return self::birimiOlmayanKullanicilar($isletmeler_id)->pluck('kullanicilar_id')->count();
     }
