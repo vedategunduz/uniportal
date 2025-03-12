@@ -102,14 +102,22 @@ window.addEventListener('click', async function (event) {
 //     }
 // }
 
-function showMoreText(clamp = 3) {
-    document.querySelectorAll('.show-more-text').forEach((element) => {
+function showMoreWrapper(clamp = 3) {
+    document.querySelectorAll('.show-more-wrapper').forEach((element) => {
         element.addEventListener('click', function () {
             const wrapper = element.previousElementSibling;
             wrapper.classList.toggle(`line-clamp-${clamp}`);
             wrapper.querySelector('[data-iframe]').classList.toggle('hidden');
             element.querySelector('i').classList.toggle('bi-arrow-down-circle-fill');
             element.querySelector('i').classList.toggle('bi-arrow-up-circle-fill');
+        });
+    });
+}
+
+function showMoreText(clamp = 3) {
+    document.querySelectorAll('.show-more-text').forEach((element) => {
+        element.addEventListener('click', function () {
+            element.classList.toggle(`line-clamp-${clamp}`);
         });
     });
 }
@@ -252,6 +260,51 @@ function datatable_verileri_getir(selector, URL) {
                 'Accept': 'application/json',
             },
             dataSrc: 'data',
+        },
+    });
+}
+
+function initDatatable(selector) {
+    $(`#${selector}`).DataTable().destroy();
+
+    $(`#${selector} `).DataTable({
+        // responsive: true,
+        lengthMenu: [20, 40, 100, {
+            'label': 'Hepsi',
+            'value': -1
+        }],
+        language: {
+            "decimal": ",",
+            "emptyTable": "Tabloda veri yok",
+            "info": " _START_ - _END_ arasında _TOTAL_ kayıt gösteriliyor",
+            "infoEmpty": "0 kayıttan 0'ı gösteriliyor",
+            "infoFiltered": " (Toplam _MAX_ kayıttan filtrelendi)",
+            "infoPostFix": "",
+            "thousands": ".",
+            "lengthMenu": "_MENU_ adet kayıt göster",
+            "loadingRecords": "Yükleniyor...",
+            "processing": "İşleniyor...",
+            "search": '<i class="bi bi-search"></i>',
+            "zeroRecords": "Eşleşen kayıt bulunamadı",
+            "paginate": {
+                "first": '<i class="bi bi-chevron-double-left"></i>',
+                "last": '<i class="bi bi-chevron-double-right"></i>',
+                "next": '<i class="bi bi-chevron-right"></i>',
+                "previous": '<i class="bi bi-chevron-left"></i>'
+            },
+            "aria": {
+                "orderable": "Bu sütunu sırala",
+                "orderableReverse": "Bu sütunun ters sırayla sıralanmasını sağla"
+            }
+        },
+        layout: {
+            topStart: {
+                pageLength: {
+                    className: 'hidden'
+                },
+            },
+            bottomStart: 'info',
+            bottomEnd: 'paging'
         },
     });
 }

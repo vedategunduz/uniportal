@@ -74,90 +74,14 @@
                     <th data-dt-order="disable">#</th>
                 </tr>
             </thead>
-            <tbody id="table-body"></tbody>
+            <tbody id="table-body">
+            </tbody>
         </table>
     </div>
 
-    <x-modal id="etkinlik-katilim-modal" visibility="flex" title="Etkinlik Katılımcılar"
-        class="w-full max-w-6xl overflow-y-auto">
-        <h4>Onay bekleyenler (12)</h4>
-        <x-checkbox>
-            Tümünü seç
-        </x-checkbox>
-        <p></p>
-        <div class="grid grid-cols-4 gap-2">
-            @for ($i = 0; $i < 12; $i++)
-                <x-checkbox>
-                    <div class="flex items-center gap-2">
-                        <img src="https://picsum.photos/{{ 100 * $i }}" class="size-10 rounded-full" alt="">
-
-                        <div>
-                            <p class="text-sm font-bold text-gray-900 tracking-wide mb-0">
-                                {{ auth()->user()->anaUnvan->baslik }} <span
-                                    class="text-xs">({{ auth()->user()->anaIsletme->kisaltma }})</span>
-                            </p>
-                            <p class="text-sm font-medium text-gray-900 mb-0">
-                                <span>{{ auth()->user()->ad . ' ' . auth()->user()->soyad }} </span>
-                                <br>
-                                <span>
-                                    <a href="mailto:{{ auth()->user()->email }}"
-                                        class="text-blue-500">{{ auth()->user()->email }}</a>
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                </x-checkbox>
-            @endfor
-        </div>
-        <div class="my-4">
-            <x-button class="!bg-rose-600 hover:!bg-rose-700 focus:ring-rose-500 text-white">Reddet</x-button>
-            <x-button class="!bg-green-400 hover:!bg-green-500 focus:ring-green-400 text-white">Onayla</x-button>
-        </div>
-        <h4>Onaylananlar (9)</h4>
-        <div class="grid grid-cols-4 gap-2">
-            @for ($i = 0; $i < 9; $i++)
-                <div class="flex items-center gap-2">
-                    <img src="https://picsum.photos/{{ 100 * $i }}" class="size-10 rounded-full" alt="">
-
-                    <div>
-                        <p class="text-sm font-bold text-gray-900 tracking-wide mb-0">
-                            {{ auth()->user()->anaUnvan->baslik }} <span
-                                class="text-xs">({{ auth()->user()->anaIsletme->kisaltma }})</span>
-                        </p>
-                        <p class="text-sm font-medium text-gray-900 mb-0">
-                            <span>{{ auth()->user()->ad . ' ' . auth()->user()->soyad }} </span>
-                            <br>
-                            <span>
-                                <a href="mailto:{{ auth()->user()->email }}"
-                                    class="text-blue-500">{{ auth()->user()->email }}</a>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            @endfor
-        </div>
-        <h4>Reddedilenler (3)</h4>
-        <div class="grid grid-cols-4 gap-2">
-            @for ($i = 0; $i < 3; $i++)
-                <div class="flex items-center gap-2">
-                    <img src="https://picsum.photos/{{ 50 * $i }}" class="size-10 rounded-full" alt="">
-
-                    <div>
-                        <p class="text-sm font-bold text-gray-900 tracking-wide mb-0">
-                            {{ auth()->user()->anaUnvan->baslik }} <span
-                                class="text-xs">({{ auth()->user()->anaIsletme->kisaltma }})</span>
-                        </p>
-                        <p class="text-sm font-medium text-gray-900 mb-0">
-                            <span>{{ auth()->user()->ad . ' ' . auth()->user()->soyad }} </span>
-                            <br>
-                            <span>
-                                <a href="mailto:{{ auth()->user()->email }}"
-                                    class="text-blue-500">{{ auth()->user()->email }}</a>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            @endfor
+    <x-modal id="etkinlik-katilim-modal" title="Etkinlik Katılımcılar" class="w-full max-w-7xl overflow-y-auto">
+        <div class="h-96 flex items-center justify-center">
+            <div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div>
         </div>
     </x-modal>
 
@@ -385,6 +309,104 @@
                 searchChannel(name);
             })();
 
+            event.target.closest('.etkinlik-katilim-modal') && (async () => {
+                const id = event.target.closest('.etkinlik-katilim-modal').dataset.id;
+                const URL =
+                    `{{ route('yonetim.etkinlikler.katilimcilar.show', ['etkinlik_id' => '___ID___']) }}`
+                    .replace('___ID___', id);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                if (RESPONSE.data.success) {
+                    UniportalService.modal.show('etkinlik-katilim-modal');
+                    document.getElementById('etkinlik-katilim-modal').querySelector('[data-slot]')
+                        .innerHTML =
+                        RESPONSE.data.html;
+                    showMoreText();
+                    initDatatable('katilim-detay');
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+            })();
+
+            event.target.closest('.etkinlik-katilim-cevap') && (async () => {
+                event.preventDefault();
+                const button = event.target.closest('.etkinlik-katilim-cevap');
+                const form = button.closest('form');
+                const URL = form.action;
+                const kullanicilar = form.querySelectorAll('[name="kullanicilar_id[]"]');
+                let send = false;
+
+                kullanicilar.forEach(kullanici => {
+                    if (kullanici.checked)
+                        send = true;
+                });
+
+                if (!send) {
+                    ApiService.alert.error('Lütfen en az bir katılımcı seçiniz.');
+                    return;
+                }
+
+                const formData = new FormData();
+
+                formData.append('durum', button.dataset.type);
+
+
+                kullanicilar.forEach(kullanici => {
+                    if (kullanici.checked)
+                        formData.append('kullanicilar_id[]', kullanici.value);
+                });
+
+                const RESPONSE = await ApiService.fetchData(URL, formData, 'POST');
+
+                if (RESPONSE.data.success) {
+
+                    kullanicilar.forEach(kullanici => {
+                        if (kullanici.checked) {
+                            const span = kullanici.closest('tr').querySelector('[data-durum]')
+                                .querySelector('span');
+                            span.textContent = button.dataset.type;
+
+                            if (button.dataset.type == 'Onaylandı') {
+                                span.classList.remove('text-red-500', 'bg-red-100',
+                                    'border-red-400', 'text-yellow-500', 'bg-yellow-100',
+                                    'border-yellow-400');
+                                span.classList.add('text-green-500', 'bg-green-100',
+                                    'border-green-400');
+                            } else {
+                                span.classList.remove('text-green-500', 'bg-green-100',
+                                    'border-green-400', 'text-yellow-500', 'bg-yellow-100',
+                                    'border-yellow-400');
+                                span.classList.add('text-red-500', 'bg-red-100',
+                                    'border-red-400');
+                            }
+                        }
+                    });
+
+                    $('#etkinlikler').DataTable().ajax.reload(null, false);
+                    ApiService.alert.success(RESPONSE.data.message);
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+            })();
+
+            event.target.closest('.sohbet-baslat') && (async () => {
+                const ID = event.target.closest('.sohbet-baslat').dataset.id;
+                const etkinlik_id = event.target.closest('.sohbet-baslat').dataset.etkinlikId;
+                const URL =
+                    `{{ route('yonetim.etkinlikler.sohbet', ['kullanici_id' => '___ID___', 'etkinlik_id' => '___ETKINLIK_ID___']) }}`
+                    .replace('___ID___', ID)
+                    .replace('___ETKINLIK_ID___', etkinlik_id);
+
+                const RESPONSE = await ApiService.fetchData(URL, {}, 'GET');
+
+                if (RESPONSE.data.success) {
+                    console.log(RESPONSE.data.message);
+                    $('#etkinlikler').DataTable().ajax.reload(null, false);
+                    document.querySelector('.open-aside-modal').click();
+                    ApiService.alert.success(RESPONSE.data.message);
+                } else
+                    ApiService.alert.error('Bir hata oluştu. Lütfen tekrar deneyiniz.');
+            })();
+
             event.target.closest('.close-modal') && function() {
                 if (event.target.closest('.close-modal').closest('#imageCropModal'))
                     return
@@ -392,6 +414,31 @@
                 MODAL.querySelector('[data-slot]').innerHTML =
                     `<div class="h-96 flex items-center justify-center"><div class="size-12 border-4 border-t-transparent border-gray-300 rounded-full wheel"></div></div>`;
             }();
+        });
+
+        document.addEventListener('change', function(event) {
+            event.target.closest('[name=toggleAll]') && (function() {
+                const form = event.target.closest('form');
+                const checkboxes = form.querySelectorAll('[name="kullanicilar_id[]"]');
+
+                if (event.target.checked) {
+                    checkAll();
+                } else {
+                    uncheckAll();
+                }
+
+                function checkAll() {
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                }
+
+                function uncheckAll() {
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+                }
+            })();
         });
     </script>
 @endsection

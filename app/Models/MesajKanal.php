@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\IslemYapanTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 
 class MesajKanal extends Model
 {
@@ -42,5 +41,15 @@ class MesajKanal extends Model
     {
         return $this->hasMany(MesajKanalKatilimci::class, 'mesaj_kanallari_id', 'mesaj_kanallari_id')
             ->where('aktiflik', 1);
+    }
+
+    // Pivot tablo ilişkisi
+    // MesajKanal.php
+    public function denemekatilimcilar()
+    {
+        // İkinci parametre: pivot tablonuzun adı (ör. 'mesaj_kanal_katilimcilari'),
+        // Üçüncü parametre: pivot tablosundaki bu modele ait yabancı anahtar (ör. 'mesaj_kanallari_id'),
+        // Dördüncü parametre: pivot tablosundaki diğer modelin yabancı anahtarı (ör. 'kullanicilar_id')
+        return $this->belongsToMany(Kullanici::class, 'mesaj_kanal_katilimcilari', 'mesaj_kanallari_id', 'kullanicilar_id');
     }
 }

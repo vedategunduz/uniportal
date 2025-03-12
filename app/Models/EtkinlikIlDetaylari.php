@@ -18,8 +18,4 @@ class EtkinlikIlDetaylari extends Model
         'iller_id',
         'yapilanIslem',
     ];
-
-    public static function etkinlikIlDetayiInsert($veriler) {
-        return self::create($veriler);
-    }
 }

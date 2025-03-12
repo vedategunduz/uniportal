@@ -25,6 +25,10 @@ class IsletmeYetkiliSeeder extends Seeder
         IsletmeYetkili::create([
             'kullanicilar_id' => 2,
             'isletmeler_id'   => 143,
+        ]); 
+        IsletmeYetkili::create([
+            'kullanicilar_id' => 7,
+            'isletmeler_id'   => 143,
         ]);
         IsletmeYetkili::create([
             'kullanicilar_id' => 3,

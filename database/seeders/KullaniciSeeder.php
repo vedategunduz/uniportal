@@ -78,5 +78,18 @@ class KullaniciSeeder extends Seeder
             'email_verified_at' => now(),
             'password'          => '12345600',
         ]);
+
+        Kullanici::create([
+            'unvanlar_id'       => 2,
+            'isletmeler_id'     => 143,
+            'kod'               => uniqid(),
+            'ad'                => 'Mümin',
+            'soyad'             => 'Kasap',
+            'email'             => 'mkasap@nku.edu.tr',
+            'email_verified_at' => now(),
+            'password'          => '12345600',
+            'telefon'           => '0543 555 44 33',
+            'profilFotoUrl'     => 'https://bidb.nku.edu.tr/resim.php?no=1477'
+        ]);
     }
 }

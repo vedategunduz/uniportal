@@ -17,25 +17,47 @@ class EtkinlikKatilimSeeder extends Seeder
                 'etkinlikler_id' => 11,
                 'kullanicilar_id' => 2,
                 'katilimciTipi' => 'giden',
-                'durum' => 'onaylandi',
+                'durum' => 'Onaylandı',
             ],
             [
                 'etkinlikler_id' => 11,
                 'kullanicilar_id' => 3,
                 'katilimciTipi' => 'giden',
-                'durum' => 'beklemede',
+                'durum' => 'Beklemede',
             ],
             [
                 'etkinlikler_id' => 11,
                 'kullanicilar_id' => 4,
                 'katilimciTipi' => 'giden',
-                'durum' => 'reddedildi',
+                'durum' => 'Reddedildi',
             ],
             [
                 'etkinlikler_id' => 11,
                 'kullanicilar_id' => 1,
                 'katilimciTipi' => 'gidilen',
-                'durum' => 'reddedildi',
+                'durum' => 'Reddedildi',
+            ]
+        ]);
+        EtkinlikKatilim::insert([
+            [
+                'etkinlikler_id' => 3,
+                'kullanicilar_id' => 5,
+                'durum' => 'Beklemede',
+            ],
+            [
+                'etkinlikler_id' => 3,
+                'kullanicilar_id' => 3,
+                'durum' => 'Beklemede',
+            ],
+            [
+                'etkinlikler_id' => 3,
+                'kullanicilar_id' => 4,
+                'durum' => 'Beklemede',
+            ],
+            [
+                'etkinlikler_id' => 3,
+                'kullanicilar_id' => 1,
+                'durum' => 'Beklemede',
             ]
         ]);
     }

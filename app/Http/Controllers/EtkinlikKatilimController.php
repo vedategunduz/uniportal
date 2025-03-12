@@ -45,7 +45,7 @@ class EtkinlikKatilimController extends Controller
 
         $etkinlik = Etkinlik::find($etkinlik_id);
 
-        $etkinlik->katilimcilar()->attach(Auth::id(), [
+        $etkinlik->pivotKatilimcilar()->attach(Auth::id(), [
             'aciklama' => $validated['aciklama']
         ]);
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('etkinlikler_id')->constrained('etkinlikler', 'etkinlikler_id')->restrictOnDelete();
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
             $table->text('aciklama')->nullable();
-            $table->enum('durum', ['beklemede', 'onaylandi', 'reddedildi', 'iptal']);
+            $table->enum('durum', ['Beklemede', 'Onaylandı', 'Reddedildi', 'İptal']);
             $table->enum('katilimciTipi', ['davetli', 'giden', 'gidilen', 'katilimci']);
             $table->timestamps();
         });

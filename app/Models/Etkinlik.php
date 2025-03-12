@@ -55,6 +55,13 @@ class Etkinlik extends Model
         return $this->hasMany(EtkinlikKatilim::class, 'etkinlikler_id', 'etkinlikler_id')->where('katilimciTipi', 'gidilen');
     }
 
+    public function pivotKatilimcilar()
+    {
+        return $this->belongsToMany(Kullanici::class, 'etkinlik_katilimlari', 'etkinlikler_id', 'kullanicilar_id')
+            ->withPivot(['durum', 'aciklama', 'katilimciTipi']);
+    }
+
+
     public function tur()
     {
         return $this->belongsTo(EtkinlikTur::class, 'etkinlik_turleri_id', 'etkinlik_turleri_id');
@@ -118,21 +125,8 @@ class Etkinlik extends Model
         $this->increment('goruntulenmeSayisi');
     }
 
-    public function mesajKanal()
+    public function mesajKanallari()
     {
-        return $this->belongsTo(MesajKanal::class, 'etkinlikler_id', 'etkinlikler_id');
-    }
-
-    public function sohbetKanaliOlustur($tur)
-    {
-        return $this->mesajKanal()->create([
-            'etkinlikler_id' => $this->etkinlikler_id,
-            'baslik'         => $this->baslik,
-            'tur'            => $tur,
-        ]);
-    }
-
-    public function mesajKanallari() {
         return $this->hasMany(MesajKanal::class, 'etkinlikler_id', 'etkinlikler_id');
     }
 }

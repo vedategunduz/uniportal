@@ -152,6 +152,13 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
                 Route::get('edit', [YonetimEtkinlikController::class, 'edit'])->name('edit');
                 Route::patch('/', [YonetimEtkinlikController::class, 'update'])->name('update');
                 Route::delete('/', [YonetimEtkinlikController::class, 'destroy'])->name('destroy');
+
+                Route::prefix('katilimcilar')->name('katilimcilar.')->group(function () {
+                    Route::get('/', [YonetimEtkinlikController::class, 'katilimcilar'])->name('show');
+                    Route::post('/', [YonetimEtkinlikController::class, 'cevap'])->name('cevap');
+                });
+
+                Route::get('{kullanici_id}/sohbet', [YonetimEtkinlikController::class, 'sohbet'])->name('sohbet');
             });
         });
 
@@ -221,7 +228,7 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
             Route::get('dataTable/{isletme_id}', [KampanyaController::class, 'dataTable'])->name('dataTable');
 
             Route::prefix('{etkinlik_id}')->group(function () {
-                Route::get('chat', [KampanyaController::class, 'chat'])->name('chat');
+                Route::get('sohbet', [KampanyaController::class, 'sohbet'])->name('sohbet');
                 Route::get('/', [KampanyaController::class, 'show'])->name('show');
                 Route::get('edit', [KampanyaController::class, 'edit'])->name('edit');
                 Route::patch('/', [KampanyaController::class, 'update'])->name('update');
@@ -261,17 +268,6 @@ Route::prefix('auth')->name('auth.')->group(function () {
     // Çıkış rotası
     Route::get('/cikis', [AuthController::class, 'cikis'])->name('cikis')->middleware(AuthMiddleware::class);
 });
-
-// Route::get('/onizle', function () {
-//     return view('mail.hesap-onaylama-mail');
-// });
-
-// Route::post('/gitgetir', function () {
-//     return response()->json([
-//         'success' => true,
-//         'html' => view('components.mesaj.mesaj')->render(),
-//     ]);
-// });
 
 Route::prefix('errors')->name('errors.')->group(function () {
     Route::get('/404', function () {

@@ -87,7 +87,7 @@
                     @endif
                 </div>
 
-                <button class="show-more-text">
+                <button class="show-more-wrapper">
                     <i class="bi bi-arrow-down-circle-fill"></i>
                 </button>
             </article>

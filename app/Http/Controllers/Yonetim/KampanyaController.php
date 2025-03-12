@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Yonetim;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\KampanyaRequest;
 use App\Models\Etkinlik;
-use App\Models\MesajKanal;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 

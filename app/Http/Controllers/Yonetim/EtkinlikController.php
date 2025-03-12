@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Yonetim;
 
+use App\Events\KanalOlusturuldu;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EtkinlikRequest;
 use App\Models\Etkinlik;
+use App\Models\EtkinlikKatilim;
 use App\Models\EtkinlikTur;
 use App\Models\Il;
+use App\Models\Kullanici;
+use App\Models\Mesaj;
+use App\Models\MesajKanal;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EtkinlikController extends Controller
@@ -139,6 +145,44 @@ class EtkinlikController extends Controller
         ], 200);
     }
 
+    public function katilimcilar(string $etkinlik_id)
+    {
+        $etkinlik_id = decrypt($etkinlik_id);
+        $etkinlik = Etkinlik::find($etkinlik_id);
+
+        $html = view('yonetim.etkinlik.katilim-modal', compact('etkinlik'))->render();
+
+        return response()->json([
+            'success' => true,
+            'html'    => $html
+        ], 200);
+    }
+
+    public function cevap(string $etkinlik_id, Request $request)
+    {
+        $etkinlikId = decrypt($etkinlik_id);
+        $etkinlik = Etkinlik::findOrFail($etkinlikId);
+
+        $validated = $request->validate([
+            'kullanicilar_id' => 'required|array',
+            'durum'        => 'required'
+        ]);
+
+        foreach ($validated['kullanicilar_id'] as $kullanici_id) {
+            $kullanici_id = decrypt($kullanici_id);
+
+            $etkinlik->pivotKatilimcilar()->updateExistingPivot($kullanici_id, [
+                'durum' => $validated['durum']
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Katılımcı durumu güncellendi.'
+        ], 200);
+    }
+
+
     public function dataTable(string $isletme_id)
     {
         $isletme_id = decrypt($isletme_id);
@@ -167,10 +211,10 @@ class EtkinlikController extends Controller
             <a href="javascript:void(0)" class="ziyaret-kanallar inline-flex items-center gap-2 p-2 bg-green-300 text-xs !text-white rounded rounded-l-none" data-name="' . $etkinlik->kod . '"><span>' . $etkinlik->mesajKanallari->count() . '</span><i class="bi bi-chat-dots-fill"></i></a>
             </div>';
 
-            $str = $etkinlik->katilimcilar->where('durum', 'beklemede')->count() ? '<span style="font-size:9px" class="absolute -top-2 -left-2 size-5 flex items-center justify-center bg-rose-400 rounded-full border border-white">' . $etkinlik->katilimcilar->where('durum', 'beklemede')->count() . '</span>' : '';
+            $str = $etkinlik->katilimcilar->where('durum', 'Beklemede')->count() ? '<span style="font-size:9px" class="absolute -top-2 -left-2 size-5 flex items-center justify-center bg-rose-400 rounded-full border border-white">' . $etkinlik->katilimcilar->where('durum', 'Beklemede')->count() . '</span>' : '';
 
             $row[]  = '
-            <a href="javascript:void(0)" class="relative inline-flex items-center gap-2 p-2 bg-purple-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '">
+            <a href="javascript:void(0)" class="etkinlik-katilim-modal  relative inline-flex items-center gap-2 p-2 bg-purple-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '">
                 <i class="bi bi-people-fill"></i>
                 <span>' . $etkinlik->katilimcilar->count() . '</span>
                 ' . $str . '
@@ -183,6 +227,50 @@ class EtkinlikController extends Controller
         return response()->json([
             'success' => true,
             'data'    => $data
+        ], 200);
+    }
+
+    public function sohbet(string $etkinlik_id, string $kullanici_id)
+    {
+        $etkinlik_id = decrypt($etkinlik_id);
+        $kullanici_id = decrypt($kullanici_id);
+
+        $kullanici = Kullanici::find($kullanici_id);
+
+        $etkinlik = Etkinlik::find($etkinlik_id);
+
+        $mesaj_kanal = $etkinlik->mesajKanallari()->create([
+            'baslik' => $kullanici->ad . ' ' . $kullanici->soyad . ' - ' . $etkinlik->baslik,
+        ]);
+
+        $kanal = MesajKanal::find($mesaj_kanal->mesaj_kanallari_id);
+
+        $tarih = Carbon::now()->translatedFormat('d.M.Y H:i');
+
+        $mesaj_kanal->denemekatilimcilar()->attach([
+            $kullanici_id => ['yoneticilikDurumu' => 0],
+            Auth::id() => ['yoneticilikDurumu' => 1]
+        ]);
+
+        Mesaj::create([
+            'mesaj_kanallari_id' => $mesaj_kanal->mesaj_kanallari_id,
+            'kullanicilar_id' => 6,
+            'mesaj' => $kullanici->ad . ' ' . $kullanici->soyad . " kanala eklendi. ({$tarih})",
+            'durum' => 'kaydedildi'
+        ]);
+        Mesaj::create([
+            'mesaj_kanallari_id' => $mesaj_kanal->mesaj_kanallari_id,
+            'kullanicilar_id' => 6,
+            'mesaj' => Auth::user()->ad . ' ' . Auth::user()->soyad . " kanala eklendi. ({$tarih})",
+            'durum' => 'kaydedildi'
+        ]);
+
+        broadcast(new KanalOlusturuldu($kanal))->toOthers();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Sohbet başlatıldı.',
+            'd' => "$mesaj_kanal"
         ], 200);
     }
 }

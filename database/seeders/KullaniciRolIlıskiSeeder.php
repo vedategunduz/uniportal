@@ -24,9 +24,13 @@ class KullaniciRolIlıskiSeeder extends Seeder
             'roller_id' => 2,
         ]);
         KullaniciRolIliski::create([
-            'kullanicilar_id' => 2,
-            'roller_id' => 18,
+            'kullanicilar_id' => 7,
+            'roller_id' => 2,
         ]);
+        // KullaniciRolIliski::create([
+        //     'kullanicilar_id' => 2,
+        //     'roller_id' => 18,
+        // ]);
 
         // foreach ($kullanicilar as $kullanici) {
         //     foreach (range(1, 18) as $rolId) {

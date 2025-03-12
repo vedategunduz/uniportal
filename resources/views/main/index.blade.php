@@ -143,7 +143,7 @@
                             }, 500);
                         }
 
-                        showMoreText();
+                        showMoreWrapper();
 
                         const swiper = new Swiper('.swiper', {
                             loop: true,
@@ -264,7 +264,7 @@
                         FORM.querySelector('[data-yorum-yanit-template]')?.remove();
                         FORM.dataset.heightAdjusted && delete FORM.dataset.heightAdjusted;
 
-                        showMoreText();
+                        showMoreWrapper();
 
 
                     } else {

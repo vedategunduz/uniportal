@@ -17,13 +17,19 @@ class KullaniciBirimUnvanSeeder extends Seeder
                 'kullanicilar_id'      => 2,
                 'isletmeler_id'        => 143,
                 'isletme_birimleri_id' => 44,
-                'unvanlar_id'          => 1
+                'unvanlar_id'          => 2
+            ],
+            [
+                'kullanicilar_id'      => 7,
+                'isletmeler_id'        => 143,
+                'isletme_birimleri_id' => 46,
+                'unvanlar_id'          => 2
             ],
             [
                 'kullanicilar_id'      => 4,
                 'isletmeler_id'        => 143,
                 'isletme_birimleri_id' => 44,
-                'unvanlar_id'          => 2
+                'unvanlar_id'          => 3
             ],
             [
                 'kullanicilar_id'      => 3,
