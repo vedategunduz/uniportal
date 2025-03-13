@@ -6,7 +6,6 @@ use App\Events\KanalOlusturuldu;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EtkinlikRequest;
 use App\Models\Etkinlik;
-use App\Models\EtkinlikKatilim;
 use App\Models\EtkinlikTur;
 use App\Models\Il;
 use App\Models\Kullanici;
@@ -182,7 +181,6 @@ class EtkinlikController extends Controller
         ], 200);
     }
 
-
     public function dataTable(string $isletme_id)
     {
         $isletme_id = decrypt($isletme_id);
@@ -200,6 +198,7 @@ class EtkinlikController extends Controller
             $row    = [];
             $row[]  = "<div class='min-w-12'><img src='$etkinlik->kapakResmiYolu' class='size-12 object-cover mx-auto rounded'></div>";
             $row[]  = '<a class="!text-blue-500" target="_blank" title="' . $etkinlik->baslik . '" href="' . route('etkinlikler.detay', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '">' . $etkinlik->baslik . '</a>';
+            $row[]  = '<span>  </span>';
             $row[]  = '<span class="text-xs">' . Carbon::parse($etkinlik->etkinlikBaslamaTarihi)->translatedFormat('d M, Y - H:i') . '<br>' . Carbon::parse($etkinlik->etkinlikBitisTarihi)->translatedFormat('d M, Y - H:i') . '</span>';
             $row[]  = '<a target="_blank" href="' . route('etkinlikler.detay', ['etkinlik_id' => encrypt($etkinlik->etkinlikler_id)]) . '" class="inline-flex items-center gap-2 p-2 bg-blue-400 text-xs !text-white rounded" data-id="' . encrypt($etkinlik->etkinlikler_id) . '"><i class="bi bi-chat-left-text"></i>
             <span>' . $etkinlik->yorum->where('yorum_tipi', 0)->count() . '</span></a>';

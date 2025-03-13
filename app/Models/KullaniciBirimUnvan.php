@@ -36,6 +36,10 @@ class KullaniciBirimUnvan extends Model
         return $this->belongsTo(Unvan::class, 'unvanlar_id', 'unvanlar_id')->where('aktiflik', 1);
     }
 
+    public function isletme() {
+        return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id')->where('aktiflik', 1);
+    }
+
     public function IzinliKullanici()
     {
         return $this

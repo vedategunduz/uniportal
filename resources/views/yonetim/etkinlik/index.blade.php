@@ -65,6 +65,7 @@
                 <tr>
                     <th data-dt-order="disable">#</th>
                     <th>Başlık</th>
+                    <th>Durum</th>
                     <th>Başlama tarihleri</th>
                     <th>Yrm</th>
                     <th>Bgn</th>
@@ -92,7 +93,7 @@
     </x-modal>
 
     <x-modal id="confirm-modal" title="" headerClass="!bg-transparent !text-gray-900" headerCloseButton="false">
-        <div class="space-y-8 pt-4">
+        <div class="space-y-8">
             <div class="text-center space-y-2">
                 <i class="bi bi-exclamation-circle-fill text-6xl text-gs-red"></i>
 
@@ -104,6 +105,26 @@
             <div class="grid grid-cols-2 gap-2">
                 <x-button class="justify-center close-modal canceled" data-modal="confirm-modal">İptal</x-button>
                 <x-button class="!bg-gs-red text-white !border-0 justify-center confirmed">Onayla</x-button>
+            </div>
+        </div>
+    </x-modal>
+
+    <x-modal id="katilim-confirm-modal" title="" headerClass="!bg-transparent !text-gray-900"
+        headerCloseButton="false">
+        <div class="space-y-8">
+            <div class="text-center space-y-2">
+                <i class="bi bi-exclamation-triangle-fill text-6xl text-orange-400"></i>
+
+                <p class="text-sm text-gray-700 w-52 mx-auto">
+                    Seçilen katılımcıların durumunu değiştirmek istediğinize emin misiniz?
+                </p>
+
+                <x-textarea name="aciklama" class="w-full" placeholder="Cevap" rows="3"></x-textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <x-button class="justify-center close-modal canceled" data-modal="katilim-confirm-modal">İptal</x-button>
+                <x-button class="!bg-orange-400 text-white !border-0 justify-center confirmed">Onayla</x-button>
             </div>
         </div>
     </x-modal>
@@ -192,6 +213,21 @@
                 });
                 MODAL.querySelector('.canceled').addEventListener('click', () => resolve(false));
                 UniportalService.modal.show('confirm-modal');
+            });
+        }
+
+        function katilimConfirmModal() {
+            return new Promise((resolve, reject) => {
+                const MODAL = document.getElementById('katilim-confirm-modal');
+                MODAL.querySelector('.confirmed').addEventListener('click', () => {
+                    resolve({
+                        confirmed: true,
+                        description: MODAL.querySelector('[name="aciklama"]').value
+                    });
+                    UniportalService.modal.hide('katilim-confirm-modal');
+                });
+                MODAL.querySelector('.canceled').addEventListener('click', () => resolve(false));
+                UniportalService.modal.show('katilim-confirm-modal');
             });
         }
 
@@ -345,6 +381,10 @@
                     ApiService.alert.error('Lütfen en az bir katılımcı seçiniz.');
                     return;
                 }
+
+                const con = await katilimConfirmModal();
+
+                if (!con.confirmed) return;
 
                 const formData = new FormData();
 

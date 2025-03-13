@@ -61,7 +61,6 @@ class Etkinlik extends Model
             ->withPivot(['durum', 'aciklama', 'katilimciTipi']);
     }
 
-
     public function tur()
     {
         return $this->belongsTo(EtkinlikTur::class, 'etkinlik_turleri_id', 'etkinlik_turleri_id');
@@ -107,8 +106,12 @@ class Etkinlik extends Model
         $begeni = $this->begeni()->where('kullanicilar_id', Auth::id())->first();
 
         if ($begeni) {
+            Auth::user()->puanKullan(-1);
+
             $begeni->delete();
         } else {
+            Auth::user()->puanKullan(1);
+
             $this->begeni()->create([
                 'kullanicilar_id' => Auth::id(),
             ]);

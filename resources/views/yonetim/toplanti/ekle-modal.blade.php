@@ -61,7 +61,7 @@
                                 <x-yonetim.toplanti.kullanici :kullanici="$giden->kullanici" :durum="$giden->durum" />
                             @endforeach
                         @else
-                            <x-yonetim.toplanti.kullanici :kullanici="auth()->user()" durum="beklemede" type="giden" />
+                            <x-yonetim.toplanti.kullanici :kullanici="auth()->user()" durum="Beklemede" type="giden" />
                         @endif
                     </div>
                 </section>

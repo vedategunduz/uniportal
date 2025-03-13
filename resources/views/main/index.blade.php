@@ -65,7 +65,7 @@
 
     <div id="yorumYanitTemplate" class="hidden">
         <div class="flex justify-between items-center bg-gray-100 px-4 py-2" data-yorum-yanit-template>
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-gray-500 mb-0">
                 <span class="text-blue-400">@ornekKullanici</span>
                 adlı kişiye yanıt veriyorsunuz.
             </p>

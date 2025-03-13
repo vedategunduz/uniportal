@@ -35,12 +35,7 @@ class Isletme extends Model
 
     public function personeller()
     {
-        return $this->hasMany(KullaniciBirimUnvan::class, 'isletmeler_id', 'isletmeler_id');
-    }
-
-    public static function referans_kodu($isletmeler_id)
-    {
-        return self::where('isletmeler_id', $isletmeler_id)->value('referans_kodu');
+        return $this->hasMany(KullaniciBirimUnvan::class, 'isletmeler_id', 'isletmeler_id')->whereNot('kullanicilar_id', 1);
     }
 
     public static function isletmelerimiGetir()

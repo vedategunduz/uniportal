@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('instagramUrl', 255)->nullable();
             $table->string('linkedinUrl', 255)->nullable();
             $table->string('digerUrl', 255)->nullable();
+            $table->float('puan', 8, 2)->default(0);
             $table->timestamps();
 
             // Foreign
@@ -53,6 +54,7 @@ return new class extends Migration
             $table->string('instagramUrl', 255)->nullable();
             $table->string('linkedinUrl', 255)->nullable();
             $table->string('digerUrl', 255)->nullable();
+            $table->float('puan', 8, 2)->default(0);
             $table->char('yapilanIslem', 1);
             $table->timestamps();
         });
@@ -81,6 +83,7 @@ return new class extends Migration
                     instagramUrl,
                     linkedinUrl,
                     digerUrl,
+                    puan,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -103,6 +106,7 @@ return new class extends Migration
                     NEW.instagramUrl,
                     NEW.linkedinUrl,
                     NEW.digerUrl,
+                    NEW.puan,
                     'E',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,
@@ -134,6 +138,7 @@ return new class extends Migration
                     instagramUrl,
                     linkedinUrl,
                     digerUrl,
+                    puan,
                     yapilanIslem,
                     aktiflik,
                     islem_yapan_id,
@@ -156,6 +161,7 @@ return new class extends Migration
                     NEW.instagramUrl,
                     NEW.linkedinUrl,
                     NEW.digerUrl,
+                    NEW.puan,
                     'G',
                     NEW.aktiflik,
                     NEW.islem_yapan_id,

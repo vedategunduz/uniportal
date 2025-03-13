@@ -74,6 +74,7 @@
                     class="!shadow-none !border-0 !p-0 !text-blue-500 hover:!underline !bg-transparent capitalize etkinlik-yorum-yanitla-button"
                     data-yorum-id="{{ encrypt($yorum->etkinlik_yorumlari_id) }}"
                     data-sender="{{ $yorum->kullanici->ad . ' ' . $yorum->kullanici->soyad }}" :disabled="!auth()->check()">
+                    <i class="bi bi-reply-fill"></i>
                     Yanıtla
                 </x-button>
             </footer>

@@ -38,10 +38,17 @@ class EtkinlikYorum extends Model
 
     public function begenToggle() {
         $begeni = $this->begeni()->where('kullanicilar_id', Auth::id())->first();
+        $kullanici = $this->kullanici;
 
         if ($begeni) {
+            Auth::user()->setUnipoint(-1);
+            $kullanici->setUnipoint(-1);
+
             $begeni->delete();
         } else {
+            Auth::user()->setUnipoint(1);
+            $kullanici->setUnipoint(1);
+
             $this->begeni()->create([
                 'kullanicilar_id' => Auth::id()
             ]);

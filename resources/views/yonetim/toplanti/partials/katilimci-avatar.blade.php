@@ -8,9 +8,9 @@
         @php $count++; @endphp
         <div @class([
             'rounded-full border-2 border-gray-50 pointer-events-none',
-            'border-green-400' => $kullanici->durum == 'onaylandi',
-            'border-rose-500' => $kullanici->durum == 'reddedildi',
-            'border-gray-300' => $kullanici->durum == 'beklemede',
+            'border-green-400' => $kullanici->durum == 'Onaylandı',
+            'border-rose-500' => $kullanici->durum == 'Reddedildi',
+            'border-gray-300' => $kullanici->durum == 'Beklemede',
         ])>
             <img src="{{ $kullanici->kullanici->profilFotoUrl }}" class="size-8 rounded-full" alt="">
         </div>

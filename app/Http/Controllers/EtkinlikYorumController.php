@@ -48,6 +48,8 @@ class EtkinlikYorumController extends Controller
             'yorum_tipi' => $validated['yorum_tipi']
         ]);
 
+        Auth::user()->puanKullan(5);
+
         return response()->json([
             'success' => true,
             'message' => 'Yorumunuz başarıyla eklendi.',
@@ -76,6 +78,7 @@ class EtkinlikYorumController extends Controller
     {
         $yorum_id = decrypt($yorum_id);
         $yorum = EtkinlikYorum::find($yorum_id);
+        Auth::user()->puanKullan(-5);
 
         $yorum->aktiflik = 0;
         $yorum->save();

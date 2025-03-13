@@ -8,13 +8,13 @@
 
     <div class="flex items-center">
         <div class="relative"
-            title="{{ $durum ? ($durum == 'onaylandi' ? 'onayladı' : ($durum == 'reddedildi' ? 'reddetti' : 'beklemede')) : '' }}">
+            title="Davet {{ $durum }}">
             @if ($durum)
                 <div @class([
                     'rounded-full size-4 absolute top-0 right-0 border-2 border-white',
-                    'bg-green-400' => $durum == 'onaylandi',
-                    'bg-rose-500' => $durum == 'reddedildi',
-                    'bg-gray-300' => $durum == 'beklemede',
+                    'bg-green-400' => $durum == 'Onaylandı',
+                    'bg-rose-500' => $durum == 'Reddedildi',
+                    'bg-gray-300' => $durum == 'Beklemede',
                 ])>
                 </div>
             @endif

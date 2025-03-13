@@ -12,18 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::disableForeignKeyConstraints();
-
-        Schema::create('etkinlik_katilimlari', function (Blueprint $table) {
-            $table->id('etkinlik_katilimlari_id');
-            $table->foreignId('etkinlikler_id')->constrained('etkinlikler', 'etkinlikler_id')->restrictOnDelete();
+        Schema::create('kullanici_paylasimlar', function (Blueprint $table) {
+            $table->id('kullanici_paylasimlar_id');
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
             $table->text('aciklama')->nullable();
-            $table->text('cevap')->nullable();
-            $table->enum('durum', ['Beklemede', 'Onaylandı', 'Reddedildi', 'İptal']);
-            $table->enum('katilimciTipi', ['davetli', 'giden', 'gidilen', 'katilimci']);
+            $table->string('kapak_foto_url', 255)->nullable();
             $table->timestamps();
         });
-
         Schema::enableForeignKeyConstraints();
     }
 
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('etkinlik_katilimlari');
+        Schema::dropIfExists('kullanici_paylasimlar');
     }
 };

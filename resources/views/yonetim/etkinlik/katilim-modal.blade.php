@@ -72,7 +72,8 @@
                                 </a>
                             </td>
                             <td>
-                                <span class="text-gray-600 hover:text-gray-900 show-more-text text-ellipsis line-clamp-3 text-wrap break-words">{{ $katilimci->aciklama }}</span>
+                                <span
+                                    class="text-gray-600 hover:text-gray-900 show-more-text text-ellipsis line-clamp-3 text-wrap break-words cursor-pointer">{{ $katilimci->aciklama }}</span>
                             </td>
                             <td>
                                 <div class="flex">

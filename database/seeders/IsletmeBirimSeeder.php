@@ -99,5 +99,11 @@ class IsletmeBirimSeeder extends Seeder
                 ]);
             }
         }
+
+        IsletmeBirim::create([
+            'isletmeler_id'    => 156,
+            'birim_tipleri_id' => 10,
+            'baslik'           => 'Yönetim',
+        ]);
     }
 }

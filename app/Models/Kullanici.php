@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 
 /**
  * @method bool aktifKanal(int $kanalId)
+ * @method void setUnipoint(int $point)
  */
 class Kullanici extends Authenticatable
 {
@@ -24,6 +25,7 @@ class Kullanici extends Authenticatable
     protected $fillable = [
         'unvanlar_id',
         'isletmeler_id',
+        'isletme_birimleri_id',
         'kod',
         'ad',
         'soyad',
@@ -33,6 +35,9 @@ class Kullanici extends Authenticatable
         'adres',
         'profilFotoUrl',
         'password',
+        'puan',
+        'unipuan',
+        'gunlukUnipuan',
     ];
 
     protected $hidden = [
@@ -45,6 +50,11 @@ class Kullanici extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function loginHistories()
+    {
+        return $this->hasMany(LoginHistory::class, 'kullanicilar_id', 'kullanicilar_id');
+    }
+
     public function anaIsletme()
     {
         return $this->belongsTo(Isletme::class, 'isletmeler_id', 'isletmeler_id');
@@ -53,6 +63,15 @@ class Kullanici extends Authenticatable
     public function anaUnvan()
     {
         return $this->belongsTo(Unvan::class, 'unvanlar_id');
+    }
+
+    public function anaBirim()
+    {
+        return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id');
+    }
+
+    public function paylasimlar() {
+        return $this->hasMany(KullaniciPaylasim::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
     public static function kullanicilariGetir(array $kullanicilar_id)
@@ -70,16 +89,29 @@ class Kullanici extends Authenticatable
             ->limit($limit);
     }
 
-    public function isletme()
+    public function puanKullan(int $point)
     {
-        $isletmeler_id = $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id')->pluck('isletmeler_id')->toArray();
-        return Isletme::whereIn('isletmeler_id', $isletmeler_id)->get();
-        // return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id')->isletme();
+        if ($this->gunlukUnipuan > 0) {
+            $this->toplamPuanEkle($point);
+            $this->gunlukPuanDus($point);
+        }
+    }
+
+    public function toplamPuanEkle(int $point)
+    {
+        $this->unipuan += $point;
+        $this->save();
+    }
+
+    public function gunlukPuanDus(int $point)
+    {
+        $this->gunlukUnipuan -= $point;
+        $this->save();
     }
 
     public function isletmeler()
     {
-        return $this->hasMany(IsletmeYetkili::class, 'kullanicilar_id', 'kullanicilar_id');
+        return $this->hasMany(KullaniciBirimUnvan::class, 'kullanicilar_id', 'kullanicilar_id');
     }
 
     public function roller()

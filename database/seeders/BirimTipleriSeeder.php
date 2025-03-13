@@ -58,6 +58,11 @@ class BirimTipleriSeeder extends Seeder
                 'isletme_turleri_id' => 1,
                 'CSSClass'           => "bg-teal-300 border-teal-400"
             ],
+            [
+                'baslik'             => "Yönetim",
+                'isletme_turleri_id' => 4,
+                'CSSClass'           => "bg-rose-300 border-rose-400"
+            ],
         ]);
     }
 }

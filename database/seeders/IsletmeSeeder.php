@@ -198,30 +198,9 @@ class IsletmeSeeder extends Seeder
 
         $bizim->update([
             'logoUrl' => 'image/_TNKU_LOGO_TR.png',
+            'websiteUrl' => 'https://www.nku.edu.tr/'
         ]);
+
+        $bizim->save();
     }
-
-    // function generateKisaltma($name)
-    // {
-    //     // Parantez içindeki ifadeleri kaldır (örneğin: "(Vakıf)")
-    //     $name = preg_replace('/\s*\(.*?\)/', '', $name);
-
-    //     // Boşluklardan kelimelere ayır
-    //     $words = preg_split('/\s+/', $name);
-    //     $kisaltma = '';
-
-    //     // Her kelimenin ilk harfini al
-    //     foreach ($words as $word) {
-    //         if (!empty($word)) {
-    //             $kisaltma .= mb_substr($word, 0, 1);
-    //         }
-    //     }
-
-    //     // Türkçe karakterleri İngilizce karşılıklarına çevir
-    //     $search  = ['Ç', 'ç', 'Ğ', 'ğ', 'Ö', 'ö', 'Ş', 'ş', 'Ü', 'ü', 'İ', 'ı'];
-    //     $replace = ['C', 'c', 'G', 'g', 'O', 'o', 'S', 's', 'U', 'u', 'I', 'i'];
-    //     $kisaltma = str_replace($search, $replace, $kisaltma);
-
-    //     return mb_strtoupper($kisaltma);
-    // }
 }

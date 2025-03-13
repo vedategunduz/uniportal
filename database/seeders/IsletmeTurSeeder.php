@@ -16,6 +16,7 @@ class IsletmeTurSeeder extends Seeder
             ['baslik' => 'Kamu'],
             ['baslik' => 'Firma'],
             ['baslik' => 'Sendika'],
+            ['baslik' => 'Uniportal']
         ]);
     }
 }

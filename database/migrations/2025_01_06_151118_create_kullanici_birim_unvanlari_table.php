@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('kullanici_birim_unvan_iliskileri_id');
             $table->foreignId('kullanicilar_id')->constrained('kullanicilar', 'kullanicilar_id')->restrictOnDelete();
             $table->foreignId('isletmeler_id')->constrained('isletmeler', 'isletmeler_id')->restrictOnDelete();
-            $table->foreignId('isletme_birimleri_id')->constrained('isletme_birimleri', 'isletme_birimleri_id')->restrictOnDelete();
+            $table->foreignId('isletme_birimleri_id')->nullable()->constrained('isletme_birimleri', 'isletme_birimleri_id')->restrictOnDelete();
             $table->foreignId('unvanlar_id')->default(46)->constrained('unvanlar', 'unvanlar_id')->restrictOnDelete();
             $table->timestamps();
         });

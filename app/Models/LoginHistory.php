@@ -20,6 +20,10 @@ class LoginHistory extends Model
         'successful'
     ];
 
+    protected $casts = [
+        'login_at' => 'datetime',
+    ];
+
     public function kullanici()
     {
         return $this->belongsTo(Kullanici::class, 'kullanicilar_id', 'kullanicilar_id');
