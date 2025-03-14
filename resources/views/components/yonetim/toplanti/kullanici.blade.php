@@ -58,7 +58,7 @@
         @else
             <x-button type="button"
                 data-id="{{ encrypt($kullanici->kullanicilar_id) }}"
-                class="toplanti-kullanici-cikart !bg-rose-600 hover:!bg-rose-700 focus:ring-rose-500 text-white rounded-full !px-2.5 !py-1.5 !text-xs">
+                class="toplanti-kullanici-cikart !bg-rose-600 hover:!bg-rose-700 focus:!ring-rose-500 text-white rounded-full !px-2.5 !py-1.5 !text-xs">
                 Çıkart
             </x-button>
         @endif

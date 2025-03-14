@@ -15,6 +15,8 @@ use App\Http\Controllers\EtkinlikYorumController;
 use App\Http\Controllers\IletisimController;
 use App\Http\Controllers\KanalController;
 use App\Http\Controllers\KullaniciPaylasimController;
+use App\Http\Controllers\KullaniciPaylasimYorumController;
+use App\Http\Controllers\KullaniciTakipController;
 use App\Http\Controllers\MesajController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\Yonetim\ToplantiController;
@@ -214,8 +216,28 @@ Route::prefix('yonetim')->name('yonetim.')->group(function () {
         Route::prefix('kullanici')->name('kullanici.')->group(function () {
             Route::get('/{kullanici_id?}', [ProfilController::class, 'show'])->name('show');
 
+            Route::prefix('takip')->name('takip.')->group(function () {
+                Route::post('/{kullanici_id}', [KullaniciTakipController::class, 'toggle'])->name('toggle');
+            });
+
             Route::prefix('paylasim')->name('paylasim.')->group(function () {
                 Route::post('/', [KullaniciPaylasimController::class, 'store'])->name('store');
+
+                Route::prefix('{paylasim_id}')->group(function () {
+                    Route::get('/', [KullaniciPaylasimController::class, 'show'])->name('show');
+                    Route::delete('/', [KullaniciPaylasimController::class, 'destroy'])->name('destroy');
+                    Route::patch('/', [KullaniciPaylasimController::class, 'update'])->name('update');
+                    Route::patch('begenToggle', [KullaniciPaylasimController::class, 'begenToggle'])->name('begenToggle');
+
+                    Route::prefix('yorum')->name('yorum.')->group(function () {
+                        Route::post('/', [KullaniciPaylasimYorumController::class, 'store'])->name('store');
+
+                        Route::prefix('{yorum_id}')->group(function () {
+                            Route::post('/', [KullaniciPaylasimYorumController::class, 'destroy'])->name('destroy');
+                            Route::patch('begenToggle', [KullaniciPaylasimYorumController::class, 'begenToggle'])->name('begenToggle');
+                        });
+                    });
+                });
             });
         });
     });

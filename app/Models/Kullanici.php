@@ -70,8 +70,19 @@ class Kullanici extends Authenticatable
         return $this->belongsTo(IsletmeBirim::class, 'isletme_birimleri_id', 'isletme_birimleri_id');
     }
 
-    public function paylasimlar() {
-        return $this->hasMany(KullaniciPaylasim::class, 'kullanicilar_id', 'kullanicilar_id');
+    public function paylasimlar()
+    {
+        return $this->hasMany(Paylasim::class, 'kullanicilar_id', 'kullanicilar_id')->orderBy('created_at', 'desc');
+    }
+
+    public function takipciler()
+    {
+        return $this->belongsToMany(Kullanici::class, 'kullanici_takip', 'kullanicilar_id', 'takip_eden_id');
+    }
+
+    public function takipEdilenler()
+    {
+        return $this->belongsToMany(Kullanici::class, 'kullanici_takip', 'takip_eden_id', 'kullanicilar_id');
     }
 
     public static function kullanicilariGetir(array $kullanicilar_id)

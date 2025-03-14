@@ -61,8 +61,6 @@
         </div>
     </x-modal>
 
-    <div id="alerts" class="fixed right-4 bottom-4 z-30 space-y-2"></div>
-
     <div id="yorumYanitTemplate" class="hidden">
         <div class="flex justify-between items-center bg-gray-100 px-4 py-2" data-yorum-yanit-template>
             <p class="text-sm text-gray-500 mb-0">

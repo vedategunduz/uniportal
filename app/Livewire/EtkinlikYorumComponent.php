@@ -39,7 +39,7 @@ class EtkinlikYorumComponent extends Component
             // Önce beğeni sayısı belirli eşik değer veya üstünde olanları getirir.
             ->orderByRaw("CASE WHEN begeni_count >= ? THEN 0 ELSE 1 END", [$this->threshold])
             // Ardından beğeni sayısına göre (yüksekten düşüğe) sıralar.
-            // ->orderByDesc('begeni_count')
+            ->orderByDesc('begeni_count')
             // Son olarak, eklenme tarihine göre (en yeniler önce) sıralar.
             ->orderByDesc('created_at')
             ->where('yorum_tipi', $this->kamuYorumu)
